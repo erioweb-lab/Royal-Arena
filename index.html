@@ -418,7 +418,7 @@ function spawnCard(key,team,x,y){
   for(const o of formation(c.count)){
     let ux=clamp(x+o[0],0.7,COLS-0.7), uy=clamp(y+o[1],0.7,ROWS-0.7);
     if(!c.flying && uy>RIVER_Y0-0.2 && uy<RIVER_Y1+0.2) uy = team==='blue'? RIVER_Y1+0.25 : RIVER_Y0-0.25;
-    units.push({id:uid++, key, team, c, x:ux, y:uy, hp:c.hp, maxHp:c.hp, cd:0.35, swing:0, bob:Math.random()*6.28,
+    units.push({id:uid++, key, team, c, r:c.r, x:ux, y:uy, hp:c.hp, maxHp:c.hp, cd:0.35, swing:0, bob:Math.random()*6.28,
                 target:null, spawnFx:0.45, building:c.kind==='building', life:c.life||0, dead:false,
                 stun:0, chargeT:0, charging:false, dir:team==='blue'?-Math.PI/2:Math.PI/2});
   }
@@ -514,7 +514,7 @@ function updateUnit(u,dt){
     const near=nearestUnitInRange(u,3.5); if(near) u.target=near;
   }
   const d=dist(u,u.target);
-  if(d<=u.c.range+u.target.r){
+  if(d<=u.c.range+(u.target.r||((u.target.c&&u.target.c.r)||0.5))){
     u.cd-=dt;
     if(u.cd<=0){ u.cd=u.c.hs; u.swing=0.2;
       hitTarget(u,u.target, u.charging? u.c.dmg*2 : u.c.dmg);
@@ -692,6 +692,14 @@ function update(dt){
   for(const t of towers) if(!t.dead) updateTower(t,dt);
   updateProjs(dt); updateFx(dt);
   units=units.filter(u=>!u.dead);
+  let cn=0,cxs=0,cys=0;   // 전투 하이라이트: 접촉 교전 군집 중심 추적
+  for(const u of units){ if(u.target&&!u.target.isTower&&!u.target.dead&&!u.building){
+    if(dist(u,u.target)<2.6){ cxs+=(u.x+u.target.x)/2; cys+=(u.y+u.target.y)/2; cn++; } } }
+  if(cn>=3){ const nx=cxs/cn, ny=cys/cn;
+    if(!S.clash) S.clash={x:nx,y:ny,a:0};
+    S.clash.x=lerp(S.clash.x,nx,0.1); S.clash.y=lerp(S.clash.y,ny,0.1);
+    S.clash.a=Math.min(1,S.clash.a+0.08);
+  } else if(S.clash){ S.clash.a=Math.max(0,S.clash.a-0.06); if(S.clash.a<=0) S.clash=null; }
 }
 
 /* ---------- 적 AI (REA 설계도 §7) ---------- */
@@ -1193,6 +1201,10 @@ function render(){
   ctx.save();
   if(S.shake>0){ ctx.translate((Math.random()-0.5)*S.shake*14,(Math.random()-0.5)*S.shake*14); S.shake=Math.max(0,S.shake-0.02); }
   ctx.clearRect(-24,-24,W+48,H+48);
+  if(S.clash&&S.clash.a>0){   // 교전 구간 하이라이트 줌
+    const zx=lerp(W/2,S.clash.x*TILE,0.22), zy=lerp(H/2,S.clash.y*TILE,0.22), zz=1+0.05*S.clash.a;
+    ctx.translate(zx,zy); ctx.scale(zz,zz); ctx.translate(-zx,-zy);
+  }
   ctx.drawImage(bgc,0,0,W,H);
   const T=THEMES[S.theme];
   ctx.strokeStyle=T.spark; ctx.lineWidth=S.theme==='lava'?3:2;
@@ -1220,6 +1232,15 @@ function render(){
   for(const f of fx) drawFx(f);
   drawParts();
   drawAmbient();
+  if(S.clash&&S.clash.a>0){   // 황금 교전 링 + 발광
+    const cx2=S.clash.x*TILE, cy2=S.clash.y*TILE, rr=(3.2+Math.sin(now*6)*0.4)*TILE;
+    ctx.globalAlpha=S.clash.a*0.75; ctx.strokeStyle='#ffd75e'; ctx.lineWidth=3.5;
+    ctx.beginPath(); ctx.ellipse(cx2,cy2,rr,rr*0.62,0,0,7); ctx.stroke();
+    const gl=ctx.createRadialGradient(cx2,cy2,rr*0.2,cx2,cy2,rr);
+    gl.addColorStop(0,'rgba(255,215,94,'+(0.22*S.clash.a)+')'); gl.addColorStop(1,'rgba(255,215,94,0)');
+    ctx.fillStyle=gl; ctx.beginPath(); ctx.ellipse(cx2,cy2,rr,rr*0.62,0,0,7); ctx.fill();
+    ctx.globalAlpha=1;
+  }
   for(const f of floats){
     const k=1-f.t/0.7;
     ctx.globalAlpha=Math.min(1,f.t*2);
