@@ -696,7 +696,7 @@ function update(dt){
   updateProjs(dt); updateFx(dt);
   units=units.filter(u=>!u.dead);
   let cn=0,cxs=0,cys=0;   // 전투 하이라이트: 접촉 교전 군집 중심 추적
-  for(const u of units){ if(u.target&&!u.target.isTower&&!u.target.dead&&!u.building){
+  for(const u of units){ if(u.target&&!u.target.dead&&!u.building&&u.spawnFx<=0){
     if(dist(u,u.target)<2.6){ cxs+=(u.x+u.target.x)/2; cys+=(u.y+u.target.y)/2; cn++; } } }
   if(cn>=3){ const nx=cxs/cn, ny=cys/cn;
     if(!S.clash) S.clash={x:nx,y:ny,a:0};
@@ -1204,10 +1204,8 @@ function render(){
   ctx.save();
   if(S.shake>0){ ctx.translate((Math.random()-0.5)*S.shake*14,(Math.random()-0.5)*S.shake*14); S.shake=Math.max(0,S.shake-0.02); }
   ctx.clearRect(-24,-24,W+48,H+48);
-  if(S.clash&&S.clash.a>0){   // 교전 구간 하이라이트 줌
-    const zx=lerp(W/2,S.clash.x*TILE,0.28), zy=lerp(H/2,S.clash.y*TILE,0.28), zz=1+0.09*S.clash.a;
-    ctx.translate(zx,zy); ctx.scale(zz,zz); ctx.translate(-zx,-zy);
-  }
+  { const cam=S.cam||{x:W/2,y:H/2,z:1};
+    ctx.translate(W/2,H/2); ctx.scale(cam.z,cam.z); ctx.translate(-cam.x,-cam.y); }
   ctx.drawImage(bgc,0,0,W,H);
   const T=THEMES[S.theme];
   ctx.strokeStyle=T.spark; ctx.lineWidth=S.theme==='lava'?3:2;
@@ -1253,15 +1251,18 @@ function render(){
     ctx.fillStyle=f.col; ctx.fillText(f.txt,f.x*TILE,f.y*TILE-k*18);
     ctx.globalAlpha=1;
   }
-  drawVignette();
   ctx.restore();
+  drawVignette();
 }
 
 /* ---------- 입력 ---------- */
 function evtPos(e){
   const r=canvas.getBoundingClientRect();
   const s=Math.min(r.width/W,r.height/H), ox=(r.width-W*s)/2, oy=(r.height-H*s)/2;
-  return {x:(e.clientX-r.left-ox)/(s*TILE), y:(e.clientY-r.top-oy)/(s*TILE)};
+  let px=(e.clientX-r.left-ox)/s, py=(e.clientY-r.top-oy)/s;
+  const cam=S.cam||{x:W/2,y:H/2,z:1};
+  px=(px-W/2)/cam.z+cam.x; py=(py-H/2)/cam.z+cam.y;   // 컴뱃 캠 역변환
+  return {x:px/TILE, y:py/TILE};
 }
 function tryDeploy(e){
   if(S.scene!=='battle'||S.over) return;
@@ -1346,7 +1347,7 @@ function show(scene){
 function startMatch(){
   units=[];projs=[];fx=[];floats=[];parts=[];ambient=[];
   S.over=false;S.shown=false;S.winner=null;S.t=180;S.overtime=false;S.double=false;
-  S.crowns={blue:0,red:0}; S.shake=0;
+  S.crowns={blue:0,red:0}; S.shake=0; S.clash=null; S.cam={x:W/2,y:H/2,z:1}; S.slow=0;
   P.elixir=5;A.elixir=5;A.timer=4.5;P.sel=null;
   initDeck(P);initDeck(A);
   buildTowers(); drawStatic();
@@ -1397,11 +1398,20 @@ $('#btn-quit').addEventListener('click' ,()=>{ if(!S.over){ banner('기권 — �
 
 /* ---------- 메인 루프 ---------- */
 let last=performance.now();
+function updateCam(dt){
+  const tgt=S.clash? {x:S.clash.x*TILE, y:S.clash.y*TILE, z:1.38} : {x:W/2, y:H/2, z:1};
+  const c=S.cam||(S.cam={x:W/2,y:H/2,z:1});
+  const k=1-Math.exp(-4.5*dt);
+  c.x=lerp(c.x,tgt.x,k); c.y=lerp(c.y,tgt.y,k); c.z=lerp(c.z,tgt.z,k);
+  const vw=W/c.z, vh=H/c.z;
+  c.x=clamp(c.x,vw/2,W-vw/2); c.y=clamp(c.y,vh/2,H-vh/2);   // 아레나 밖 노출 방지
+}
 function loop(t){
   let dt=Math.min(0.05,(t-last)/1000); last=t; now=t/1000;
   const real=dt;
   if(S.slow>0){ S.slow-=real; dt=real*0.42; }   // 하이라이트 슬로모션
   try{ update(dt); }catch(e){}
+  updateCam(real);
   try{ render(); }catch(e){}
   syncHUD();
   requestAnimationFrame(loop);
