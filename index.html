@@ -606,7 +606,7 @@ function dealDamage(e,dmg,fromTeam){
   if(e.dead) return;
   e.hp-=dmg;
   const big=dmg>=150;
-  floats.push({x:e.x,y:e.y-(e.r||0.45)-0.4,txt:Math.round(dmg)+(big?'!':''),t:big?0.9:0.7,col:big?'#ff9d3c':(fromTeam==='blue'?'#bfe0ff':'#ffd2d2'),big});
+  floats.push({x:e.x+(Math.random()-0.5)*0.7,y:e.y-(e.r||0.45)-0.35-Math.random()*0.5,txt:Math.round(dmg)+(big?'!':''),t:big?0.9:0.7,col:big?'#ff9d3c':(fromTeam==='blue'?'#bfe0ff':'#ffd2d2'),big});
   if(e.isTower&&e.kind==='king') e.active=true;   // 킹타워 피격 시 각성
   if(e.hp<=0){ e.hp=0; e.dead=true;
     if(e.isTower) destroyTower(e,fromTeam); else killUnit(e,false); }
@@ -708,18 +708,33 @@ function update(dt){
   for(const t of towers) if(!t.dead) updateTower(t,dt);
   updateProjs(dt); updateFx(dt);
   units=units.filter(u=>!u.dead);
-  let cn=0,cxs=0,cys=0;   // 전투 하이라이트: 타격·탄환 발생 즉시 감지 (탄환 날아가고 체력 깎이는 순간 줌인)
-  for(const u of units){ if(u.target&&!u.target.dead&&!u.building&&u.spawnFx<=0){
-    const rr=u.c.range+(u.target.r||(u.target.c&&u.target.c.r)||0.5);
-    if(dist(u,u.target)<=rr){ const wgt=u.target.isTower?2:1;   // 타원 공성 1기만 있어도 줌 발화
-      cxs+=(u.x+u.target.x)/2*wgt; cys+=(u.y+u.target.y)/2*wgt; cn+=wgt; } } }
-  for(const p of projs){ const pt=p.target; if(p.kind!=='fireball'&&pt&&!pt.dead){
-    cxs+=(p.x+pt.x)/2; cys+=(p.y+pt.y)/2; cn++; } }   // 타워 방어 사격도 격전 포함
-  if(cn>=2){ const nx=cxs/cn, ny=cys/cn;
-    if(!S.clash) S.clash={x:nx,y:ny,a:0};
-    S.clash.x=lerp(S.clash.x,nx,0.1); S.clash.y=lerp(S.clash.y,ny,0.1);
-    S.clash.a=Math.min(1,S.clash.a+0.08);
-  } else if(S.clash){ S.clash.a=Math.max(0,S.clash.a-0.06); if(S.clash.a<=0) S.clash=null; }
+  { // 전투 하이라이트: 격전 군집화 — 동시 2곳이면 '최근 전투 우선'(현재 추적 격전이 살아있는 한 유지, 블렌딩 없음)
+    const fights=[];
+    for(const u of units){ if(u.target&&!u.target.dead&&!u.building&&u.spawnFx<=0){
+      const rr=u.c.range+(u.target.r||(u.target.c&&u.target.c.r)||0.5);
+      if(dist(u,u.target)<=rr) fights.push({x:(u.x+u.target.x)/2,y:(u.y+u.target.y)/2,w:u.target.isTower?2:1}); } }   // 타원 공성 1기도 발화
+    for(const p of projs){ const pt=p.target; if(p.kind!=='fireball'&&pt&&!pt.dead)
+      fights.push({x:(p.x+pt.x)/2,y:(p.y+pt.y)/2,w:1}); }   // 타워 방어 사격 포함
+    const cls=[];
+    for(const f of fights){
+      let best=null,bd=1e9;
+      for(const c of cls){ const d=Math.hypot(c.x-f.x,c.y-f.y); if(d<bd){bd=d;best=c;} }
+      if(best&&bd<4.0){ best.x=(best.x*best.n+f.x)/(best.n+1); best.y=(best.y*best.n+f.y)/(best.n+1); best.n++; best.w+=f.w; }
+      else cls.push({x:f.x,y:f.y,n:1,w:f.w});
+    }
+    let pick=null;
+    if(S.clash){ let bc=null,bw=0;   // 히스테리시스: 현재 추적 격전 군집이 살아있으면 그쪽 유지
+      for(const c of cls){ const d=Math.hypot(c.x-S.clash.x,c.y-S.clash.y);
+        if(d<4.5&&c.w>bw){ bw=c.w; bc=c; } }
+      pick=bc;
+    }
+    if(!pick){ let mw=0; for(const c of cls) if(c.w>mw){ mw=c.w; pick=c; } }
+    if(pick&&pick.w>=2){
+      if(!S.clash) S.clash={x:pick.x,y:pick.y,a:0};
+      S.clash.x=lerp(S.clash.x,pick.x,0.1); S.clash.y=lerp(S.clash.y,pick.y,0.1);
+      S.clash.a=Math.min(1,S.clash.a+0.08);
+    } else if(S.clash){ S.clash.a=Math.max(0,S.clash.a-0.06); if(S.clash.a<=0) S.clash=null; }
+  }
 }
 
 /* ---------- 적 AI (REA 설계도 §7) ---------- */
@@ -859,6 +874,14 @@ function drawStatic(){
     g.fillRect((bx-0.45)*TILE, RIVER_Y1*TILE, 0.9*TILE, 9.2*TILE);
     g.fillRect((bx-0.45)*TILE, RIVER_Y0*TILE-9.2*TILE, 0.9*TILE, 9.2*TILE);
   }
+  for(const bx of BRIDGES){   // 다리 끝단 임계(강과 만나는 단면 처리)
+    g.fillStyle='#5c6270';
+    g.fillRect((bx-0.5)*TILE, RIVER_Y0*TILE-5, 1.0*TILE, 6);
+    g.fillRect((bx-0.5)*TILE, RIVER_Y1*TILE-1, 1.0*TILE, 6);
+    g.fillStyle='rgba(255,255,255,.25)';
+    g.fillRect((bx-0.5)*TILE, RIVER_Y0*TILE-5, 1.0*TILE, 2);
+    g.fillRect((bx-0.5)*TILE, RIVER_Y1*TILE-1, 1.0*TILE, 2);
+  }
   g.strokeStyle='rgba(255,255,255,.15)'; g.setLineDash([7,9]); g.lineWidth=2;
   g.beginPath(); g.moveTo(0,BLUE_DEPLOY_MIN*TILE); g.lineTo(W,BLUE_DEPLOY_MIN*TILE);
   g.moveTo(0,RED_DEPLOY_MAX*TILE); g.lineTo(W,RED_DEPLOY_MAX*TILE); g.stroke(); g.setLineDash([]);
@@ -926,7 +949,7 @@ function drawTower(t){
     roundRect(bx,by,bw*Math.max(0,hr),8,4); ctx.fill();
     ctx.font='700 11px "Noto Sans KR",sans-serif'; ctx.textAlign='center';
     ctx.strokeStyle='rgba(0,0,0,.8)'; ctx.lineWidth=3;
-    ctx.strokeText(Math.ceil(t.hp),x,by-4); ctx.fillStyle='#fff'; ctx.fillText(Math.ceil(t.hp),x,by-4);
+    ctx.strokeText(Math.ceil(t.hp),clamp(x,26,W-26),by-4); ctx.fillStyle='#fff'; ctx.fillText(Math.ceil(t.hp),clamp(x,26,W-26),by-4);
     return;
   }
   const w=king?108:82, h=king?84:68, top=y-h/2+4;
@@ -975,7 +998,7 @@ function drawTower(t){
   roundRect(bx,by,bw*Math.max(0,hr),8,4); ctx.fill();
   ctx.font='700 12.5px "Noto Sans KR",sans-serif'; ctx.textAlign='center';
   ctx.strokeStyle='rgba(0,0,0,.8)'; ctx.lineWidth=3;
-  ctx.strokeText(Math.ceil(t.hp),x,by-4); ctx.fillStyle='#fff'; ctx.fillText(Math.ceil(t.hp),x,by-4);
+  ctx.strokeText(Math.ceil(t.hp),clamp(x,26,W-26),by-4); ctx.fillStyle='#fff'; ctx.fillText(Math.ceil(t.hp),clamp(x,26,W-26),by-4);
 }
 function drawRubble(t){
   if(TSPR.t_rubble&&TSPR.t_rubble.complete){
@@ -1248,6 +1271,7 @@ function render(){
     if(im&&im.complete&&DEC) for(const d of DEC){
       const sz=2.1*TILE*d.s;
       ctx.save(); ctx.translate(d.x*TILE,d.y*TILE); ctx.rotate(d.rot); if(d.f) ctx.scale(-1,1);
+      ctx.fillStyle='rgba(0,0,0,.28)'; ctx.beginPath(); ctx.ellipse(0,sz*0.30,sz*0.44,sz*0.17,0,0,7); ctx.fill();
       if(S.theme==='lava'){ const pul=0.5+0.5*Math.sin(now*2.2+d.x*3);
         const gl=ctx.createRadialGradient(0,0,sz*0.15,0,0,sz*0.6);
         gl.addColorStop(0,'rgba(255,122,26,'+(0.30+0.18*pul).toFixed(3)+')'); gl.addColorStop(1,'rgba(255,122,26,0)');
@@ -1270,7 +1294,8 @@ function render(){
   drawAmbient();
   { // 진영 라벨: 화면 공간에 그려 줌 중에도 안 잘림
     ctx.save(); ctx.setTransform(BSCALE,0,0,BSCALE,0,0);
-    ctx.font='900 19px "Noto Sans KR",sans-serif'; ctx.textAlign='left';
+    const zl=(S.cam?S.cam.z:1)>1.05;   // 줌 중엔 라벨 축소·반투명(유닛 겹침 완화)
+    ctx.font=zl?'700 13px "Noto Sans KR",sans-serif':'900 19px "Noto Sans KR",sans-serif'; ctx.textAlign='left';
     ctx.lineWidth=5; ctx.strokeStyle='rgba(8,14,26,.9)';
     const cz=(S.cam?S.cam.z:1), cy=(S.cam?S.cam.y:H/2);
     const y1=(RED_DEPLOY_MAX*TILE-cy)*cz+H/2-34, y2=(BLUE_DEPLOY_MIN*TILE-cy)*cz+H/2+40;
