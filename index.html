@@ -269,7 +269,7 @@ body{background:radial-gradient(1100px 760px at 50% 28%,#22335c 0%,#0b1220 62%) 
 </style>
 </head>
 <body>
-<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v63</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v64</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1418,6 +1418,7 @@ function drawUnit(u){try{
     if(!moving&&!u.c.flying){ const br=1+Math.sin(now*2.6+u.bob)*0.018; ctx.scale(br,2-br); }
     const punch=u.swing>0?1+Math.sin(u.swing*Math.PI)*0.12:1;
     ctx.save(); ctx.scale(punch,punch);
+    if(u.swing>0) ctx.rotate(Math.sin(u.swing*Math.PI)*0.16);
     ctx.drawImage(aimF?ASPR[u.key]:SPR[u.key],-sh/2,-sh*0.82-hop,sh,sh);
     if(u.hurt>0){ ctx.globalCompositeOperation='lighter'; ctx.globalAlpha=Math.min(1,u.hurt/0.09)*0.75;
       ctx.drawImage(aimF?ASPR[u.key]:SPR[u.key],-sh/2,-sh*0.82-hop,sh,sh);
@@ -1620,6 +1621,7 @@ function drawBody(u,r,la){
     ctx.font=Math.max(11,r*0.9)+'px sans-serif'; ctx.fillText(u.c.emoji,0,-r*0.6);
   }
 }
+const PROJ_BIAS={'arrow': 0.785, 'bullet': 0.785, 'bomb': 0.785, 'wizfb': 0.785, 'dragon': 0.785, 'ice': 0.785, 'cannon': 0.785};
 function drawProj(p){
   const px=p.x*TILE, py=p.y*TILE;
   if(p.kind==='fireball'){
@@ -1647,7 +1649,7 @@ function drawProj(p){
     ctx.moveTo(px-Math.cos(a)*16,py2-Math.sin(a)*16); ctx.lineTo(px,py2); ctx.stroke(); }
   const im=(typeof PSPR!=='undefined')?PSPR[p.kind]:null;
   if(im&&im.complete&&im.naturalWidth>0&&im.__valid!==false){ ctx.save(); ctx.translate(px,py2);
-    ctx.rotate(a); ctx.drawImage(im,-SZ/2,-SZ/2,SZ,SZ); ctx.restore(); }
+    ctx.rotate(a); ctx.save();ctx.translate((-SZ/2)+(SZ)/2,(-SZ/2)+(SZ)/2);ctx.rotate(a-(PROJ_BIAS[p.kind]||0));ctx.drawImage(im,-(SZ)/2,-(SZ)/2,SZ,SZ);ctx.restore();; ctx.restore(); }
   else if(p.kind==='bullet'){ ctx.fillStyle='#ffe9a8'; ctx.beginPath(); ctx.arc(px,py2,3.2,0,7); ctx.fill(); }
   else { ctx.strokeStyle='#f4e9c8'; ctx.lineWidth=2.5; ctx.beginPath();
     ctx.moveTo(px-Math.cos(a)*8,py2-Math.sin(a)*8); ctx.lineTo(px+Math.cos(a)*5,py2+Math.sin(a)*5); ctx.stroke(); }
