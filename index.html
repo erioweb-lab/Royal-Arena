@@ -1685,5 +1685,47 @@ if('serviceWorker' in navigator){
   addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 }
 </script>
-</body>
+<script id="ra-watchdog">
+(function(){
+  if(window.__raWd)return; window.__raWd=1;
+  var last=performance.now();
+  var oraf=window.requestAnimationFrame?window.requestAnimationFrame.bind(window):null;
+  if(oraf){window.requestAnimationFrame=function(cb){last=performance.now();
+    return oraf(function(t){last=performance.now();
+      try{cb(t);}catch(e){try{document.dispatchEvent(new CustomEvent('ra-crash',{detail:String(e&&e.message||e)}));}catch(_e){}throw e;}});};}
+  var box=null;
+  function show(){
+    if(box)return; box=document.createElement('div');
+    box.style.cssText='position:fixed;inset:0;z-index:99998;background:rgba(5,10,20,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;font-family:sans-serif;color:#dbe7ff;text-align:center;padding:24px';
+    box.innerHTML='<div style="font-size:17px;font-weight:700">화면을 복구하는 중이에요…</div><div style="font-size:13px;opacity:.75">잠시 후 자동으로 새로고침됩니다</div>';
+    var b=document.createElement('button'); b.textContent='지금 새로고침';
+    b.style.cssText='padding:10px 22px;border-radius:12px;border:2px solid #f7c531;background:#1c3357;color:#ffd75e;font-size:14px;font-weight:700';
+    b.onclick=function(){location.reload();}; box.appendChild(b); document.body.appendChild(box);
+  }
+  function recover(){
+    show();
+    setTimeout(function(){
+      var seen=false; try{seen=!!sessionStorage.getItem('ra-rec');}catch(e){}
+      if(seen)return;
+      try{sessionStorage.setItem('ra-rec','1');}catch(e){}
+      var done=0; function go(){ if(done)return; done=1; location.reload(); }
+      if(window.caches&&caches.keys){
+        caches.keys().then(function(ks){return Promise.all(ks.map(function(k){return caches.delete(k);}));}).catch(function(){}).then(function(){
+          if(navigator.serviceWorker&&navigator.serviceWorker.getRegistrations){
+            navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){try{r.unregister();}catch(e){}});}).catch(function(){}).then(go);
+            setTimeout(go,1200);
+          } else go();
+        });
+        setTimeout(go,2500);
+      } else go();
+    },2200);
+  }
+  window.addEventListener('error',function(){ var b=document.querySelector('#screen-battle');
+    if(b&&!b.classList.contains('hidden')) recover(); });
+  document.addEventListener('ra-crash',recover);
+  setInterval(function(){ var b=document.querySelector('#screen-battle');
+    if(!b||b.classList.contains('hidden'))return;
+    if(performance.now()-last>3000) recover(); },1500);
+})();
+</script></body>
 </html>
