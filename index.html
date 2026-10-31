@@ -232,10 +232,16 @@ h1,h2{font-family:'Jua','Noto Sans KR',sans-serif;font-weight:400}
   .theme-row{gap:4px}
   .t-foot{display:none}
 }
+/* v55 첫화면 정비 */ .t-cta{color:#fff !important;text-shadow:0 2px 8px rgba(0,0,0,.65),0 1px 2px rgba(0,0,0,.5);letter-spacing:1.5px;}
+.t-link{width:min(88vw,520px);padding:13px 18px;font-size:15px;font-weight:700;}
+.sw{line-height:1.4;padding-top:9px;padding-bottom:11px;}
+#verchip{opacity:.5;font-size:10px;}
+.cost{text-shadow:0 1px 2px rgba(0,0,0,.7);box-shadow:0 1px 3px rgba(0,0,0,.45);}
+#menu{padding-top:14px;padding-bottom:14px;}
 </style>
 </head>
 <body>
-<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v54</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v55</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -616,7 +622,8 @@ function impactProj(p,tgt){
   if(p.kind==='bullet'){ fx.push({x:p.tx,y:p.ty,t:0,dur:0.16,kind:'hit'}); addParts(p.tx,p.ty,3,'#ffe9a8',2.2,0.25,0); sfx('spark'); }
   else if(p.kind==='arrow'){ fx.push({x:p.tx,y:p.ty,t:0,dur:0.16,kind:'hit'}); sfx('thud'); }
   else if(p.kind==='bomb'){ fx.push({x:p.tx,y:p.ty,t:0,dur:0.4,kind:'boom'}); addParts(p.tx,p.ty,10,'#ffcf7a',2.8,0.5,50); S.shake=Math.max(S.shake||0,0.18); sfx('boom'); }
-  else if(p.kind==='wizfb'||p.kind==='dragon'){ fx.push({x:p.tx,y:p.ty,t:0,dur:0.18,kind:'flash'}); addParts(p.tx,p.ty,7,'#ffb14d',2.4,0.4,30); sfx('fwhit'); }
+  else if(p.kind==='wizfb'||p.kind==='dragon'){ fx.push({x:p.tx,y:p.ty,t:0,dur:0.18,kind:'flash'}); addParts(p.tx,p.ty,7,'#ffb14d',2.4,0.4,30); sfx('fwhit');
+    if(tgt&&!tgt.dead&&!tgt.isTower){ tgt.burnT=3; tgt.burnDps=22; tgt.burnAcc=0; } }
   else if(p.kind==='ice'){ fx.push({x:p.tx,y:p.ty,t:0,dur:0.3,kind:'ring',col:'rgba(156,220,255,.85)'}); addParts(p.tx,p.ty,8,'#9cdcff',2.6,0.45,40); sfx('icehit'); }
   else if(p.kind==='cannon'){ fx.push({x:p.tx,y:p.ty,t:0,dur:0.3,kind:'boom'}); addParts(p.tx,p.ty,6,'#cfd6e0',2.2,0.4,40); S.shake=Math.max(S.shake||0,0.12); sfx('boomL'); }
   else { fx.push({x:p.tx,y:p.ty,t:0,dur:0.16,kind:'hit'}); }
@@ -624,7 +631,7 @@ function impactProj(p,tgt){
 function shoot(src,tgt,dmg,kind,splash){
   kind=kind||'arrow';
   const d0=Math.hypot(tgt.x-src.x,tgt.y-src.y);
-  const v=kind==='bullet'?11:(kind==='bomb'?6.5:9);
+  const v=kind==='bullet'?5.5:(kind==='bomb'?3.25:4.5);
   projs.push({x:src.x, y:src.y-(src.isTower?0.8:0.3), target:tgt, tx:tgt.x, ty:tgt.y,
               spd:v, dmg, team:src.team, kind, splash:splash||0, slow:src.c?src.c.slow:0, fromTower:!!src.isTower,
               arc:kind==='bomb', t:0, dur:Math.max(0.12,d0/v)});
@@ -646,6 +653,12 @@ function updateUnit(u,dt){
   if(!isFinite(u.x)||!isFinite(u.y)){ u.x=9; u.y=u.team==='blue'?20:12; }
   if(!isFinite(u.cd)) u.cd=0.1;
   if(u.spawnFx>0){ u.spawnFx-=dt; return; }
+  if(u.comboCd>0) u.comboCd-=dt;
+  if(u.burnT>0){ u.burnT-=dt; u.burnAcc+=dt;
+    if(Math.random()<0.25) addParts(u.x,u.y-0.3,1,'#ff9d3c',0.8,0.3,-30);
+    if(u.burnAcc>=0.5){ const __bd=Math.round(u.burnDps*u.burnAcc); u.burnAcc=0; u.hp-=__bd; u.hurt=0.06;
+      floats.push({x:u.x+(Math.random()-0.5)*0.5,y:u.y-0.9,txt:__bd,t:0.55,col:'#ff9d3c',big:false});
+      if(u.hp<=0){ u.hp=0; u.dead=true; killUnit(u,false); return; } } }
   if(u.slowT>0) u.slowT-=dt;
   if(u.stun>0){ u.stun-=dt; u.swing=0; return; }
   if(u.building){ // 캐논(건물): 고정, 수명 있음
@@ -739,7 +752,7 @@ function castZap(team,x,y){
 function castFireball(team,x,y){
   const kt=towers.find(t=>t.team===team&&t.kind==='king'&&!t.dead)||{x:9,y:team==='blue'?29:3};
   const d=Math.hypot(x-kt.x,y-kt.y);
-  { const x1c=clamp(x,0.4,COLS-0.4), y1c=clamp(y,0.4,ROWS-0.4), T0=Math.max(0.5,d/9);
+  { const x1c=clamp(x,0.4,COLS-0.4), y1c=clamp(y,0.4,ROWS-0.4), T0=Math.max(0.5,d/18);
     projs.push({kind:'fireball',team,x0:kt.x,y0:kt.y,x1:x1c,y1:y1c,x:kt.x,y:kt.y,t:0,T:T0});
     fx.push({x:x1c,y:y1c,t:0,dur:T0+0.2,kind:'warnring'}); }
   sfx('cast');
@@ -760,6 +773,14 @@ function explodeFireball(p){
 /* ---------- 피해 / 파괴 / 승패 (REA 설계도 §2·§6) ---------- */
 function dealDamage(e,dmg,fromTeam){
   if(e.dead) return;
+  var __st=((e.burnT>0)?1:0)+((e.slowT>0)?1:0)+((e.stun>0)?1:0);
+  var __mult=__st>=3?2:(__st===2?1.4:1);
+  dmg=Math.round(dmg*__mult);
+  if(__st>=2&&!(e.comboCd>0)){
+    e.comboCd=1.2;
+    floats.push({x:e.x,y:e.y-(e.r||0.45)-1.1,txt:__st>=3?'3원소 콤보 ×2!':'2원소 콤보 +40%',t:0.8,col:__st>=3?'#ff9d3c':'#ffe95e',big:true});
+    fx.push({x:e.x,y:e.y,t:0,dur:0.35,kind:'ring',col:__st>=3?'rgba(255,157,60,.9)':'rgba(255,233,94,.9)'});
+  }
   e.hp-=dmg; e.hurt=0.09;
   const big=dmg>=150;
   floats.push({x:e.x+(Math.random()-0.5)*0.7,y:e.y-(e.r||0.45)-0.35-Math.random()*0.5,txt:Math.round(dmg)+(big?'!':''),t:big?0.9:0.7,col:big?'#ff9d3c':(fromTeam==='blue'?'#bfe0ff':'#ffd2d2'),big});
