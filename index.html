@@ -525,7 +525,9 @@ function updateUnit(u,dt){
   if(u.building){ // 캐논(건물): 고정, 수명 있음
     u.life-=dt; if(u.life<=0){ killUnit(u,true); return; }
     u.cd-=dt; u.swing=Math.max(0,u.swing-dt);
-    if(!u.target||u.target.dead) u.target=nearestUnitInRange(u,u.c.range+0.3);
+    if(!u.target||u.target.dead){ u.target=null; let nbd=1e9;
+      for(const e2 of units){ if(e2.dead||e2.team===u.team||e2.c.flying) continue;
+        const nd=Math.hypot(e2.x-u.x,e2.y-u.y); if(nd<=u.c.range+0.3&&nd<nbd){ nbd=nd; u.target=e2; } } }
     if(u.target&&!u.target.dead&&u.cd<=0){ u.cd=u.c.hs; u.swing=0.2;
       const tgt=u.target;
       fx.push({x:u.x,y:u.y-0.55,t:0,dur:0.15,kind:'muzzle'});
@@ -706,7 +708,7 @@ function update(dt){
   }
   regenElixir(dt);
   aiTick(dt);
-  for(const u of units) if(!u.dead) updateUnit(u,dt);
+  for(const u of units) if(!u.dead){ try{ updateUnit(u,dt); }catch(err){ u.target=null; } }
   for(let i=0;i<units.length;i++)for(let j=i+1;j<units.length;j++){
     const a=units[i],b=units[j];
     if(a.c.flying!==b.c.flying) continue;
