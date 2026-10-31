@@ -194,6 +194,9 @@ h1,h2{font-family:'Jua','Noto Sans KR',sans-serif;font-weight:400}
 #emote-bubble.show{transform:translateX(-50%) scale(1);opacity:1}
 #arena-wrap{position:relative}
 @media (prefers-reduced-motion:reduce){ *{animation:none!important;transition:none!important} }
+/* v24 타이포그래피: 밝은 베벨 하이라이트 + 드롭 섀도우 (참고 문서 가이드) */
+#hud button,.icon-btn,.t-btn,.t-cta,.t-link,.r-home,.r-title,#r-title,#emote-bar button,.cx,.t-flow span{text-shadow:0 1px 0 rgba(255,255,255,.22),0 2px 5px rgba(0,0,0,.5)}
+.r-title,#r-title{letter-spacing:1px}
 </style>
 </head>
 <body>
@@ -521,9 +524,14 @@ function updateUnit(u,dt){
   if(u.stun>0){ u.stun-=dt; u.swing=0; return; }
   if(u.building){ // 캐논(건물): 고정, 수명 있음
     u.life-=dt; if(u.life<=0){ killUnit(u,true); return; }
-    u.cd-=dt;
+    u.cd-=dt; u.swing=Math.max(0,u.swing-dt);
     if(!u.target||u.target.dead) u.target=nearestUnitInRange(u,u.c.range+0.3);
-    if(u.target&&u.cd<=0){ u.cd=u.c.hs; shoot(u,u.target,u.c.dmg,'bullet'); sfx('shoot'); }
+    if(u.target&&!u.target.dead&&u.cd<=0){ u.cd=u.c.hs; u.swing=0.2;
+      const tgt=u.target;
+      fx.push({x:u.x,y:u.y-0.55,t:0,dur:0.15,kind:'muzzle'});
+      addParts(u.x,u.y-0.5,3,'#ffcf7a',2.0,0.3,-30);
+      fx.push({x:tgt.x,y:tgt.y,t:0,dur:0.18,kind:'hit'});
+      dealDamage(tgt,u.c.dmg,u.team); sfx('shoot'); }
     return;
   }
   if(!u.target||u.target.dead) u.target=acquire(u);
@@ -1237,6 +1245,7 @@ function drawFx(f){
   if(f.kind==='hit'){ ctx.fillStyle='#fff';
     for(let i=0;i<4;i++){ const a=i*1.57+0.6;
       ctx.fillRect(px+Math.cos(a)*6*(1+k*2)-1.5,py+Math.sin(a)*6*(1+k*2)-1.5,3,3); } }
+  else if(f.kind==='muzzle'){ ctx.fillStyle='#ffe9a8'; ctx.beginPath(); ctx.arc(px,py-10,5+k*9,0,7); ctx.fill(); ctx.fillStyle='#ff9d3c'; ctx.beginPath(); ctx.arc(px,py-10,3+k*5,0,7); ctx.fill(); }
   else if(f.kind==='poof'){ ctx.fillStyle='#cfd6e0'; ctx.beginPath(); ctx.arc(px,py,4+k*14,0,7); ctx.fill(); }
   else if(f.kind==='die'){ const im2=DIESPR[f.key];
     if(im2&&im2.complete){ ctx.save(); ctx.translate(px,py); ctx.rotate((f.team==='blue'?-1:1)*k*0.9);
@@ -1351,7 +1360,7 @@ function render(){
   for(const f of floats){
     const k=1-f.t/0.7;
     ctx.globalAlpha=Math.min(1,f.t*2);
-    ctx.font=(f.big?'900 17px':'700 13px')+' "Noto Sans KR",sans-serif'; ctx.textAlign='center';
+    ctx.font=(f.big?'900 22px':'900 15px')+' Jua, sans-serif'; ctx.lineWidth=3; ctx.strokeStyle='rgba(8,12,22,.85)'; ctx.strokeText(f.txt,fx2,fy2); ctx.textAlign='center';
     ctx.strokeStyle='rgba(0,0,0,.8)'; ctx.lineWidth=3;
     ctx.strokeText(f.txt,f.x*TILE,f.y*TILE-k*18);
     ctx.fillStyle=f.col; ctx.fillText(f.txt,f.x*TILE,f.y*TILE-k*18);
