@@ -874,17 +874,6 @@ function drawStatic(){
     g.fillRect((bx-0.45)*TILE, RIVER_Y1*TILE, 0.9*TILE, 9.2*TILE);
     g.fillRect((bx-0.45)*TILE, RIVER_Y0*TILE-9.2*TILE, 0.9*TILE, 9.2*TILE);
   }
-  for(const bx of BRIDGES){   // 다리 끝단 임계(강과 만나는 단면 처리) — 고대비 돌출 돌단
-    g.fillStyle='#3d4350';
-    g.fillRect((bx-0.54)*TILE, RIVER_Y0*TILE-15, 1.08*TILE, 15);
-    g.fillRect((bx-0.54)*TILE, RIVER_Y1*TILE, 1.08*TILE, 15);
-    g.fillStyle='#98a0b0';
-    g.fillRect((bx-0.54)*TILE, RIVER_Y0*TILE-15, 1.08*TILE, 7);
-    g.fillRect((bx-0.54)*TILE, RIVER_Y1*TILE, 1.08*TILE, 7);
-    g.strokeStyle='rgba(8,12,22,.8)'; g.lineWidth=2;
-    g.strokeRect((bx-0.54)*TILE, RIVER_Y0*TILE-15, 1.08*TILE, 15);
-    g.strokeRect((bx-0.54)*TILE, RIVER_Y1*TILE, 1.08*TILE, 15);
-  }
   g.strokeStyle='rgba(255,255,255,.15)'; g.setLineDash([7,9]); g.lineWidth=2;
   g.beginPath(); g.moveTo(0,BLUE_DEPLOY_MIN*TILE); g.lineTo(W,BLUE_DEPLOY_MIN*TILE);
   g.moveTo(0,RED_DEPLOY_MAX*TILE); g.lineTo(W,RED_DEPLOY_MAX*TILE); g.stroke(); g.setLineDash([]);
@@ -922,6 +911,18 @@ function drawStatic(){
   g.fillRect(0,0,W,7); g.fillRect(0,H-7,W,7); g.fillRect(0,0,7,H); g.fillRect(W-7,0,7,H);
   g.fillStyle='rgba(255,255,255,.25)'; g.fillRect(0,0,W,2); g.fillRect(0,0,2,H);
   g.fillStyle='rgba(0,0,0,.25)'; g.fillRect(0,H-2,W,2); g.fillRect(W-2,0,2,H);
+  for(const bx of BRIDGES){   // 다리 끝단 임계(강과 만나는 단면 처리) — 고대비 돌출 돌단
+    g.fillStyle='#3d4350';
+    g.fillRect((bx-0.54)*TILE, RIVER_Y0*TILE-15, 1.08*TILE, 15);
+    g.fillRect((bx-0.54)*TILE, RIVER_Y1*TILE, 1.08*TILE, 15);
+    g.fillStyle='#98a0b0';
+    g.fillRect((bx-0.54)*TILE, RIVER_Y0*TILE-15, 1.08*TILE, 7);
+    g.fillRect((bx-0.54)*TILE, RIVER_Y1*TILE, 1.08*TILE, 7);
+    g.strokeStyle='rgba(8,12,22,.8)'; g.lineWidth=2;
+    g.strokeRect((bx-0.54)*TILE, RIVER_Y0*TILE-15, 1.08*TILE, 15);
+    g.strokeRect((bx-0.54)*TILE, RIVER_Y1*TILE, 1.08*TILE, 15);
+  }
+
 }
 function flagPole(px,py,col){
   ctx.strokeStyle='#5a4632'; ctx.lineWidth=2;
