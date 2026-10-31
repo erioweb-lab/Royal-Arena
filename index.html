@@ -874,16 +874,16 @@ function drawStatic(){
     g.fillRect((bx-0.45)*TILE, RIVER_Y1*TILE, 0.9*TILE, 9.2*TILE);
     g.fillRect((bx-0.45)*TILE, RIVER_Y0*TILE-9.2*TILE, 0.9*TILE, 9.2*TILE);
   }
-  for(const bx of BRIDGES){   // 다리 끝단 임계(강과 만나는 단면 처리) — 돌출 돌단
-    g.fillStyle='#4a4f5c';
-    g.fillRect((bx-0.52)*TILE, RIVER_Y0*TILE-12, 1.04*TILE, 12);
-    g.fillRect((bx-0.52)*TILE, RIVER_Y1*TILE, 1.04*TILE, 12);
-    g.fillStyle='#7a8090';
-    g.fillRect((bx-0.52)*TILE, RIVER_Y0*TILE-12, 1.04*TILE, 5);
-    g.fillRect((bx-0.52)*TILE, RIVER_Y1*TILE, 1.04*TILE, 5);
-    g.strokeStyle='rgba(0,0,0,.5)'; g.lineWidth=1.5;
-    g.strokeRect((bx-0.52)*TILE, RIVER_Y0*TILE-12, 1.04*TILE, 12);
-    g.strokeRect((bx-0.52)*TILE, RIVER_Y1*TILE, 1.04*TILE, 12);
+  for(const bx of BRIDGES){   // 다리 끝단 임계(강과 만나는 단면 처리) — 고대비 돌출 돌단
+    g.fillStyle='#3d4350';
+    g.fillRect((bx-0.54)*TILE, RIVER_Y0*TILE-15, 1.08*TILE, 15);
+    g.fillRect((bx-0.54)*TILE, RIVER_Y1*TILE, 1.08*TILE, 15);
+    g.fillStyle='#98a0b0';
+    g.fillRect((bx-0.54)*TILE, RIVER_Y0*TILE-15, 1.08*TILE, 7);
+    g.fillRect((bx-0.54)*TILE, RIVER_Y1*TILE, 1.08*TILE, 7);
+    g.strokeStyle='rgba(8,12,22,.8)'; g.lineWidth=2;
+    g.strokeRect((bx-0.54)*TILE, RIVER_Y0*TILE-15, 1.08*TILE, 15);
+    g.strokeRect((bx-0.54)*TILE, RIVER_Y1*TILE, 1.08*TILE, 15);
   }
   g.strokeStyle='rgba(255,255,255,.15)'; g.setLineDash([7,9]); g.lineWidth=2;
   g.beginPath(); g.moveTo(0,BLUE_DEPLOY_MIN*TILE); g.lineTo(W,BLUE_DEPLOY_MIN*TILE);
@@ -1274,7 +1274,7 @@ function render(){
     if(im&&im.complete&&DEC) for(const d of DEC){
       const sz=2.1*TILE*d.s;
       ctx.save(); ctx.translate(d.x*TILE,d.y*TILE); ctx.rotate(d.rot); if(d.f) ctx.scale(-1,1);
-      ctx.fillStyle='rgba(0,0,0,.38)'; ctx.beginPath(); ctx.ellipse(0,sz*0.44,sz*0.55,sz*0.13,0,0,7); ctx.fill();
+      ctx.fillStyle='rgba(0,0,0,.5)'; ctx.beginPath(); ctx.ellipse(0,sz*0.46,sz*0.60,sz*0.15,0,0,7); ctx.fill();
       if(S.theme==='lava'){ const pul=0.5+0.5*Math.sin(now*2.2+d.x*3);
         const gl=ctx.createRadialGradient(0,0,sz*0.15,0,0,sz*0.6);
         gl.addColorStop(0,'rgba(255,122,26,'+(0.30+0.18*pul).toFixed(3)+')'); gl.addColorStop(1,'rgba(255,122,26,0)');
