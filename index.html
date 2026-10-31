@@ -1399,9 +1399,9 @@ $('#btn-quit').addEventListener('click' ,()=>{ if(!S.over){ banner('기권 — �
 /* ---------- 메인 루프 ---------- */
 let last=performance.now();
 function updateCam(dt){
-  const tgt=S.clash? {x:S.clash.x*TILE, y:S.clash.y*TILE, z:1.38} : {x:W/2, y:H/2, z:1};
+  const tgt=S.clash? {x:S.clash.x*TILE, y:S.clash.y*TILE, z:1.6} : {x:W/2, y:H/2, z:1};
   const c=S.cam||(S.cam={x:W/2,y:H/2,z:1});
-  const k=1-Math.exp(-4.5*dt);
+  const k=1-Math.exp(-6.0*dt);
   c.x=lerp(c.x,tgt.x,k); c.y=lerp(c.y,tgt.y,k); c.z=lerp(c.z,tgt.z,k);
   const vw=W/c.z, vh=H/c.z;
   c.x=clamp(c.x,vw/2,W-vw/2); c.y=clamp(c.y,vh/2,H-vh/2);   // 아레나 밖 노출 방지
