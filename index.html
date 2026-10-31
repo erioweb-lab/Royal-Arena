@@ -1293,5 +1293,12 @@ window.__auto=new URLSearchParams(location.search).has('auto');
 if(window.__auto) startMatch();
 requestAnimationFrame(loop);
 </script>
+
+<script>
+/* 서비스 워커 등록 — 오프라인 실행 지원 */
+if('serviceWorker' in navigator){
+  addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+}
+</script>
 </body>
 </html>
