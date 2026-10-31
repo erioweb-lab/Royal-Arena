@@ -255,7 +255,7 @@ h1,h2{font-family:'Jua','Noto Sans KR',sans-serif;font-weight:400}
       <div id="codex" class="t-codex"></div>
     </div>
     <div class="t-links"><button id="btn-info" class="t-link">📖 게임 방법</button></div>
-    <p class="t-foot">무료 팬 게임 · Supercell 및 원작과 무관 · <span id="ver-chip" style="color:#ffd75e">v41</span></p>
+    <p class="t-foot">무료 팬 게임 · Supercell 및 원작과 무관 · <span id="ver-chip" style="color:#ffd75e">v42</span></p>
   </section>
 
   <!-- ===== 배틀 ===== -->
@@ -1481,7 +1481,6 @@ function render(){
     if(y2>-20&&y2<H+20){ const bw2=152,bh2=44; if(BANB_IM.complete&&BANB_IM.naturalWidth) ctx.drawImage(BANB_IM,8,y2-bh2*0.55,bw2,bh2);
   ctx.font='900 15px Jua, sans-serif'; ctx.lineWidth=4; ctx.strokeStyle='rgba(8,12,22,.9)'; ctx.strokeText('🛡 아군 진영',26,y2); ctx.fillStyle='#d7e8ff'; ctx.fillText('🛡 아군 진영',26,y2); }
     ctx.globalAlpha=1; ctx.restore(); }
-  if(S.clash&&S.clash.a>0){   // 황금 교전 링 + 발광
 for(const t of towers) if(t.dead) drawRubble(t);
   for(const t of towers) if(!t.dead) drawTower(t);
   for(const u of [...units].sort((a,b)=>a.y-b.y)) drawUnit(u);
@@ -1489,6 +1488,7 @@ for(const t of towers) if(t.dead) drawRubble(t);
   for(const f of fx) drawFx(f);
   drawParts();
   drawAmbient();
+  if(S.clash&&S.clash.a>0){   // 황금 교전 링 + 발광
     const cx2=S.clash.x*TILE, cy2=S.clash.y*TILE, rr=(3.2+Math.sin(now*6)*0.4)*TILE;
     ctx.globalAlpha=S.clash.a*0.75; ctx.strokeStyle='#ffd75e'; ctx.lineWidth=3.5;
     ctx.beginPath(); ctx.ellipse(cx2,cy2,rr,rr*0.62,0,0,7); ctx.stroke();
