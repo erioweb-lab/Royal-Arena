@@ -610,7 +610,7 @@ function explodeFireball(p){
 /* ---------- 피해 / 파괴 / 승패 (REA 설계도 §2·§6) ---------- */
 function dealDamage(e,dmg,fromTeam){
   if(e.dead) return;
-  e.hp-=dmg;
+  e.hp-=dmg; e.hurt=0.09;
   const big=dmg>=150;
   floats.push({x:e.x+(Math.random()-0.5)*0.7,y:e.y-(e.r||0.45)-0.35-Math.random()*0.5,txt:Math.round(dmg)+(big?'!':''),t:big?0.9:0.7,col:big?'#ff9d3c':(fromTeam==='blue'?'#bfe0ff':'#ffd2d2'),big});
   if(e.isTower&&e.kind==='king') e.active=true;   // 킹타워 피격 시 각성
@@ -1044,6 +1044,7 @@ function drawRubble(t){
 function drawUnit(u){
   const px=u.x*TILE, py=u.y*TILE;
   const fly=u.c.flying, bob=fly?Math.sin(now*5+u.bob)*2.5:0, dy=fly?-15+bob:0;
+  if(u.spawnFx>0.28&&Math.random()<0.5) addParts(px,py+3,1,'#cfc3a8',1.8,0.35,-20);
   const scale=u.spawnFx>0?1-(u.spawnFx/0.45)*0.7:1;
   const r=Math.max(8,(u.c.r*TILE*0.92+9)*scale);
   const la=u.target?Math.atan2(u.target.y-u.y,u.target.x-u.x):u.dir;
@@ -1064,9 +1065,19 @@ function drawUnit(u){
     if(Math.random()<0.4) addParts(px,py+3,1,'#e8d9a0',1.8,0.35,-20); }
   const sprOK=SPR[u.key]&&SPR[u.key].complete;
   ctx.save(); ctx.translate(cx0,cy0); ctx.scale(sx,1);
+  if(u.hurt>0) u.hurt=Math.max(0,u.hurt-0.017);
+  const moving=(!u.c.flying&&u.target&&dist(u,u.target)>u.c.range+u.target.r);
+  const step=Math.sin(now*7.5+u.bob);
+  if(moving){ ctx.rotate(step*0.06); ctx.scale(1,1-Math.abs(step)*0.035); }
   const hop=(!u.c.flying&&u.target&&dist(u,u.target)>u.c.range+u.target.r)?Math.abs(Math.sin(now*7.5+u.bob))*2.6:0;
   if(sprOK){ const sh=r*3.6, aimF=u.swing>0&&ASPR[u.key]&&ASPR[u.key].complete;
-    ctx.drawImage(aimF?ASPR[u.key]:SPR[u.key],-sh/2,-sh*0.82-hop,sh,sh); }
+    const punch=u.swing>0?1+Math.sin(u.swing*Math.PI)*0.12:1;
+    ctx.save(); ctx.scale(punch,punch);
+    ctx.drawImage(aimF?ASPR[u.key]:SPR[u.key],-sh/2,-sh*0.82-hop,sh,sh);
+    if(u.hurt>0){ ctx.globalCompositeOperation='lighter'; ctx.globalAlpha=Math.min(1,u.hurt/0.09)*0.75;
+      ctx.drawImage(aimF?ASPR[u.key]:SPR[u.key],-sh/2,-sh*0.82-hop,sh,sh);
+      ctx.globalCompositeOperation='source-over'; ctx.globalAlpha=1; }
+    ctx.restore(); }
   else { drawBody(u,r,la);
     if(u.swing>0){ ctx.strokeStyle='rgba(255,255,255,.8)'; ctx.lineWidth=3;
       ctx.beginPath(); ctx.arc(0,-r*0.6,r*1.1,-0.5,0.9); ctx.stroke(); } }
@@ -1230,7 +1241,7 @@ function drawFx(f){
   else if(f.kind==='die'){ const im2=DIESPR[f.key];
     if(im2&&im2.complete){ ctx.save(); ctx.translate(px,py); ctx.rotate((f.team==='blue'?-1:1)*k*0.9);
       const dsz=TILE*3.2*(1-k*0.15); ctx.globalAlpha=Math.max(0,1-k);
-      ctx.drawImage(im2,-dsz/2,-dsz*0.8,dsz,dsz); ctx.restore(); } }
+      ctx.globalAlpha=Math.max(0,1-(f.t/f.dur)*0.75);ctx.drawImage(im2,-dsz/2,-dsz*0.8,dsz,dsz); ctx.restore(); } }
   else if(f.kind==='ring'){ ctx.strokeStyle=f.col; ctx.lineWidth=3; ctx.beginPath();
     ctx.ellipse(px,py,8+k*26,(8+k*26)*0.5,0,0,7); ctx.stroke(); }
   else if(f.kind==='zap'){
