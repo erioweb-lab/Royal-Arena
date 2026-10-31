@@ -336,7 +336,7 @@ const RART={win:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAFACAYAAADNk
 
 /* ---------- 전역 상태 ---------- */
 const S={scene:'title', over:false, shown:false, winner:null, t:180, overtime:false, double:false,
-         crowns:{blue:0,red:0}, endTimer:0, muted:false, shake:0, theme:'classic', pre:0};
+         crowns:{blue:0,red:0}, endTimer:0, slow:0, muted:false, shake:0, theme:'classic', pre:0};
 const P={elixir:5, hand:[], queue:[], sel:null};        // 플레이어(파랑)
 const A={elixir:5, hand:[], queue:[], timer:2.0};       // AI(빨강)
 let units=[], towers=[], projs=[], fx=[], floats=[], parts=[];
@@ -593,7 +593,8 @@ function explodeFireball(p){
 function dealDamage(e,dmg,fromTeam){
   if(e.dead) return;
   e.hp-=dmg;
-  floats.push({x:e.x,y:e.y-(e.r||0.45)-0.4,txt:Math.round(dmg),t:0.7,col:fromTeam==='blue'?'#bfe0ff':'#ffd2d2'});
+  const big=dmg>=150;
+  floats.push({x:e.x,y:e.y-(e.r||0.45)-0.4,txt:Math.round(dmg)+(big?'!':''),t:big?0.9:0.7,col:big?'#ff9d3c':(fromTeam==='blue'?'#bfe0ff':'#ffd2d2'),big});
   if(e.isTower&&e.kind==='king') e.active=true;   // 킹타워 피격 시 각성
   if(e.hp<=0){ e.hp=0; e.dead=true;
     if(e.isTower) destroyTower(e,fromTeam); else killUnit(e,false); }
@@ -601,12 +602,14 @@ function dealDamage(e,dmg,fromTeam){
 function killUnit(u,expire){
   u.dead=true;
   fx.push({x:u.x,y:u.y,t:0,dur:0.4,kind:'poof'});
-  addParts(u.x,u.y,7,'#cfd6e0',2.2,0.4,-40);
+  addParts(u.x,u.y,u.maxHp>=900?16:7,u.maxHp>=900?'#ffe08a':'#cfd6e0',u.maxHp>=900?3:2.2,0.5,-40);
+  if(!expire&&u.maxHp>=900){ S.slow=0.45; S.clash={x:u.x,y:u.y,a:1}; }  // 대형 킬 하이라이트
   if(!expire) sfx('hit');
 }
 function destroyTower(t,fromTeam){
   fx.push({x:t.x,y:t.y,t:0,dur:0.9,kind:'boom'});
-  S.shake=0.6; sfx('boom');
+  S.shake=0.8; S.slow=0.6; S.clash={x:t.x,y:t.y,a:1};  // 타워 파괴 클로즈업
+  sfx('boom');
   addParts(t.x,t.y,24,'#d8dee8',3.6,0.9,90);
   if(fromTeam) fx.push({x:t.x,y:t.y,tx:9*TILE,ty:fromTeam==='blue'?H+30:-30,t:0,dur:0.95,kind:'crownfly'});
   const kt=towers.find(k=>k.team===t.team&&k.kind==='king'); if(kt) kt.active=true;
@@ -844,8 +847,8 @@ function drawStatic(){
   g.moveTo(0,RED_DEPLOY_MAX*TILE); g.lineTo(W,RED_DEPLOY_MAX*TILE); g.stroke(); g.setLineDash([]);
   g.font='900 19px "Noto Sans KR",sans-serif'; g.textAlign='left';
   g.lineWidth=5; g.strokeStyle='rgba(8,14,26,.9)';
-  g.strokeText('⚔ 적군 진영',12,RED_DEPLOY_MAX*TILE-34); g.fillStyle='#ff9d9d'; g.fillText('⚔ 적군 진영',12,RED_DEPLOY_MAX*TILE-34);
-  g.strokeText('🛡 아군 진영',12,BLUE_DEPLOY_MIN*TILE+40); g.fillStyle='#9fcaff'; g.fillText('🛡 아군 진영',12,BLUE_DEPLOY_MIN*TILE+40);
+  g.strokeText('⚔ 적군 진영',20,RED_DEPLOY_MAX*TILE-34); g.fillStyle='#ff9d9d'; g.fillText('⚔ 적군 진영',20,RED_DEPLOY_MAX*TILE-34);
+  g.strokeText('🛡 아군 진영',20,BLUE_DEPLOY_MIN*TILE+40); g.fillStyle='#9fcaff'; g.fillText('🛡 아군 진영',20,BLUE_DEPLOY_MIN*TILE+40);
   g.fillStyle='#c9b27a';
   g.fillRect(0,RIVER_Y0*TILE-6,W,6); g.fillRect(0,RIVER_Y1*TILE,W,6);
   g.fillStyle=T.riverA; g.fillRect(0,RIVER_Y0*TILE,W,(RIVER_Y1-RIVER_Y0)*TILE);
@@ -1006,7 +1009,7 @@ function drawUnit(u){
   const sprOK=SPR[u.key]&&SPR[u.key].complete;
   ctx.save(); ctx.translate(cx0,cy0); ctx.scale(sx,1);
   const hop=(!u.c.flying&&u.target&&dist(u,u.target)>u.c.range+u.target.r)?Math.abs(Math.sin(now*7.5+u.bob))*2.6:0;
-  if(sprOK){ const sh=r*3.35; ctx.drawImage(SPR[u.key],-sh/2,-sh*0.82-hop,sh,sh); }
+  if(sprOK){ const sh=r*3.6; ctx.drawImage(SPR[u.key],-sh/2,-sh*0.82-hop,sh,sh); }
   else { drawBody(u,r,la);
     if(u.swing>0){ ctx.strokeStyle='rgba(255,255,255,.8)'; ctx.lineWidth=3;
       ctx.beginPath(); ctx.arc(0,-r*0.6,r*1.1,-0.5,0.9); ctx.stroke(); } }
@@ -1202,7 +1205,7 @@ function render(){
   if(S.shake>0){ ctx.translate((Math.random()-0.5)*S.shake*14,(Math.random()-0.5)*S.shake*14); S.shake=Math.max(0,S.shake-0.02); }
   ctx.clearRect(-24,-24,W+48,H+48);
   if(S.clash&&S.clash.a>0){   // 교전 구간 하이라이트 줌
-    const zx=lerp(W/2,S.clash.x*TILE,0.22), zy=lerp(H/2,S.clash.y*TILE,0.22), zz=1+0.05*S.clash.a;
+    const zx=lerp(W/2,S.clash.x*TILE,0.28), zy=lerp(H/2,S.clash.y*TILE,0.28), zz=1+0.09*S.clash.a;
     ctx.translate(zx,zy); ctx.scale(zz,zz); ctx.translate(-zx,-zy);
   }
   ctx.drawImage(bgc,0,0,W,H);
@@ -1244,7 +1247,7 @@ function render(){
   for(const f of floats){
     const k=1-f.t/0.7;
     ctx.globalAlpha=Math.min(1,f.t*2);
-    ctx.font='700 13px "Noto Sans KR",sans-serif'; ctx.textAlign='center';
+    ctx.font=(f.big?'900 17px':'700 13px')+' "Noto Sans KR",sans-serif'; ctx.textAlign='center';
     ctx.strokeStyle='rgba(0,0,0,.8)'; ctx.lineWidth=3;
     ctx.strokeText(f.txt,f.x*TILE,f.y*TILE-k*18);
     ctx.fillStyle=f.col; ctx.fillText(f.txt,f.x*TILE,f.y*TILE-k*18);
@@ -1395,7 +1398,9 @@ $('#btn-quit').addEventListener('click' ,()=>{ if(!S.over){ banner('기권 — �
 /* ---------- 메인 루프 ---------- */
 let last=performance.now();
 function loop(t){
-  const dt=Math.min(0.05,(t-last)/1000); last=t; now=t/1000;
+  let dt=Math.min(0.05,(t-last)/1000); last=t; now=t/1000;
+  const real=dt;
+  if(S.slow>0){ S.slow-=real; dt=real*0.42; }   // 하이라이트 슬로모션
   try{ update(dt); }catch(e){}
   try{ render(); }catch(e){}
   syncHUD();
