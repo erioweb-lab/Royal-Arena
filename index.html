@@ -269,7 +269,7 @@ body{background:radial-gradient(1100px 760px at 50% 28%,#22335c 0%,#0b1220 62%) 
 </style>
 </head>
 <body>
-<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v62</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v63</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -868,7 +868,7 @@ function dealDamage(e,dmg,fromTeam){
     fx.push({x:e.x,y:e.y,t:0,dur:0.35,kind:'ring',col:__st>=3?'rgba(255,157,60,.9)':'rgba(255,233,94,.9)'});
   }
   e.hp-=dmg; e.hurt=0.09;
-  if(!e.isTower){ S.focus={t:1.0}; S.focusV=e; }
+  S.focus={t:1.6}; S.focusV=e; S.hot={x:e.x*TILE,y:e.y*TILE,t:performance.now()};   // v63: 최신 전투 latest-wins — 타워 피해도 트리거
   const big=dmg>=150;
   floats.push({x:e.x+(Math.random()-0.5)*0.7,y:e.y-(e.r||0.45)-0.35-Math.random()*0.5,txt:Math.round(dmg)+(big?'!':''),t:big?0.9:0.7,col:big?'#ff9d3c':(fromTeam==='blue'?'#bfe0ff':'#ffd2d2'),big});
   if(e.isTower&&e.kind==='king') e.active=true;   // 킹타워 피격 시 각성
@@ -1916,7 +1916,7 @@ function show(scene){
 function startMatch(){
   units=[];projs=[];fx=[];floats=[];parts=[];ambient=[];
   S.over=false;S.shown=false;S.winner=null;S.t=180;S.overtime=false;S.double=false;
-  S.crowns={blue:0,red:0}; S.kills={blue:0,red:0}; S.shake=0; S.clash=null; S.cam={x:W/2,y:H/2,z:1}; S.focus=null; S.focusV=null; S.slow=0;
+  S.crowns={blue:0,red:0}; S.kills={blue:0,red:0}; S.shake=0; S.clash=null; S.cam={x:W/2,y:H/2,z:1}; S.focus=null; S.focusV=null; S.hot=null; S.slow=0;
   P.elixir=5;A.elixir=5;A.timer=4.5;P.sel=null;P._full=false;
   initDeck(P);initDeck(A);
   buildTowers(); drawStatic();
@@ -1968,8 +1968,10 @@ $('#btn-quit').addEventListener('click' ,()=>{ if(!S.over){ banner('기권 — �
 let last=performance.now();
 function updateCam(dt){
   const c=S.cam||(S.cam={x:W/2,y:H/2,z:1});
-  if(S.focusV){ if(S.focusV.dead) S.focusV=null;
-    else { S.focus=S.focus||{t:1.0}; S.focus.x=S.focusV.x*TILE; S.focus.y=S.focusV.y*TILE; } }   // 이동 유닛 추적
+  if(S.focusV){ if(S.focusV.dead){ S.focusV=null;
+      if(S.focus) S.focus.t=Math.min(S.focus.t,0.5);   // v63: 시체에 머물지 않기
+      if(S.hot&&performance.now()-S.hot.t<600){ S.focus={t:1.6,x:S.hot.x,y:S.hot.y}; } }   // 직전 최신 교전으로 즉시 재지향
+    else { S.focus=S.focus||{t:1.6}; S.focus.x=S.focusV.x*TILE; S.focus.y=S.focusV.y*TILE; } }   // 이동 유닛 추적
   if(S.focus){ S.focus.t-=dt; if(S.focus.t<=0) S.focus=null; }   // 피해가 끊기면 1초 후 원복
   const tgt=S.focus? {x:S.focus.x, y:S.focus.y, z:1.6} : {x:W/2,y:H/2,z:1};
   const k=1-Math.exp(-6.0*dt);
