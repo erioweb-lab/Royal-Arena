@@ -1360,7 +1360,7 @@ function render(){
   for(const f of floats){
     const k=1-f.t/0.7;
     ctx.globalAlpha=Math.min(1,f.t*2);
-    ctx.font=(f.big?'900 22px':'900 15px')+' Jua, sans-serif'; ctx.lineWidth=3; ctx.strokeStyle='rgba(8,12,22,.85)'; ctx.strokeText(f.txt,fx2,fy2); ctx.textAlign='center';
+    ctx.font=(f.big?'900 22px':'900 15px')+' Jua, sans-serif';  ctx.textAlign='center';
     ctx.strokeStyle='rgba(0,0,0,.8)'; ctx.lineWidth=3;
     ctx.strokeText(f.txt,f.x*TILE,f.y*TILE-k*18);
     ctx.fillStyle=f.col; ctx.fillText(f.txt,f.x*TILE,f.y*TILE-k*18);
