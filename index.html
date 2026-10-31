@@ -806,10 +806,10 @@ function drawStatic(){
   g.strokeStyle='rgba(255,255,255,.15)'; g.setLineDash([7,9]); g.lineWidth=2;
   g.beginPath(); g.moveTo(0,BLUE_DEPLOY_MIN*TILE); g.lineTo(W,BLUE_DEPLOY_MIN*TILE);
   g.moveTo(0,RED_DEPLOY_MAX*TILE); g.lineTo(W,RED_DEPLOY_MAX*TILE); g.stroke(); g.setLineDash([]);
-  g.font='900 17px "Noto Sans KR",sans-serif'; g.textAlign='left';
-  g.lineWidth=4; g.strokeStyle='rgba(8,14,26,.85)';
-  g.strokeText('⚔ 적군 진영',10,RED_DEPLOY_MAX*TILE+26); g.fillStyle='#ff8f8f'; g.fillText('⚔ 적군 진영',10,RED_DEPLOY_MAX*TILE+26);
-  g.strokeText('🛡 아군 진영',10,BLUE_DEPLOY_MIN*TILE-12); g.fillStyle='#8fbcff'; g.fillText('🛡 아군 진영',10,BLUE_DEPLOY_MIN*TILE-12);
+  g.font='900 19px "Noto Sans KR",sans-serif'; g.textAlign='left';
+  g.lineWidth=5; g.strokeStyle='rgba(8,14,26,.9)';
+  g.strokeText('⚔ 적군 진영',12,RED_DEPLOY_MAX*TILE-34); g.fillStyle='#ff9d9d'; g.fillText('⚔ 적군 진영',12,RED_DEPLOY_MAX*TILE-34);
+  g.strokeText('🛡 아군 진영',12,BLUE_DEPLOY_MIN*TILE+40); g.fillStyle='#9fcaff'; g.fillText('🛡 아군 진영',12,BLUE_DEPLOY_MIN*TILE+40);
   g.fillStyle='#c9b27a';
   g.fillRect(0,RIVER_Y0*TILE-6,W,6); g.fillRect(0,RIVER_Y1*TILE,W,6);
   g.fillStyle=T.riverA; g.fillRect(0,RIVER_Y0*TILE,W,(RIVER_Y1-RIVER_Y0)*TILE);
