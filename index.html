@@ -31,14 +31,15 @@ body{
   background:radial-gradient(1200px 800px at 50% -10%, #1d3a63 0%, var(--navy) 60%);
   color:var(--text); overflow:hidden; user-select:none; -webkit-user-select:none;
 }
-#app{height:100dvh;display:flex;flex-direction:column;align-items:center}
+#app{height:100vh;height:100dvh;display:flex;flex-direction:column;align-items:center}
 .hidden{display:none!important}
 button{font-family:inherit;cursor:pointer;border:none}
 button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 h1,h2{font-family:'Jua','Noto Sans KR',sans-serif;font-weight:400}
 
 /* ============ 타이틀 화면 ============ */
-#screen-title{width:100%;max-width:640px;height:100%;display:flex;flex-direction:column;gap:10px;padding:14px 16px 12px;overflow-y:auto}
+#screen-title{width:100%;max-width:640px;height:100%;display:flex;flex-direction:column;gap:10px;padding:14px 16px 12px;overflow-y:auto;scrollbar-width:none}
+#screen-title::-webkit-scrollbar{display:none}
 .t-hero{text-align:center;padding:4px 0 0}
 .t-crown{font-size:44px;line-height:1;filter:drop-shadow(0 6px 10px rgba(0,0,0,.45));animation:crownFloat 3s ease-in-out infinite}
 @keyframes crownFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
@@ -203,6 +204,34 @@ h1,h2{font-family:'Jua','Noto Sans KR',sans-serif;font-weight:400}
 .crown-chip{font-family:'Jua',sans-serif;font-size:15px;letter-spacing:1px;text-shadow:0 2px 0 #6b4e00,0 4px 8px rgba(0,0,0,.55);background:none!important;border:none!important}
 #timer{text-shadow:0 2px 0 #6b4e00,0 4px 10px rgba(0,0,0,.6)}
 .r-crowns{font-family:'Jua',sans-serif;text-shadow:0 2px 0 #6b4e00,0 4px 12px rgba(0,0,0,.6)}
+
+/* v32: 무스크롤 적응형 (모바일 동적 환경·PC) */
+@media (max-height:780px){
+  .t-crown{font-size:28px}.t-hero h1{font-size:25px}.t-sub{font-size:11.5px;margin-top:3px}
+  #screen-title{gap:7px;padding:10px 16px 8px}
+  .t-panel{padding:9px}.t-panel h2{font-size:15px;margin-bottom:6px}
+  .cx{min-height:78px;padding:5px 3px 8px}.cx .s{display:none}.cx .art{width:26px;height:26px}
+  .t-cta{padding:11px;font-size:20px}
+}
+@media (max-height:660px){
+  #screen-title{gap:6px}
+  .t-crown{display:none}.t-hero h1{font-size:22px}
+  .cx{min-height:58px}.cx .n{font-size:10px}.cx .art{width:22px;height:22px}
+  .t-btn{font-size:11.5px;border-width:9px}.t-btn .sw{height:18px}
+  .t-cta{padding:9px;font-size:18px;border-width:12px}
+  .t-link{padding:6px 14px;font-size:11.5px;border-width:9px}
+  #arena-wrap{padding:3px 0 2px}
+  .card{height:78px}.card .art{width:42px;height:42px}.card .emoji{font-size:24px}
+  #next-card{width:38px;height:52px}
+}
+@media (max-height:540px){
+  #screen-title{gap:4px;padding:6px 14px}
+  .t-hero h1{font-size:18px}.t-sub{font-size:10px}
+  .t-codex{gap:4px!important}.cx{min-height:44px;padding:3px 2px 5px}.cx .n{display:none}.cx .art{width:18px;height:18px}.cx .e{font-size:15px;min-height:18px}
+  .t-panel h2{font-size:13px;margin-bottom:4px}
+  .theme-row{gap:4px}
+  .t-foot{display:none}
+}
 </style>
 </head>
 <body>
@@ -213,7 +242,7 @@ h1,h2{font-family:'Jua','Noto Sans KR',sans-serif;font-weight:400}
     <div class="t-hero">
       <div class="t-crown">👑</div>
       <h1>로얄 아레나</h1>
-      <p class="t-sub">12종 카드로 승부하는 실시간 아레나 배틀</p>
+      <p class="t-sub" id="cards-sub">18종 카드로 승부하는 실시간 아레나 배틀</p>
     </div>
     <div class="theme-row">
       <button class="t-btn sel" data-theme="classic"><span class="sw" style="background:linear-gradient(#67ab49,#3d9be9)"></span>로얄 클래식<small>잔디 아레나</small></button>
@@ -330,6 +359,7 @@ const CARDS={
 };
 const DECK=['knight','archers','giant','minions','musketeer','fireball','skarmy','cannon','wizard','sniper','prince','zap','valk','bomber','babyd','cleric','boar','icem'];
 const __ch2=document.getElementById('cards-h2'); if(__ch2) __ch2.textContent='🃏 카드 도감 ('+DECK.length+'종)';
+const __cs=document.getElementById('cards-sub'); if(__cs) __cs.textContent=DECK.length+'종 카드로 승부하는 실시간 아레나 배틀';
 /* ---------- 아레나 테마 (레퍼런스: 클래시 로얄 스토어 스크린샷) ---------- */
 const THEMES={
   classic:{g1:'#59963e',g2:'#67ab49',speck:'rgba(255,255,255,.07)',blade:'rgba(30,70,20,.28)',
