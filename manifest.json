@@ -1,7 +1,7 @@
 {
   "name": "로얄 아레나",
   "short_name": "로얄 아레나",
-  "description": "REA 역설계로 재현한 클래시 로얄 스타일 실시간 카드 배틀",
+  "description": "실시간 아레나 카드 배틀",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

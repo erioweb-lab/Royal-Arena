@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="로얄 아레나">
-<title>로얄 아레나 — REA 역설계 클래시 로얄 스타일 배틀</title>
+<title>로얄 아레나 — 실시간 카드 배틀</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@500;700;900&display=swap" rel="stylesheet">
@@ -76,7 +76,7 @@ h1,h2{font-family:'Jua','Noto Sans KR',sans-serif;font-weight:400}
 
 /* ============ 배틀 화면 ============ */
 #screen-battle{width:100%;max-width:640px;height:100%;display:flex;flex-direction:column}
-#topbar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:calc(7px + env(safe-area-inset-top)) 12px 7px;
+#topbar{display:flex;align-items:center;justify-content:space-between;gap:8px;max-width:min(640px,52dvh);margin:0 auto;padding:calc(7px + env(safe-area-inset-top)) 12px 7px;
   background:linear-gradient(#1a3257,#132540);border-bottom:2px solid #081222;width:100%}
 .crown-chip{display:flex;align-items:center;gap:5px;font-family:'Jua',sans-serif;font-size:16px;min-width:52px}
 .crown-chip.blue{color:#7fb0ff}.crown-chip.red{color:#ff9d9d}
@@ -87,7 +87,7 @@ h1,h2{font-family:'Jua','Noto Sans KR',sans-serif;font-weight:400}
 #btn-quit{width:auto;padding:0 10px;font-size:12.5px;font-weight:700;color:var(--muted)}
 #arena-wrap{flex:1;min-height:0;width:100%;display:flex;justify-content:center;padding:6px 0 2px}
 #arena{width:100%;height:100%;object-fit:contain;touch-action:none;cursor:crosshair;border-radius:8px}
-#hud{width:100%;padding:7px 10px calc(10px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:7px;
+#hud{width:100%;max-width:min(640px,52dvh);margin:0 auto;padding:7px 10px calc(10px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:7px;
   background:linear-gradient(#132540,#0d1b2e);border-top:2px solid #081222}
 #hand-row{display:flex;gap:10px;align-items:stretch;justify-content:center}
 #next-slot{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px;padding-bottom:2px}
@@ -191,7 +191,7 @@ h1,h2{font-family:'Jua','Noto Sans KR',sans-serif;font-weight:400}
     <div class="t-hero">
       <div class="t-crown">👑</div>
       <h1>로얄 아레나</h1>
-      <p class="t-sub">REA 역설계로 재현한 클래시 로얄 스타일 실시간 카드 배틀</p>
+      <p class="t-sub">12종 카드로 승부하는 실시간 아레나 배틀</p>
     </div>
     <div class="theme-row">
       <button class="t-btn sel" data-theme="classic"><span class="sw" style="background:linear-gradient(#67ab49,#3d9be9)"></span>로얄 클래식<small>잔디 아레나</small></button>
@@ -203,7 +203,7 @@ h1,h2{font-family:'Jua','Noto Sans KR',sans-serif;font-weight:400}
       <h2>🃏 카드 도감 (12종)</h2>
       <div id="codex" class="t-codex"></div>
     </div>
-    <div class="t-links"><button id="btn-info" class="t-link">📖 게임 방법 · REA 브리핑</button></div>
+    <div class="t-links"><button id="btn-info" class="t-link">📖 게임 방법</button></div>
     <p class="t-foot">무료 팬 게임 · Supercell 및 원작과 무관</p>
   </section>
 
@@ -240,7 +240,7 @@ h1,h2{font-family:'Jua','Noto Sans KR',sans-serif;font-weight:400}
       <p class="t-how">① 아래 <b>카드를 아레나까지 끌어다 놓거나</b> 탭해 선택 (키보드 1~4)<br>
         ② 아래쪽 <b>아군 진영</b>을 눌러 배치 — 주문(파이어볼·번개)은 아무 데나 시전<br>
         ③ 다리를 건너 진군 → 상대 타워를 부숴 <b>왕관</b>을 모으세요!</p>
-      <h2 class="info-title">🔬 REA 역설계 브리핑</h2>
+      <h2 class="info-title">📜 게임 시스템</h2>
       <ul class="t-spec">
         <li>· <b>매치 규칙</b> — 3분 제한, 마지막 60초 엘릭서 2배, 동점 시 60초 연장(서든데스)</li>
         <li>· <b>승리 조건</b> — 왕관 수 비교. 타워 1기 = 왕관 1, 킹타워 파괴 = 즉시 3왕관 승리</li>
@@ -248,7 +248,7 @@ h1,h2{font-family:'Jua','Noto Sans KR',sans-serif;font-weight:400}
         <li>· <b>아레나</b> — 18×32 타일, 중앙 강 + 다리 2개, 팀별 타워 3기(킹 1 · 프린세스 2)</li>
         <li>· <b>전투 규칙</b> — 공중 유닛은 대공 유닛만 요격, 자이언트는 건물만 타격, 마법사 광역 · 프린스 돌진 · 번개 기절</li>
       </ul>
-      <p class="t-note">원본 클라이언트의 코드·그래픽·사운드는 일절 사용하지 않고, <b>관측 기반 설계도</b>만으로 새로 작성한 클린룸 팬 클론입니다. (REA 개발팀 가이드라인 준수: 보호받는 코드·자산 복제 금지)</p>
+      <p class="t-note">학습 목적으로 직접 만든 무료 팬 게임입니다.</p>
       <button id="btn-info-close" class="t-cta">확인</button>
     </div>
   </div>
@@ -267,8 +267,7 @@ h1,h2{font-family:'Jua','Noto Sans KR',sans-serif;font-weight:400}
 <script>
 'use strict';
 /* ================================================================
-   로얄 아레나 — REA 역설계 기반 클래시 로얄 스타일 미니 배틀
-   클린룸 재구현: 원본 코드/에셋 미사용, 관측 기반 설계도만 사용
+   로얄 아레나 — 실시간 카드 배틀 (학습용 팬 게임, 직접 제작)
    ================================================================ */
 
 /* ---------- 유틸 ---------- */
@@ -279,7 +278,7 @@ const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 let uid=1, now=0;
 
 /* ---------- 아레나 상수 (REA 설계도 §1) ---------- */
-const COLS=18, ROWS=32, TILE=30, W=COLS*TILE, H=ROWS*TILE;   // 540×960
+const COLS=18, ROWS=32, TILE=34, W=COLS*TILE, H=ROWS*TILE;   // 612×1088
 const RIVER_Y0=15, RIVER_Y1=17, RIVER_MID=16;                 // 강: 15~17행
 const BRIDGES=[3.5,14.5];                                     // 다리 x중심(타일)
 const BLUE_DEPLOY_MIN=16.8, RED_DEPLOY_MAX=15.2;
@@ -807,9 +806,10 @@ function drawStatic(){
   g.strokeStyle='rgba(255,255,255,.15)'; g.setLineDash([7,9]); g.lineWidth=2;
   g.beginPath(); g.moveTo(0,BLUE_DEPLOY_MIN*TILE); g.lineTo(W,BLUE_DEPLOY_MIN*TILE);
   g.moveTo(0,RED_DEPLOY_MAX*TILE); g.lineTo(W,RED_DEPLOY_MAX*TILE); g.stroke(); g.setLineDash([]);
-  g.font='900 13px "Noto Sans KR",sans-serif'; g.textAlign='left';
-  g.fillStyle='rgba(255,120,120,.9)'; g.fillText('적군 진영',10,RED_DEPLOY_MAX*TILE+20);
-  g.fillStyle='rgba(130,180,255,.95)'; g.fillText('아군 진영',10,BLUE_DEPLOY_MIN*TILE-10);
+  g.font='900 17px "Noto Sans KR",sans-serif'; g.textAlign='left';
+  g.lineWidth=4; g.strokeStyle='rgba(8,14,26,.85)';
+  g.strokeText('⚔ 적군 진영',10,RED_DEPLOY_MAX*TILE+26); g.fillStyle='#ff8f8f'; g.fillText('⚔ 적군 진영',10,RED_DEPLOY_MAX*TILE+26);
+  g.strokeText('🛡 아군 진영',10,BLUE_DEPLOY_MIN*TILE-12); g.fillStyle='#8fbcff'; g.fillText('🛡 아군 진영',10,BLUE_DEPLOY_MIN*TILE-12);
   g.fillStyle='#c9b27a';
   g.fillRect(0,RIVER_Y0*TILE-6,W,6); g.fillRect(0,RIVER_Y1*TILE,W,6);
   g.fillStyle=T.riverA; g.fillRect(0,RIVER_Y0*TILE,W,(RIVER_Y1-RIVER_Y0)*TILE);
@@ -921,7 +921,7 @@ function drawTower(t){
   ctx.fillStyle='#20293a'; roundRect(bx,by,bw,8,4); ctx.fill();
   ctx.fillStyle=t.team==='blue'?'#4ade80':'#ff7b6b';
   roundRect(bx,by,bw*Math.max(0,hr),8,4); ctx.fill();
-  ctx.font='700 11px "Noto Sans KR",sans-serif'; ctx.textAlign='center';
+  ctx.font='700 12.5px "Noto Sans KR",sans-serif'; ctx.textAlign='center';
   ctx.strokeStyle='rgba(0,0,0,.8)'; ctx.lineWidth=3;
   ctx.strokeText(Math.ceil(t.hp),x,by-4); ctx.fillStyle='#fff'; ctx.fillText(Math.ceil(t.hp),x,by-4);
 }
@@ -956,8 +956,10 @@ function drawUnit(u){
   const lunge=u.swing>0?u.swing*16:0;
   const cx0=px+Math.cos(la)*lunge, cy0=py+dy+Math.sin(la)*lunge*0.5;
   ctx.fillStyle='rgba(0,0,0,.28)'; ctx.beginPath(); ctx.ellipse(px,py+5,r*0.8,r*0.36,0,0,7); ctx.fill();
-  ctx.strokeStyle=u.team==='blue'?'rgba(96,158,255,.8)':'rgba(255,110,110,.8)';
-  ctx.lineWidth=2.5; ctx.beginPath(); ctx.ellipse(px,py+5,r*0.95,r*0.45,0,0,7); ctx.stroke();
+  ctx.strokeStyle=u.team==='blue'?'rgba(96,158,255,1)':'rgba(255,110,110,1)';
+  ctx.lineWidth=4.5; ctx.beginPath(); ctx.ellipse(px,py+5,r*0.95,r*0.45,0,0,7); ctx.stroke();
+  ctx.strokeStyle=u.team==='blue'?'rgba(96,158,255,.4)':'rgba(255,110,110,.4)';
+  ctx.lineWidth=2; ctx.beginPath(); ctx.ellipse(px,py+5,r*1.3,r*0.62,0,0,7); ctx.stroke();
   if(fly){ ctx.strokeStyle='rgba(255,255,255,.35)'; ctx.setLineDash([3,3]); ctx.lineWidth=1.5;
     ctx.beginPath(); ctx.moveTo(px,py+2); ctx.lineTo(px,py+dy+r-2); ctx.stroke(); ctx.setLineDash([]); }
   if(u.charging){ ctx.strokeStyle='rgba(255,215,94,.9)'; ctx.lineWidth=2.5;
@@ -967,14 +969,14 @@ function drawUnit(u){
     if(Math.random()<0.4) addParts(px,py+3,1,'#e8d9a0',1.8,0.35,-20); }
   const sprOK=SPR[u.key]&&SPR[u.key].complete;
   ctx.save(); ctx.translate(cx0,cy0); ctx.scale(sx,1);
-  if(sprOK){ const sh=r*2.7; ctx.drawImage(SPR[u.key],-sh/2,-sh*0.82,sh,sh); }
+  if(sprOK){ const sh=r*3.0; ctx.drawImage(SPR[u.key],-sh/2,-sh*0.82,sh,sh); }
   else { drawBody(u,r,la);
     if(u.swing>0){ ctx.strokeStyle='rgba(255,255,255,.8)'; ctx.lineWidth=3;
       ctx.beginPath(); ctx.arc(0,-r*0.6,r*1.1,-0.5,0.9); ctx.stroke(); } }
   ctx.restore();
   if(u.stun>0){ ctx.font='12px sans-serif'; ctx.textAlign='center'; ctx.fillText('💫',cx0,py+dy-r-8); }
-  const bw=24, bx=px-bw/2, by=py+dy-(SPR[u.key]&&SPR[u.key].complete?r*2.05:r)-8;
-  ctx.fillStyle='rgba(0,0,0,.55)'; roundRect(bx-1,by-1,bw+2,6,3); ctx.fill();
+  const bw=Math.max(24,r*1.5), bx=px-bw/2, by=py+dy-(SPR[u.key]&&SPR[u.key].complete?r*2.05:r)-8;
+  ctx.fillStyle=u.team==='blue'?'rgba(63,123,245,.55)':'rgba(230,69,69,.55)'; roundRect(bx-1,by-1,bw+2,6,3); ctx.fill();
   const k=Math.max(0,u.hp/u.maxHp);
   ctx.fillStyle=k>0.5?'#4ade80':k>0.25?'#facc15':'#f87171';
   roundRect(bx,by,bw*k,4,2); ctx.fill();
