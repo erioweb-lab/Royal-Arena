@@ -265,7 +265,7 @@ body{background:radial-gradient(1100px 760px at 50% 28%,#22335c 0%,#0b1220 62%) 
 </style>
 </head>
 <body>
-<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v60</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v61</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -695,6 +695,7 @@ function moveUnit(u,dt){
 /* ---------- 전투 ---------- */
 
 /* ---------- v53: 유닛별 투사체 그래픽·사운드 ---------- */
+const UMOT={_def:{},babyd:{flut:1},minions:{flut:1},cleric:{halo:1},boar:{dust:1},giant:{dust:1},valk:{dust:1},knight:{dust:1},skarmy:{dust:1}};
 const TRAIL={arrow:'rgba(232,226,200,.9)',bullet:'#ffe9a8',bomb:'#ffcf7a',wizfb:'#ffb14d',dragon:'#ff9d3c',ice:'#9cdcff',cannon:'#cfd6e0'};
 const PROJ_SFX_LAUNCH={arrow:'bow',bullet:'musket',wizfb:'firel',dragon:'firel',bomb:'toss',ice:'icel',cannon:'cannon'};
 function impactProj(p,tgt){
@@ -719,13 +720,14 @@ function shoot(src,tgt,dmg,kind,splash){
     src.recoilT=0.14; src.recoilA=__ma;
     if(kind!=='arrow'&&kind!=='ice') fx.push({x:src.x+Math.cos(__ma)*0.5,y:src.y-0.3+Math.sin(__ma)*0.5,t:0,dur:0.12,kind:'muzzle',a:__ma});
     if(kind==='cannon') addParts(src.x+Math.cos(__ma)*0.5,src.y-0.5+Math.sin(__ma)*0.5,3,'#ffcf7a',2.0,0.3,-30);
+    else if(kind==='bullet'||kind==='arrow') addParts(src.x+Math.cos(__ma)*0.5,src.y-0.3+Math.sin(__ma)*0.5,2,'#cfd6e0',1.0,0.35,-12);
   }
   sfx(PROJ_SFX_LAUNCH[kind]||'shoot');
 }
 function hitTarget(u,t,dm){
   dm=dm||u.c.dmg;
   if(u.c.range>1.6){ const __pk=(u.key==='musketeer'||u.key==='sniper')?'bullet':(u.key==='wizard'?'wizfb':(u.key==='bomber'?'bomb':(u.key==='babyd'?'dragon':(u.key==='icem'?'ice':'arrow')))); shoot(u,t,dm,__pk,u.c.splash); }
-  else { dealDamage(t,dm,u.team); fx.push({x:t.x,y:t.y,t:0,dur:0.18,kind:'hit'}); addParts(t.x,t.y,3,'#fff2c8',2.0,0.25,0); sfx('hit');
+  else { dealDamage(t,dm,u.team); fx.push({x:t.x,y:t.y,t:0,dur:0.18,kind:'hit'}); fx.push({x:t.x,y:t.y,t:0,dur:0.16,kind:'slash',a:Math.atan2(t.y-u.y,t.x-u.x),col:u.team==='blue'?'rgba(159,201,255,.95)':'rgba(255,150,150,.95)'}); addParts(t.x,t.y,3,'#fff2c8',2.0,0.25,0); sfx('hit');
     if(u.c.splash){ for(const s2 of units){ if(s2.dead||s2.team===u.team||s2===t) continue;
       if(Math.hypot(s2.x-t.x,s2.y-t.y)<=u.c.splash) dealDamage(s2,Math.round(dm*0.6),u.team); } } }
 }
@@ -1394,12 +1396,22 @@ function drawUnit(u){try{
     var rb=Math.max(0,Math.sin(Math.min(1,u.recoilT/0.14)*Math.PI))*5.5, ra=(typeof u.recoilA==='number')?u.recoilA:u.dir;
     ctx.translate(-Math.cos(ra)*rb*0.7,-Math.sin(ra)*rb*0.35);
     ctx.rotate((sx>0?-1:1)*rb*0.055); }
+  if(u.swing>0&&(u.key==='wizard'||u.key==='icem'||u.key==='babyd')){
+    var __cg=u.key==='icem'?'rgba(156,220,255,':u.key==='babyd'?'rgba(255,157,60,':'rgba(255,177,77,';
+    ctx.fillStyle=__cg+(0.5*Math.min(1,u.swing/0.2)+0.15)+')';
+    ctx.beginPath(); ctx.arc(Math.cos(u.dir)*r*0.9,-r*0.75+Math.sin(u.dir)*r*0.4,r*(0.5+0.3*Math.sin(u.swing*10)),0,7); ctx.fill(); }
   if(u.hurt>0) u.hurt=Math.max(0,u.hurt-0.017);
   const moving=(!u.c.flying&&u.target&&dist(u,u.target)>u.c.range+u.target.r);
   const step=Math.sin(now*7.5+u.bob);
+  const __mv=UMOT[u.key]||UMOT._def;
+  if(__mv.flut) ctx.translate(0,Math.sin(now*11+u.bob)*1.6);
+  if(__mv.halo){ ctx.strokeStyle='rgba(247,207,90,'+(0.35+0.2*Math.sin(now*3+u.bob))+')'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.ellipse(0,-r*1.75,r*0.55,r*0.22,0,0,7); ctx.stroke(); }
+  if(__mv.dust&&!fly&&moving&&Math.random()<0.22) addParts(px-Math.cos(la)*r*0.5,py+4,1,'#c9b27a',1.1,0.3,-16);
   if(moving){ ctx.rotate(step*0.06); ctx.scale(1,1-Math.abs(step)*0.035); }
   const hop=(!u.c.flying&&u.target&&dist(u,u.target)>u.c.range+u.target.r)?Math.abs(Math.sin(now*7.5+u.bob))*2.6:0;
   if(sprOK){ const sh=r*(u.key==='cannon'?2.55:3.6), aimF=u.swing>0&&ASPR[u.key]&&ASPR[u.key].complete;
+    if(!moving&&!u.c.flying){ const br=1+Math.sin(now*2.6+u.bob)*0.018; ctx.scale(br,2-br); }
     const punch=u.swing>0?1+Math.sin(u.swing*Math.PI)*0.12:1;
     ctx.save(); ctx.scale(punch,punch);
     ctx.drawImage(aimF?ASPR[u.key]:SPR[u.key],-sh/2,-sh*0.82-hop,sh,sh);
@@ -1642,6 +1654,10 @@ function drawFx(f){
   if(f.kind==='hit'){ ctx.fillStyle='#fff';
     for(let i=0;i<4;i++){ const a=i*1.57+0.6;
       ctx.fillRect(px+Math.cos(a)*6*(1+k*2)-1.5,py+Math.sin(a)*6*(1+k*2)-1.5,3,3); } }
+    else if(f.kind==='slash'){
+    ctx.strokeStyle=f.col; ctx.lineWidth=3.5; ctx.beginPath();
+    ctx.arc(px,py,TILE*0.42,(f.a||0)-0.9+(1-k)*0.4,(f.a||0)+0.9+(1-k)*0.4); ctx.stroke();
+  }
   else if(f.kind==='muzzle'){ ctx.fillStyle='#ffe9a8'; ctx.beginPath(); ctx.arc(px,py-10,5+k*9,0,7); ctx.fill(); ctx.fillStyle='#ff9d3c'; ctx.beginPath(); ctx.arc(px,py-10,3+k*5,0,7); ctx.fill(); }
   else if(f.kind==='poof'){ ctx.fillStyle='#cfd6e0'; ctx.beginPath(); ctx.arc(px,py,4+k*14,0,7); ctx.fill(); }
   else if(f.kind==='die'){ const im2=DIESPR[f.key];
