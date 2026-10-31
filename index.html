@@ -139,8 +139,25 @@ h1,h2{font-family:'Jua','Noto Sans KR',sans-serif;font-weight:400}
 .r-crowns{font-size:30px;letter-spacing:6px;margin-bottom:10px}
 #r-sub{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:18px}
 .r-home{display:block;width:100%;margin-top:10px;padding:11px;border-radius:12px;background:var(--panel);border:1px solid var(--line);color:var(--muted);font-size:14px;font-weight:700}
-@media (max-width:420px){ .card{height:84px}.card .emoji{font-size:22px} #screen-title .t-codex{grid-template-columns:repeat(3,1fr)} }
+@media (max-width:420px){ .card{height:84px}.card .emoji{font-size:22px} }
+.t-hero{padding:2px 0 0}
+#screen-title{gap:8px;padding:12px 16px 10px}
+.t-crown{font-size:36px}
+.t-hero h1{font-size:30px}
+.t-sub{font-size:12px;margin-top:4px}
+.t-links{display:flex;justify-content:center}
+.t-link{background:var(--panel2);border:1.5px solid var(--line);color:#cfe0ff;border-radius:999px;padding:8px 16px;font-size:12.5px;font-weight:700}
+.info-box{max-height:86dvh;overflow-y:auto;text-align:left}
+.info-title{font-family:'Jua','Noto Sans KR',sans-serif;color:var(--gold);font-size:19px;letter-spacing:1px;margin:14px 0 8px}
+.info-box .t-cta{margin-top:16px;padding:12px;font-size:20px}
 @media (max-width:480px){
+  #screen-title .t-codex{grid-template-columns:repeat(6,1fr);gap:5px}
+  .cx{padding:6px 2px 10px;min-height:78px}
+  .cx .e{min-height:22px}
+  .cx .art{width:24px;height:24px}
+  .cx .n{font-size:10px}
+  .cx .s{font-size:8.8px;min-height:21px}
+  .cx .c{font-size:9.5px}
   .card{max-width:70px;height:78px;gap:2px}
   .card .art{width:40px;height:40px}
   .card .emoji{font-size:20px}
@@ -174,41 +191,19 @@ h1,h2{font-family:'Jua','Noto Sans KR',sans-serif;font-weight:400}
     <div class="t-hero">
       <div class="t-crown">👑</div>
       <h1>로얄 아레나</h1>
-      <p class="t-sub"><b>REA(Reverse Engineer Anything)</b> 역설계 워크플로우로 재현한<br>클래시 로얄 스타일 실시간 카드 배틀</p>
-      <div class="t-flow"><span>① 원본 <b>관측·분석</b></span><span>② 시스템 <b>설계도</b> 추출</span><span>③ 클린룸 <b>재구현</b></span></div>
+      <p class="t-sub">REA 역설계로 재현한 클래시 로얄 스타일 실시간 카드 배틀</p>
+    </div>
+    <div class="theme-row">
+      <button class="t-btn sel" data-theme="classic"><span class="sw" style="background:linear-gradient(#67ab49,#3d9be9)"></span>로얄 클래식<small>잔디 아레나</small></button>
+      <button class="t-btn" data-theme="lava"><span class="sw" style="background:linear-gradient(#5a4440,#e86a1e)"></span>용암 협곡<small>불꽃 테마</small></button>
+      <button class="t-btn" data-theme="ice"><span class="sw" style="background:linear-gradient(#c2e0f0,#7fb6d9)"></span>서리 왕국<small>얼음 테마</small></button>
     </div>
     <button id="btn-start" class="t-cta">⚔️ 배틀 시작</button>
-    <div class="t-panel">
-      <h2>🔬 REA 역설계 브리핑</h2>
-      <ul class="t-spec">
-        <li>· <b>매치 규칙</b> — 3분 제한, 마지막 60초 엘릭서 2배, 동점 시 60초 연장(서든데스)</li>
-        <li>· <b>승리 조건</b> — 왕관 수 비교. 타워 1기 = 왕관 1, 킹타워 파괴 = 즉시 3왕관 승리</li>
-        <li>· <b>자원 시스템</b> — 엘릭서 최대 10, 약 2.8초마다 +1 자동 회복</li>
-        <li>· <b>아레나</b> — 18×32 타일, 중앙 강 + 다리 2개, 팀별 타워 3기(킹 1 · 프린세스 2)</li>
-        <li>· <b>전투 규칙</b> — 사거리·공속 기반 교전, 공중 유닛은 대공 유닛만 요격, 자이언트는 건물만 타격, 마법사 광역 폭발 · 프린스 돌진(2배) · 번개 기절 지원</li>
-      </ul>
-      <p class="t-note">원본 클라이언트의 코드·그래픽·사운드는 일절 사용하지 않고, <b>관측 기반 설계도</b>만으로 새로 작성한 클린룸 팬 클론입니다. (REA 개발팀 가이드라인 준수: 보호받는 코드·자산 복제 금지)</p>
-    </div>
     <div class="t-panel">
       <h2>🃏 카드 도감 (12종)</h2>
       <div id="codex" class="t-codex"></div>
     </div>
-    <div class="t-panel">
-      <h2>🏟 아레나 테마</h2>
-      <div class="theme-row">
-        <button class="t-btn sel" data-theme="classic"><span class="sw" style="background:linear-gradient(#67ab49,#3d9be9)"></span>로얄 클래식<small>잔디 아레나</small></button>
-        <button class="t-btn" data-theme="lava"><span class="sw" style="background:linear-gradient(#5a4440,#e86a1e)"></span>용암 협곡<small>불꽃 테마</small></button>
-        <button class="t-btn" data-theme="ice"><span class="sw" style="background:linear-gradient(#c2e0f0,#7fb6d9)"></span>서리 왕국<small>얼음 테마</small></button>
-      </div>
-    </div>
-    <div class="t-panel">
-      <h2>🎮 조작법</h2>
-      <p class="t-how">
-        ① 아래 <b>카드 4장</b> 중 하나를 눌러 선택 (키보드 1~4도 가능)<br>
-        ② 아래쪽 <b>아군 진영</b>을 눌러 배치 — 주문(파이어볼)은 아무 데나 시전<br>
-        ③ 다리를 건너 진군 → 상대 타워를 부숴 <b>왕관</b>을 모으세요!
-      </p>
-    </div>
+    <div class="t-links"><button id="btn-info" class="t-link">📖 게임 방법 · REA 브리핑</button></div>
     <p class="t-foot">무료 팬 게임 · Supercell 및 원작과 무관</p>
   </section>
 
@@ -239,6 +234,24 @@ h1,h2{font-family:'Jua','Noto Sans KR',sans-serif;font-weight:400}
   <div id="banner"></div>
 
   <!-- ===== 결과 ===== -->
+  <div id="overlay-info" class="overlay hidden">
+    <div class="r-box info-box">
+      <h2 class="info-title">📖 게임 방법</h2>
+      <p class="t-how">① 아래 <b>카드를 아레나까지 끌어다 놓거나</b> 탭해 선택 (키보드 1~4)<br>
+        ② 아래쪽 <b>아군 진영</b>을 눌러 배치 — 주문(파이어볼·번개)은 아무 데나 시전<br>
+        ③ 다리를 건너 진군 → 상대 타워를 부숴 <b>왕관</b>을 모으세요!</p>
+      <h2 class="info-title">🔬 REA 역설계 브리핑</h2>
+      <ul class="t-spec">
+        <li>· <b>매치 규칙</b> — 3분 제한, 마지막 60초 엘릭서 2배, 동점 시 60초 연장(서든데스)</li>
+        <li>· <b>승리 조건</b> — 왕관 수 비교. 타워 1기 = 왕관 1, 킹타워 파괴 = 즉시 3왕관 승리</li>
+        <li>· <b>자원 시스템</b> — 엘릭서 최대 10, 약 2.8초마다 +1 자동 회복</li>
+        <li>· <b>아레나</b> — 18×32 타일, 중앙 강 + 다리 2개, 팀별 타워 3기(킹 1 · 프린세스 2)</li>
+        <li>· <b>전투 규칙</b> — 공중 유닛은 대공 유닛만 요격, 자이언트는 건물만 타격, 마법사 광역 · 프린스 돌진 · 번개 기절</li>
+      </ul>
+      <p class="t-note">원본 클라이언트의 코드·그래픽·사운드는 일절 사용하지 않고, <b>관측 기반 설계도</b>만으로 새로 작성한 클린룸 팬 클론입니다. (REA 개발팀 가이드라인 준수: 보호받는 코드·자산 복제 금지)</p>
+      <button id="btn-info-close" class="t-cta">확인</button>
+    </div>
+  </div>
   <div id="overlay-result" class="overlay hidden">
     <div class="r-box">
       <div id="r-title" class="r-title">승리!</div>
@@ -1274,6 +1287,8 @@ $('#btn-start').addEventListener('click',()=>{ ensureAudio(); startMatch(); });
 $('#btn-again').addEventListener('click',()=>{ $('#overlay-result').classList.add('hidden'); startMatch(); });
 $('#btn-home').addEventListener('click',()=>show('title'));
 $('#btn-sound').addEventListener('click',()=>{ S.muted=!S.muted; $('#btn-sound').textContent=S.muted?'🔇':'🔊'; });
+$('#btn-info').addEventListener('click',()=>$('#overlay-info').classList.remove('hidden'));
+$('#btn-info-close').addEventListener('click',()=>$('#overlay-info').classList.add('hidden'));
 $('#btn-quit').addEventListener('click',()=>{ if(!S.over){ banner('기권 — 패배'); finish('red'); } });
 
 /* ---------- 메인 루프 ---------- */
