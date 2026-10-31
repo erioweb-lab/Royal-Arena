@@ -222,7 +222,7 @@ h1,h2{font-family:'Jua','Noto Sans KR',sans-serif;font-weight:400}
     </div>
     <button id="btn-start" class="t-cta">⚔️ 배틀 시작</button>
     <div class="t-panel">
-      <h2>🃏 카드 도감 (12종)</h2>
+      <h2 id="cards-h2">🃏 카드 도감 (18종)</h2>
       <div id="codex" class="t-codex"></div>
     </div>
     <div class="t-links"><button id="btn-info" class="t-link">📖 게임 방법</button></div>
@@ -329,6 +329,7 @@ const CARDS={
   icem:     {name:'서리 마법사', emoji:'❄️', cost:4, count:1, hp:420,  dmg:90,  hs:1.5, range:5.0, spd:1.1, flying:false, hitsAir:true, targets:'any', r:0.45, splash:1.4, slow:1.5, desc:'적중 시 둔화 · 광역'}
 };
 const DECK=['knight','archers','giant','minions','musketeer','fireball','skarmy','cannon','wizard','sniper','prince','zap','valk','bomber','babyd','cleric','boar','icem'];
+const __ch2=document.getElementById('cards-h2'); if(__ch2) __ch2.textContent='🃏 카드 도감 ('+DECK.length+'종)';
 /* ---------- 아레나 테마 (레퍼런스: 클래시 로얄 스토어 스크린샷) ---------- */
 const THEMES={
   classic:{g1:'#59963e',g2:'#67ab49',speck:'rgba(255,255,255,.07)',blade:'rgba(30,70,20,.28)',
@@ -615,7 +616,7 @@ function updateProjs(dt){
         for(const s2 of units){ if(s2.dead||s2.team===p.team||s2===tgt) continue;
           if(Math.hypot(s2.x-p.tx,s2.y-p.ty)<=p.splash) dealDamage(s2,Math.round(p.dmg*0.7),p.team); }
       if(p.slow){ for(const s2 of units){ if(s2.dead||s2.team===p.team) continue;
-        if(Math.hypot(s2.x-p.tx,s2.y-p.ty)<=p.splash) s2.slowT=p.slow; } } }
+        if(Math.hypot(s2.x-p.tx,s2.y-p.ty)<=p.splash) s2.slowT=p.slow; } } } }
     else { p.x+=dx/d*step; p.y+=dy/d*step; }
   }
   projs=projs.filter(p=>!p.done);
