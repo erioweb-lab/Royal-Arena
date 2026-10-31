@@ -40,7 +40,7 @@
 
 ## 5. 첨부 문서 반영 — 추가 방안 (2026-10-31)
 
-> 사용자 첨부 5건(디펜스 히어로즈 프로젝트 재활용 문서)에서 본 게임(로얄 아레나, 단일 파일 바닐라 JS)에 전이 가능한 패턴만 추려 반영. 링크는 파이프라인 문서 §10 참조.
+> 사용자 첨부 5건(디펜스 히어로즈 프로젝트 재활용 문서)에서 본 게임(로얄 아레나, 단일 파일 바닐라 JS)에 전이 가능한 패턴만 추려 반영. 링크는 image.md §10 참조.
 
 ### 5-1. 게임성 — 신규 추가 방안
 
@@ -69,3 +69,1113 @@
 - **팝업 상호 배타성**: 오버레이 모달 중복 노출 금지 (AGENTS III-5)
 - **safe-area-inset 적용 검토**: 100dvh는 이미 사용 중 — 하단 카드 바에 `env(safe-area-inset-bottom)` 패딩 추가 검토 항목 신설 (AGENTS II-1)
 - **한글 명칭 원칙**: 게임 내 표기 영문 병기 배제 (AGENTS III-10) — 현재 준수 중, 유지
+
+
+## 6. 첨부 5종 전문 통합 — 게임성 향상 마스터 플랜 (2026-11-01)
+
+> 사용자 첨부 5건(**game.md** · **handoff.md** · **TUTORIAL_SKILL.md** · **PIPELINE.md** · **AGENTS.md** — 디펜스 히어로즈 프로젝트 문서)의 내용을 **하나도 빠짐없이** 본 로드맵에 통합하고, 로얄 아레나(단일 파일 바닐라 JS 카드 배틀)에 맞춰 게임성 향상 방안으로 재정리했다.
+> §5는 이전 회차의 요약본, **§6-1이 전체 통합 제안 본문**, §6-2~6-6은 **원문 전문**(무손실 사본)이다. 원 문서는 타워 디펜스 기준이므로 아래 용어 대응표를 먼저 본다.
+
+### 6-0. 용어 대응표 (디펜스 히어로즈 → 로얄 아레나)
+
+| 원 문서 개념 | 로얄 아레나 대응 |
+|---|---|
+| 웨이브·몬스터 | AI 푸시·소환 유닛 (왕관 레인 방어) |
+| 타워 4속성(화염·빙설·뇌명·거포) | 유닛 역할군 — 마법(위저드)·냉기(얼음마법사)·화염(아기드래곤)·원거리·근접·공성 |
+| 요새(초소)/성벽/수리 | 왕·프린세스 타워 — 수리 개념은 신규 도입 대상 |
+| 광역 전략 마법(킹샷·메테오·눈보라) | 스펠 카드(파이어볼·번개) |
+| 골드 경제(처치·채굴 수급) | 엘릭서(시간 자동 회복 — 구조가 달라 전이 시 재설계 필요) |
+| 유물·스킬트리·SP·지휘관 프로필 | 대전 외 메타 성장(신설 필요 — localStorage 계승) |
+
+### 6-1. 게임성 향상 제안 (적용 순서 — 하나씩)
+
+| # | 우선순위 | 제안 | 로얄 아레나 적용안 | 출처 |
+|---|---|---|---|---|
+| P1 | ★★★ | 첫 실행 인터랙티브 튜토리얼 | FSM 단계 가이드(카드 선택→아군 진영 배치→첫 교전 관전→주문 시전→왕관 획득→수료 모달). 대상 카드 펄스 링·상단 배너(Step n/6·건너뛰기)·비대상 요소 반투명화·샌드박스(엘릭서 안전 플로어)·배치 타일 캔버스 하이라이트 | TUTORIAL_SKILL 전체, game §10-3, AGENTS III-7/9 |
+| P2 | ★★★ | 상태이상 콤보 엔진 | 화상(위저드·아기드래곤)/둔화(얼음마법사)/기절(번개·돌진충격) 중첩 시 단계 증폭 — 2종 중첩 +40%, 3종 2배 + 콤보 엠블럼 플로팅. 기존 slowT·stun 필드를 축적으로 확장 | game §3, PIPELINE §3 |
+| P3 | ★★★ | 스코어 정산 & 랭크 SSS~B | 왕관·킬·잔존 타워 HP·남은 시간 가중 점수 → 결과를 2탭 모달(📊 집계 / 👑 랭크 인장+전술 브리핑)로 확장 | game §8, handoff §2, AGENTS III-18 |
+| P4 | ★★★ | 엘릭서 만원 경고 펄스 | 10/10 만원 시 게이지 펄스 — 낭비 방지(기존 항목 유지) | 로드맵 §2 |
+| P5 | ★★☆ | 오디오 스로틀링·컴프레서 | 다중 명중 시 사운드 뭉개짐 방지 — 발사음 25ms 디바운스 + 6채널 다이내믹 컴프레서(v53 무기별 사운드 확장) | handoff §2-6, AGENTS IV-27 |
+| P6 | ★★☆ | 명예의 전당 | localStorage 최고 기록 5위 — 1~3위 포디엄 슬로우 빛 스윕(5.2초 주기·시차 0/1.1/2.2초), 점수 축약 표기(1.2k) | game §8, AGENTS III-17 |
+| P7 | ★★☆ | 실시간 전황 위젯 | 우상단 접이식 카드 — 유닛별 생존 수·누적 딜 브리핑(배치 영역 비침범) | game §10-1, AGENTS III-14 |
+| P8 | ★★☆ | 킬 카운트·전적 피드백 | 결과 화면에 킬/디 양·주문 사용 집계 표기(기존 항목 강화) | 로드맵 §2 |
+| P9 | ★★☆ | 보스 레이드 이벤트 모드 | 신규 씬 축소 이식 — 웨이브 보스(통합 체력바·파멸기 프로그레스 게이지), 직접 조준 저격 스킬(킹샷) 명중 시 파멸기 캔슬+그로기+쉴드 60% 파괴, 슬림 단일 행 보스 HUD(28~32px) | game §6, PIPELINE §4, handoff §2-5, AGENTS III-8/11 |
+| P10 | ★★☆ | 타워 수리 시스템 | 수리 스펠/건물 신설 — 5초 쿨타임 게이지(연타 방지), 강화 시 풀 회복 관례 | game §4, PIPELINE §2 |
+| P11 | ★★☆ | UI 무결성 QA 게이트 채택 | 배포 게이트에 편입 — 360px 클리핑 0건·버튼/뱃지 단일 행 원칙·팝업 상호 배타성·탭 전환 전수 검사 | PIPELINE §7, AGENTS III |
+| P12 | ★★☆ | 모바일 safe-area 피팅 | 하단 카드 바에 env(safe-area-inset-bottom) 패딩, 풀스크린 모달 노스크롤 재점검 | AGENTS II, handoff §3 |
+| P13 | ★★☆ | 캔버스 타일 하이라이트 | 배치 가능 구역 점선 회전+펄스 스케일 발광(튜토리얼 P1과 세트) | TUTORIAL_SKILL §5.2 |
+| P14 | ★★☆ | 머즐 플래시 스타버스트 | 발사 순간 별모양 버스트 파티클로 강화(v53 muzzle 확장) | PIPELINE §9-4 |
+| P15 | ★☆☆ | 유물 4종(영구 계승) | 승리 보상 장착형 유물 — 계열 증폭·주문 강화형 보너스, 웹스토리지 영구 유지(판이 바뀌어도 선택 보존) | game §7, AGENTS III-18 |
+| P16 | ★☆☆ | 축소 스킬트리(9노드) | 승리 보상 SP로 해금하는 3계통×3티어 — 연쇄 환불·총 SP 보존 규격 포함 | game §5, handoff §2-2 |
+| P17 | ★☆☆ | 3D 레벨 뱃지·Lv.UP 파티클 | 유닛 레벨 시스템 도입 시 하단 입체 뱃지(단계별 컬러)+단일 Lv.UP 뱃지 팝업 | PIPELINE §9-1/3 |
+| P18 | ★☆☆ | 바닥 대비 정돈 | 아레나 배경 슬레이트 필터로 유닛·포탄 시인성 우선 | PIPELINE §9-5 |
+| P19 | ★☆☆ | 도감 동기화 강제 | 카드 스탯 변경 시 도감 수치 100% 일치 검증을 게이트화 | AGENTS III-15/16 |
+| P20 | ★☆☆ | 프로필 관리 | 닉네임별 진행도 격리·난이도 리셋/복원 컨트롤(멀티 프로필) | game §9, handoff §2-7 |
+| — | 완료 | 투사체 종류별 그래픽·트레일·무기별 사운드·BGM | v53(포탄 7종·사운드 11종·포물선·트레일)/v54(BGM·스펠 연출)에서 반영 완료 | PIPELINE §9-4 확장 |
+
+> 권장 진행 순서: **P1 튜토리얼 → P2 콤보 엔진 → P3 스코어·랭크** (온보딩→전투 깊이→보상 루프 순으로 체감 게임성이 가장 큼). P5·P11·P12는 다음 배포부터 상시 게이트로 병행한다.
+
+### 6-2. 원문 전문: game.md (디펜스 히어로즈 — 시스템·구현 명세)
+
+<details>
+<summary>펼쳐서 보기</summary>
+
+```markdown
+# 🏰 디펜스 히어로즈 (Defense Heroes) - 종합 시스템 & 구현 명세서
+
+'킹샷 (King Shot)' 및 'Idle Kingdom Defense'의 전략적 깊이와 2.5D 이소메트릭(Isometric) / 2D 탑뷰 듀얼 렌더링 엔진을 융합한 웹 기반 하이퍼 캐주얼 전략 타워 디펜스 게임의 전체 구현 명세서입니다.
+
+---
+
+## 1. 🎮 게임 핵심 시스템 개요
+* **장르**: 2.5D 이소메트릭 / 2D 탑뷰 융합 다크 판타지 생존 & 전략 타워 디펜스
+* **플랫폼**: 모바일 웹 & 데스크톱 브라우저 최적화 (100dvh, Safe-Area 피팅, 터치 친화형 UI)
+* **핵심 게임 루프**:
+  1. 몬스터 처치 및 금광 채굴을 통한 무제한 **골드(Gold) 경제 수급**
+  2. 4속성 타워(**화염·빙설·뇌명·골렘거포**) 전술 배치 및 타일 룬(Rune) 시너지 확보
+  3. **생존자 구출 및 직업 배정** (금광 채굴공 / 왕실 대장장이 / 보물 사냥꾼)
+  4. **요새(초소) 6티어 30레벨 승급 & 성벽 발리스타 방어 사격**
+  5. **15노드 왕실 전술 연구소(스킬트리)**를 통한 원소별 특성 및 영구 버프 강화
+  6. 5W / 10W / 15W / 20W **4대 고대 거신 보스** 토벌전 및 영주의 **'킹샷' 정밀 저격**을 통한 파멸기 저지
+  7. 4대 거신 고유 **유물(Artifact) 획득 및 장착**, 웨이브별 **세부 스코어 집계 & 랭크 평가**
+
+---
+
+## 2. 🏹 4속성 타워 & 4단계 계통 진화 시스템
+
+### (1) 4대 원소 타워 기본 스펙
+| 타워 종류 | 역할 및 특성 | 기본 공격력 | 기본 공속 | 기본 사거리 | 기본 HP |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| 🔥 **화염술사** | 전방위 방사 소각, 도트 화상 누적 및 폭발 피해 | 36 | 0.30/s | 120px | 450 HP |
+| ❄️ **빙설술사** | 광역 감속, 동결 결빙 및 4타 광역 서리파동 | 30 | 0.33/s | 135px | 520 HP |
+| ⚡ **뇌명술사** | 다중 연쇄 전격, 감전 및 크리티컬 낙뢰 타격 | 48 | 0.25/s | 160px | 420 HP |
+| 💣 **골렘거포** | 최전방 고내구도 탱커, 대형 포탄 및 방어 분쇄 폭격 | 108 | 0.17/s | 185px | 680 HP |
+
+### (2) 4단계 계통 진화 (Evolution Stages)
+* 타워 레벨에 따라 4단계 계통 진화가 적용되며 외형 및 총열(Multi-Barrel Emitters: 1~4구)이 변화합니다:
+  * **Stage 1 (Lv.1~3)**: 기초 속성 타워 (1.0x 화력)
+  * **Stage 2 (Lv.4~6)**: 2단계 진화 타워 (1.30x 체력 / 탄속 및 이펙트 증폭)
+  * **Stage 3 (Lv.7~9)**: 3단계 고위 정예 타워 (1.70x 체력 / 광역 스플래시 확장)
+  * **Stage 4 (Lv.10 MAX)**: 신화 각성 타워 (2.20x 체력 / 계통 고유 극대화 오라)
+* **타워 체력 제곱 성장 공식**:
+  $$\text{HP}(\text{Level}) = \text{baseHp} \times \left(1 + (\text{Level}-1) \times 0.45 + (\text{Level}-1)^2 \times 0.22\right) \times \text{TierBonus} \times \text{RefineBonus}$$
+* **타워 강화 성공률 & 안심 천장 (`fy`)**:
+  * Lv.1 100%, Lv.2 90%, Lv.3 85%, Lv.4 75%, Lv.5 65%, Lv.6 55%, Lv.7 45%, Lv.8+ 35%
+  * 강화 실패 시 스킬 및 안심 천장 보정(+5%) 누적 적용
+
+---
+
+## 3. 🌌 다원소 상태이상 & 융합 콤보 시스템 (Cataclysm)
+
+적에게 누적된 4대 원소 타이머를 감지하여 유기적인 증폭 및 연쇄 폭발을 일으킵니다:
+1. **2원소 중첩**: 일반 상태이상 병합 (+40% 피해 증폭)
+2. **3원소 콤보**: 모든 공격 및 주문 피해 **+100% (2.0배) 스텝 증폭** & 3원소 시각 엠블럼 플로팅
+3. **4원소 콤보 (대재앙 · Cataclysm)**:
+   * **상시 누적 증폭**: 모든 일반 타격 및 스킬 피해 **+100% (2.0배) 스텝 증폭**
+   * **일반 타워 적중 시**: +100% 폭발 피해 + 적 현재 체력 10%까지 추가 폭파 + 140px 광역 충격파
+   * **광역 전략기(메테오/눈보라/킹샷) 적중 시**:
+     * 기본 주문 대미지 +100% (2.0배) 초폭발
+     * 적 최대 체력 10%까지 즉시 추가 폭파 (심연의 성배 장착 시 **15%**로 확장)
+     * 150px 초광역 충격파, 화면 셰이크 및 풀스크린 비네트 연출
+
+---
+
+## 4. 🏰 요새(초소/성채) 6티어 30레벨 승급 체계
+
+* **초소 레벨 구조**: 6개 티어, 티어당 5개 레벨로 총 30레벨 체계
+  * **Tier 1 (Lv.1~5)**: 목조 초소 (기본 발리스타 연사)
+  * **Tier 2 (Lv.6~10)**: 보강된 석조 성채 (신규 3D 강철 발리스타 기둥볼트 투사)
+  * **Tier 3 (Lv.11~15)**: 철벽 요새 (소형 지원 대포탑 증설)
+  * **Tier 4 (Lv.16~20)**: 마법 첨탑 요새 (에테르 에너지 탄환 투사)
+  * **Tier 5 (Lv.21~25)**: 천상 수호 성채 (천상 고주파 관통 레이어 사격)
+  * **Tier 6 (Lv.26~30 MAX)**: 불멸의 신화 요새 (최대 25,000 HP / 전 타워 공격력 +150% 증폭)
+* **강화 비용 지수 스케일링**:
+  $$\text{Cost}(\text{Level}) = \text{round}\left(120 \times 1.2^{\text{Level}-1}\right)$$
+  레벨당 정확히 1.2배씩 기하급수적으로 증가하여 인게임 경제 밸런스 유지
+* **티어 승급 확률 & 안심 천장**:
+  * Tier 1 (100%), Tier 2 (85%), Tier 3 (70%), Tier 4 (55%), Tier 5 (40%), Tier 6 (25%)
+  * 강화 실패 시 회당 +5% 안심 천장 보정
+* **성채 및 타워 수리 시스템**:
+  * 초소 및 타워 피해 시 '전체 수리' / '개별 수리' 버튼 활성화
+  * 수리 시 5.0초 쿨타임 적용 (실시간 카운트다운 게이지 표시 및 연타 방지)
+  * 초소/타워 강화 시 소모된 체력이 새로운 최대 체력에 맞춰 **즉시 100% 풀(Full) 회복**
+
+---
+
+## 5. ⚡ 왕실 전술 연구소 (15노드 스킬트리 시스템)
+
+* **카테고리 구성 (5계통 15노드)**:
+  1. 🔥 **화염술사**: 작열의 불씨 (T1 공+10%), 화염 폭풍 확산 (T2 반경+10% 사거리+8px), 영구 지옥불 (T3 콤보+25% 공+20%)
+  2. ❄️ **빙설술사**: 서리 한기 (T1 둔화+5% 공+8%), 절대 영도 (T2 빙결+0.3s 사거리+8px), 혹한의 서리폭풍 (T3 광역빙결 및 반경+20%)
+     * *주의*: '서리 한기'는 둔화 및 공격력 전용이며, 사거리 증가는 '절대 영도'에만 적용됩니다.
+  3. ⚡ **뇌명술사**: 뇌명 전력화 (T1 공+10%), 초전도 연쇄 (T2 연쇄+1회 사거리+10px), 신벌의 벼락 (T3 크리+15% 낙뢰+1.5배)
+  4. 💣 **골렘거포**: 중구경 포탄 (T1 공+10%), 철갑 분쇄포 (T2 방어분쇄+10% 사거리+8px), 집속 파편 클러스터 (T3 3개 파편 비산 및 공+20%)
+  5. 🏰 **초소 요새**: 궁수 화력 강화 (T1 궁수뎀+10% 사거리+8px), 왕실 결계 룬 쉴드 (T2 보호막+1회 룬확률+5%), 긴급 수리반 (T3 5초마다 성벽 HP+1 수리)
+* **티어 해금 전제조건**:
+  * Tier 2 해금: Tier 1 스킬에 **5 SP** 이상 투자
+  * Tier 3 해금: Tier 1 + Tier 2 누적 **18 SP** 이상 투자
+* **스킬 포인트(SP) 수급 & 초기화/환불 규격**:
+  * **노멀 시작 시 1 SP 초기화**: 노멀 모드 시작 및 메인 메뉴 난이도 리셋 시 보유 스킬 `{}` 및 SP는 **1 SP**로 깨끗하게 시작 (웨이브 클리어마다 +1 SP 획득)
+  * **연쇄 환불 (Cascade Refund)**: 하위 티어의 `-` 버튼을 눌러 티어 해금 조건 미달 시, 종속된 상위 티어 스킬을 자동으로 연쇄 환불하여 SP 전액 복구
+  * **총 SP 보존**: 스킬 전체 초기화 시 캠페인 클리어 등을 통해 누적 획득한 총 SP(`Hr`)가 100% 온전히 반환
+  * **승리 화면 연동**: 20웨이브 정복 승리 모달(`VictoryModal`)에서 `[전술스킬트리]` 버튼을 통해 획득한 SP를 즉시 확인 및 강화 가능
+
+---
+
+## 6. 👑 4대 고대 거신 (Colossus Raid Bosses) & 킹샷 저지 시스템
+
+5웨이브 단위로 출현하는 거대 보스는 일반 몬스터와 차원이 다른 쉴드, 공격 패턴 및 화면 전역 파멸기를 보유합니다:
+
+| 웨이브 | 거신 명칭 | 속성 상성 (취약 / 내성) | 고유 파멸기 (광역기) | 토벌 보상 유물 |
+| :---: | :--- | :--- | :--- | :--- |
+| **5W** | 🔥 **마그마 거신** | 빙설 1.5배 / 화염 0.7배 | **지옥 마그마 분출** (성벽 14%·타워 20% 피해) | 🔥 **마그마의 심장** |
+| **10W** | ❄️ **혹한 거신** | 화염 1.5배 / 빙설 0.7배 | **절대영도 혹한 폭풍** (성벽 18%·타워 24% 피해) | ❄️ **만년설의 결정** |
+| **15W** | ⚡ **뇌명 거신** | 대포 1.5배 / 뇌명 0.7배 | **천벌의 뇌신 폭풍** (성벽 22%·타워 28% 피해) | ⚡ **뇌신의 코어** |
+| **20W** | 🌌 **심연 거신** | 4속성 균등 1.2배 | **심연의 차원 붕괴** (성벽 28%·타워 35% 피해) | 🌌 **심연의 성배** |
+
+### (1) 파멸기 시전 게이지 & 킹샷(Kingshot) 즉각 저지
+* 거신 보스는 쿨타임 도달 시 **화면 중앙 경고 배너 및 시전 프로그레스 바**를 표시하며 파멸기를 준비합니다.
+* 영주의 정밀 사격 **[킹샷]**을 적중시키면:
+  * 거신 파멸기 즉각 캔슬 (저지 성공)
+  * 거신 **4.5초간 그로기(무력화)** 상태 돌입
+  * 거신 실시간 **쉴드의 60% 즉시 파괴**
+
+### (2) 슬림 단일 행(Single-Row) 보스 HUD
+* 상단 HUD 높이를 약 28~32px 슬림 단일 행으로 집약하여 전장 타워 및 경로를 가리지 않도록 렌더링:
+  `[초상화+명칭/페이즈] - [통합 HP & 쉴드 게이지 (% 내장)] - [쿨타임/킹샷 저지 게이지] - [약점 뱃지] - [최소화 토글]`
+
+---
+
+## 7. 🏺 4대 거신 유물(Artifact) & 계승 시스템
+
+토벌전 또는 캠페인 클리어 시 획득하여 장착하는 영구 전술 유물:
+1. 🔥 **마그마의 심장 (Heart of Magma)**: 화염 타워 화력 +25%, 메테오 데미지 +30%, 4원소 폭발 피해 +25%
+2. ❄️ **만년설의 결정 (Glacial Crystal)**: 빙설 타워 화력 +25%, 눈보라 빙결 지속 +1.5초, 성채 최대 체력 +20%
+3. ⚡ **뇌신의 코어 (Thunder Core)**: 뇌명·거포 화력 +25%, 전 타워 공격속도 +12%, 킹샷 데미지 +35%
+4. 🌌 **심연의 성배 (Abyssal Chalice)**: 모든 타워 화력 +30%, 4원소 체력 폭파 10% ➔ 15% 확장, 적 처치 골드 +25%
+
+---
+
+## 8. 📊 세부 스코어 집계 & 랭크 평가 (Settlement & Rank)
+
+게임 종료(승리/패배/튜토리얼 수료) 및 인게임/메인 메뉴에서 상시 접근 가능한 2-탭 정산 모달:
+* **탭 1 [📊 세부 스코어 집계]**: 웨이브 돌파 점수, 몬스터 처치 점수, 거신 보스 처치 점수, 성벽 무결성 보너스, 자원 비축 보너스 및 난이도 배율(노멀 1.0x, 악몽 1.5x, 지옥 2.0x)을 곱한 최종 점수 산출
+* **탭 2 [👑 랭크 및 종합 평가]**: 5대 랭크(👑SSS, 🎖️SS, ⚔️S, 🛡️A, 🔰B) 티어 인장, 사령부 공식 전술 평가 브리핑 및 다음 등급까지의 프로그레스 바 제공
+* **[🏆 명예의 전당]**: 난이도별 최고 기록 5위 랭킹 보드 (1~3위 포디엄 슬로우 빛 스윕 연출, 4~5위 다크 슬레이트 테마, 골드 컴팩트 표기 `12.5k`)
+
+---
+
+## 9. 🛡️ 지휘관 프로필 & 난이도 관리 시스템
+
+* **지휘관별 독립 프로필 (`commanderProfiles.ts`)**:
+  * 지휘관 명칭별로 캠페인/레이드 해금 상태(`nightmareUnlocked`, `hellUnlocked`), 격파 거신 목록, 최고 점수를 로컬 스토리지에 격리 보존
+  * 신규 지휘관 생성 시 악몽·지옥이 잠긴 노멀 난이도로 시작
+  * 베테랑 수호자 복귀 시 이전 클리어 상태 자동 복원
+* **메인 메뉴 난이도 제어 컨트롤**:
+  * **[🔄 난이도 리셋]**: 악몽·지옥을 다시 잠그고 노멀 난이도로 초기화하며, 스킬을 깨끗한 1 SP 상태로 리셋
+  * **[🔓 난이도 복원]**: 악몽·지옥 및 4대 거신 토벌전을 즉시 전면 해금하여 자유로운 테스트 지원
+
+---
+
+## 10. 🎯 실시간 전투 지원 위젯 & 튜토리얼 시스템
+
+1. **우측 상단 실시간 타워/초소 레벨·DPS 위젯**:
+   * 전장 우측 상단 빈 공간에 초소 및 4속성 타워의 레벨, 배치 대수, 개별 DPS 및 총합 DPS를 실시간 브리핑
+   * 이동 경로를 침범하지 않는 컴팩트 카드 및 원터치 펼침/접기 토글 지원
+2. **초소 강철 발리스타 볼트 정밀 3D 조준**:
+   * 강철 발리스타 볼트 투사체 발사 시 화살촉이 몬스터(타깃)를 정확히 정면으로 향하도록 캔버스 회전 오프셋(`-3 * Math.PI / 4`) 보정
+3. **11단계 인터랙티브 튜토리얼**:
+   * 타워 선택 ➔ 타일 배치 ➔ 타워 강화 ➔ 무기 제련 ➔ 초소 증축 ➔ 스킬 연구 ➔ 칙령 선포 ➔ 마법 시전 ➔ 전투 시작 순서로 이어지는 FSM 가이드
+   * 튜토리얼 모드 중 골드가 1,000G 미만으로 떨어지지 않는 **골드 안전 하한선(Gold Floor >= 1,000G)** 절대 보장
+```
+
+</details>
+
+### 6-3. 원문 전문: handoff.md (기술 핸드오프·재활용 가이드)
+
+<details>
+<summary>펼쳐서 보기</summary>
+
+```markdown
+# 🏰 디펜스 히어로즈 (Defense Heroes) - 기술 핸드오프 & 시스템 아키텍처 가이드 (Handoff)
+
+본 문서는 **디펜스 히어로즈 (Defense Heroes)** 프로젝트의 아키텍처, 핵심 알고리즘, 컴포넌트 계층 구조, 렌더링 파이프라인 및 상태 관리 노하우를 정리한 **표준 기술 핸드오프 및 재활용 가이드**입니다.
+
+---
+
+## 1. 📂 프로젝트 모듈 디렉토리 구조 및 역할
+
+```text
+/
+├── game.md                        # 게임 종합 기획 및 시스템 명세서
+├── PIPELINE.md                    # 통합 시스템 & 아키텍처 파이프라인 명세서
+├── handoff.md                     # 기술 핸드오프 및 재활용 가이드 (본 문서)
+├── AGENTS.md                      # 프로젝트 커스텀 코딩 및 UI 무결성 가이드라인
+├── TUTORIAL_SKILL.md              # 인터랙티브 튜토리얼 FSM & 샌드박스 스킬 문서
+├── package.json                   # 의존성 관리 (React 19, Lucide-react, Tailwind CSS)
+└── src/
+    ├── types.ts                   # 전역 TypeScript 모델 (타워, 몬스터, 보스, 투사체, 파티클, 룬 등)
+    ├── App.tsx                    # 메인 게임 루프(60 FPS), 상태 머신, 충돌 검출, 웨이브 제어
+    ├── components/
+    │   ├── IsometricGameCanvas.tsx    # 2.5D 이소메트릭 캔버스 렌더러 (타일 그리드, 그림자, 높낮이 림)
+    │   ├── GameCanvas2D.tsx           # 2D 탑뷰 캔버스 렌더러 (클래식 모드 및 디버깅 뷰)
+    │   ├── InGameOverlay.tsx          # 인게임 실시간 HUD (자원, 체력, 타워 상점, 우측 상단 DPS 패널)
+    │   ├── TowerShop.tsx              # 하단 독(Bottom Dock) 타워 소환 및 제련/요새/수리 컨트롤
+    │   ├── ActiveSkills.tsx           # 광역 전략 주문 (킹샷, 눈보라, 메테오) 쿨타임 & 발동 버튼
+    │   ├── RaidBossOverlay.tsx        # 슬림 단일 행(Single-Row) 거신 보스 HUD & 파멸기 게이지
+    │   ├── SkillTreeModal.tsx         # 15노드 왕실 전술 연구소 모달 (실시간 DPS 시뮬레이션, 캐스케이드 환불)
+    │   ├── EncyclopediaModal.tsx      # 대백과사전 5대 탭 (보스도감, 몬스터, 영웅타워, 원소연계, 요새)
+    │   ├── BossPatternInfographic.tsx # 4대 거신 난이도별(노멀/악몽/지옥) 패턴 진화 인포그래픽 뷰
+    │   ├── ScoreSettlementRankModal.tsx # 세부 스코어 집계 & 5대 랭크(SSS~B) 종합 평가 2-탭 모달
+    │   ├── ScoreboardModal.tsx        # 명예의 전당 (5위 포디엄 슬로우 빛 스윕, 골드 축약 포맷)
+    │   ├── RoyalDecreeModal.tsx       # 왕실 칙령 3종 카드 선택 모달 (유물/희귀/일반)
+    │   ├── MainMenu.tsx               # 메인 로비 (지휘관 프로필, 캠페인/레이드 난이도 제어, 패치노트)
+    │   ├── PatchNotesModal.tsx        # 버전별 업데이트 내역 & 패치노트 모달
+    │   ├── InteractiveTutorialOverlay.tsx # 11단계 튜토리얼 가이드 오버레이 & 타깃 하이라이트
+    │   ├── TutorialModal.tsx          # 튜토리얼 입문 상세 안내 모달
+    │   ├── TutorialVictoryModal.tsx   # 튜토리얼 샌드박스 연습전 수료 모달
+    │   ├── GameOverModal.tsx          # 패배 모달 (웨이브 재도전, 다시 시작, 정산 확인)
+    │   └── VictoryModal.tsx           # 20W 정복 승리 모달 (다음 난이도 도전, 전술스킬트리 연동)
+    └── utils/
+        ├── gameConstants.ts           # 밸런스 상수, 타워/초소 스탯 연산(Cr), 룬 타일(Oi) 및 웨이브 데이터
+        ├── statusComboSystem.ts       # 2/3/4원소(Cataclysm) 상태이상 감지 및 대미지 배율 연산 엔진
+        ├── statusVfxRenderer.ts       # 원소 상태이상 시각 효과 (화염 연기, 빙결 결정, 감전 아크, 충격파)
+        ├── colossusVfxRenderer.ts     # 거신 보스 전용 파멸기 링, 전역 비네트 및 킹샷 저지 이펙트
+        ├── artifactSystem.ts          # 4대 거신 유물 정의, 장착 및 계승 시스템
+        ├── commanderProfiles.ts       # 지휘관 프로필 관리 (노멀/악몽/지옥 잠금, 1 SP 리셋, 복원)
+        ├── evolutionSystem.ts         # 4단계 계통 진화 외형, 스프라이트 및 총열 정의
+        ├── bossEvolutionData.ts       # 거신 보스 난이도별 스탯 및 패턴 진화 데이터
+        ├── particleUtils.ts           # 3D 입체 레벨업 뱃지, 머즐 플래시, 골드/크리티컬 파티클 생성기
+        ├── pathGenerator.ts           # 스플라인 곡선 기반 동적 절차적 경로 생성기
+        ├── skillTreeData.ts           # 15노드 전술 스킬 트리 정의 및 티어 전제조건
+        ├── towerUpgradeLore.ts        # 타워 단계별 플레이버 텍스트 및 상세 스토리
+        ├── sound.ts                   # Web Audio API 기반 오디오 신시사이저 (투사체 타격음, 강화음 등)
+        └── jsxRuntime.ts              # React 19 JSX Key props spread 방어 분리 런타임
+```
+
+---
+
+## 2. 🧊 핵심 기술 패턴 및 재활용 가이드
+
+### (1) 2.5D 이소메트릭 & 2D 탑뷰 듀얼 프로젝션 (`IsometricGameCanvas.tsx`, `GameCanvas2D.tsx`)
+* **좌표 변환 공식 (Grid ➔ Iso)**:
+  ```typescript
+  const TILE_W = 64;
+  const TILE_H = 32;
+  export const gridToIso = (col: number, row: number, originX: number, originY: number) => ({
+    x: originX + (col - row) * (TILE_W / 2),
+    y: originY + (col + row) * (TILE_H / 2),
+  });
+  ```
+* **마우스/터치 역산 (Screen ➔ Grid)**:
+  이소메트릭 역행렬 공식을 사용하여 화면 터치 픽셀을 정밀한 타일 좌표 `(col, row)`로 환산하여 타워 건설 타일 및 룬 타일을 감지합니다.
+
+### (2) 15노드 전술 스킬트리 & 연쇄 환불 (Cascade Refund) 알고리즘 (`SkillTreeModal.tsx`, `App.tsx`)
+* 하위 티어 스킬 레벨을 줄일 때 상위 티어의 해금 조건(T1 < 5pt, T1+T2 < 18pt)이 무너지면, 상위 티어 스킬을 재귀적으로 자동 환불하여 유저가 투자한 모든 포인트를 100% 안전하게 돌려받도록 설계되었습니다.
+* **노멀 시작 시 1 SP 초기화**: 캠페인 노멀 모드 시작 및 [난이도 리셋] 시 기존 계승 데이터를 정리하고 스킬 `{}` 및 SP를 `1 SP`로 깨끗하게 동기화합니다.
+
+### (3) 요새 6티어 30레벨 승급 및 지수 비용 스케일링 (`gameConstants.ts`)
+* `Cost(Level) = round(120 * 1.2^(Level - 1))`의 1.2배 지수 스케일링 적용
+* 티어별 승급 성공 확률(100% ➔ 85% ➔ 70% ➔ 55% ➔ 40% ➔ 25%) 및 실패 시 안심 천장(+5%) 보정
+* 레벨업 성공 시 새로운 최대 체력에 맞춰 **즉시 체력 100% 풀(Full) 회복**
+
+### (4) 다원소 상태이상 및 대재앙(Cataclysm) 엔진 (`statusComboSystem.ts`)
+* 2원소 중첩(+40%), 3원소 콤보(+100%), 4원소 콤보(+100% 상시 누적 + 10% 체력 폭파)
+* 광역 전략기(메테오/눈보라/킹샷) 적중 시 4원소 누적 대상에게 화면 셰이크 및 풀스크린 비네트 연출과 함께 대재앙 폭파 발동
+
+### (5) 거신 파멸기 라이프사이클 & 킹샷 저지 (`RaidBossOverlay.tsx`, `App.tsx`)
+* 거신 보스의 파멸기 시전 진행률을 실시간 프로그레스 바로 노출
+* 영주의 정밀 사격 [킹샷]을 명중시키면 파멸기 즉각 저지 + 4.5초 그로기 + 쉴드 60% 파괴 메커니즘 제공
+* 상단 HUD를 약 28~32px 슬림 단일 행(Single-Row)으로 통합하여 전장 시야를 완벽히 확보
+
+### (6) 무손실 Web Audio API 신시사이저 (`sound.ts`)
+* 외부 사운드 에셋 파일 없이 브라우저 내장 오디오 컨텍스트(`AudioContext`)로 실시간 합성
+* 타워 발사음, 명중 타격음(발리스타 관통, 소각, 빙결 파쇄, 전격 스파크, 폭발), 모루 강화음, 승리/패배음 지원
+* 25ms 디바운스 및 6채널 다이내믹 컴프레서로 다중 명중 시에도 소리 깨짐 현상 완전 방지
+
+### (7) 지휘관 프로필 격리 & 난이도 잠금/복원 (`commanderProfiles.ts`)
+* 지휘관 명칭별로 진행도(캠페인/레이드 난이도 해금, 거신 격파 목록, 최고 점수)를 개별 관리
+* 메인 로비에서 [난이도 리셋] 및 [난이도 복원] 버튼을 통해 즉각적인 테스트 및 난이도 전환 지원
+
+---
+
+## 3. 🚀 모바일 웹 환경 최적화 규칙 (Mobile Optimization Rules)
+1. **Dynamic Viewport (`100dvh`)**: 모바일 브라우저 주소창 및 제스처 바에 의해 버튼이 가려지지 않도록 `100dvh`와 `safe-area-inset` 필수 적용
+2. **Single-Line Constraint (`whitespace-nowrap`)**: 360px 모바일 화면에서도 모든 버튼, 뱃지, 탭 라벨의 텍스트가 줄바꿈되지 않고 온전히 한 줄로 표시
+3. **No Vertical Scroll (`fixed inset-0 overflow-hidden`)**: 인게임 캔버스 및 주요 모달이 브라우저 기본 바운스 스크롤을 유발하지 않도록 전체화면 피팅
+```
+
+</details>
+
+### 6-4. 원문 전문: TUTORIAL_SKILL.md (튜토리얼 FSM·샌드박스 프레임워크)
+
+<details>
+<summary>펼쳐서 보기</summary>
+
+```markdown
+---
+name: game-tutorial-system
+description: Reusable interactive game tutorial framework & practice wave system skill for web games.
+---
+
+# Game Tutorial System Architecture & Design Skill
+
+This document details the complete interactive tutorial architecture, finite state machine (FSM), visual overlay system, UI target highlight patterns, and sandbox practice wave mechanics for web games built with React & TypeScript.
+
+---
+
+## 1. System Overview & Core Objectives
+
+1. **Guided Onboarding FSM**: Step-by-step state machine directing player interactions (e.g. Card Selection -> Canvas Tile Placement -> Unit Upgrade -> Research Panel -> Skill Usage -> Start Battle).
+2. **Sandbox Practice Environment**: Providing elevated initial gold and skill points (e.g. 5,000 Gold, 20 SP) and jumping directly to mid-stage waves (Waves 4 & 5) so players can experience real mechanics without grinding early trivial content.
+3. **Simulation Pause Control**: Pausing the main game tick during interactive UI steps to allow players time to inspect hints, automatically unpausing upon starting the wave.
+4. **Visual Highlight Cues**: Pulsing target rings (`ring-4 ring-amber-400 animate-bounce`), glowing canvas target markers (`animate-ping`), and floating direction arrows over target UI controls.
+5. **Contextual Overlay Banners**: Top floating instruction banners with single-line labels (`whitespace-nowrap`), step indicators (`Step 1/11`), resource counters, and a skip button.
+6. **Practice Boundary Enforcement**: Restricting practice mode to specific wave bounds (e.g., clearing Wave 4 & Wave 5 Colossus Boss), then triggering a customized Tutorial Victory Modal (`🎓 튜토리얼 연습전 수료!`).
+
+---
+
+## 2. Finite State Machine (FSM) Blueprint
+
+```typescript
+export type TutorialInteractiveStep =
+  | 'SELECT_TOWER'      // 1. Select building/unit card
+  | 'PLACE_TOWER'       // 2. Touch target tile on canvas
+  | 'UPGRADE_TOWER'     // 3. Touch placed unit & click Upgrade
+  | 'UPGRADE_WEAPON'    // 4. Touch global weapon upgrade button
+  | 'UPGRADE_CASTLE'    // 5. Touch fortress expansion button
+  | 'OPEN_SKILL_TREE'   // 6. Touch tactical research button (grant 20 SP)
+  | 'OPEN_DECREE'       // 7. Touch royal decree button
+  | 'CAST_SPELL'        // 8. Cast area-of-effect spell
+  | 'START_BATTLE'      // 9. Touch Start Battle button
+  | 'COMPLETED';        // 10. Tutorial state completed
+```
+
+---
+
+## 3. Core Component Implementation Examples
+
+### 3.1 Practice Initialization (`App.tsx`)
+```typescript
+const handleStartTutorialRun = () => {
+  setIsRaidMode(false);
+  setIsTutorialPractice(true);
+  setTutorialStep('SELECT_TOWER');
+  setTutorialStepIndex(1);
+  
+  // Elevated Sandbox Starter Resources
+  setCoins(5000);              // High Gold for testing upgrades
+  setSkillPoints(20);          // High SP for instant research
+  setTotalSkillPoints(20);
+  setWave(4);                  // Start at Wave 4 (Waves 4 & 5 practice)
+  setLives(30);
+  
+  setGameState('playing');
+  setIsPaused(true);           // Pause game simulation for guided UI clicks
+};
+```
+
+### 3.2 Practice Wave Boundary & Victory Check
+```typescript
+// Inside wave completion check
+if (waveActive && !isSpawning && remainingEnemies === 0) {
+  const currentW = wave;
+  
+  // Complete practice mode if Wave 5 (Colossus) is cleared
+  if ((isTutorialPractice && currentW >= 5) || currentW >= TOTAL_WAVES) {
+    soundManager.playVictory();
+    setScore(s => s + (isTutorialPractice ? 20000 : 100000));
+    setGameState('victory');
+    resetSkillPointsToInitial();
+  } else {
+    setWave(currentW + 1);
+  }
+}
+```
+
+### 3.3 Interactive Overlay Component (`InteractiveTutorialOverlay.tsx`)
+```tsx
+export const InteractiveTutorialOverlay: React.FC<Props> = ({
+  currentStep,
+  stepIndex,
+  totalSteps,
+  onSkipTutorial,
+  coins,
+  skillPoints,
+}) => {
+  if (currentStep === 'COMPLETED') return null;
+
+  return (
+    <div className="fixed inset-0 z-40 pointer-events-none select-none overflow-hidden">
+      {/* Top Floating Instruction Pill Banner */}
+      <div className="absolute top-22 sm:top-24 left-1/2 -translate-x-1/2 pointer-events-auto z-50 w-[94%] max-w-lg">
+        <div className="bg-slate-900/98 border-2 border-amber-400/90 rounded-2xl p-3 shadow-[0_0_35px_rgba(245,158,11,0.5)] backdrop-blur-md flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <span className="px-2 py-0.5 rounded-md text-[10px] font-black bg-amber-500/30 text-amber-300 border border-amber-400/40 whitespace-nowrap">
+              튜토리얼 {stepIndex}/{totalSteps} (일시정지)
+            </span>
+            <h3 className="text-xs font-black text-slate-100 break-keep">
+              {currentStep === 'SELECT_TOWER' && '👉 [🔥 화염 타워] 선택! 지속 화상 피해(DoT)를 부여합니다.'}
+              {currentStep === 'PLACE_TOWER' && '👉 전장의 반짝이는 빈 타일을 터치하여 화염 타워를 배치하세요!'}
+              {currentStep === 'START_BATTLE' && '👉 하단 [전격 개시] 버튼을 눌러 웨이브 4 & 5 연습전을 개시하세요!'}
+            </h3>
+          </div>
+          <button
+            onClick={onSkipTutorial}
+            className="px-2 py-1 rounded-xl bg-slate-800 text-slate-300 font-bold text-[11px] border border-slate-700 pointer-events-auto"
+          >
+            건너뛰기
+          </button>
+        </div>
+      </div>
+
+      {/* Target Tile Pulse Indicator for Map Placement */}
+      {currentStep === 'PLACE_TOWER' && (
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none flex flex-col items-center gap-2">
+          <div className="bg-amber-400 text-slate-950 font-black text-xs px-3 py-1.5 rounded-full shadow-xl border border-amber-200 animate-bounce whitespace-nowrap">
+            전장의 반짝이는 빈 타일을 터치하세요!
+          </div>
+          <div className="w-28 h-28 rounded-full border-4 border-dashed border-amber-400 shadow-[0_0_40px_rgba(251,191,36,0.9)] animate-spin-slow bg-amber-400/20 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-full bg-amber-400/40 animate-ping" />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+```
+
+---
+
+## 4. Design Guidelines & Anti-Slop Mobile Rules
+
+1. **No Text Wrapping (`whitespace-nowrap`)**:
+   - Bad: `웨이브 \n 4 전투`
+   - Good: `웨이브 4 & 5 (거신) 연습전 개시`
+   - Apply `whitespace-nowrap`, `break-keep`, and `truncate` to all tutorial badges, buttons, and titles.
+
+2. **Non-Intrusive HUD Layout**:
+   - Place instruction banners in reserved offsets (`top-22` / `top-24`) so health bars, gold counters, and spell cooldowns remain visible.
+
+3. **Custom Victory Screen**:
+   - Differentiate practice victory (`🎓 튜토리얼 연습전 수료!`) from full campaign victory (`👑 20웨이브 정복 & 거신 토벌 성공!`).
+
+---
+
+## 5. UI/Canvas Target Highlight Methodologies (튜토리얼 하이라이트 구현 기법 정리)
+
+튜토리얼을 진행할 때 사용자가 조작해야 하는 특정 UI 버튼이나 맵 위의 특정 좌표를 시각적으로 명확하게 유도하는 **4대 핵심 하이라이트 설계 기법**입니다.
+
+### 5.1 CSS & Tailwind를 활용한 HTML UI 요소 강제 하이라이트 (DOM Elements Highlight)
+조작해야 하는 버튼이나 메뉴 카드의 경계선에 맥동하는(pulsing) 테두리를 적용하고, 주변 요소를 반투명하게 어둡게 하여 사용자의 인지 과부하를 줄입니다.
+
+```tsx
+// 1. 특정 단계에서 대상 버튼만 강조하는 Tailwind 스타일 매핑 예시
+const isHighlighted = isTutorialPractice && (
+  (currentStep === 'SELECT_FLAME' && type === 'flame') ||
+  (currentStep === 'UPGRADE_WEAPON' && buttonType === 'weapon')
+);
+
+return (
+  <button
+    className={`relative transition duration-300 ${
+      isHighlighted
+        ? 'ring-4 ring-amber-400/90 shadow-[0_0_25px_rgba(245,158,11,0.85)] scale-105 z-50 animate-pulse'
+        : isTutorialPractice
+          ? 'opacity-40 grayscale pointer-events-none' // 비대상 요소는 반투명/비활성 처리로 시선 유도
+          : ''
+    }`}
+  >
+    {/* 맥동하는 테두리 외에 시각적 알림 도트 추가 */}
+    {isHighlighted && (
+      <span className="absolute -top-1.5 -right-1.5 flex h-3.5 w-3.5 z-50">
+        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+        <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-amber-500"></span>
+      </span>
+    )}
+    <span>화염 타워</span>
+  </button>
+);
+```
+
+### 5.2 월드 스페이스(World Space) 맵 내 특정 타일 강조 기법 (Isometric/2D Canvas Highlight)
+전장 맵 내에서 타워를 지어야 하는 특정 타일 좌표(예: 중앙 영역)를 지정할 때, 게임 루프(`requestAnimationFrame`) 내부에서 수치 변화를 주어 프레임마다 동적으로 드로잉합니다.
+
+```typescript
+// 2. Canvas 2D Context를 통한 맵 상의 특정 타일 수치 하이라이트 드로잉 예시
+const drawTutorialTileHighlight = (ctx: CanvasRenderingContext2D, tileX: number, tileY: number, tileW: number, tileH: number) => {
+  const pulseScale = 1 + Math.sin(Date.now() / 150) * 0.08; // 150ms 속도로 부드럽게 요동치는 스케일
+  const currentW = tileW * pulseScale;
+  const currentH = tileH * pulseScale;
+
+  ctx.save();
+  ctx.beginPath();
+  // 등각 투영(Isometric) 다이아몬드 경로 지정
+  ctx.moveTo(tileX, tileY - currentH / 2);
+  ctx.lineTo(tileX + currentW / 2, tileY);
+  ctx.lineTo(tileX, tileY + currentH / 2);
+  ctx.lineTo(tileX - currentW / 2, tileY);
+  ctx.closePath();
+
+  // 타겟 타일 내부 오렌지빛 발광 레이어 블렌딩
+  ctx.fillStyle = 'rgba(245, 158, 11, 0.25)';
+  ctx.fill();
+  
+  // 점선 형태의 외곽선 회전 가이드라인
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 3;
+  ctx.setLineDash([6, 6]);
+  ctx.stroke();
+  ctx.restore();
+};
+```
+
+### 5.3 부동 안내 화살표 & 유도 문구 오버레이 (Floating Instruction Anchor)
+화면상의 절대 좌표(`absolute` / `fixed`)에 위치하여 사용자가 배치해야 할 행동을 텍스트와 바운싱 화살표 아이콘으로 정확하게 지시합니다.
+
+```tsx
+// 3. 지시 오버레이와 핑 효과 컴포넌트 조합
+{currentStep === 'PLACE_TOWER' && (
+  <div className="absolute inset-0 bg-slate-950/20 backdrop-blur-[1px] pointer-events-none z-30">
+    <div className="absolute top-[52%] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2">
+      {/* 텍스트 뱃지 */}
+      <div className="bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-black text-xs px-3.5 py-2 rounded-full shadow-[0_4px_20px_rgba(245,158,11,0.5)] border border-amber-300 flex items-center gap-2 animate-bounce">
+        <Target className="w-4 h-4 animate-spin-slow" />
+        <span className="whitespace-nowrap">이 자리에 타워를 배치하고 [설치 확정]을 터치하세요!</span>
+      </div>
+      {/* 이중 핑 파동 */}
+      <div className="relative flex items-center justify-center">
+        <div className="absolute w-24 h-24 rounded-full border-4 border-dashed border-amber-400 animate-spin-slow bg-amber-400/10" />
+        <div className="absolute w-12 h-12 rounded-full bg-amber-400/40 animate-ping" />
+      </div>
+    </div>
+  </div>
+)}
+```
+
+### 5.4 선택적 입력 차단 (Selective Pointer Events Blocking)
+잘못된 UI 조작으로 인해 튜토리얼이 꼬이는 현상을 방지하기 위해, 현재 지시 단계 이외의 모든 UI 터치 인터랙션을 무력화하고 안내 팝업 및 특정 버튼의 클릭 권한만 개방합니다.
+
+- **방법**: 전체 바디 오버레이에 `pointer-events-none`을 깔고, 하이라이트된 타겟 클래스에만 `pointer-events-auto`를 개별 할당하여 튜토리얼 조작 범위 외의 다른 클릭 미스를 차단합니다.
+```
+
+</details>
+
+### 6-5. 원문 전문: PIPELINE.md (통합 시스템·QA 파이프라인)
+
+<details>
+<summary>펼쳐서 보기</summary>
+
+```markdown
+# 🏰 디펜스 히어로즈 (Defense Heroes) - 통합 시스템 & 아키텍처 파이프라인 명세서 (PIPELINE.md)
+
+본 문서는 **디펜스 히어로즈 (Defense Heroes)**의 전역 아키텍처, 렌더링 엔진, 게임 루프, 전투 및 원소 연계 수식, 경제 시스템, 그리고 배포 파이프라인을 집약한 **표준 시스템 파이프라인 명세서**입니다. 향후 시스템 및 수치 변경 시 본 문서에 동기화하여 유지 관리합니다.
+
+---
+
+## 1. 🏗️ 시스템 아키텍처 & 런타임 실행 파이프라인
+
+```text
+[ 브라우저 런타임 (100dvh) ]
+       │
+       ├── React SPA (Vite + TypeScript + Tailwind CSS)
+       │     │
+       │     ├── [Game State Machine] (App.tsx)
+       │     │     ├── Menu ──► Playing ──► GameOver / Victory
+       │     │     └── TutorialPractice Mode (Gold Floor >= 1,000G)
+       │     │
+       │     ├── [Game Loop Engine (60 FPS)]
+       │     │     ├── Delta-time Update (deltaSec, requestAnimationFrame)
+       │     │     ├── Monster Spawning & Spline Path Traversal
+       │     │     ├── Tower Target Acquisition & Projectile Physics
+       │     │     ├── Collision & Elemental Reaction Calculation
+       │     │     └── Particle & Visual Feedback Pipeline
+       │     │
+       │     ├── [Dual Rendering Layer]
+       │     │     ├── 3D Isometric Engine (IsometricGameCanvas.tsx)
+       │     │     ├── 2D Top-Down Canvas (GameCanvas2D.tsx)
+       │     │     └── UI Overlay & Screen Vignette (InGameOverlay.tsx / ComboScreenOverlay.tsx)
+       │     │
+       │     └── [Web Audio Synth Engine] (sound.ts - Web Audio API)
+```
+
+---
+
+## 2. ⚔️ 전투 및 대미지 연산 파이프라인
+
+### (1) 타워 및 초소 탄도학, 공격력 & 공격 속도 파이프라인
+* **탄환 속도 승수**: 시인성 및 궤적 식별을 위해 `PROJECTILE_SPEED_MULTIPLIER = 1 / 12` 적용.
+* **타워 기본 공격력 (2배 상향 완료) & 공격 주기 (초당 발사수)**:
+  * 🔥 **화염술사**: 기본 공격력 `36` (기존 18 대비 2배) · 공속 `0.30/s` (화염구 투척, 도트 화상 누적)
+  * ❄️ **빙결술사**: 기본 공격력 `30` (기존 15 대비 2배) · 공속 `0.33/s` (빙결 파편, 둔화 및 빙결 부여)
+  * ⚡ **뇌명술사**: 기본 공격력 `48` (기존 24 대비 2배) · 공속 `0.25/s` (연쇄 전격, 감전 및 기절)
+  * 💣 **골렘거포**: 기본 공격력 `108` (기존 54 대비 2배) · 공속 `0.17/s` (중형 포탄, 범위 충격 및 지진 기절)
+* **초소 / 성벽 궁수 방어 포격 (파워 집중 증폭 & 공속 최적화 완료)**:
+  * 🏹 **초소 성벽 궁수 공격력**: `72 * (castleLevel ^ 1.35) * equipmentLevel * (1 + archerSkill * 0.12)` (지수적 파워 증대)
+  * ⏱️ **발사 간격**: `1200ms / (1 + archerSkill * 0.10)` (프레임 드랍 방지를 위해 과도한 연사 대신 묵직한 한 방 파워로 집중)
+  * 🛠️ **수리 쿨타임**: 성채 및 타워 수리 시 `5.0초` 쿨타임 적용 (남은 시간 UI 실시간 표시 및 연타 방지)
+  * 🛡️ **초소 성벽 기본 및 레벨별 체력(HP)**: 기존 대비 **2배 상향** (`100 + (Lv-1)*50 + (Lv-1)^2*10` -> Tier 계수 반영)
+
+### (2) 타워 체력(HP) 제곱 비례 성장 파이프라인 (`calculateTowerStats`)
+몬스터의 공격력 성장 곡선($\text{wave}^2$) 및 거신 광역기(파멸기) 피해에 비례하여 타워 강화 시 체력이 제곱 비례 + 티어 각성 보너스로 적절히 증대됩니다:
+* **기본 체력**: 골렘거포 680 HP (최전방 탱커), 빙결술사 520 HP (빙설 방호), 화염술사 450 HP (초기 화력), 뇌명술사 420 HP (원거리 마법)
+* **레벨별 체력 수식**:
+  $$\text{HP}(\text{Level}) = \text{baseHp} \times \left(1 + (\text{Level}-1) \times 0.45 + (\text{Level}-1)^2 \times 0.22\right) \times \text{TierBonus} \times \text{eqBonus} \times \text{legBonus} \times \text{craftBonus}$$
+  * **티어 각성 보너스 (`TierBonus`)**: 1~3단계 `1.0x`, 4~6단계(2단계 진화) `1.30x`, 7~9단계(3단계 진화) `1.70x`, 10단계(신화 각성) `2.20x`
+
+### (3) 몬스터 체력 및 공격력 제곱 성장 파이프라인 (`calculateMonsterHp`, `calculateMonsterAttack`)
+웨이브별 불연속 체력 폭증을 방지하고 난이도 계승이 적용된 부드러운 제곱($\text{wave}^2$) 연속 곡선을 적용합니다:
+$$\text{HP}(\text{wave}) = \text{baseHp} + (\text{effectiveWave}^2 - 1) \times \text{coeff}$$
+* **몬스터 공격력**: $\text{Atk}(\text{wave}) = \text{baseAtk} + (\text{effectiveWave}^2 - 1) \times \text{atkCoeff}$ (제곱 비례 성장)
+* **난이도별 계승 웨이브 (`effectiveWave`)**:
+  * 🔴 **노멀**: `W1 ~ 20`
+  * 👿 **악몽**: `W21 ~ 40` (20 + wave)
+  * 💀 **지옥**: `W41 ~ 60` (40 + wave)
+
+---
+
+## 3. 🌌 원소 상태 이상 & 다원소 융합 콤보 파이프라인
+
+적에게 누적된 4대 원소(화염 🔥, 빙설 ❄️, 뇌명 ⚡, 거포 💣) 상태 타이머를 기반으로 단계별 대미지 증폭 및 콤보를 연산합니다.
+
+```text
+[원소 상태 이상 축적]
+  ├─ 화염 (Burn): burnTimer > 0 (초당 도트 피해)
+  ├─ 빙설 (Frost): freezeTimer > 0 (행동 정지) / slowTimer > 0 (이동속도 50% 감속)
+  ├─ 뇌명 (Lightning): stunTimer > 0 (전기 기절) / shockTimer > 0 (감전 방전)
+  └─ 거포 (Cannon): concussionTimer > 0 (충격 분쇄)
+          │
+          ├── [2원소 중첩]: 일반 상태이상 병합 (+40% 피해)
+          ├── [3원소 콤보]: 모든 공격/주문 피해 +100% (2.0배) 스텝 증폭 & 3원소 시각 엠블럼 플로팅
+          │
+          └── [4원소 콤보]
+                ├─ 4원소 상시 누적 증폭: 모든 일반 타격 & 스킬 피해 +100% (2.0배) 스텝 증폭
+                ├─ 일반 타워 적중 시: [4원소 콤보] +100% 폭발 피해 + 적 체력 10%까지 폭파 + 140px 광역파
+                └─ 광역기(메테오/눈보라/킹샷) 적중 시:
+                      [🌌👑 4원소 콤보 (대재앙)]
+                      - 기본 주문 대미지 +100% (2.0배) 초폭발
+                      - 적 최대 체력 10%까지 즉시 추가 폭파 (보스/거신 포함 최대 10%, 심연 성배 장착 시 15%)
+                      - 150px 초광역 충격파 & 화면 셰이크 + 풀스크린 비네트 연출
+```
+
+---
+
+## 4. 👑 광역 전략 마법 (Ultimate Spells) 파이프라인
+
+* **쿨타임 (현재 3배 확장 적용)**:
+  * 🎯 **킹샷 (Kingshot)**: `18초` (소모: 800G) - 최고 체력 적 결전 저격, 거신 파멸기 즉각 저지 & 4.5초 그로기 + 쉴드 60% 파괴
+  * ❄️ **눈보라 (Blizzard)**: `30초` (소모: 1000G) - 전장 전체 3.5초 절대영도 동결 및 광역 냉기 타격
+  * 🔥 **메테오 (Meteor)**: `36초` (소모: 900G) - 전장 전체 지옥불 폭격 및 화상 부여
+
+---
+
+## 5. 🪙 경제 & 성장 시스템 파이프라인
+
+```text
+[골드 수급원]
+  ├─ 몬스터 처치 보상 (일반 4~15G, 보스 200~500G)
+  ├─ 금광 채굴공 (Miners): 초당 +0.50G / worker
+  ├─ 보물 사냥꾼 (Scouts): 처치당 +3G / worker
+  ├─ 왕실 징세령 (Decree): 즉시 +150G 긴급 징수
+  └─ 웨이브 클리어 보너스 (+120G + 웨이브당 +40G)
+          │
+          ├── [타워 계통 진화 (Lv 1~10 & Tier 1~4 분기)]: 화력 4.5배~8배 증폭
+          ├── [무구 제련 (Weapon Forging)]: 전 타워 공격력 레벨당 +15% 누적 증폭
+          ├── [요새 6티어 30레벨 승급 (Outpost Tier)]:
+          │     ├─ 승급 비용: Cost(Level) = round(120 * 1.2^(Level - 1)) [1.2배 지수 스케일링]
+          │     ├─ 티어별 확률: T1(100%), T2(85%), T3(70%), T4(55%), T5(40%), T6(25%) [실패 시 +5% 천장]
+          │     ├─ 레벨업 효과: 성벽 최대 체력(1,000~25,000 HP) 증가 및 즉시 체력 100% 완전 회복
+          │     └─ 강철 발리스타 볼트: Tier 2 전용 신규 3D 스프라이트 및 타깃 정면 조준(-3*PI/4) 연동
+          ├── [전술 스킬트리 (15노드 왕실 연구소)]:
+          │     ├─ SP 규격: 노멀 시작 및 난이도 리셋 시 보유 스킬 {} 및 1 SP 초기화 (웨이브 클리어 시 +1 SP)
+          │     ├─ 연쇄 환불 (Cascade Refund): 하위 티어 감축 시 상위 전제조건 미달 스킬 자동 일괄 환불
+          │     ├─ 서리 한기 규격: T1 서리 한기는 둔화(+5%)·공격력(+8%)만 적용, 사거리 증가는 T2 절대영도에만 반영
+          │     ├─ 총 SP 보존: 스킬 초기화 시 누적 획득한 총 SP(Hr)를 100% 온전히 보존 반환
+          │     └─ 승리 모달 연동: 20웨이브 정복 승리 창에서 [전술스킬트리] 버튼을 통해 획득 SP 즉시 확인 및 강화
+          └── [4대 거신 아티팩트 (Colossus Artifacts - artifactSystem.ts)]:
+                ├─ 🔥 마그마의 심장 (5W): 화염 타워 +25% · 메테오 +30% · 4원소 폭발 +25%
+                ├─ ❄️ 만년설의 결정 (10W): 빙설 타워 +25% · 눈보라 빙결 +1.5초 · 성채 HP +20%
+                ├─ ⚡ 뇌신의 코어 (15W): 뇌명·거포 +25% · 전 타워 공속 +12% · 킹샷 +35%
+                └─ 🌌 심연의 성배 (20W): 전 타워 +30% · 4원소 체력폭파 10%➔15% · 처치골드 +25%
+```
+
+---
+
+## 6. 🎨 렌더링 & 모바일 뷰포트 피팅 규칙
+
+1. **동적 뷰포트 (100dvh & Safe-Area)**:
+   - 상단 주소창 및 하단 툴바(100px~140px)를 감안하여 `100dvh`와 `safe-area-inset` 필수 적용.
+   - 루트 컨테이너 `fixed inset-0 overflow-hidden`으로 모바일 바운스 스크롤 원천 방지.
+2. **단일 행 레이아웃 (Zero Clipping & Single-Line)**:
+   - 최소 가로폭 `360px` 기기에서도 모든 버튼과 뱃지에 `whitespace-nowrap`을 적용하여 텍스트 분절/줄바꿈 금지.
+3. **팝업 상호 배타성**:
+   - 모달, 인스펙터, 건설 창이 서로 중첩되지 않도록 배타적 렌더링 보장.
+
+---
+
+## 7. 🛡️ 필수 품질 검증 마스터 파이프라인 (Mandatory Quality Assurance Pipeline)
+
+### 📌 [원칙] 버그 픽스 시 품질 검증 항목 영구 누적 등록 규칙 (Continuous Bug-Fix QA Registration Policy)
+- 개발 중 발견되거나 사용자가 제보한 **모든 버그 픽스(예외 처리, 변수 스코프, 런타임 크래시, 레이아웃 깨짐 등)는 해결 즉시 본 품질 검증 마스터 파이프라인에 영구 검증 게이트(Gate)로 등록**합니다.
+- 향후 신규 기능 추가 또는 리팩토링 시 등록된 모든 검증 항목을 전수 점검하여 동일/유사한 회귀 버그(Regression)의 재발을 원천 방지합니다.
+
+모든 코드 수정, 화면 변경, 시스템 변경, 밸런스 패치 및 배포 시 아래 **12대 품질 검증 항목**을 필수로 전수 확인합니다.
+
+```text
+[품질 검증 게이트 (QA Gate)]
+  ├── 1. [화면 변경 시 필수 화면·텍스트 잘림(Clipping/Overflow) 사전 전수 검증 - ★필수]
+  │     - UI/화면 텍스트 변경 또는 신규 카드 추가 시 360px 모바일 브라우저 기준 가로/세로 잘림이 0건인가?
+  │     - 긴 텍스트(예: 연출 설명, 콤보 효과, 발동 조건)에 `whitespace-nowrap`을 무분별하게 적용하여 화면 밖으로 이탈(overflow)하지 않는가?
+  │     - 모든 스크롤 컨테이너(대백과사전, 전술 연구소 등) 최하단에 충분한 패딩(`pb-6` 이상)을 부여하여 마지막 카드가 하단 고정 [닫기] 버튼에 잘리거나 가려지지 않는가?
+  │
+  ├── 2. [대백과사전 5대 탭 완결성 & 콤보 탭 품질 검증]
+  │     - 보스도감, 몬스터, 영웅·타워, 원소연계(콤보), 요새의 모든 스탯/수식/설명이 인게임 시스템과 100% 일치하는가?
+  │     - 난이도 선택 버튼(🔴 노멀, 👿 악몽, 💀 지옥)이 5대 탭 전환 시 상시 표시 및 상태 유지되는가?
+  │     - 콤보 탭에서 4원소 광역 대재앙(비네트 연출)과 2/3/4원소 스텝 증폭(클린 플로팅)이 명확히 구분 표기되고 텍스트가 잘리지 않는가?
+  │
+  ├── 3. [가로폭 360px 무결성 & UI 라벨 단일 행 수납 (Zero Clipping & Single-Line)]
+  │     - 초소형 모바일 기기(360px 폭)에서도 모든 버튼, 뱃지, 탭 라벨 내 텍스트가 단일 행(`whitespace-nowrap`)으로 완벽히 수납되는가?
+  │     - 상단 자원/체력 HUD에서 불필요한 중복 수리 버튼을 배제하여 `❤️ 체력`과 `👥 생존자` 뱃지가 우측으로 밀려 잘려나가지 않고 온전히 노출되는가?
+  │     - 텍스트나 버튼 끝이 `...` 등으로 어색하게 잘리거나 컨테이너 밖으로 이탈하지 않는가?
+  │
+  ├── 4. [모바일 동적 뷰포트 (100dvh) & Safe-Area 피팅]
+  │     - 상/하단 브라우저 UI 및 제스처 바에 의해 하단 닫기/확인/액션 버튼이 가려지지 않는가?
+  │     - `fixed inset-0 overflow-hidden`으로 모바일 바운스 스크롤이 원천 차단되었는가?
+  │
+  ├── 5. [팝업 상호 배타성 (Mutually Exclusive Modals)]
+  │     - 타워 후보 선택, 건설 확정, 상세 인스펙터, 대백과사전, 칙령 모달이 중복으로 겹쳐 뜨지 않는가?
+  │
+  ├── 6. [전투 & 원소 융합 연산 무결성]
+  │     - 2원소(+40%), 3원소(+100%), 4원소(+100%) 스텝 증폭이 정확히 계산되는가?
+  │     - 4원소 누적 상태에서 광역기 시전 시 +100% 폭발 및 최대 체력 10% 폭파(심연 성배 장착 시 15%) 카타클리즘이 정상 발동하는가?
+  │
+  ├── 7. [광역 마법 쿨타임 라이프사이클 (3배 확장 적용)]
+  │     - 킹샷(18초), 눈보라(30초), 메테오(36초) 쿨타임이 타이머 및 UI에 오차 없이 작동하는가?
+  │
+  ├── 8. [거신 보스 HUD & 파멸기 라이프사이클 동기화]
+  │     - 거신 보스 스폰부터 처치 시까지 상단 HUD 단일 행(Single-Row)이 유지되며 쿨타임/시전 게이지가 실시간 연동되는가?
+  │
+  ├── 9. [튜토리얼 안전 하한선 보장]
+  │     - 튜토리얼 모드 중 보유 골드가 1,000G 미만으로 떨어지지 않아 실습이 100% 보장되는가?
+  │
+  ├── 10. [게임 루프 TDZ & 변수 선언 순서 무결성 (Temporal Dead Zone & Lifecycle Scope)]
+  │     - 프레임 업데이트 루프(`deltaSec`) 내에서 수집되는 파티클(`nextParticles`), 투사체(`newProjectiles`), 대미지 델타 배열이 타워 공격·스킬 로직보다 **반드시 상단에서 먼저 선언**되어 `Cannot access before initialization` TDZ 런타임 참조 에러가 원천 차단되었는가?
+  │
+  ├── 11. [동적 절차적 경로 & 상태 참조 스코프 무결성 (Dynamic Path & Scope Binding)]
+  │     - 고정 전역 변수 대신 동적 절차적 경로(`currentPath.waypoints`, `splineRef`)를 사용하는 환경에서 성채 위치, 타워 조준, 스탯 큐브 파티클 생성 시 누락된 변수명(`waypoints is not defined`) 없이 올바른 상태 객체를 정확히 바인딩하고 있는가?
+  │
+  ├── 12. [초소 레벨업 파워 집중 스케일링 & 5초 수리 쿨타임 무결성]
+  │     - 초소 레벨업 시 과도한 공속 증가 대신 묵직한 한 방 파워가 증대되어 프레임 드랍 없이 부드러운 전투가 유지되는가?
+  │     - 초소 및 타워 수리(개별/전체 수리) 실행 시 5.0초 수리 쿨타임이 정상 작동하며, 쿨타임 중 중복 연타 방지 및 UI에 남은 대기 시간이 올바르게 표시되는가?
+  │     - 초소(요새) 하단에도 타워와 동일한 대형 3D 레벨 블록 뱃지(Big Bold 3D Level Plate)가 정상 렌더링되는가?
+  │
+  ├── 13. [간결한 콤보 문구 & 3원소/4원소 콤보 & 거신 아티팩트 표기 무결성]
+  │     - 장황한 문구 대신 `3원소 콤보`, `4원소 콤보`, `2원소 콤보` 등 직관적인 간결 문구로 게임 내 플로팅 텍스트, 이펙트 및 도감 설명이 통일되었는가?
+  │     - 3원소 이상 상태이상 누적 시 3원소 콤보(+100% 피해 증폭) 및 4원소 콤보(+100% 폭발 / 체력 10% 폭파)와 4대 거신 아티팩트 장착 효과가 정상 연계되는가?
+  │
+  ├── 14. [초소 강철화살 조준각 동기화 & 우측 상단 타워/초소 레벨·DPS 위젯 무결성]
+  │     - 초소 강철 발리스타 볼트 투사체 발사 시 화살촉이 타깃을 정면으로 향하도록 캔버스 회전 오프셋(-3*PI/4)이 적용되어 있는가?
+  │     - 전장 우측 상단에 초소 및 4속성 타워의 레벨, 배치 대수, 개별 및 총합 DPS 현황판(펼침/접기 토글)이 이동 경로를 가리지 않는가?
+  │
+  ├── 15. [스킬트리 1 SP 초기화 & 연쇄 환불 (Cascade Refund) & 승리 모달 연동 무결성]
+  │     - 노멀 난이도 시작 및 메인 메뉴 난이도 리셋 시 전술 스킬이 {} 및 1 SP로 초기화되어 시작하는가?
+  │     - 하위 티어 감축 시 상위 전제조건 미달 스킬이 자동으로 연쇄 환불되어 투자된 SP가 전액 복구되는가?
+  │     - 스킬 전체 초기화 시 누적 획득한 총 SP가 100% 온전히 반환되는가?
+  │     - 20웨이브 정복 승리 모달에서 [전술스킬트리] 버튼을 통해 획득 SP 확인 및 강화 화면으로 즉시 진입 가능한가?
+  │
+  ├── 16. [빙설술사 T1 서리한기 사거리 증가 제거 및 규격 무결성]
+  │     - T1 서리 한기 습득 시 잘못 부여되던 사거리 증가(서리 범위 +10px)가 제거되고 둔화율(+5%) 및 공격력(+8%)만 정상 반영되는가?
+  │     - 사거리 증가 배지는 기획대로 T2 절대 영도 습득 시에만 [❄️ 사거리 +8px]로 표시 및 적용되는가?
+  │
+  ├── 17. [요새 1.2배 지수 스케일링 & 6티어 30레벨 경제 무결성]
+  │     - 요새 승급 비용이 Cost(Level) = round(120 * 1.2^(Level - 1))에 맞춰 정확히 1.2배씩 기하급수적으로 증가하는가?
+  │     - 초소/타워 강화 성공 시 새로운 최대 체력에 맞춰 즉시 100% 풀(Full) 회복되는가?
+  │
+  └── 18. [TypeScript 타입 무결성 (`tsc --noEmit`) & 빌드 (`npm run build`)]
+        - TypeScript 컴파일 에러 0건 및 모든 에셋 ES Module `import` 번들링 통과
+```
+
+---
+
+## 8. ⚡ AI 세션 & 대화 컨텍스트 압축 파이프라인 (Context Compression & Resource Optimization)
+
+프로젝트 개발이 장기화되거나 대화 턴이 누적될 때 AI Studio 및 런타임의 토큰 낭비 및 브라우저 메모리 부하를 방지하기 위해 **대화 컨텍스트 압축 규칙**을 상시 실행합니다.
+
+```text
+[컨텍스트 압축 파이프라인 (Context Compression Workflow)]
+  ├── 1. [체크포인트 요약 압축 (Context Truncation & Summarization)]
+  │     - 이전 턴의 작업 결과, 변경 파일, 핵심 요구사항을 압축 요약 형태로 집약하여 토큰 낭비 방지.
+  │     - 불필요한 장문 코드 덤프 및 중복 대화 기록을 제거하고 핵심 아키텍처 상태만 보존.
+  │
+  ├── 2. [단일 진실 원천 (Single Source of Truth)]:
+  │     - 모든 시스템 수식, 전투 계수, 쿨타임, QA 게이트는 본 `PIPELINE.md` 문서에 통합 기록하여 컨텍스트가 초기화되더라도 즉시 복원 가능하도록 유지.
+  │
+  ├── 3. [점진적 파일 읽기 & 최소 호출 원칙 (Smart Read)]:
+  │     - 전체 파일 재조회 대신 수정 대상 라인 블록만 슬라이스 조회하여 토큰 효율 극대화.
+  │     - 컴파일 검증(`tsc`, `build`)은 모든 수정 완료 후 마지막에 통합 1회 실행.
+  │
+  └── 4. [보고 압축 & 액션 중심 응답]:
+        - 불필요한 미사여구를 배제하고 수정 내역, QA 통과 여부, 핵심 수치 변화만 간결·명확하게 브리핑.
+```
+
+---
+
+## 9. 🎨 하이퍼 캐주얼 3D & 고대비 비주얼/그래픽 파이프라인 (5대 그래픽 업그레이드)
+
+탑 로드 / 하이퍼 캐주얼 스타일의 직관적인 인지성과 생동감을 극대화하기 위해 다음 **5대 그래픽 파이프라인**을 표준 적용합니다.
+
+```text
+[5대 비주얼 & 그래픽 렌더링 파이프라인]
+  ├── 1. [타워 & 초소 전면 대형 3D 레벨 블록 뱃지 (Big Bold 3D Level Plate)]
+  │     - 타워 및 초소 하단 중앙에 직관적인 3D 입체 블록 레벨 뱃지 (폭 48~50px, 높이 18~19px) 상시 렌더링
+  │     - 레벨 및 티어 구간별 3D 컬러링: Lv.1~9(목조 앰버), Lv.10~19(석조 스카이블루), Lv.20~29(비전 퍼플), Lv.30+(신화 골든)
+  │     - 상단 밝은 하이라이트 베벨 + 하단 드롭 섀도우 + Bold 타이포그래피로 가독성 300% 향상
+  │
+  ├── 2. [타워 베이스 3D 원형 메탈/골드 플랫폼 & 진화 총열 (Multi-Barrel Silhouettes)]
+  │     - 타워 하단에 3D 림 플랫폼 베이스(골드/메탈 림 + 층상 압출) 구축
+  │     - 1~4단계 진화별 포구(Multi-Barrel Emitters: 1/2/3/4구) 및 속성별 고대비 링 조화
+  │
+  ├── 3. [단일 3D 입체 레벨업 뱃지 팝업 파티클 (Clean 3D Level-Up Badge)]
+  │     - 타워 강화 및 성채 증축 시 시야를 어지럽히는 불필요한 스탯/체력 파티클을 제거하고, 오직 깔끔한 단일 `Lv.UP` 3D 뱃지만 팝업되어 전장 시인성 보장
+  │     - 상면 하이라이트 림 + 전면 굵은 텍스트 + 입체 드롭 섀도우 적용
+  │
+  ├── 4. [클래식 고해상도 이모지 투사체 & 포구 머즐 플래시 (Classic High-Res Projectiles & Muzzle Flash)]
+  │     - 기존의 친숙하고 깔끔한 속성별 이모지 투사체(🔥, ❄️, ⚡, 💣)와 컬러 오라 글로우 유지
+  │     - 타워 발사 순간 포구 위치에 별 모양 머즐 플래시(`muzzle_flash`) 스타 버스트 파티클 생성
+  │
+  ├── 5. [전장 바닥 타일 노이즈 정돈 & 슬레이트 대비 최적화 (Clean Battlefield Ground)]
+  │     - 배경 맵에 차분한 슬레이트 필터(`rgba(15, 23, 42, 0.48~0.60)`)를 적용하고 타일 그리드 대비를 부드럽게 정돈
+  │     - 타워, 몬스터, 레벨 뱃지, 투사체가 전장 위에서 가장 돋보이도록 배경 노이즈 제거
+```
+```
+
+</details>
+
+### 6-6. 원문 전문: AGENTS.md (프로젝트 코딩·UI 무결성 가이드라인)
+
+<details>
+<summary>펼쳐서 보기</summary>
+
+```markdown
+# Project Custom Guidelines & Conventions
+
+## I. GitHub & Vercel 배포 및 정적 에셋 무결성 규칙 (Build & Deployment Integrity)
+
+1. **정적 에셋(이미지·오디오·폰트) Import 강제 (No Raw Path Strings)**:
+   - 모든 정적 리소스(이미지 `.jpg`, `.png`, `.webp`, 오디오 `.mp3`, `.wav` 등)는 코드 내에서 `src="/src/assets/..."`와 같이 문자열 경로로 직접 지정하는 것을 엄격히 금지합니다.
+   - 반드시 파일 상단에서 `import myAsset from '../assets/images/my_asset.png';`와 같이 **ES Module로 명시적 import**하여 사용해야 합니다.
+   - *이유*: Vercel 프로덕션 빌드(`vite build`) 시 번들러가 import되지 않은 정적 경로는 `dist/assets` 번들링 대상에서 제외하여 배포 시 이미지/사운드 액박 및 404 오류가 발생합니다.
+
+2. **이미지 로드 실패 대비 방어 코드 (Image Fallback & onError)**:
+   - 네트워크 지연, CDN 캐싱 실패 등 예외 상황에 대비하여 모든 주요 이미지 태그에는 `referrerPolicy="no-referrer"`를 기본 적용하고, 필요 시 이모지/아이콘/대체 텍스트로 자연스럽게 전환되는 `onError` 안전장치를 구성합니다.
+
+3. **파일명 대소문자 엄격 일치 (Case-Sensitive File Path)**:
+   - Vercel의 Linux 빌드 환경은 파일 시스템 대소문자를 엄격히 구분하므로, import 경로와 실제 파일명의 대소문자가 정확히 일치해야 합니다.
+
+---
+
+## II. 모바일 브라우저 뷰포트 및 실기기 피팅 규칙 (Mobile Viewport & Safe-Area Fitting)
+
+1. **동적 뷰포트(dvh) 및 Safe-Area Inset 표준화**:
+   - 모바일 브라우저(삼성 인터넷, 사파리, 크롬 등)의 상단 주소창 및 하단 툴바(약 100px~140px)로 인한 화면 잘림을 방지하기 위해 일반 `100vh` 대신 **`100dvh` (Dynamic Viewport Height)**를 사용합니다.
+   - 화면 최외곽 컨테이너 및 풀스크린 모달에는 `pt-[max(0.5rem,env(safe-area-inset-top))]`, `pb-[max(0.5rem,env(safe-area-inset-bottom))]`를 필수로 적용하여 하단 [닫기] 버튼이나 컨트롤이 툴바/제스처 바 뒤로 숨겨지지 않도록 합니다.
+
+2. **루트 컨테이너 고정 및 바운스 스크롤 방지**:
+   - 게임 애플리케이션의 루트(`html, body, #root`)는 `width: 100%; height: 100dvh; position: fixed; inset: 0; overflow: hidden;`을 기본 적용하여 모바일 브라우저 고유의 원치 않는 상하 고무줄 바운스 스크롤을 원천 차단합니다.
+   - `index.html` 메타 태그에는 `viewport-fit=cover, maximum-scale=1.0, user-scalable=no`를 설정합니다.
+
+---
+
+## III. UI Text Wrapping & Layout Rules (화면 구성 텍스트 줄바꿈 및 화면 잘림 방지 규칙)
+
+1. **텍스트 줄바꿈 엄격 금지 (Strict Single-Line Constraint for UI Labels)**:
+   - 모든 버튼(Button), 뱃지/칩(Badge/Pill), 탭(Tab), 액션 컨트롤, 스탯 라벨 내 텍스트는 반드시 **한 줄(Single-Line)**로 표시되어야 합니다.
+   - 단어가 분절되어 위아래로 줄바꿈(wrapping/break-word)되는 현상(예: `진화/강 \n 화`, `💀 0 \n 처치`)은 중대한 결함으로 취급하며 엄격히 금지합니다.
+   - 모든 UI 요소에는 `whitespace-nowrap`을 필수로 적용하고, 부모 및 자식 요소에 적절한 `flex-shrink-0`, `min-w-0`, `truncate` 처리를 통해 좁은 모바일 화면(360px~420px)에서도 줄바꿈 없는 깔끔한 단일 행 레이아웃을 보장해야 합니다.
+
+2. **화면 및 요소 잘림(Clipping/Overflow) 방지 및 품질 검증 필수 규칙 (Zero Clipping & Viewport Width Verification)**:
+   - **가로/세로 화면 잘림 절대 금지**: 모바일 기기(360px~420px 폭, 540px~680px 높이)의 브라우저 뷰포트에서 버튼, 텍스트, 아이콘, 뱃지 등 어떤 UI 요소도 우측 화면 밖으로 밀려나 잘리거나(clipped/overflowed, 예: `철거 (51...` 처럼 텍스트나 버튼 끝이 잘리는 현상), 컨테이너 경계를 벗어나는 일이 절대 없어야 합니다.
+   - **액션 버튼 행 그리드/비율 분배 원칙**: 한 행에 여러 액션 버튼(예: 수리, 강화, 철거)이 배치될 경우, 무분별한 `justify-between`과 고정 패딩으로 인한 우측 밀림을 방지하고 `grid grid-cols-3 gap-1.5` 또는 균등한 너비(`flex-1 min-w-0`)와 컴팩트한 패딩(`px-1.5 py-1.5`, `text-xs`)을 적용하여 360px 화면에서도 모든 버튼의 텍스트가 온전히 노출되도록 수학적으로 설계합니다.
+
+3. **화면 및 모달 전체화면 피팅 & 노스크롤 규칙 (Strict Full-Screen & Zero-Scroll Rule)**:
+   - 전술 연구소, 거신 토벌전 모달, 인벤토리/인스펙터, 대백과사전, 게임 오버/승리 창 등 모든 주요 모달 및 UI 화면은 브라우저 세로 스크롤(Vertical Scroll) 없이 **전체 화면(Full Screen)에 온전히 피팅(Fit-to-Screen)**되도록 설계합니다.
+   - 모바일 환경(스마트폰 세로 뷰포트)에서는 어중간한 크기의 팝업으로 여백을 낭비하지 않고 `fixed inset-0` 또는 화면 전체를 가득 채우는 전체화면 레이아웃(`w-full h-full` 및 데스크톱 `sm:max-w-...`)을 기본 적용합니다.
+   - 상단 주소창, 하단 툴바가 존재하는 모바일 브라우저(560px~680px)에서도 스크롤이 발생하지 않도록 상하 높이를 균등/컴팩트하게 분배하고, 2x2 그리드, 가로형 칩/버튼 배치(`grid-cols-2`, `grid-cols-3`), `flex-col justify-between`을 활용하여 모든 주요 컨트롤(선택지, 정보, 닫기/확인 버튼)이 상시 노출되도록 합니다.
+
+4. **타워 강화 버튼 명칭 및 표기 (Tower Upgrade Button)**:
+   - 타워 상세 인스펙터 및 상태창의 업그레이드 버튼은 '진화/강화' 대신 **'강화'**로 간결하게 단일 행 표기합니다 (예: `강화 (85G)`).
+   - 최대 레벨 도달 시에는 `최대 레벨`로 깔끔하게 단일 행으로 안내합니다.
+
+5. **게임 내 팝업 상호 배타성 및 안내 멘트 동기화 규칙 (Mutually Exclusive Modals & Toast State Rule)**:
+   - **팝업 겹침 방지 (No Overlapping Overlays)**: 인접 타워 후보 선택 창(`towerCandidates`), 설치 확정 확인 창(`pendingPlacement`), 타워 상세 속성/강화 창(`selectedPlacedTower`) 등 주요 UI 레이어들은 동시에 겹쳐서 표시되지 않도록 상호 배타적(Mutually Exclusive)으로 렌더링해야 합니다.
+   - **안내 토스트 분리**: 타일 선택/건설 위치 지정 중 안내 멘트(예: "타일을 터치하여 위치를 선택하세요.")는 설치 확인창이 활성화되거나 대상이 지정되면 즉시 숨겨져 상하 컨트롤을 침범하지 않도록 합니다.
+   - **명시적 액션 버튼**: 다중 타워/아이템 선택 모달 등에서 상세 화면으로 진입할 때는 카드 전체 클릭이 아닌 명시적 액션 버튼(예: [선택] 버튼)을 통해서만 동작하도록 제어합니다.
+
+6. **화면 변경 및 전환 시 겹침(Overlap)·누락(Clipping) 방지 검증 규칙 (Screen Transition & Layout Integrity Verification Rule)**:
+   - **수직/수평 겹침(Overlap) 엄격 금지**: 화면 내 카드, 모달, 리스트 아이템, 액션 버튼 등 어떤 UI 요소도 상하 또는 좌우로 겹치거나(stack/overlap), z-index/flex 축소로 인해 이전 요소의 텍스트가 다음 요소를 침범하는 현상을 엄격히 금지합니다.
+   - **뷰포트 피팅 및 높이 수학적 분배**: 모바일 브라우저(상단 주소창, 하단 툴바가 있는 540px~680px 세로 뷰포트)에서 고정 높이 컨테이너 내 여러 카드가 렌더링될 때, 자식 요소의 높이 합계(패딩, 갭, 내용물)가 컨테이너 가용 높이를 초과하지 않도록 컴팩트하게 설계합니다.
+   - **버튼 및 상태 뱃지 수직 적층 지양**: 버튼 아래에 별도의 잠금/해금 조건 텍스트를 위아래로 쌓아 높이를 과도하게 차지하지 않고, 잠금 상태일 때는 버튼 자체 텍스트로 전환하거나 단일 행으로 통합하여 수직 팽창을 방지합니다.
+   - **무분별한 `flex-wrap` 금지 및 텍스트 누락 방지**: 카드 내부 텍스트 행에 무분별한 `flex-wrap`을 적용하여 예상치 못하게 여러 줄로 늘어나면서 카드가 팽창하고 하단 요소를 침범하는 것을 방지합니다. 핵심 수치는 단일 행 뱃지로 정돈하고 긴 보조 설명은 `truncate` 또는 간결한 문구로 통일합니다.
+   - **카테고리/탭 전환 전수 검증**: 탭이나 카테고리(예: 화염, 빙설, 뇌명, 거포, 요새 등)를 전환했을 때 텍스트 길이가 달라지더라도 레이아웃이 깨지거나, 줄바꿈되거나, 다른 요소와 겹치지 않는지 모든 탭 상태에 대해 사전에 레이아웃 무결성을 검증해야 합니다.
+
+7. **튜토리얼 완료 UI 및 전 영역 터치 반응 규칙 (Tutorial Completion UI & Touch Accessibility Rules)**:
+   - 튜토리얼 완료 시 축하 메시지는 `text-[22px] sm:text-[24px]` 이상의 크기로 강조하여 노출하며, 한글 문장이 어색하게 줄바꿈되지 않도록 `break-keep`을 적용합니다.
+   - 실전 투입(메인화면/게임시작 이동) 버튼은 튜토리얼 완료 모달 하단에 배치하며, 아이콘·텍스트·패딩을 포함한 버튼의 영역 전체가 온전히 클릭 및 터치 가능하도록 `onClick`과 `onTouchEnd`, `touch-manipulation`을 설계합니다.
+   - 튜토리얼 완료 후 실전 투입 시에는 실전 게임 시작(`handleStartGame`)으로 즉시 안전하게 연결되도록 로직을 구성합니다.
+
+8. **거신 보스 상태창 및 광역기(파멸기) 쿨타임 라이프사이클 동기화 규칙 (Boss AOE & HUD Synchronization Rule)**:
+   - **소환 프레임 상태 보존**: 보스 소환 딜레이(`isSpawning`) 및 첫 프레임 타이밍 이슈로 인해 `raidBoss.isActive`가 조기 비활성화되지 않도록 보스 스폰 시작부터 필드 내 보스 생존 시까지 상태를 견고하게 유지합니다.
+   - **실시간 쿨타임/시전 게이지 상시 노출**: 거신 보스 활성화 시 상단 HUD에 광역기 대기 쿨타임(초 단위 카운트다운 & 프로그레스 바)과 파멸기 시전 진행률 게이지 및 [킹샷 저지] 버튼이 끊김 없이 노출되어야 합니다.
+   - **HUD 상호 배타성**: 보스 활성화 중에는 일반 타깃 미니 HUD(`priorityEnemy`)가 중복으로 겹쳐 뜨지 않도록 상호 배타적(Mutually Exclusive)으로 렌더링합니다.
+
+9. **튜토리얼 모드 최소 골드 보장 규칙 (Tutorial Mode Gold Safety Floor Rule)**:
+   - 튜토리얼 모드(`isTutorialPractice`)에서는 유저가 타워 건설, 업그레이드, 성벽/무기 강화를 자유롭게 진행하더라도 보유 골드가 **최소 1,000G 미만으로 떨어지지 않도록 안전 하한선(Gold Floor >= 1,000G)**을 절대적으로 보장합니다.
+   - 이를 통해 유저가 튜토리얼 후반부의 광역기(킹샷, 메테오, 눈보라) 시전 단계를 자원 부족으로 막히는 일 없이 100% 원활하게 실습하고 수료할 수 있도록 합니다.
+
+10. **보스 등장 알림 최적화 및 영문 병기 배제 규칙 (Boss Warning Banner & Korean Typography Rule)**:
+    - 보스 등장 시 출력되는 중앙 경고 배너 및 게임 내 보스 명칭에서 불필요한 영문 표기(예: `(Magma Colossus)`, `Magma Destroyer` 등)를 배제하고 자연스러운 한글 명칭과 직관적인 공략 힌트(예: `제1 거신 · 지옥 화염의 군주 · 약점 속성 집중 공략!`)로 구성합니다.
+    - 경고 배너는 360px 모바일 화면에서도 텍스트가 줄바꿈되거나 우측으로 삐져나가지 않도록 컴팩트한 패딩과 단일 행/최대 2행 레이아웃을 엄격히 준수합니다.
+
+11. **보스 상태창(HUD) 1열 단일 행(Single-Row) 통합 & 전장 가림 방지 규칙 (Single-Row Boss HUD & Compact Fitting Rule)**:
+    - 보스 활성화 시 상단 HUD가 3단 이상 누적되어 게임 필드와 타워를 가리지 않도록 **[초상화+이름/페이즈] - [통합 HP & 쉴드 게이지 (% 내장)] - [쿨타임/킹샷 저지 게이지] - [약점 뱃지] - [최소화 토글]**을 슬림한 **단일 행(Single-Row, 높이 약 28~32px)**으로 집약 렌더링합니다.
+    - 유저가 언제든 원터치로 초소형 캡슐 알약 모드로 접거나 펼칠 수 있는 최소화 토글을 지원하여 전장 시야 확보를 극대화합니다.
+
+12. **대백과사전 보스도감 통합 및 난이도 선택 버튼 상시 표시 규칙 (Encyclopedia Boss Catalog & Permanent Difficulty Switcher Rule)**:
+    - **보스도감 단일 통합**: 기존 몬스터 탭에서 거신 내용을 완전히 분리하여 **[보스도감]**으로 단일 통합 관리하며, 5W(마그마), 10W(혹한), 15W(뇌명), 20W(심연) 거신을 즉시 전환 조회할 수 있는 4대 거신 선택 탭을 제공합니다.
+    - **패턴 진화 인포그래픽 제공**: 각 거신별 실제 초상화, 체력·쉴드·보상 수치, 고유 파멸기 스킬, 약점 상성(1.5배/1.2배/0.7배)과 함께 난이도별(노멀/악몽/지옥) 공격 패턴의 진화 과정 및 강화 효과를 한눈에 볼 수 있는 [패턴 진화 인포그래픽] 뷰를 제공합니다.
+    - **대백과사전 탭 전환 시 난이도 선택 버튼 상시 표시**: 도감 내 5대 탭(보스도감, 몬스터, 영웅·타워, 원소연계, 초소·성채) 및 서브 뷰(약점 전술 / 패턴 진화 인포그래픽)를 자유롭게 전환하더라도 상단 헤더의 **난이도 선택 버튼(🔴 노멀, 👿 악몽, 💀 지옥)**이 숨겨지거나 사라지지 않고 상시 온전히 노출되어야 하며, 탭 간 전환 시에도 선택된 난이도 상태가 일관되게 유지되어야 합니다.
+    - **버튼 내 텍스트 이탈 및 잘림 방지 (Zero Clipping & Zero Overflow)**: 360px 초소형 모바일 화면에서도 난이도 선택 버튼, 5대 탭 버튼, 인포그래픽 3단계 카드 내 모든 텍스트는 `whitespace-nowrap`을 적용하고 적절한 패딩과 글자 크기를 조율하여 텍스트가 버튼 테두리 밖으로 이탈(overflow)하거나, `...` 등으로 잘려나가는(clipping) 현상을 원천 방지해야 합니다.
+
+13. **하단 독(Bottom Dock) 레이아웃 무결성 및 타워 시인성 규칙 (Bottom Dock Layout & Tower Visibility Rule)**:
+    - **수직/수평 겹침 및 이탈 방지**: 하단 독(80px 높이) 내의 모든 버튼은 360px 가로폭에서도 이미지, 이름, 가격, DPS 정보가 서로 겹치거나 버튼 경계를 벗어나지 않아야 합니다. (이미지 크기 `w-6.5~7`, 텍스트 `text-[8px~9.5px]` 조율)
+    - **타워 명칭 가독성**: 타워 명칭은 `font-black` 두께와 드롭 섀도우를 적용하여 배경과 확실히 대비되어야 하며, 줄바꿈 없이 단일 행으로 표시되어야 합니다.
+    - **유틸리티 버튼 슬림화**: 제련, 요새, 수리, 연구 버튼은 타워 상점 영역의 가용 폭 확보를 위해 컴팩트한 너비(`w-9~10`)를 유지하며 정보를 집약적으로 노출합니다.
+    - **전체 수리 버튼 활성화 조건**: 요새(초소)의 체력이 깎였을 때뿐만 아니라, 필드에 배치된 어떤 타워라도 피해를 입었을 경우 즉시 '전체 수리' 버튼이 활성화(초록색 강조 및 애니메이션)되어야 합니다.
+
+14. **하단 레이아웃 변경 시 튜토리얼 모드 동기화 규칙 (Tutorial Mode Layout Sync Rule)**:
+    - 하단 독(Bottom Dock), 메인 HUD, 모달, 상점 등 주요 UI의 높이/배치/크기가 변경될 때는 **반드시 튜토리얼 모드 배너 및 가이드 피킹 뱃지(`InteractiveTutorialOverlay`, `InGameOverlay`)의 오프셋 위치를 즉시 동기화 검증**해야 합니다.
+    - 튜토리얼 안내 배너가 하단 독 버튼, 주문 버튼, 상단 HUD 컨트롤과 상호 겹쳐 클릭을 방해하거나 텍스트가 가려지는 일이 없도록 세로 오프셋(`bottom-[calc(5.75rem+...)]`)을 항시 정밀 조정합니다.
+    - 튜토리얼 대상 버튼이 강조 표시될 때(`ring-4`, `scale-110`, `animate-bounce` 등) 부모 컨테이너의 `overflow-hidden` 속성으로 인해 하이라이트 원형/링이나 테두리 섀도우가 잘려 보이는(clipping) 현상이 발생하지 않도록, 부모 컨테이너는 `relative` 속성을 부여하고 `overflow-hidden`을 반드시 제거해야 합니다.
+
+15. **대백과사전(Encyclopedia) 최신 시스템 동기화 및 전수 검증 규칙 (Encyclopedia System Sync & Live Data Integrity Rule)**:
+    - **게임 시스템 변경 시 도감 동기화 강제**: 몬스터 스탯·성장률(난이도별 계승 체력 곡선), 보스 공격력, 타워 DPS 및 4단계 계통 진화, 성채 티어 및 수치, 원소 연계 콤보, 난이도별 보상 배율 등 인게임 시스템이나 수식이 변경될 때마다 **대백과사전 5대 탭(보스도감, 몬스터, 영웅·타워, 원소연계, 초소·성채)의 수치 및 설명 데이터가 인게임 로직과 100% 일치하도록 즉시 업데이트 및 동기화**해야 합니다.
+    - **난이도별 데이터 실시간 전환 검증**: 노멀, 악몽, 지옥 난이도 전환 시 몬스터 체력·성장치·보상 골드, 거신 보스 스탯, 패턴 진화 설명이 현재 적용된 시스템과 오차 없이 일치하는지 코드 수정 시마다 상시 교차 검증합니다.
+
+16. **몬스터 성장 곡선 & 타워·콤보·골드 밸런스 무결성 검증 규칙 (Monster Scaling, Gold Economy & Tower DPS Balance Rule)**:
+    - **체력 성장 곡선 및 도감 표기 100% 일치**: 몬스터의 실제 체력 계산식(`calculateMonsterHp`, 4차 가속 곡선)과 도감 내 시작 체력(W1), 정점 체력(W20), 그래프 뱃지, X축 라벨(W1~W20)이 모순 없이 정확하게 일치해야 합니다.
+    - **골드 경제 및 타워 성장 비례 검증**: 웨이브별 몬스터 처치 보상 및 기본 골드 수급량이 타워 레벨업(Lv 1~10), 4단계 진화, 무기 제련, 성채 업그레이드 비용을 자연스럽게 충당할 수 있도록 조율되어야 합니다.
+    - **타워 DPS & 원소 연계 콤보 대비 몬스터 체력 밸런스**: 4속성 타워의 진화 및 제련 증폭 DPS, 4종 원소 연계 콤보(1.5x~3.5x 증폭/폭발 피해), 전략 주문(메테오, 눈보라, 킹샷) 화력이 난이도별(노멀/악몽/지옥) 몬스터 체력 상승 곡선에 맞춰 적절한 긴장감과 전술적 쾌감을 제공하도록 교차 검증해야 합니다.
+
+17. **스코어보드(명예의 전당) 레이아웃 무결성 및 골드 축약·테두리·빛 연출 규칙 (Scoreboard Layout & Lighting Rules)**:
+    - **골드 수치 컴팩트 축약 표기 (Gold Compact Formatting)**: 360px 모바일 화면에서 5열 그리드 내 골드 수치가 잘리지 않도록 `formatCompactGold` 함수를 필수로 적용하여, 1,000 이상 수치는 `1.2k`, `12k`, `24.5k` 등으로 축약 표기하고 `12,00...` 형태의 말줄임 잘림 현상을 원천 방지합니다.
+    - **별도 내기록 뱃지 배제 & 지휘관 이름 자체 플레이어 발광 효과 (Player Name Highlight & Zero Clipping)**: 랭크 뱃지(`👑SSS`)와의 색상 혼동을 방지하고 360px 화면에서 지휘관 이름이 말줄임(`수호자 ...`)되는 현상을 원천 차단하기 위해, 별도의 독립된 `[내기록]` 뱃지는 렌더링하지 않습니다. 대신 지휘관 이름 자체에 직관적인 플레이어 아바타(`👤`)와 앰버 골드 발광 캡슐(`bg-amber-500/20 border border-amber-400/80 text-yellow-200 drop-shadow`) 효과를 직접 적용하여 "수호자 지휘관" 전체 명칭이 잘림 없이 100% 온전히 노출되도록 보장합니다.
+    - **4위·5위 금색 테두리 완전 배제 (4th & 5th Slate Border Integrity)**: 1·2·3위 포디엄 슬롯에만 고유의 금·은·동 테두리를 허용하며, 4위와 5위는 플레이어 본인 기록 여부와 무관하게 금색 테두리를 완전히 제거하고 단정하고 모던한 다크 슬레이트 테마(`border border-slate-700/80` 또는 `slate-800/90`)로 절제하여 시각적 위계를 확립합니다.
+    - **1·2·3위 우아한 슬로우 빛 스윕 & 오라 연출 (AAA Slow Sheen & Ambient Aura)**: 1위(금), 2위(은), 3위(동)의 빛 연출은 1초대의 산만한 고속 이동을 엄격히 금지하며, 5.2초 주기의 완만한 곡선(`cubic-bezier(0.25, 1, 0.5, 1)`)을 가진 슬로우 라이트 스윕(약 1.5초간의 부드러운 스윕 후 3.7초간의 평온한 휴지기)을 적용합니다. 1위(0s), 2위(1.1s), 3위(2.2s)에 시차 딜레이를 부여하고, 배경에 호흡하듯 은은한 앰비언트 브리딩 오라(`animate-hall-aura`)와 1위 왕관의 미세 반짝임(`animate-crown-glint`)을 결합하여 품격 있는 전당 연출을 완성합니다.
+    - **점수 중복 기록 원천 차단 (Game Over Deduplication & Idempotent State)**: React 상태 변경자(`setState`) 내부에서 비동기 사이드 이펙트나 게임 오버/승리 저장을 직접 호출하지 않고, `isGameOverRef` 방어 플래그와 서명 기반 디바운스(4초 이내 동일 스탯 중복 저장 차단)를 적용하여 3위·4위 등 동일 스코어가 중복 기록되는 결함을 영구 방지합니다.
+
+18. **상단 상태창 지휘관명 무결성 · 스코어 집계 & 랭크 화면 · 거신 광역기 데미지 & 유물 계승 규칙 (HUD Name, Settlement/Rank Screen, Colossus AOE & Artifact Persistence Rule)**:
+    - **상단 상태창 지휘관 명칭 온전 노출 및 칙령 표시창 삭제**: 상단 상태바에서 지휘관 명칭(예: "수호자 지휘관")이 좁은 360px 모바일 화면에서도 `...`으로 잘리지 않고 골드 앰버 캡슐(`text-amber-300 font-black text-[10.5px] sm:text-[12px]`)로 100% 온전히 노출되도록 보장합니다. 상단 상태바의 동일 행에 위치하던 불필요한 칙령 표시창은 완전히 제거하여 공간을 확보합니다.
+    - **세부 스코어 집계 및 랭크 평가 화면 (2-Tab Settlement & Rank View)**: 게임 종료(승리/패배/튜토리얼) 및 인게임/메인메뉴에서 접근 가능한 전용 스코어 정산 모달을 제공합니다. 탭 1 [📊 세부 스코어 집계]에서는 웨이브 돌파, 몬스터 처치, 거신 토벌, 성벽 무결성, 자원 비축, 난이도 보정(1.0x~2.0x) 및 최종 정산 스코어를 일목요연하게 산정합니다. 탭 2 [👑 랭크 및 종합 평가]에서는 5대 랭크(👑SSS, 🎖️SS, ⚔️S, 🛡️A, 🔰B)의 화려한 티어 인장, 사령부 공식 전술 평가 및 다음 등급 게이지를 제공하며, [🏆 명예의 전당]과 원터치 상호 전환을 지원합니다.
+    - **거신 광역기(파멸기) 초소 & 타워 체력 비례 및 속성·난이도 차등 데미지**:
+      - **초소(성채) 피해**: 초소 최대 체력(`castleMaxHp = Ei(castleLevel)`)에 비례하여 거신 티어(5W 14%, 10W 18%, 15W 22%, 20W 28%) 및 난이도 배율(노말 1.0x, 악몽 1.35x, 지옥 1.75x)을 정밀 적용합니다. (룬 결계 `aegis` 보유 시 100% 방어)
+      - **타워 피해**: 각 타워의 최대 체력(`towerMaxHp = On.maxHp`)에 비례하여 거신 티어(5W 20%, 10W 24%, 15W 28%, 20W 35%) 및 난이도 배율(노말 1.0x, 악몽 1.30x, 지옥 1.65x)을 적용합니다.
+      - **속성 상성 연동**: 마그마 거신(화염 타워 -30% 내성, 빙설 타워 +35% 취약), 혹한 거신(빙설 타워 -30% 내성, 화염 타워 +30% 취약), 뇌명 거신(뇌명 타워 -30% 절연, 대포 타워 +35% 전도), 심연 거신(성역 룬 50% 흡수) 상성이 적용되며 전투 텍스트 플로팅으로 명확히 시각화됩니다.
+    - **인게임 유물(Artifact) 장착·해제 웨이브 불변 유지**: 게임 내 대백과사전이나 도감에서 유물을 장착, 해제(`none`), 교체했을 때 웨이브가 변경되거나 보스 웨이브를 클리어하더라도 유저의 선택이 강제 초기화/자동 덮어쓰기되지 않고 영구 지속되도록 상태 및 스토리지를 견고하게 보존합니다.
+
+---
+
+## IV. 크로스플랫폼 & 웹 게임 품질 검증 마스터 체크리스트 (QA Checklist)
+
+모든 기능 구현, UI 수정 및 배포 전 다음 **34단계 마스터 체크리스트**를 필수로 확인합니다:
+
+1. **[빌드 & 번들링]**: 모든 이미지/오디오가 `import` 구문으로 참조되어 `npm run build` 시 누락 없이 `dist/assets`에 생성되는가?
+2. **[모바일 뷰포트 & 툴바 피팅]**: 최하단 닫기/확인 버튼이 모바일 브라우저 하단 툴바(100dvh + safe-area)에 가려지지 않고 온전히 노출되는가?
+3. **[가로폭 360px 무결성]**: 가장 좁은 모바일 화면에서도 텍스트가 줄바꿈되거나 우측으로 잘려나가지 않는가?
+4. **[노스크롤 & 전체화면 적응]**: 모든 모달/인스펙터 창이 불필요한 이중 스크롤 없이 가용 영역 내에 피팅되는가?
+5. **[팝업 상호 배타성]**: 2개 이상의 모달이나 인게임 인스펙터 오버레이가 동시에 겹쳐서 뜨지 않는가?
+6. **[보스 광역기 쿨타임 & HUD 동기화]**: 거신 보스 등장 시 상단에 광역기 쿨타임 및 시전 게이지가 실시간으로 끊김 없이 노출되는가?
+7. **[보스 HUD 단일 행 & 전장 시야 확보]**: 보스 HUD가 다단 적층으로 전장을 가리지 않고, 단일 행(Single-Row)으로 슬림하게 배치되며 최소화 토글 및 패턴 진화 안내 아이콘(`🧬`)이 정상 작동하는가?
+8. **[보스 등장 메시지 최적화]**: 보스 등장 알림에 불필요한 영문 괄호가 없고 한글로 간결하며 360px 모바일에서도 잘림 없이 피팅되는가?
+9. **[대백과사전 보스도감 통합 & 패턴 진화 인포그래픽]**: 몬스터 탭에서 거신 항목이 완전히 삭제되고 보스도감으로 단일 통합되었는가? 5W/10W/15W/20W 거신별 초상화, 스탯, 파멸기, 약점 상성 가이드 및 난이도별(노멀/악몽/지옥) 공격 패턴 진화 인포그래픽 탭이 정상 전환/노출되는가?
+10. **[대백과사전 난이도 선택 버튼 상시 표시]**: 대백과사전 내 모든 탭(보스도감, 몬스터, 영웅·타워, 원소연계, 초소·성채) 및 인포그래픽 뷰 전환 시 상단 헤더의 난이도 선택 버튼(🔴 노멀, 👿 악몽, 💀 지옥)이 가려지거나 사라지지 않고 **상시 온전히 표시**되는가?
+11. **[대백과사전 버튼 텍스트 이탈 및 잘림 무결성]**: 360px 최소 모바일 뷰포트에서도 난이도 선택 버튼, 5대 탭 전환 버튼, 인포그래픽 단계 카드의 텍스트가 버튼 테두리 밖으로 이탈(overflow)하거나, `...` 등으로 잘려나가지(clipping) 않고 `whitespace-nowrap` 단일 행으로 완벽하게 수납되는가?
+12. **[대백과사전 시스템 동기화 & 실시간 반영]**: 게임 수식/스탯/난이도/성장 시스템(몬스터 연속 체력 곡선, 난이도별 계승, 타워 DPS, 성채 티어 등) 변경 시 대백과사전 5대 탭의 설명, 스탯 표, 성장 곡선 차트, 약점 배율 및 난이도별 수치가 실제 인게임 로직과 완벽하게 일치하도록 업데이트되었는가?
+13. **[몬스터 성장 곡선 & 타워·콤보·골드 밸런스 검증]**: 몬스터의 체력 계산식(4차 곡선)과 도감의 시작/정점(W20) 표기 및 차트 뱃지가 일치하며, 타워 공격력 진화, 원소 연계 콤보, 골드 수급량이 몬스터 체력 상승 곡선에 맞춰 균형 있게 작동하는가?
+14. **[튜토리얼 골드 보장]**: 튜토리얼 중 골드가 1,000G 이하로 내려가지 않아 광역기 시전 튜토리얼이 항상 가능한가?
+15. **[하단 독 레이아웃 & 제련 피드백 무결성]**: 타워 명칭이 이미지나 가격과 겹치지 않는가? DPS 수치가 버튼 하단에 잘리지 않고 온전히 노출되는가? 제련 버튼 클릭 시 DPS 황금색 하이라이트 효과가 1초 후 정상적으로 원래 스카이 블루 색상으로 원복되는가? 타워/요새 중 하나라도 피해를 입었을 때 '전체 수리' 버튼이 즉시 활성화되는가?
+16. **[튜토리얼 모드 레이아웃 동기화]**: UI 요소(하단 독, 상단 HUD 등)의 크기/높이 변경 시 튜토리얼 안내 배너 및 가이드 뱃지가 컨트롤과 겹치지 않고 정상 위치에 올바르게 노출되는가? 또한 강조 가이드가 부모 컨테이너의 `overflow-hidden`에 잘리지 않고 전체 영역이 올바르게 하이라이트(링, 바운스 효과 포함)되는가?
+17. **[스코어보드 무결성 & 이름 자체 하이라이트 및 4·5위 테두리 절제]**: 랭크(👑SSS)와의 색상 혼동을 방지하기 위해 별도 내기록 뱃지가 제거되고 지휘관 이름 자체에 플레이어 전용 발광 캡슐(`👤`)이 적용되어 이름("수호자 지휘관")이 잘림 없이 100% 온전히 노출되는가? 4위·5위에 불필요한 금색 테두리가 제거되고 다크 슬레이트로 정돈되었는가? 1·2·3위 빛 연출이 5.2초 주기의 우아한 슬로우 스윕 및 시차 딜레이(0s, 1.1s, 2.2s), 앰비언트 브리딩 오라로 고급스럽게 작동하며 중복 기록이 발생하지 않는가?
+18. **[상단 지휘관명 온전 표시 · 스코어 정산 & 랭크 모달 · 거신 광역기 & 유물 불변 계승]**: 상단 상태바에서 지휘관명이 잘림 없이 노출되고 칙령 표시창이 정리되었는가? 스코어 집계화면(6개 항목 세부 정산) 및 랭크화면(SSS/SS/S/A/B 인장, 전술 평가, 다음 등급 게이지, 명예의 전당 연동)이 360px 모바일에서 완벽히 피팅되는가? 거신 광역기 피해가 초소 및 타워 최대 체력 비례, 속성 상성, 난이도 배율로 작동하는가? 유물 해제/교체가 웨이브 변경 후에도 유지되는가?
+19. **[거신 광역기 50% 축소 & 고유 특수효과 · 타워 완파/초소 함락 및 최소 데미지 무결성]**:
+    - 거신 보스의 광역기(파멸기) 기본 데미지가 기존 대비 50% 절반으로 축소 적용되는가?
+    - 거신의 특징에 따른 고유 특별효과(5W 마그마: 용암 균열 & 골드 소각 & 열과부하 마비, 10W 혹한: 서리 낙석 & 몬스터 쉴드 부여 & 연쇄 동결, 15W 뇌명: 쉴드 충전 & 골드 감전 누전세 & 연쇄 스파크, 20W 심연: 전역 적 가속 & 성벽 수리 봉인 & 공허 잠식)가 정상 발동하는가?
+    - 레이드전에서 광역기 피격 시 타워 체력이 0이거나 최소 데미지 산정 시 즉시 완파(Destroyed)되어 전장에서 깔끔히 제거되는가?
+    - 초소의 체력이 0인 상태에서 몬스터가 충돌하거나 0이 되는 순간 초소 파괴 및 패배(Game Over) 처리가 지연이나 누락 없이 즉각 발동하며, 전장에 파괴된 폐허 연출이 표시되는가?
+    - 비동기 React 상태 업데이트 시 다중 중첩 setState 호출로 인한 내부 에러(Internal Error)가 발생하지 않도록 상호 독립적으로 안전하게 처리되었는가?
+    - 초소 골드 강화 비용 2배 인상 및 초소 발리스타/대포 탄환 공격력 2배 상향이 인게임 및 도감 데이터와 완벽하게 일치하며, Tier 2 강철 볼트에서 파란색 줄이 제거된 깨끗한 3D 에셋이 적용되었는가?
+    - 대백과사전 및 인게임 오버레이에서 탄환 설명 및 특성이 잘리거나 가려지지 않고 온전히 노출되는가?
+20. **[레이드모드 골드 난이도별 증가 · 초소 업글비용 1.2배 & 데미지 제곱 연산 · 지휘관 변경 시 리셋 · 튜토리얼 몬스터 체력 도감 일치]**:
+    - 레이드모드 시작 지원금 및 골드 수급량이 노멀(6,000G~), 악몽(8,000G~), 지옥(10,000G~) 난이도로 갈수록 일정하게 단계별로 증가하는가?
+    - 초소 골드 업그레이드 비용 계수가 1.2배(`120 * 1.2^(L-1)`)로 정밀하게 조율되고, 초소 총 공격력이 레벨당 제곱(`150 + 50 * L^2`)으로 비례하여 강화되는가?
+    - 명예의 전당 등에서 지휘관(수호자) 이름을 수정/변경할 경우 초소 레벨, 배치된 타워, 선택 상태가 즉시 리셋되어 무결성이 유지되는가?
+    - 튜토리얼 모드에서 출현하는 몬스터들의 체력이 대백과사전 도감에 명시된 수치(`Yd` 4차 가속 곡선)와 100% 완벽히 일치하는가?
+21. **[튜토리얼 타워 2개 Lv.3 각성 & 초소 Lv.6 진화 가이드 · 메테오+눈보라 콤보 데미지 보장 · 강화 성공 버튼 왼쪽에 레벨 표기]**:
+    - 튜토리얼 가이드 단계에서 최소 2개 이상의 타워를 Lv.3 각성 상태까지 강화를 유도하고 완료 시 차순위 단계로 정상 이행되는가?
+    - 튜토리얼 가이드 단계에서 초소 레벨을 Lv.6(2티어 발리스타 포탑 진화)까지 강화를 유도하고 달성 시 다음 단계로 이행하는가?
+    - 메테오(화염)와 눈보라(빙결) 동시/연속 시전 시 원소 중첩(`q5 >= 2`)이 감지되어 기화 열충격/원소 폭발 피해 증폭(1.4x~2.0x) 및 상응하는 텍스트/이펙트가 정확히 발동하는가?
+    - 타워 및 초소 강화 성공 시 강화 버튼의 성공 메시지 왼쪽에 달성 레벨(`Lv.N`)이 명확하게 표시되는가?
+22. **[튜토리얼 모드 Wave 5 완료 시 훈련 수료 완료 화면(VictoryModal) 정상 노출 및 실전 투입 연동]**:
+    - 튜토리얼 모드(`isTutorialPractice`)에서 W5 클리어 시 `VictoryModal`(`isTutorialPractice: true`)이 예외나 미정의 컴포넌트 없이 정상적으로 렌더링되는가?
+    - 축하 헤더가 `text-[22px] sm:text-[24px]` 크기와 `break-keep`으로 강조되어 표시되는가?
+    - 하단 [⚔️ 실전 게임 시작] 버튼 터치 시 캠페인 노멀 실전 게임으로 즉시 안전하게 진입하고, [메인 화면으로] 터치 시 정상적으로 복귀하는가?
+23. **[튜토리얼 HP 회복 플로팅 메시지 제거 · 타워(Lv.3)/초소(Lv.6) 달성 전까지 상시 하이라이팅 · 지휘관 이름 입력 엔터 시 튜토리얼 버튼 활성화 & 설명서 닫기 시 하이라이트 해제]**:
+    - 튜토리얼 모드(`isTutorialPractice`)에서 강화 시 화면을 가리는 `💖 체력 완전 회복` 및 `💖 HP 100% 회복` 플로팅 텍스트가 완전히 억제되어 전장 시야를 가리지 않는가?
+    - 타워 강화 단계에서 각 타워가 목표 레벨(Lv.3 각성)에 도달하기 전까지, 초소 강화 단계에서 초소가 목표 레벨(Lv.6 진화)에 도달하기 전까지 인게임 오버레이 강화 버튼 및 가이드 뱃지가 상시 하이라이팅을 유지하는가?
+    - 메인 메뉴에서 지휘관 명칭을 새로 입력하고 엔터(Enter)를 눌렀을 때, 튜토리얼 모달이 강제로 즉시 팝업되지 않고 `[✨ 첫 접속 필수 초보자 입문]` 뱃지와 튜토리얼 버튼이 활성화(펄스/발광) 상태로 전환되는가?
+24. **[튜토리얼 완료 후 메인화면 정상 복귀 · 강화 후 화면 완료 배너 억제 · Step 5 설치된 전체 타워 강화 대상 하이라이팅]**:
+    - 튜토리얼 모드 완료 후 [메인 화면으로] 터치 시 모바일 고스트 클릭이나 튜토리얼 자동 재진입 없이 메인 화면으로 온전히 복귀하는가?
+    - 튜토리얼 모드에서 타워/초소 강화 버튼을 눌렀을 때 화면 중앙을 가리는 토스트 "완료" 알림 배너가 억제되어 깔끔하고 쾌적한 전투 시야가 유지되는가?
+    - 튜토리얼 Step 5(타워 강화 단계)에서 필드에 설치된 모든 타워가 강화 대상 후보로 하이라이트(선택 타워는 에메랄드, 미선택 타워는 앰버 펄스 링)되어 유저가 원하는 타워를 자유롭게 선택하여 강화할 수 있는가?
+25. **[수호자(지휘관) 프로필별 진행도 보존 · 기존 지휘관 복원 · 신규 지휘관 노멀 시작]**:
+    - "수호자 지휘관" 및 이전에 사용된 지휘관 이름으로 전환/입력 시, 해당 지휘관이 이전에 해금한 악몽·지옥 난이도 및 4대 거신 토벌전 진행도가 온전히 복원되는가?
+    - 완전히 새로운 신규 지휘관 이름을 입력할 때만 노멀 난이도로 안전하게 시작하며 악몽·지옥이 잠금(`🔒`) 상태로 분리 관리되는가?
+26. **[캠페인 난이도 리셋(노멀 초기화) 및 난이도 복원(전체 해금) 컨트롤 제공]**:
+    - 메인 메뉴 캠페인 난이도 선택 헤더에 [🔄 난이도 리셋] 및 [🔓 난이도 복원] 버튼이 제공되는가?
+    - [🔄 난이도 리셋] 클릭 시 현재 지휘관의 악몽·지옥 잠금 및 캠페인/레이드 난이도가 [노멀]로 즉시 초기화되며 피드백 알림이 노출되는가?
+    - [🔓 난이도 복원] 클릭 시 악몽·지옥 및 4대 거신 토벌전이 즉시 전면 해금되어 테스트 및 베테랑 복귀가 즉각 가능한가?
+27. **[초소 및 4속성 타워 투사체 명중(Hit) 사운드 & 거신 타격 공명 연동]**:
+    - 초소 투사체(발리스타 볼트, 나무 화살, 대포탄, 에테르탄, 천상 레이저) 및 4속성 타워(화염, 빙설, 뇌명, 캐논)의 탄환이 적에게 적중할 때 고유의 특성(관통, 소각, 빙결 파쇄, 전격 스파크, 폭발 분쇄)을 반영한 타격 사운드가 재생되는가?
+    - 고대 거신 및 보스 명중 시 서브 베이스 럼블 공명음과 크리티컬 고주파 강조가 결합되어 거대 보스 타격감이 입체적으로 전달되는가?
+    - 다중 탄환 및 광역 명중 시 소리가 찢어지거나 뭉개지지 않도록 정밀 오디오 스로틀링(25ms 디바운스 & 6채널 다이내믹 컴프레서)이 적용되어 있는가?
+28. **[게임 최초 접속 시 메인 로비 직행 & 튜토리얼 모달 자동 팝업 원천 차단]**:
+    - 게임 최초 접속이나 새로고침 시 튜토리얼 모달(`TutorialModal`)이 강제로 자동 팝업되거나 튜토리얼 런으로 직행하지 않고, 메인 메뉴(지휘관 명칭, 캠페인 난이도, 거신 토벌전, 도감/스킬트리 등)가 항상 첫 화면에 직접 온전히 노출되는가?
+    - 튜토리얼 모달은 유저가 메인 메뉴의 [✨ 초보자 입문] 버튼을 명시적으로 터치했을 때만 팝업되는가?
+29. **[React 훅 명시적 Import 무결성 및 런타임 ReferenceError 방지 (Explicit React Hooks Integrity)]**:
+    - `useMemo`, `useCallback`, `useRef`, `useState`, `useEffect` 등 모든 React 훅은 컴포넌트 상단에서 `import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";`와 같이 ES Module로 100% 명시적 import하여 빌드 및 런타임 ReferenceError 결함을 원천 방지하는가?
+    - `// @ts-nocheck` 등으로 타입 체커의 미참조 경고가 가려지지 않도록 클린 임포트 표준을 준수하는가?
+30. **[지휘관 명칭 실시간 입력 & 난이도 잠금/복원 즉각 반응성 (Commander Profile Reactivity)]**:
+    - 메인 메뉴에서 지휘관 명칭을 실시간으로 입력(`onChange`), 포커스 아웃(`onBlur`), 엔터(`onKeyDown`) 시 `activeProfile`이 즉시 반응하여 캠페인 및 레이드 난이도 잠금 상태(`isNightmareUnlocked`, `isHellUnlocked`)와 거신 해금 목록이 딜레이나 깜빡임 없이 즉각 업데이트되는가?
+    - 잠긴 난이도가 선택되어 있던 경우 안전하게 [노멀] 난이도로 자동 보정 클램핑되는가?
+31. **[토벌/캠페인 승리 및 게임 오버 시 세부 스코어 집계 & 랭크 확인 모달 상위 렌더링 무결성 (Settlement & Rank Modal Overlay Stacking)]**:
+    - 거신 토벌 성공(`VictoryModal`), 캠페인 클리어, 게임 오버(`GameOverModal`) 화면에서 `[📊 세부 스코어 집계 & 랭크 확인]` 또는 `[🏆 명예의 전당]` 버튼을 클릭했을 때, 모달이 하위 레이어에 가려지지 않고 최상위(`z-[70]`, `z-[75]`) 레이어로 즉시 팝업되어 정상 렌더링되는가?
+    - 정산 모달 상단 우측 `[X]` 닫기 버튼 및 하단 [메인 화면으로] / [다시 도전] 버튼 터치 시 이전 화면 또는 메인 로비로 안전하게 복귀/전환되는가?
+32. **[요새(초소/성채) 업그레이드 비용 1.2배 증가 및 경제 밸런스 동기화 (Fortress Upgrade Cost 1.2x Scaling)]**:
+    - 요새(성벽/초소) 강화 비용이 `getCastleUpgradeCost(level)` 공식을 통해 레벨당 정확히 1.2배씩 기하급수적으로 증가(`Math.round(120 * Math.pow(1.2, level - 1))`)하여, 초반 성장과 후반 골드 경제 밸런스가 균형 있게 유지되는가?
+    - 하단 독(Bottom Dock), 타워 상점, 초소 상세 인스펙터, 대백과사전 [요새] 탭의 강화 비용 및 골드 차감 로직이 오차 없이 100% 일치하는가?
+33. **[초소 강철화살 조준 회전각 동기화 & 우측 상단 타워/초소 레벨·DPS 컴팩트 현황 패널 (Steel Bolt Arrowhead Alignment & Top-Right DPS Overview Widget)]**:
+    - 초소 강철 발리스타 볼트(`ballista_bolt`) 투사체 발사 시 화살촉이 몬스터(타깃)를 정확히 정면으로 향하도록 캔버스 회전 오프셋(`-3 * Math.PI / 4`)이 적용되어 있는가?
+    - 전장 우측 상단 빈 공간에 초소 및 4속성 타워의 레벨, 배치 대수, DPS 및 총합 DPS 현황이 이동 경로를 가리지 않는 컴팩트 카드(펼침/접기 최소화 토글 지원)로 깔끔하게 제공되는가?
+34. **[React 19 JSX Key 전달 규격 준수 & Props Spread 내 Key 포함 방지 (React 19 JSX Key & Spread Integrity)]**:
+    - React 19 환경에서 JSX 엘리먼트 생성 시 `key` prop은 spread 객체 내부(`{...props}`)가 아닌 JSX 어트리뷰트(`key={...}`) 또는 `jsx(type, props, key)`의 3번째 인자로 명시적 분리 전달되어 'A props object containing a "key" prop is being spread into JSX' 경고 및 렌더링 결함이 원천 차단되는가?
+    - `jsxRuntime` 유틸에서 `key`가 props 객체에 포함되어 있더라도 안전하게 분리 추출하여 3번째 인자로 전달하는 방어적 런타임이 구성되어 있는가?
+35. **[스킬트리 노멀 시작 & 난이도 리셋 시 1 SP 초기화 · 연쇄 환불 (Cascade Refund) · 승리 모달 연동 무결성]**:
+    - 노멀 캠페인 시작 및 메인 메뉴 [난이도 리셋] 시 기존 계승 데이터가 정리되고 전술 스킬이 `{}` 및 `1 SP`(`defense_heroes_sp = "1"`, `defense_heroes_total_sp = "1"`)로 깨끗하게 초기화되어 시작하는가?
+    - 하위 티어 스킬 레벨을 줄일 때 상위 티어 해금 조건(T1 < 5pt 또는 T1+T2 < 18pt)이 미달될 경우, 종속된 상위 티어 스킬을 자동으로 연쇄 환불(Cascade Refund)하여 투자된 모든 SP를 온전히 돌려받을 수 있는가?
+    - 스킬 전체 초기화 시 누적 획득한 총 SP(`Hr`)가 100% 온전히 보존 반환되는가?
+    - 20웨이브 정복 승리 모달(`VictoryModal`)에서 `[전술스킬트리]` 버튼을 통해 획득한 SP를 즉시 확인 및 투자할 수 있는가?
+36. **[빙설술사 T1 서리 한기 사거리 증가 배제 및 규격 무결성 (Frost T1 Range Bug Prevention)]**:
+    - 빙설술사 T1 '서리 한기'(`frost_tier1_slow`)는 스킬 명세대로 둔화율(+5%) 및 공격력(+8%)만 적용되며, 잘못 부여되던 사거리 증가 보너스(`k += G * 10`) 및 모달 내 `[❄️ 서리 범위 +10px]` 배지가 완전히 배제되었는가?
+    - 빙설 계통의 사거리 증가는 기획대로 2티어 '절대 영도'(`frost_tier2_duration`) 습득 시에만 레벨당 +8px로 정상 반영 및 표기되는가?
+```
+
+</details>
