@@ -862,6 +862,7 @@ function dealDamage(e,dmg,fromTeam){
     fx.push({x:e.x,y:e.y,t:0,dur:0.35,kind:'ring',col:__st>=3?'rgba(255,157,60,.9)':'rgba(255,233,94,.9)'});
   }
   e.hp-=dmg; e.hurt=0.09;
+  if(!e.isTower){ S.focus={t:1.0}; S.focusV=e; }
   const big=dmg>=150;
   floats.push({x:e.x+(Math.random()-0.5)*0.7,y:e.y-(e.r||0.45)-0.35-Math.random()*0.5,txt:Math.round(dmg)+(big?'!':''),t:big?0.9:0.7,col:big?'#ff9d3c':(fromTeam==='blue'?'#bfe0ff':'#ffd2d2'),big});
   if(e.isTower&&e.kind==='king') e.active=true;   // 킹타워 피격 시 각성
@@ -1033,7 +1034,6 @@ function update(dt){
     if(!pick){ let mw=0; for(const c of cls) if(c.w>mw){ mw=c.w; pick=c; } }
     if(pick&&pick.w>=2){
       if(!S.clash) S.clash={x:pick.x,y:pick.y,a:0};
-      S.camLocked=true;
       S.clash.x=lerp(S.clash.x,pick.x,0.1); S.clash.y=lerp(S.clash.y,pick.y,0.1);
       S.clash.a=Math.min(1,S.clash.a+0.08);
     } else if(S.clash){ S.clash.a=Math.max(0,S.clash.a-0.06); if(S.clash.a<=0) S.clash=null; }
@@ -1812,6 +1812,7 @@ window.addEventListener('pointermove',e=>{
   if(S._pan.moved&&S.scene==='battle'){
     const c=S.cam, vw=W/c.z, vh=H/c.z;
     c.x=clamp(c.x-dx/c.z,vw/2,W-vw/2); c.y=clamp(c.y-dy/c.z,vh/2,H-vh/2);
+    if(S.focus){ S.focus.x=c.x; S.focus.y=c.y; S.focusV=null; }
     S._pan.x=e.clientX; S._pan.y=e.clientY;
   }
 });
@@ -1889,7 +1890,7 @@ function show(scene){
 function startMatch(){
   units=[];projs=[];fx=[];floats=[];parts=[];ambient=[];
   S.over=false;S.shown=false;S.winner=null;S.t=180;S.overtime=false;S.double=false;
-  S.crowns={blue:0,red:0}; S.kills={blue:0,red:0}; S.shake=0; S.clash=null; S.cam={x:W/2,y:H/2,z:1}; S.camLocked=false; S.slow=0;
+  S.crowns={blue:0,red:0}; S.kills={blue:0,red:0}; S.shake=0; S.clash=null; S.cam={x:W/2,y:H/2,z:1}; S.focus=null; S.focusV=null; S.slow=0;
   P.elixir=5;A.elixir=5;A.timer=4.5;P.sel=null;
   initDeck(P);initDeck(A);
   buildTowers(); drawStatic();
@@ -1941,8 +1942,10 @@ $('#btn-quit').addEventListener('click' ,()=>{ if(!S.over){ banner('기권 — �
 let last=performance.now();
 function updateCam(dt){
   const c=S.cam||(S.cam={x:W/2,y:H/2,z:1});
-  if(S.clash) S.camLocked=true;   // 한 번 줌인되면 전투가 끝날 때까지 유지
-  const tgt=S.camLocked? {x:c.x,y:c.y,z:1.6} : {x:W/2,y:H/2,z:1};
+  if(S.focusV){ if(S.focusV.dead) S.focusV=null;
+    else { S.focus=S.focus||{t:1.0}; S.focus.x=S.focusV.x*TILE; S.focus.y=S.focusV.y*TILE; } }   // 이동 유닛 추적
+  if(S.focus){ S.focus.t-=dt; if(S.focus.t<=0) S.focus=null; }   // 피해가 끊기면 1초 후 원복
+  const tgt=S.focus? {x:S.focus.x, y:S.focus.y, z:1.6} : {x:W/2,y:H/2,z:1};
   const k=1-Math.exp(-6.0*dt);
   c.x=lerp(c.x,tgt.x,k); c.y=lerp(c.y,tgt.y,k); c.z=lerp(c.z,tgt.z,k);
   const vw=W/c.z, vh=H/c.z;
