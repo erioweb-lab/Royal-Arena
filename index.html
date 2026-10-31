@@ -255,7 +255,7 @@ h1,h2{font-family:'Jua','Noto Sans KR',sans-serif;font-weight:400}
       <div id="codex" class="t-codex"></div>
     </div>
     <div class="t-links"><button id="btn-info" class="t-link">📖 게임 방법</button></div>
-    <p class="t-foot">무료 팬 게임 · Supercell 및 원작과 무관 · <span id="ver-chip" style="color:#ffd75e">v39</span></p>
+    <p class="t-foot">무료 팬 게임 · Supercell 및 원작과 무관 · <span id="ver-chip" style="color:#ffd75e">v40</span></p>
   </section>
 
   <!-- ===== 배틀 ===== -->
@@ -386,7 +386,7 @@ for(const nk in ART_SPR_NEW) ART_SPR[nk]=ART_SPR_NEW[nk];
 (function(){
   var cx=document.getElementById('codex'); if(!cx) return;
   cx.innerHTML='';
-  DECK.forEach(function(k){
+  DECK.filter(function(k,i){return DECK.indexOf(k)===i;}).forEach(function(k){
     var c=CARDS[k]; if(!c) return;
     var d=document.createElement('div'); d.className='cx';
     var art=(typeof ART!=='undefined'&&ART[k])?ART[k]:'';
