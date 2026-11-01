@@ -500,9 +500,21 @@ button:active{transform:translateY(2px)}
   #arena-wrap #ks-btn{height:38px;padding:0 12px;font-size:13px !important}
 }
 </style>
+<style id="ui-v105">
+/* v105 #11: 트로피 칩(로비) + 등급별 아레나 인테리어 글로우 */
+#trophy-chip{display:inline-flex;align-items:center;font-family:var(--fd);font-size:13px;font-weight:700;letter-spacing:-.2px;background:rgba(18,24,43,.85);border:1.5px solid var(--goldB);border-radius:999px;padding:6px 14px;color:var(--gold);box-shadow:inset 0 0 6px rgba(255,179,0,.15)}
+#arena-wrap{transition:box-shadow .6s ease}
+#arena-wrap.g0{box-shadow:inset 0 0 46px rgba(154,167,184,.10)}
+#arena-wrap.g1{box-shadow:inset 0 0 46px rgba(207,224,238,.13)}
+#arena-wrap.g2{box-shadow:inset 0 0 46px rgba(111,208,140,.13)}
+#arena-wrap.g3{box-shadow:inset 0 0 46px rgba(176,127,224,.14)}
+#arena-wrap.g4{box-shadow:inset 0 0 52px rgba(247,197,49,.17)}
+#arena-wrap.g5{box-shadow:inset 0 0 56px rgba(255,138,60,.19)}
+#rt-trophy{font-variant-numeric:tabular-nums}
+</style>
 </head>
 <body>
-<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v104</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v105</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -602,6 +614,7 @@ button:active{transform:translateY(2px)}
         <div class="rrow"><span>⏱ 남은 시간</span><b id="rt-time">0</b></div>
         <div class="rrow"><span>⚔️ 킬 / 데스</span><b id="rt-kd">0 / 0</b></div>
         <div class="rrow"><span>✨ 주문 사용</span><b id="rt-spell">0회</b></div>
+        <div class="rrow"><span>🏆 트로피</span><b id="rt-trophy">+0</b></div>
         <div class="rrow rsum"><span>총점</span><b id="rt-sum">0</b></div>
       </div>
       <div id="rpane-rank" class="rpane hidden">
@@ -1218,6 +1231,7 @@ function showResult(){
   $('#rt-time').textContent=timeLeft;
   $('#rt-sum').textContent=score;
   try{ hofRecord(score); }catch(e){}
+  if(!S._tp){ S._tp=1; try{ var __d=applyTrophyDelta(S.winner); var __te=document.getElementById('rt-trophy'); if(__te){ __te.textContent=(__d>=0?'+':'')+__d; __te.style.color=__d>=0?'#ffe08a':'#ff8f8f'; } }catch(e){} }   // v105 #11: 트로피 증감
   $('#rt-emblem').textContent=['👑SSS','🎖️SS','⚔️S','🛡️A','🔰B'][ri];
   const next=ranks[ri-1];
   $('#rt-barfill').style.width = next? Math.min(100,Math.round(score/next[1]*100))+'%' : '100%';
@@ -1464,6 +1478,9 @@ function roundRect(x,y,w,h,r){
   ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
   ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath();
 }
+</script>
+<script>
+'use strict';
 function drawStatic(){
   const T=THEMES[S.theme];
   const g=bgc.getContext('2d');
@@ -1563,9 +1580,6 @@ function drawStatic(){
   }
 
 }
-</script>
-<script>
-'use strict';
 function flagPole(px,py,col){
   ctx.strokeStyle='#5a4632'; ctx.lineWidth=2;
   ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(px,py-22); ctx.stroke();
@@ -2295,7 +2309,7 @@ function show(scene){
 function startMatch(){
   units=[];projs=[];fx=[];floats=[];parts=[];ambient=[];
   S.over=false;S.shown=false;S.winner=null;S.t=180;S.overtime=false;S.double=false;
-  S.crowns={blue:0,red:0}; S.kills={blue:0,red:0}; S.deaths={blue:0,red:0}; S.spells={blue:0,red:0}; S.shake=0; S.clash=null; S.cam={x:W/2,y:H/2,z:1}; S.focus=null; S.focusV=null; S.hot=null; S.slow=0; S.boss=null; S.bossSpawned=false; S.ks=false; S.ksCd=0; S.focusGap=0;
+  S.crowns={blue:0,red:0}; S.kills={blue:0,red:0}; S.deaths={blue:0,red:0}; S.spells={blue:0,red:0}; S.shake=0; S.clash=null; S.cam={x:W/2,y:H/2,z:1}; S.focus=null; S.focusV=null; S.hot=null; S.slow=0; S.boss=null; S.bossSpawned=false; S.ks=false; S.ksCd=0; S.focusGap=0; S._tp=0; try{ syncGradeVisual(); }catch(e){}
   P.elixir=5;A.elixir=5;A.timer=4.5;P.sel=null;P._full=false;
   try{ var __sb2=document.getElementById('screen-battle'); if(__sb2) __sb2.classList.remove('ended'); }catch(e){}
   initDeck(P);initDeck(A);
@@ -2500,8 +2514,36 @@ function syncBossHud(){
   var kb=document.getElementById('ks-btn');
   if(kb){ if(S.ksCd<=0&&!S.ks) kb.classList.add('ready'); else kb.classList.remove('ready'); }
 }
+
+/* ---------- v105 #11: 트로피·아레나 등급 ---------- */
+const GRADES=[['훈련 캠프',0,'#9aa7b8'],['뼈 구덩이',100,'#cfe0ee'],['요정 계곡',200,'#6fd08c'],['마법 대굴',350,'#b07fe0'],['전설 성채',500,'#f7c531'],['왕관 극지',750,'#ff8a3c']];
+function loadTrophies(){ try{ return Math.max(0,parseInt(localStorage.getItem('ra_trophies_v1')||'0',10)||0); }catch(e){ return 0; } }
+function gradeOf(t){ let gi=0; for(let i=0;i<GRADES.length;i++) if(t>=GRADES[i][1]) gi=i; return gi; }
+function applyTrophyDelta(w){
+  const cur=loadTrophies();
+  const d=(w==='blue')?30:(w==='red'?-20:10);
+  const nv=Math.max(0,cur+d);
+  try{ localStorage.setItem('ra_trophies_v1',String(nv)); }catch(e){}
+  try{ syncTrophyChip(); syncGradeVisual(); }catch(e){}
+  return nv-cur;
+}
+function syncTrophyChip(){
+  const ta=document.getElementById('title-actions'); if(!ta) return;
+  let c=document.getElementById('trophy-chip');
+  if(!c){ c=document.createElement('span'); c.id='trophy-chip'; ta.insertBefore(c,ta.firstChild); }
+  const t=loadTrophies(), gi=gradeOf(t);
+  c.textContent='🏆 '+t.toLocaleString()+' · '+GRADES[gi][0];
+  c.style.borderColor=GRADES[gi][1]; c.style.color=GRADES[gi][1];
+}
+function syncGradeVisual(){
+  const aw=document.getElementById('arena-wrap'); if(!aw) return;
+  const gi=gradeOf(loadTrophies());
+  for(let i=0;i<GRADES.length;i++) aw.classList.toggle('g'+i, i===gi);
+}
+try{ syncTrophyChip(); }catch(e){}
 </script>
 <script>
+
 
 
 /* 서비스 워커 등록 — 오프라인 실행 지원 */
