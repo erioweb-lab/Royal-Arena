@@ -269,7 +269,7 @@ body{background:radial-gradient(1100px 760px at 50% 28%,#22335c 0%,#0b1220 62%) 
 </style>
 </head>
 <body>
-<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v69</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v70</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1432,11 +1432,22 @@ function drawUnit(u){try{
     if(!moving&&!u.c.flying){ const br=1+Math.sin(now*2.6+u.bob)*0.018; ctx.scale(br,2-br); }
     const punch=u.swing>0?1+Math.sin(u.swing*Math.PI)*0.16:1;
     ctx.save(); ctx.scale(punch,punch);
-    if(u.swing>0) ctx.rotate(Math.sin((1-u.swing/(u._swd||0.3))*Math.PI)*0.30);
-    ctx.drawImage(aimF?ASPR[u.key]:SPR[u.key],-sh/2,-sh*0.82-hop,sh,sh);
-    if(u.hurt>0){ ctx.globalCompositeOperation='lighter'; ctx.globalAlpha=Math.min(1,u.hurt/0.09)*0.75;
-      ctx.drawImage(aimF?ASPR[u.key]:SPR[u.key],-sh/2,-sh*0.82-hop,sh,sh);
-      ctx.globalCompositeOperation='source-over'; ctx.globalAlpha=1; }
+    if(aimF){ var __IM=SPR[u.key], __AU=ASPR[u.key], __wy=-sh*0.30-hop;
+      ctx.drawImage(__IM,0,__IM.naturalHeight*0.44,__IM.naturalWidth,__IM.naturalHeight*0.56,-sh/2,-sh*0.38-hop,sh,sh*0.56);
+      ctx.translate(0,__wy);
+      ctx.rotate(Math.sin((1-u.swing/(u._swd||0.45))*Math.PI)*0.30);
+      ctx.drawImage(__AU,0,0,__AU.naturalWidth,__AU.naturalHeight*0.66,-sh/2,-sh*0.32,sh,sh*0.66);
+      if(u.hurt>0){ ctx.globalCompositeOperation='lighter'; ctx.globalAlpha=Math.min(1,u.hurt/0.09)*0.75;
+        ctx.drawImage(__IM,0,__IM.naturalHeight*0.44,__IM.naturalWidth,__IM.naturalHeight*0.56,-sh/2,-sh*0.38-hop,sh,sh*0.56);
+        ctx.drawImage(__AU,0,0,__AU.naturalWidth,__AU.naturalHeight*0.66,-sh/2,-sh*0.32,sh,sh*0.66);
+        ctx.globalCompositeOperation='source-over'; ctx.globalAlpha=1; }
+    } else {
+      if(u.swing>0) ctx.rotate(Math.sin((1-u.swing/(u._swd||0.3))*Math.PI)*0.30);
+      ctx.drawImage(SPR[u.key],-sh/2,-sh*0.82-hop,sh,sh);
+      if(u.hurt>0){ ctx.globalCompositeOperation='lighter'; ctx.globalAlpha=Math.min(1,u.hurt/0.09)*0.75;
+        ctx.drawImage(SPR[u.key],-sh/2,-sh*0.82-hop,sh,sh);
+        ctx.globalCompositeOperation='source-over'; ctx.globalAlpha=1; }
+    }
     ctx.restore(); }
   else { drawBody(u,r,la);
     if(u.swing>0){ ctx.strokeStyle='rgba(255,255,255,.8)'; ctx.lineWidth=3;
@@ -2020,6 +2031,7 @@ try{ var __rq=new URLSearchParams(location.search); var __rw=__rq.get('result');
 requestAnimationFrame(loop);
 </script>
 <script>
+
 
 
 'use strict';
