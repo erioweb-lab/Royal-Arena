@@ -567,7 +567,7 @@ button:active{transform:translateY(2px)}
 </style>
 </head>
 <body>
-<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v122</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v123</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -2254,6 +2254,8 @@ function render(){
   }
   ctx.restore();
   drawVignette();
+
+  try{ drawFrame(); }catch(e){}   // v123: 프레임 드로우 — 최상위 레이어(스크린 공간)
 }
 
 /* ---------- 입력 ---------- */
@@ -2635,11 +2637,25 @@ function repairBtnState(){
   if(!dmg) return 'hidden';
   return (S.repCd>0)?'cd':'ready';
 }
-/* ---------- v122: 전투 좌우 여백 레이아웃 (상태 좌·컨트롤 우 기둥) ---------- */
+/* ---------- v123: 게임 화면 금색 프레임 + 프레임 내부 HUD (참고 디자인 규격) ---------- */
+function drawFrame(){   // v123: 게임 화면 금색 테두리 — 스크린 공간 고정(얇은 골드 스트로크 + 모서리 캡, 참고 이미지 규격)
+  try{
+    ctx.setTransform(BSCALE,0,0,BSCALE,0,0);
+    ctx.lineJoin='round';
+    roundRect(4,4,W-8,H-8,14); ctx.strokeStyle='rgba(4,8,16,.92)'; ctx.lineWidth=6; ctx.stroke();
+    var g2=ctx.createLinearGradient(0,0,W,H); g2.addColorStop(0,'#f7c531'); g2.addColorStop(.55,'#d4af37'); g2.addColorStop(1,'#b8860b');
+    roundRect(6.5,6.5,W-13,H-13,12); ctx.strokeStyle=g2; ctx.lineWidth=2.5; ctx.stroke();
+    roundRect(10,10,W-20,H-20,10); ctx.strokeStyle='rgba(247,197,49,.32)'; ctx.lineWidth=1; ctx.stroke();
+    var cl=26, cs=[[5,5,1,1],[W-5,5,-1,1],[5,H-5,1,-1],[W-5,H-5,-1,-1]];
+    ctx.strokeStyle='#FFD54F'; ctx.lineWidth=4;
+    for(var ci=0;ci<4;ci++){ var qx=cs[ci][0],qy=cs[ci][1],qsx=cs[ci][2],qsy=cs[ci][3];
+      ctx.beginPath(); ctx.moveTo(qx,qy+qsy*cl); ctx.lineTo(qx,qy); ctx.lineTo(qx+qsx*cl,qy); ctx.stroke(); }
+  }catch(e){}
+}
 function ensureGutters(){
   var aw=document.getElementById('arena-wrap'); if(!aw||document.getElementById('gutL')) return;
   if(!document.getElementById('gut-style')){ var st=document.createElement('style'); st.id='gut-style';
-    st.textContent="#gutL,#gutR{display:none;position:absolute;top:0;bottom:0;width:172px;flex-direction:column;justify-content:center;align-items:center;gap:12px;pointer-events:none;z-index:60} #gutL{left:6px} #gutR{right:6px} #arena-wrap{position:relative} body.battle-wide #gutL,body.battle-wide #gutR{display:flex} body.battle-wide #topbar{opacity:0;pointer-events:none} #gutL>*,#gutR>*{pointer-events:auto} #gutL .crown-chip{font-size:20px;min-width:76px} #gutL #timer{font-size:28px} #gutL #zoom-chip{font-size:13px} #gutR .icon-btn{width:64px;height:48px;min-width:0;font-size:20px} #gutR #btn-quit{font-size:13px;padding:8px 10px;width:84px} .gut-cap{font-family:var(--fd,'Pretendard Variable','Noto Sans KR',sans-serif);font-size:11px;color:#9fb0d0;letter-spacing:-.2px}";
+    st.textContent="#gutL,#gutR{display:none;position:absolute;z-index:60;pointer-events:none} #arena-wrap{position:relative} body.battle-on #topbar{display:none} body.battle-on #boss-hud{top:46px !important} #gutL.on,#gutR.on{display:flex} #gutL>*,#gutR>*{pointer-events:auto;background:rgba(8,12,24,.76);border:1px solid rgba(247,197,49,.55);border-radius:11px;padding:5px 10px;box-shadow:0 2px 8px rgba(0,0,0,.45)} #gutL .crown-chip{font-family:'Jua',sans-serif;font-size:17px;min-width:48px} #gutL #timer{font-family:'Black Han Sans','Jua',sans-serif;font-size:19px;color:#fff} #gutL #zoom-chip{font-size:12px;font-weight:700;color:#FFD54F} #gutR .icon-btn{width:42px;height:40px;min-width:0;font-size:18px;padding:0;display:flex;align-items:center;justify-content:center} #gutR #btn-quit{width:42px;height:40px;font-size:17px;padding:0;overflow:hidden;white-space:nowrap;display:flex;align-items:center;justify-content:center} .gut-cap{font-family:var(--fd,'Pretendard Variable','Noto Sans KR',sans-serif);font-size:11px;color:#FFD54F;letter-spacing:.18em;display:none;background:none !important;border:none !important;box-shadow:none !important} #gutL.on{flex-direction:row;align-items:center;gap:8px;left:calc(var(--fx,0px) + 14px);top:12px} #gutR.on{flex-direction:column;align-items:center;gap:8px;right:calc(var(--fx,0px) + 14px);top:12px} body.battle-wide #gutL{flex-direction:column;align-items:stretch;justify-content:center;gap:14px;left:calc(var(--fx,0px) + 18px);top:0;bottom:0;width:150px} body.battle-wide #gutR{flex-direction:column;align-items:stretch;justify-content:center;gap:12px;right:calc(var(--fx,0px) + 18px);top:0;bottom:0;width:110px} body.battle-wide #gutL>*,body.battle-wide #gutR>*{display:flex;align-items:center;justify-content:center} body.battle-wide #gutL #timer{font-size:26px} body.battle-wide #gutR .icon-btn{width:64px;height:48px;font-size:20px} body.battle-wide #gutR #btn-quit{width:96px;height:48px;font-size:15px} body.battle-wide .gut-cap{display:block}";
     document.head.appendChild(st); }
   var L=document.createElement('div'); L.id='gutL'; var capL=document.createElement('div'); capL.className='gut-cap'; capL.textContent='전황';
   var R=document.createElement('div'); R.id='gutR'; var capR=document.createElement('div'); capR.className='gut-cap'; capR.textContent='컨트롤';
@@ -2650,22 +2666,23 @@ function relayoutHud(){
     var aw=document.getElementById('arena-wrap'); if(!aw) return; ensureGutters();
     var tb=document.getElementById('topbar'); if(!tb) return;
     var L=document.getElementById('gutL'), R=document.getElementById('gutR'); if(!L||!R) return;
+    var on=(typeof S!=='undefined'&&S&&S.scene==='battle');
+    document.body.classList.toggle('battle-on', on);
+    if(!on){ L.classList.remove('on'); R.classList.remove('on'); return; }
     if(!tb.__order) tb.__order=Array.prototype.slice.call(tb.children);
     var gw=aw.clientWidth||window.innerWidth||1280, gh=aw.clientHeight||520;
-    var cw=gh*(612/1088);   // 캔버스 표시 폭(9:16 contain)
-    var wide=((gw-cw)/2)>=150;
+    var cw2=gh*(612/1088); if(cw2>gw) cw2=gw;
+    var fx=Math.max(0,(gw-cw2)/2);
+    aw.style.setProperty('--fx', fx.toFixed(1)+'px');
+    var wide=((gw-cw2)/2)>=150;
     aw.classList.toggle('wide', wide);
-    try{ document.body.classList.toggle('battle-wide', wide); }catch(e){}
+    document.body.classList.toggle('battle-wide', wide);
     var idsL=['crowns-blue','timer','crowns-red','zoom-chip'], idsR=['cam-home-btn','btn-sound','btn-quit'];
     function byId(id){ return document.getElementById(id); }
-    if(wide){
-      idsL.forEach(function(id){ var el=byId(id); if(el&&el.parentNode!==L) L.appendChild(el); });
-      idsR.forEach(function(id){ var el=byId(id); if(el&&el.parentNode!==R) R.appendChild(el); });
-    } else {
-      tb.__order.forEach(function(el){ if(byId(el.id)===el) tb.appendChild(el); });   // 원순 복원
-      var zs=byId('zoom-chip'); if(zs&&zs.parentNode!==tb){ var bs=byId('btn-sound'); if(bs) tb.insertBefore(zs,bs); else tb.appendChild(zs); }
-      var hs=byId('cam-home-btn'); if(hs&&hs.parentNode!==tb){ var bs2=byId('btn-sound'); if(bs2) tb.insertBefore(hs,bs2); else tb.appendChild(hs); }
-    }
+    idsL.forEach(function(id){ var el=byId(id); if(el&&el.parentNode!==L) L.appendChild(el); });
+    idsR.forEach(function(id){ var el=byId(id); if(el&&el.parentNode!==R) R.appendChild(el); });
+    var q=byId('btn-quit'); if(q){ if(wide){ if(q.__t!=='w'){ q.textContent='🏳️ 기권'; q.__t='w'; } } else { if(q.__t!=='n'){ q.textContent='🏳️'; q.__t='n'; } } }
+    L.classList.add('on'); R.classList.add('on');
   }catch(e){}
 }
 window.addEventListener('resize', relayoutHud);
@@ -2757,7 +2774,10 @@ function renderProfileList(){
     ctl.appendChild(sel); ctl.appendChild(del); it.appendChild(ctl); box.appendChild(it);
   });
 }
-/* ---------- v119: P16 전술 연구소 (스킬트리 9노드) ---------- */
+
+</script>
+<script>
+'use strict';
 const SKILLS=[
  {id:'off1',col:'⚔️',tier:1,name:'무난한 힘',desc:'아군 유닛 공격력 +8%'},
  {id:'off2',col:'⚔️',tier:2,name:'집중 포화',desc:'아군 유닛 공격력 추가 +6%'},
@@ -2780,10 +2800,6 @@ function canBuySkill(id){ var d=SKILLS.find(function(s){ return s.id===id; }); i
   return true; }
 function buySkill(id){ if(!canBuySkill(id)) return false;
   var st=spState(); st.sp-=1; var o=skillsObj(); o[id]=(o[id]||0)+1; skillsSave(o); spSave(st); return true; }
-
-</script>
-<script>
-'use strict';
 function refundSkill(id){ var lv=skillLv(id); if(lv<=0) return false;
   var d=SKILLS.find(function(s){ return s.id===id; }); var back=lv; var o=skillsObj(); o[id]=0;
   [colSkill(d.col,d.tier+1),colSkill(d.col,d.tier+2)].forEach(function(n){ if(n&&skillLv(n.id)>0){ back+=skillLv(n.id); o[n.id]=0; } });   // v119: 연쇄 환불 — 하위 전제 미달 시 종속 상위 전액 환불
@@ -2884,6 +2900,161 @@ function syncRepairBtn(){
 
 /* ---------- v109 #13: 유물 4종(영구 계승) ---------- */
 const RELICS=[
+  {id:'relic_atk',icon:'⚔️',name:'전투 문장',desc:'아군 유닛의 피해 +10%',need:1},
+  {id:'relic_tower',icon:'🛡️',name:'수호 문장',desc:'아군 타워 최대 체력 +10%',need:3},
+  {id:'relic_spell',icon:'✨',name:'마력 봉인구',desc:'주문 피해 +25%',need:5},
+  {id:'relic_gold',icon:'💰',name:'황금 엘릭서 통',desc:'엘릭서 재생 +10%',need:7}
+];
+function spellDmg(d){ d=Math.round(d*(1+0.10*((S._sk&&S._sk.mag2)||0))); return (S&&S.relic==='relic_spell')?Math.round(d*1.25):d; }   // v119: 스킬트리 광역 술영 — 주문 피해 +10%
+function relicWins(){ try{ return Math.max(0,parseInt(localStorage.getItem('ra_wins_v1')||'0',10)||0); }catch(e){ return 0; } }
+function loadRelicEquip(){ try{ return localStorage.getItem('ra_relic_v1')||''; }catch(e){ return ''; } }
+function saveRelicEquip(id){ try{ if(id) localStorage.setItem('ra_relic_v1',id); else localStorage.removeItem('ra_relic_v1'); }catch(e){} }
+function applyRelics(){
+  if(S.relic!=='relic_tower') return;
+  for(const t of towers){ if(t.team==='blue'&&!t.__rl){ t.__rl=1; t.maxHp=Math.round(t.maxHp*1.1); t.hp=Math.min(t.maxHp,Math.round(t.hp*1.1)); } }
+}
+function castSpell(key,team,x,y){ var __pn=projs.length; castSpellBase(key,team,x,y); try{ if(team==='blue'&&S.relic==='relic_spell'&&projs.length>__pn){ for(var __i=__pn;__i<projs.length;__i++){ if(projs[__i]&&projs[__i].dmg) projs[__i].dmg=Math.round(projs[__i].dmg*1.25); } } }catch(e){} }
+function renderRelicList(){
+  var box=document.getElementById('relic-list'); if(!box) return;
+  var wins=relicWins(), eq=loadRelicEquip(); box.innerHTML='';
+  RELICS.forEach(function(r){
+    var d=document.createElement('div'); d.className='rli'+(eq===r.id?' on':'')+((wins<r.need)?' lock':'');
+    d.innerHTML='<span class="ricon">'+r.icon+'</span><span class="rmeta"><b>'+r.name+'</b><small>'+r.desc+'</small></span>'
+      +(wins<r.need?'<span class="rbadge lk">🔒 '+r.need+'승</span>':(eq===r.id?'<span class="rbadge eq">착용 중</span>':'<span class="rbadge">착용</span>'));
+    d.onclick=function(){
+      if(wins<r.need){ toast(r.need+'승 달성 시 해금됩니다'); return; }
+      saveRelicEquip(eq===r.id?'':r.id); renderRelicList();
+    };
+    box.appendChild(d);
+  });
+}
+function ensureRelicUI(){
+  if(document.getElementById('overlay-relic')) return;
+  var ov=document.createElement('div'); ov.id='overlay-relic'; ov.className='overlay hidden';
+  ov.innerHTML='<div class="rpanel"><h2>🏺 유물</h2><p class="rsub">승리로 해금 — 한 번에 하나만 착용</p><div id="relic-list"></div><button id="btn-relic-close">닫기</button></div>';
+  document.body.appendChild(ov);
+  ov.addEventListener('click',function(ev){ if(ev.target===ov) ov.classList.add('hidden'); });
+  var cl=document.getElementById('btn-relic-close'); if(cl) cl.onclick=function(){ ov.classList.add('hidden'); };
+  var n=0, tick=function(){
+    var ta=document.getElementById('title-actions');
+    if(ta){ var b=document.createElement('button'); b.id='btn-relic'; b.textContent='🏺 유물';
+      b.onclick=function(){ renderRelicList(); ov.classList.remove('hidden'); };
+      var hof=document.getElementById('btn-hof'); if(hof&&hof.parentNode===ta) ta.insertBefore(b,hof); else ta.appendChild(b); return; }
+    if(++n<40) setTimeout(tick,50);
+  };
+  setTimeout(tick,50);
+}
+try{ ensureRelicUI(); ensureSkillUI(); ensureProfileUI(); }catch(e){}
+
+/* v110 SPR.boss 등록(선언 완료 후) */
+try{ if(!SPR.boss&&ART.boss){ SPR.boss=new Image(); SPR.boss.src=ART.boss; ASPR.boss=SPR.boss; } }catch(e){}
+try{ relayoutHud(); }catch(e){}   // v122: 초기화 시 기둥 배치
+try{ relayoutHud(); }catch(e){}
+
+</script>
+<script>
+
+'use strict';
+function refundSkill(id){ var lv=skillLv(id); if(lv<=0) return false;
+  var d=SKILLS.find(function(s){ return s.id===id; }); var back=lv; var o=skillsObj(); o[id]=0;
+  [colSkill(d.col,d.tier+1),colSkill(d.col,d.tier+2)].forEach(function(n){ if(n&&skillLv(n.id)>0){ back+=skillLv(n.id); o[n.id]=0; } });   // v119: 연쇄 환불 — 하위 전제 미달 시 종속 상위 전액 환불
+  var st=spState(); st.sp+=back; skillsSave(o); spSave(st); return true; }
+function resetSkills(){ var o=skillsObj(); var back=0; for(var k in o) back+=(o[k]||0);
+  var st=spState(); st.sp+=back; skillsSave({}); spSave(st); return true; }   // v119: 총 SP 보존 — 획득 누적 SP 100% 반환
+function applySkills(){ try{   // v119: 경기 시작마다 스킬 반영 — 방위 계통(타워 체력)+캐시(S._sk)
+  S._sk={off1:skillLv('off1'),off2:skillLv('off2'),off3:skillLv('off3'),def2:skillLv('def2'),mag1:skillLv('mag1'),mag2:skillLv('mag2'),mag3:skillLv('mag3')};
+  var hb=1+0.10*skillLv('def1')+0.10*skillLv('def3');
+  for(var i=0;i<towers.length;i++){ var t=towers[i]; if(t.team==='blue'){ t.maxHp=Math.round(t.maxHp*hb); t.hp=t.maxHp; } }
+}catch(e){} }
+function ensureSkillUI(){
+  if(document.getElementById('overlay-skill')) return;
+  if(!document.getElementById('sk-style')){ var st2=document.createElement('style'); st2.id='sk-style';
+    st2.textContent='#sk-grid{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;max-width:660px;margin:10px auto} .sk-col{flex:1;min-width:172px;display:flex;flex-direction:column;gap:8px} .sk-item{position:relative;background:rgba(18,24,43,.9);border:1px solid #3d4c73;border-radius:10px;padding:8px 44px 8px 10px;color:#dfe8ff;text-align:left;font-family:var(--fd,\'Pretendard Variable\',\'Noto Sans KR\',sans-serif);font-size:13.5px}   /* v121: 아이템 폰트 정합 */ .sk-item small{display:block;color:#9fb0d0;font-size:11px;margin:2px 0 6px} .sk-item button{font-family:var(--fd,\'Pretendard Variable\',\'Noto Sans KR\',sans-serif);position:absolute;right:8px;width:26px;height:26px;border-radius:8px;border:1px solid #FFB300;background:rgba(18,24,43,.9);color:#FFD54F;font-weight:800;cursor:pointer} .sk-item button:disabled{opacity:.35;cursor:default} .sk-item .sk-lv{color:#FFD54F;font-weight:700;font-size:12px} .sk-item.t2{border-color:#7f8fbb} .sk-item.t3{border-color:#c77dff} #sk-sp{text-align:center;color:#FFD54F;font-weight:700;margin:6px 0} #btn-skill-reset{display:block;margin:10px auto 0;width:130px;padding:8px 0;border-radius:10px;border:1.5px solid #e64545;background:rgba(18,24,43,.85);color:#ff9d9d;font-weight:700;cursor:pointer} #overlay-skill .rpanel{max-height:82vh;overflow-y:auto} #btn-skill,#btn-profile{font-family:\'Black Han Sans\',\'Jua\',sans-serif;font-size:19px;padding:12px 34px;border-radius:14px;border:2px solid #3d4c73;color:#dfe8ff;background:rgba(18,24,43,.85);box-shadow:0 5px 0 #1c2740,0 9px 18px rgba(0,0,0,.4);text-shadow:0 2px 0 rgba(0,0,0,.6);transition:transform .06s} #btn-skill:active,#btn-profile:active{transform:translateY(3px)} #btn-skill-close,#btn-prf-close{display:block;margin:14px auto 0;width:120px;padding:9px 0;border-radius:12px;border:1.5px solid #FFB300;background:rgba(18,24,43,.85);color:#FFD54F;font-weight:700;font-family:var(--fd,\'Pretendard Variable\',\'Noto Sans KR\',sans-serif);cursor:pointer} @media (max-width:420px){#btn-skill,#btn-profile{font-size:16px;padding:10px 22px}}';   // v121: 로비 버튼·닫기 — 유물 규격 통일
+    document.head.appendChild(st2); }
+  var ov=document.createElement('div'); ov.id='overlay-skill'; ov.className='overlay hidden';
+  ov.innerHTML='<div class="rpanel"><h2>🎓 전술 연구소</h2><p class="rsub">승리 보상 SP로 영구 강화 — 연쇄 환불·총 SP 보존</p><div id="sk-sp"></div><div id="sk-grid"></div><button id="btn-skill-reset">전체 초기화</button><button id="btn-skill-close">닫기</button></div>';
+  document.body.appendChild(ov);
+  ov.addEventListener('click',function(ev){ if(ev.target===ov) ov.classList.add('hidden'); });
+  var cl=document.getElementById('btn-skill-close'); if(cl) cl.onclick=function(){ ov.classList.add('hidden'); };
+  var rs=document.getElementById('btn-skill-reset'); if(rs) rs.onclick=function(){ resetSkills(); renderSkillList(); };
+  var n=0, tick=function(){
+    var ta=document.getElementById('title-actions');
+    if(ta){ var b=document.createElement('button'); b.id='btn-skill'; b.textContent='🎓 전술 연구소';
+      b.onclick=function(){ renderSkillList(); ov.classList.remove('hidden'); };
+      var rel=document.getElementById('btn-relic'); if(rel&&rel.parentNode===ta) ta.insertBefore(b,rel); else ta.appendChild(b); return; }
+    if(++n<40) setTimeout(tick,150); };
+  tick();
+}
+function renderSkillList(){
+  var box=document.getElementById('sk-grid'); if(!box) return;
+  var st=spState(); var sp=document.getElementById('sk-sp');
+  if(sp) sp.textContent='보유 SP: '+st.sp+' · 누적 획득: '+st.total;
+  box.innerHTML='';
+  ['⚔️','🛡️','🧪'].forEach(function(c){
+    var colDiv=document.createElement('div'); colDiv.className='sk-col';
+    SKILLS.filter(function(s){ return s.col===c; }).forEach(function(d){
+      var lv=skillLv(d.id);
+      var locked=false;
+      if(d.tier===2&&skillLv(colSkill(d.col,1).id)<2) locked=true;
+      if(d.tier===3&&skillLv(colSkill(d.col,2).id)<2) locked=true;
+      var item=document.createElement('div'); item.className='sk-item t'+d.tier;
+      item.innerHTML='<b>'+d.col+' '+d.name+'</b><small>'+d.desc+'</small><span class="sk-lv">Lv '+lv+'/3</span>';
+      var minus=document.createElement('button'); minus.textContent='−'; minus.disabled=lv<=0;
+      minus.onclick=function(){ refundSkill(d.id); renderSkillList(); };
+      var plus=document.createElement('button'); plus.textContent='+'; plus.disabled=(locked||!canBuySkill(d.id));
+      plus.title=locked?'하위 티어 Lv 2 필요':'';
+      plus.onclick=function(){ buySkill(d.id); renderSkillList(); };
+      item.appendChild(plus); item.appendChild(minus);
+      colDiv.appendChild(item);
+    });
+    box.appendChild(colDiv);
+  });
+}
+function repairTower(){
+  if(S.over||S.repCd>0) return false;
+  const dmg=towers.filter(t=>t.team==='blue'&&!t.dead&&t.hp<t.maxHp-1);
+  if(!dmg.length) return false;
+  var __rc=(S._sk&&S._sk.def2)?2:3; if(P.elixir<__rc){ toast('엘릭서 부족 — 수리는 '+__rc+' 필요'); return false; }   // v119: 수리 조직 스킬 — 비용 −1
+  const t=dmg.slice().sort((a,b)=>(a.hp/a.maxHp)-(b.hp/b.maxHp))[0];
+  P.elixir-=__rc; S.repCd=5;
+  const amt=Math.min(t.maxHp-t.hp, Math.round(t.maxHp*0.25));
+  t.hp+=amt;
+  fx.push({x:t.x,y:t.y,t:0,dur:0.8,kind:'ring',col:'rgba(111,208,140,.9)'});
+  fx.push({x:t.x,y:t.y,t:0,dur:0.7,kind:'poof'});
+  floats.push({x:t.x,y:t.y-1.1,txt:'+'+amt,t:0.9,col:'#8fe6a8',big:false});
+  sfx('cast'); toast('🔨 타워 수리 +'+amt);
+  try{ syncHUD(); }catch(e){}
+  return true;
+}
+function ensureRepairBtn(){
+  var b=document.getElementById('repair-btn'); if(b) return b;
+  b=document.createElement('button'); b.id='repair-btn'; b.className='hidden';
+  b.innerHTML='<i class="rfill"></i><span class="rt">🔨 수리 3</span>';
+  b.onclick=function(){ ensureAudio(); repairTower(); };
+  var aw=document.getElementById('arena-wrap'); if(aw) aw.appendChild(b); return b;
+}
+function syncRepairBtn(){
+  var b=document.getElementById('repair-btn')||ensureRepairBtn(); if(!b) return;
+  var st=repairBtnState();
+  b.classList.toggle('hidden',st==='hidden');
+  if(st==='hidden') return;
+  var f=b.querySelector('.rfill'), lb=b.querySelector('.rt');
+  if(st==='cd'){
+    b.classList.add('cd');
+    if(f) f.style.width=(S.repCd/5*100)+'%';
+    var tx='🔨 '+Math.ceil(S.repCd)+'s';
+    if(b.__t!==tx){ lb.textContent=tx; b.__t=tx; }
+  } else {
+    b.classList.remove('cd');
+    if(f&&b.__t!=='ready') f.style.width='0%';
+    if(b.__t!=='ready'){ lb.textContent='🔨 수리 3'; b.__t='ready'; }
+    b.style.opacity=P.elixir<3?'.55':'1';
+  }
+}
+
+
+/* ---------- v109 #13: 유물 4종(영구 계승) ---------- */
+var RELICS_LEGACY=[
   {id:'relic_atk',icon:'⚔️',name:'전투 문장',desc:'아군 유닛의 피해 +10%',need:1},
   {id:'relic_tower',icon:'🛡️',name:'수호 문장',desc:'아군 타워 최대 체력 +10%',need:3},
   {id:'relic_spell',icon:'✨',name:'마력 봉인구',desc:'주문 피해 +25%',need:5},
