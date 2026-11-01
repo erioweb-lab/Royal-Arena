@@ -385,9 +385,21 @@ button:active{transform:translateY(2px)}
 #deck-edit button{border-radius:14px;font-weight:700}
 #dk-save{background:linear-gradient(180deg,#FFB300,#E65100);border:1px solid #FFE082;color:#1A1A1A;font-weight:800}
 </style>
+<style id="ui-v96">
+/* v96: 내부 UI 시스템 적용 — 전투 중 버튼·상태창·토스트·엘릭서(v95 토큰 재활용) */
+#screen-battle button{background:rgba(18,24,43,.85) !important;border:1.5px solid #FFB300 !important;color:#FFD54F !important;border-radius:14px !important;box-shadow:inset 0 0 6px rgba(255,179,0,.15) !important}
+
+#ks-btn{background:linear-gradient(180deg,#FFB300 0%,#E65100 100%) !important;border:1px solid #FFE082 !important;color:#1A1A1A !important;font-weight:800 !important;border-radius:18px !important;box-shadow:0 4px 12px rgba(230,81,0,.4),inset 0 1px 1px rgba(255,255,255,.6) !important}
+#screen-battle div:has(.emote-btn){background:rgba(18,24,43,.85) !important;background-image:none !important;border:1.5px solid #FFB300 !important;border-radius:16px !important;box-shadow:inset 0 0 6px rgba(255,179,0,.15) !important}
+.emote-btn{background:rgba(8,14,26,.5) !important;background-image:none !important;border:1px solid rgba(255,213,79,.45) !important;border-radius:12px !important;font-size:20px !important}
+#toast{background:rgba(8,14,26,.85);border:1px solid #FFB300;border-radius:999px;color:#FFD54F;font-weight:700;padding:3px 14px;font-family:var(--fd)}
+#elixir-track{border:1px solid rgba(255,179,0,.35);border-radius:999px;overflow:hidden}
+#elixir-num{font-family:var(--fd);font-weight:800}
+#zoom-chip{font-family:var(--fd) !important;font-weight:700 !important}
+</style>
 </head>
 <body>
-<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v95</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v96</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1522,7 +1534,7 @@ function drawTower(t){try{
         ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(bx-2,by-2,bw3+4,12);
         ctx.fillStyle='#20293a';ctx.fillRect(bx,by,bw3,8);
         ctx.fillStyle=t.team==='blue'?'#4ade80':'#ff7b6b';ctx.fillRect(bx,by,bw3*hr,8);
-        ctx.font='900 17px Jua, sans-serif';ctx.textAlign='center';ctx.lineWidth=3;ctx.strokeStyle='rgba(8,12,22,.95)';
+        ctx.font=" + FD + ";ctx.textAlign='center';ctx.lineWidth=3;ctx.strokeStyle='rgba(8,12,22,.95)';
         ctx.strokeText(Math.ceil(t.hp),clamp(x,26,W-26),by-6);ctx.fillStyle='#ffe08a';ctx.fillText(Math.ceil(t.hp),clamp(x,26,W-26),by-6);
         return;
       }
@@ -1545,9 +1557,9 @@ function drawTower(t){try{
     ctx.fillStyle='#20293a'; roundRect(bx,by,bw,8,4); ctx.fill();
     ctx.fillStyle=t.team==='blue'?'#4ade80':'#ff7b6b';
     roundRect(bx,by,bw*Math.max(0,hr),8,4); ctx.fill();
-    ctx.font='700 11px "Noto Sans KR",sans-serif'; ctx.textAlign='center';
+    ctx.font="'Pretendard Variable','Noto Sans KR',sans-serif"; ctx.textAlign='center';
     ctx.strokeStyle='rgba(0,0,0,.8)'; ctx.lineWidth=3;
-    ctx.font='900 17px Jua, sans-serif'; ctx.lineWidth=3; ctx.strokeStyle='rgba(8,12,22,.95)'; ctx.strokeText(Math.ceil(t.hp),clamp(x,26,W-26),by-6); ctx.fillStyle='#ffe08a'; ctx.fillText(Math.ceil(t.hp),clamp(x,26,W-26),by-6);
+    ctx.font=" + FD + "; ctx.lineWidth=3; ctx.strokeStyle='rgba(8,12,22,.95)'; ctx.strokeText(Math.ceil(t.hp),clamp(x,26,W-26),by-6); ctx.fillStyle='#ffe08a'; ctx.fillText(Math.ceil(t.hp),clamp(x,26,W-26),by-6);
     return;
   }
   const w=king?108:82, h=king?84:68, top=y-h/2+4;
@@ -1594,9 +1606,9 @@ function drawTower(t){try{
   ctx.fillStyle='#20293a'; roundRect(bx,by,bw,8,4); ctx.fill();
   ctx.fillStyle=t.team==='blue'?'#4ade80':'#ff7b6b';
   roundRect(bx,by,bw*Math.max(0,hr),8,4); ctx.fill();
-  ctx.font='700 12.5px "Noto Sans KR",sans-serif'; ctx.textAlign='center';
+  ctx.font="'Pretendard Variable','Noto Sans KR',sans-serif"; ctx.textAlign='center';
   ctx.strokeStyle='rgba(0,0,0,.8)'; ctx.lineWidth=3;
-  ctx.font='900 17px Jua, sans-serif'; ctx.lineWidth=3; ctx.strokeStyle='rgba(8,12,22,.95)'; ctx.strokeText(Math.ceil(t.hp),clamp(x,26,W-26),by-6); ctx.fillStyle='#ffe08a'; ctx.fillText(Math.ceil(t.hp),clamp(x,26,W-26),by-6);
+  ctx.font=" + FD + "; ctx.lineWidth=3; ctx.strokeStyle='rgba(8,12,22,.95)'; ctx.strokeText(Math.ceil(t.hp),clamp(x,26,W-26),by-6); ctx.fillStyle='#ffe08a'; ctx.fillText(Math.ceil(t.hp),clamp(x,26,W-26),by-6);
 }catch(__pe){ if(!window.__pe1)window.__pe1=__pe.message; }}
 function drawRubble(t){
   if(TSPR.t_rubble&&TSPR.t_rubble.complete){
@@ -2299,7 +2311,7 @@ function drawBossHUD(){
   if((b.shield||0)>0){ ctx.fillStyle='rgba(226,236,255,.9)'; ctx.fillRect(x+4,y+4,(bw-8)*hf*Math.min(1,b.shield/900),4); }
   ctx.fillStyle='#7a3d10'; ctx.fillRect(x+4,y+19,bw-8,6);
   ctx.fillStyle='#ffa02e'; ctx.fillRect(x+4,y+19,(bw-8)*Math.min(1,b.doom/12),6);
-  ctx.font='900 12px "Noto Sans KR",sans-serif'; ctx.textAlign='left'; ctx.textBaseline='middle';
+  ctx.font="'Pretendard Variable','Noto Sans KR',sans-serif"; ctx.textAlign='left'; ctx.textBaseline='middle';
   ctx.fillStyle='#ffe08a'; ctx.fillText('💀 부활한 왕',x+8,y+9);
   ctx.textAlign='right'; ctx.fillStyle='#fff'; ctx.fillText(Math.ceil(b.hp)+' / '+b.maxHp,x+bw-8,y+9);
   ctx.textAlign='left'; ctx.fillStyle='#ffd7a8'; ctx.fillText('파멸기 '+Math.min(12,b.doom).toFixed(1)+'s',x+8,y+25);
@@ -2380,6 +2392,7 @@ try{ var __rq=new URLSearchParams(location.search); var __rw=__rq.get('result');
 requestAnimationFrame(loop);
 </script>
 <script>
+
 
 
 
