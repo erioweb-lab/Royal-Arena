@@ -521,9 +521,24 @@ button:active{transform:translateY(2px)}
 #repair-btn.cd{color:#c9b06a}
 @media (max-width:420px){#repair-btn{height:38px;padding:0 12px;font-size:13px;bottom:58px}}
 </style>
+<style id="ui-v107">
+/* v107: QA 스윕 정리 — 보스 HUD 축소(타워 가림 완화)·safe-area 여백·모달 딤 강화 */
+#boss-hud{width:min(86%,370px) !important;padding:4px 10px 5px !important;top:6px;background:rgba(8,12,24,.86)}
+#boss-hud .bh-bar{height:13px !important}
+#boss-hud .bh-doomrow{margin-top:3px !important}
+#boss-hud .bh-name{font-size:12.5px !important}
+#boss-hud .bh-hp{font-size:12.5px !important}
+@media (max-width:420px){
+  #boss-hud{top:4px !important;width:90% !important;padding:3px 8px 4px !important}
+  #boss-hud .bh-bar{height:12px !important}
+}
+#screen-title{padding-bottom:calc(18px + env(safe-area-inset-bottom))}
+#hud{padding-bottom:calc(5px + env(safe-area-inset-bottom))}
+.overlay{background:rgba(5,10,20,.9) !important}
+</style>
 </head>
 <body>
-<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v106</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v107</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1618,7 +1633,7 @@ function drawTower(t){try{
         ctx.fillStyle='#20293a';ctx.fillRect(bx,by,bw3,8);
         ctx.fillStyle=t.team==='blue'?'#4ade80':'#ff7b6b';ctx.fillRect(bx,by,bw3*hr,8);
         ctx.font=" + FD + ";ctx.textAlign='center';ctx.lineWidth=3;ctx.strokeStyle='rgba(8,12,22,.95)';
-        ctx.strokeText(Math.ceil(t.hp),clamp(x,26,W-26),by-6);ctx.fillStyle='#ffe08a';ctx.fillText(Math.ceil(t.hp),clamp(x,26,W-26),by-6);
+        var __s=String(Math.ceil(t.hp)),__x=clamp(x,26,W-26),__w=ctx.measureText(__s).width+12;ctx.fillStyle='rgba(8,12,22,.78)';ctx.beginPath();(ctx.roundRect||function(px,py,pw,ph){ctx.rect(px,py,pw,ph)})(__x-__w/2,by-16,__w,18);ctx.fill();ctx.fillStyle='#ffe08a';ctx.fillText(__s,__x,by-6);
         return;
       }
     }catch(__pe){ if(!window.__pe1)window.__pe1='towerFb:'+__pe.message; }try{
@@ -1642,7 +1657,7 @@ function drawTower(t){try{
     roundRect(bx,by,bw*Math.max(0,hr),8,4); ctx.fill();
     ctx.font="'Pretendard Variable','Noto Sans KR',sans-serif"; ctx.textAlign='center';
     ctx.strokeStyle='rgba(0,0,0,.8)'; ctx.lineWidth=3;
-    ctx.font=" + FD + "; ctx.lineWidth=3; ctx.strokeStyle='rgba(8,12,22,.95)'; ctx.strokeText(Math.ceil(t.hp),clamp(x,26,W-26),by-6); ctx.fillStyle='#ffe08a'; ctx.fillText(Math.ceil(t.hp),clamp(x,26,W-26),by-6);
+    ctx.font=" + FD + "; ctx.lineWidth=3; ctx.strokeStyle='rgba(8,12,22,.95)';  var __s=String(Math.ceil(t.hp)),__x=clamp(x,26,W-26),__w=ctx.measureText(__s).width+12;ctx.fillStyle='rgba(8,12,22,.78)';ctx.beginPath();(ctx.roundRect||function(px,py,pw,ph){ctx.rect(px,py,pw,ph)})(__x-__w/2,by-16,__w,18);ctx.fill();ctx.fillStyle='#ffe08a';ctx.fillText(__s,__x,by-6);
     return;
   }
   const w=king?108:82, h=king?84:68, top=y-h/2+4;
@@ -1691,7 +1706,7 @@ function drawTower(t){try{
   roundRect(bx,by,bw*Math.max(0,hr),8,4); ctx.fill();
   ctx.font="'Pretendard Variable','Noto Sans KR',sans-serif"; ctx.textAlign='center';
   ctx.strokeStyle='rgba(0,0,0,.8)'; ctx.lineWidth=3;
-  ctx.font=" + FD + "; ctx.lineWidth=3; ctx.strokeStyle='rgba(8,12,22,.95)'; ctx.strokeText(Math.ceil(t.hp),clamp(x,26,W-26),by-6); ctx.fillStyle='#ffe08a'; ctx.fillText(Math.ceil(t.hp),clamp(x,26,W-26),by-6);
+  ctx.font=" + FD + "; ctx.lineWidth=3; ctx.strokeStyle='rgba(8,12,22,.95)';  var __s=String(Math.ceil(t.hp)),__x=clamp(x,26,W-26),__w=ctx.measureText(__s).width+12;ctx.fillStyle='rgba(8,12,22,.78)';ctx.beginPath();(ctx.roundRect||function(px,py,pw,ph){ctx.rect(px,py,pw,ph)})(__x-__w/2,by-16,__w,18);ctx.fill();ctx.fillStyle='#ffe08a';ctx.fillText(__s,__x,by-6);
 }catch(__pe){ if(!window.__pe1)window.__pe1=__pe.message; }}
 function drawRubble(t){
   if(TSPR.t_rubble&&TSPR.t_rubble.complete){
@@ -2603,6 +2618,7 @@ function syncRepairBtn(){
 }
 </script>
 <script>
+
 
 
 
