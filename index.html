@@ -269,7 +269,7 @@ body{background:radial-gradient(1100px 760px at 50% 28%,#22335c 0%,#0b1220 62%) 
 </style>
 </head>
 <body>
-<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v68</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v69</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -787,7 +787,7 @@ function updateUnit(u,dt){
   const d=dist(u,u.target);
   if(d<=u.c.range+(u.target.r||((u.target.c&&u.target.c.r)||0.5))){
     u.cd-=dt;
-    if(u.cd<=0){ u.cd=u.c.hs; u.swing=0.3;
+    if(u.cd<=0){ u.cd=u.c.hs; u.swing=(u.c.range>1.6?0.3:0.45); u._swd=u.swing;
       hitTarget(u,u.target, u.charging? u.c.dmg*2 : u.c.dmg);
       u.chargeT=0; u.charging=false; }
   } else {
@@ -1409,7 +1409,7 @@ function drawUnit(u){try{
       ctx.lineTo(cx0+Math.cos(a3)*(r+15),cy0+Math.sin(a3)*(r+15)); ctx.stroke(); }
     if(Math.random()<0.4) addParts(px,py+3,1,'#e8d9a0',1.8,0.35,-20); }
   const __sp=(typeof SPR!=='undefined')?SPR[u.key]:null;const sprOK=__sp&&__sp.complete&&__sp.naturalWidth>0&&__sp.__valid!==false;
-  ctx.save(); ctx.translate(cx0,cy0); ctx.scale(sx,1);
+  ctx.save(); ctx.translate(cx0,cy0); ctx.rotate(la);
   if(u.recoilT>0){ u.recoilT-=0.017;
     var rb=Math.max(0,Math.sin(Math.min(1,u.recoilT/0.14)*Math.PI))*5.5, ra=(typeof u.recoilA==='number')?u.recoilA:u.dir;
     ctx.translate(-Math.cos(ra)*rb*0.7,-Math.sin(ra)*rb*0.35);
@@ -1432,7 +1432,7 @@ function drawUnit(u){try{
     if(!moving&&!u.c.flying){ const br=1+Math.sin(now*2.6+u.bob)*0.018; ctx.scale(br,2-br); }
     const punch=u.swing>0?1+Math.sin(u.swing*Math.PI)*0.16:1;
     ctx.save(); ctx.scale(punch,punch);
-    if(u.swing>0) ctx.rotate(Math.sin((1-u.swing/0.3)*Math.PI)*0.30);
+    if(u.swing>0) ctx.rotate(Math.sin((1-u.swing/(u._swd||0.3))*Math.PI)*0.30);
     ctx.drawImage(aimF?ASPR[u.key]:SPR[u.key],-sh/2,-sh*0.82-hop,sh,sh);
     if(u.hurt>0){ ctx.globalCompositeOperation='lighter'; ctx.globalAlpha=Math.min(1,u.hurt/0.09)*0.75;
       ctx.drawImage(aimF?ASPR[u.key]:SPR[u.key],-sh/2,-sh*0.82-hop,sh,sh);
@@ -2020,6 +2020,7 @@ try{ var __rq=new URLSearchParams(location.search); var __rw=__rq.get('result');
 requestAnimationFrame(loop);
 </script>
 <script>
+
 
 'use strict';
 /* v52: v30에서 유실된 스프라이트 맵 빌더 복원 — SPR/TSPR(+RART 데이터) */
