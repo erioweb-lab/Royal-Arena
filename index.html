@@ -512,9 +512,18 @@ button:active{transform:translateY(2px)}
 #arena-wrap.g5{box-shadow:inset 0 0 56px rgba(255,138,60,.19)}
 #rt-trophy{font-variant-numeric:tabular-nums}
 </style>
+<style id="ui-v106">
+/* v106 #12: 타워 수리 버튼(아레나 좌하단, 킹샷 슬롯 위) — 5초 쿨다운 잔량 필 */
+#repair-btn{position:absolute;left:10px;bottom:64px;z-index:56;font-family:var(--fd);font-size:15px;font-weight:800;height:44px;padding:0 16px;background:rgba(18,24,43,.85);border:1.5px solid #FFB300;border-radius:14px;color:#FFD54F;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.5);overflow:hidden}
+#repair-btn.hidden{display:none}
+#repair-btn .rfill{position:absolute;left:0;top:0;bottom:0;width:0;background:rgba(255,179,0,.28);transition:width .2s linear;pointer-events:none}
+#repair-btn .rt{position:relative;pointer-events:none;white-space:nowrap}
+#repair-btn.cd{color:#c9b06a}
+@media (max-width:420px){#repair-btn{height:38px;padding:0 12px;font-size:13px;bottom:58px}}
+</style>
 </head>
 <body>
-<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v105</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v106</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1311,6 +1320,7 @@ function update(dt){
   regenElixir(dt);
   aiTick(dt);
   if(S.ksCd>0) S.ksCd-=dt;
+  if(S.repCd>0) S.repCd-=dt;   // v106 #12: 수리 쿨다운
   if(!S.bossSpawned&&S.t<=90&&!S.over){ S.bossSpawned=true;
     const kt=towers.find(t=>t.team==='blue'&&t.kind==='king'&&!t.dead);
     if(kt){ const BU={key:'boss',team:'red',x:9,y:3.2,c:BOSS_STATS,hp:BOSS_STATS.hp,maxHp:BOSS_STATS.hp,shield:900,cd:1.2,dir:Math.PI/2,dead:false,swing:0,bob:1,spawnFx:0.45,doom:0,chargeT:0};
@@ -2286,6 +2296,7 @@ function syncHUD(){
     if(bo) ksBtn.textContent=S.ks?'🎯 조준 중… 탭=발사':(S.ksCd>0?'🎯 킹샷 '+Math.ceil(S.ksCd)+'s':'🎯 킹샷 READY'); }
   $('#badge-double').classList.toggle('hidden',!S.double);
   try{ syncBossHud(); }catch(e){}   // v104: DOM 보스 상태 HUD
+  try{ syncRepairBtn(); }catch(e){}   // v106: 수리 버튼 상태
   const mm=Math.max(0,Math.floor(S.t/60)), ss=Math.max(0,Math.floor(S.t%60));
   const tEl=$('#timer');
   tEl.textContent=(S.overtime?'+':'')+mm+':'+String(ss).padStart(2,'0');
@@ -2309,7 +2320,7 @@ function show(scene){
 function startMatch(){
   units=[];projs=[];fx=[];floats=[];parts=[];ambient=[];
   S.over=false;S.shown=false;S.winner=null;S.t=180;S.overtime=false;S.double=false;
-  S.crowns={blue:0,red:0}; S.kills={blue:0,red:0}; S.deaths={blue:0,red:0}; S.spells={blue:0,red:0}; S.shake=0; S.clash=null; S.cam={x:W/2,y:H/2,z:1}; S.focus=null; S.focusV=null; S.hot=null; S.slow=0; S.boss=null; S.bossSpawned=false; S.ks=false; S.ksCd=0; S.focusGap=0; S._tp=0; try{ syncGradeVisual(); }catch(e){}
+  S.crowns={blue:0,red:0}; S.kills={blue:0,red:0}; S.deaths={blue:0,red:0}; S.spells={blue:0,red:0}; S.shake=0; S.clash=null; S.cam={x:W/2,y:H/2,z:1}; S.focus=null; S.focusV=null; S.hot=null; S.slow=0; S.boss=null; S.bossSpawned=false; S.ks=false; S.ksCd=0; S.focusGap=0; S._tp=0; S.repCd=0; try{ syncGradeVisual(); }catch(e){}
   P.elixir=5;A.elixir=5;A.timer=4.5;P.sel=null;P._full=false;
   try{ var __sb2=document.getElementById('screen-battle'); if(__sb2) __sb2.classList.remove('ended'); }catch(e){}
   initDeck(P);initDeck(A);
@@ -2541,8 +2552,58 @@ function syncGradeVisual(){
   for(let i=0;i<GRADES.length;i++) aw.classList.toggle('g'+i, i===gi);
 }
 try{ syncTrophyChip(); }catch(e){}
+
+/* ---------- v106 #12: 타워 수리 시스템 ---------- */
+function repairBtnState(){
+  if(S.over) return 'hidden';
+  const dmg=towers.some(t=>t.team==='blue'&&!t.dead&&t.hp<t.maxHp-1);
+  if(!dmg) return 'hidden';
+  return (S.repCd>0)?'cd':'ready';
+}
+function repairTower(){
+  if(S.over||S.repCd>0) return false;
+  const dmg=towers.filter(t=>t.team==='blue'&&!t.dead&&t.hp<t.maxHp-1);
+  if(!dmg.length) return false;
+  if(P.elixir<3){ toast('엘릭서 부족 — 수리는 3 필요'); return false; }
+  const t=dmg.slice().sort((a,b)=>(a.hp/a.maxHp)-(b.hp/b.maxHp))[0];
+  P.elixir-=3; S.repCd=5;
+  const amt=Math.min(t.maxHp-t.hp, Math.round(t.maxHp*0.25));
+  t.hp+=amt;
+  fx.push({x:t.x,y:t.y,t:0,dur:0.8,kind:'ring',col:'rgba(111,208,140,.9)'});
+  fx.push({x:t.x,y:t.y,t:0,dur:0.7,kind:'poof'});
+  floats.push({x:t.x,y:t.y-1.1,txt:'+'+amt,t:0.9,col:'#8fe6a8',big:false});
+  sfx('cast'); toast('🔨 타워 수리 +'+amt);
+  try{ syncHUD(); }catch(e){}
+  return true;
+}
+function ensureRepairBtn(){
+  var b=document.getElementById('repair-btn'); if(b) return b;
+  b=document.createElement('button'); b.id='repair-btn'; b.className='hidden';
+  b.innerHTML='<i class="rfill"></i><span class="rt">🔨 수리 3</span>';
+  b.onclick=function(){ ensureAudio(); repairTower(); };
+  var aw=document.getElementById('arena-wrap'); if(aw) aw.appendChild(b); return b;
+}
+function syncRepairBtn(){
+  var b=document.getElementById('repair-btn')||ensureRepairBtn(); if(!b) return;
+  var st=repairBtnState();
+  b.classList.toggle('hidden',st==='hidden');
+  if(st==='hidden') return;
+  var f=b.querySelector('.rfill'), lb=b.querySelector('.rt');
+  if(st==='cd'){
+    b.classList.add('cd');
+    if(f) f.style.width=(S.repCd/5*100)+'%';
+    var tx='🔨 '+Math.ceil(S.repCd)+'s';
+    if(b.__t!==tx){ lb.textContent=tx; b.__t=tx; }
+  } else {
+    b.classList.remove('cd');
+    if(f&&b.__t!=='ready') f.style.width='0%';
+    if(b.__t!=='ready'){ lb.textContent='🔨 수리 3'; b.__t='ready'; }
+    b.style.opacity=P.elixir<3?'.55':'1';
+  }
+}
 </script>
 <script>
+
 
 
 
