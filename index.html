@@ -390,7 +390,7 @@ button:active{transform:translateY(2px)}
 #screen-battle button{background:rgba(18,24,43,.85) !important;border:1.5px solid #FFB300 !important;color:#FFD54F !important;border-radius:14px !important;box-shadow:inset 0 0 6px rgba(255,179,0,.15) !important}
 
 #ks-btn{background:linear-gradient(180deg,#FFB300 0%,#E65100 100%) !important;border:1px solid #FFE082 !important;color:#1A1A1A !important;font-weight:800 !important;border-radius:18px !important;box-shadow:0 4px 12px rgba(230,81,0,.4),inset 0 1px 1px rgba(255,255,255,.6) !important}
-#screen-battle div:has(.emote-btn){background:rgba(18,24,43,.85) !important;background-image:none !important;border:1.5px solid #FFB300 !important;border-radius:16px !important;box-shadow:inset 0 0 6px rgba(255,179,0,.15) !important}
+#screen-battle #emote-bar{background:rgba(18,24,43,.85) !important;background-image:none !important;border:1.5px solid #FFB300 !important;border-radius:16px !important;box-shadow:inset 0 0 6px rgba(255,179,0,.15) !important}
 .emote-btn{background:rgba(8,14,26,.5) !important;background-image:none !important;border:1px solid rgba(255,213,79,.45) !important;border-radius:12px !important;font-size:20px !important}
 #toast{background:rgba(8,14,26,.85);border:1px solid #FFB300;border-radius:999px;color:#FFD54F;font-weight:700;padding:3px 14px;font-family:var(--fd)}
 #elixir-track{border:1px solid rgba(255,179,0,.35);border-radius:999px;overflow:hidden}
@@ -444,9 +444,13 @@ button:active{transform:translateY(2px)}
   #topbar{gap:6px !important}
 }
 </style>
+<style id="ui-v101">
+/* v101: 아레나 랩 골드 링 제거 — v96 div:has(.emote-btn) 셀렉터가 이모트 바 조상 #arena-wrap까지 채택하던 버그 수정 */
+#arena-wrap{border:none !important;background:transparent !important;box-shadow:none !important;border-radius:0 !important}
+</style>
 </head>
 <body>
-<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v100</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v101</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
