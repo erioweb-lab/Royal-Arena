@@ -349,7 +349,7 @@ h1,h2,.t-cta,.rtab{font-family:'Black Han Sans','Jua','Noto Sans KR',sans-serif}
 </style>
 </head>
 <body>
-<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v86</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v87</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1852,7 +1852,7 @@ function drawBody(u,r,la){
   }
 }
 const FIREARC={kingshot:30,arrow:10,bullet:3,wizfb:18,dragon:14,ice:16,bomb:34,cannon:46};
-const PROJ_BASE={fireball:0,zap:Math.PI/2};
+const PROJ_BASE={fireball:0,zap:1.5708,arrow:0.785,bullet:0.785,bomb:0.785,wizfb:0.785,dragon:0.785,ice:0.785,cannon:0.785,kingshot:0.785};
 const PROJ16={};
 function cv16(fn){ const c=document.createElement('canvas'); c.width=64; c.height=64; fn(c.getContext('2d')); return c; }
 function pArrow(g){
@@ -1887,22 +1887,12 @@ function pBomb(g){ pBall(g,'#23262e','#8a93a6'); g.strokeStyle='#6b4a26'; g.line
 function pBullet(g){ pBall(g,'#c9a24a','#ffe9a8'); g.fillStyle='#8f9cab'; g.beginPath(); g.moveTo(29,0); g.lineTo(10,-5); g.lineTo(10,5); g.closePath(); g.fill(); }
 function bake16(){
   if(window.__p16) return;
-  const mk={arrow:pArrow,bullet:pBullet,bomb:pBomb,ice:pIce,
-    wizfb:function(g){pBolt(g,'#ffd75e','rgba(255,140,40,.85)')},
-    dragon:function(g){pBolt(g,'#ff9a3c','rgba(255,80,20,.85)')},
-    cannon:function(g){pBall(g,'#3a3f4a','#aab4c4')},
-    kingshot:function(g){pBall(g,'#4a3a12','#ffd75e')}};
   let pend=0;
-  for(const k in mk){ if(PROJ16[k]) continue;
-    const base=cv16(mk[k]); const arr=[];
-    for(let i=0;i<16;i++){ const c=document.createElement('canvas'); c.width=64; c.height=64; const g2=c.getContext('2d');
-      g2.translate(32,32); g2.rotate(i*Math.PI/8); g2.drawImage(base,-32,-32); arr.push(c); }
-    PROJ16[k]=arr; }
-  for(const k in PROJ_BASE){ if(PROJ16[k]) continue; const im=PSPR[k];
+  for(const k in PSPR){ if(PROJ16[k]) continue; const im=PSPR[k];
     if(!im||!im.complete||!im.naturalWidth||im.__valid===false){ pend++; continue; }
     const arr=[];
     for(let i=0;i<16;i++){ const c=document.createElement('canvas'); c.width=64; c.height=64; const g2=c.getContext('2d');
-      g2.translate(32,32); g2.rotate(i*Math.PI/8-PROJ_BASE[k]); g2.drawImage(im,-32,-32,64,64); arr.push(c); }
+      g2.translate(32,32); g2.rotate(i*Math.PI/8-(PROJ_BASE[k]||0)); g2.drawImage(im,-32,-32,64,64); arr.push(c); }
     PROJ16[k]=arr; }
   if(!pend) window.__p16=true;
 }
@@ -1928,14 +1918,10 @@ function drawProj(p){
   const tc=p.team==='blue'?'96,158,255':'255,110,110';
   const LIFT=(p.arc&&p.dur)?Math.sin(Math.min(1,p.t/p.dur)*Math.PI)*(FIREARC[p.kind]||16):0;
   const py2=py-LIFT;
-  const SZ={kingshot:30,arrow:38,bullet:22,bomb:32,wizfb:38,dragon:36,ice:30,cannon:26}[p.kind]||34;
-  const GLOW={bullet:'rgba(255,233,168,.35)',bomb:'rgba(255,180,80,.25)',wizfb:'rgba(255,140,40,.35)',dragon:'rgba(255,157,60,.3)',ice:'rgba(156,220,255,.35)',cannon:'rgba(200,210,225,.25)'};
-  if(GLOW[p.kind]){ const gl=ctx.createRadialGradient(px,py2,1,px,py2,SZ*0.75);
-    gl.addColorStop(0,p.team==='blue'?'rgba(96,158,255,.40)':'rgba(255,110,110,.40)'); gl.addColorStop(1,'rgba(0,0,0,0)');
-    ctx.fillStyle=gl; ctx.beginPath(); ctx.arc(px,py2,SZ*0.75,0,7); ctx.fill(); }
+  const SZ={kingshot:40,arrow:46,bullet:30,bomb:40,wizfb:46,dragon:44,ice:38,cannon:34}[p.kind]||44;
+
   const va=visAngle(p,px,py2);
-  if(p.kind==='bullet'){ ctx.strokeStyle='rgba('+tc+',.60)'; ctx.lineWidth=2.5; ctx.beginPath();
-    ctx.moveTo(px-Math.cos(va)*16,py2-Math.sin(va)*16); ctx.lineTo(px,py2); ctx.stroke(); }
+
   bake16();
   const fr=PROJ16[p.kind];
   if(fr){ const fi=((Math.round(va/(Math.PI/8))%16)+16)%16; ctx.drawImage(fr[fi],px-SZ/2,py2-SZ/2,SZ,SZ); }
@@ -2352,6 +2338,7 @@ try{ var __rq=new URLSearchParams(location.search); var __rw=__rq.get('result');
 requestAnimationFrame(loop);
 </script>
 <script>
+
 
 
 
