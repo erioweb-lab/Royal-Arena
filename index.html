@@ -362,9 +362,32 @@ h1,h2,.t-cta,.rtab{font-family:'Black Han Sans','Jua','Noto Sans KR',sans-serif}
   #btn-hof{font-size:14px !important;padding:9px 20px !important}
 }
 </style>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" crossorigin>
+<style id="ui-v95">
+/* v95: 레퍼런스 기반 버튼·폰트 시스템 — 내비 베이스 + 필형 버튼(CTA 오렌지골드/서브 틸·퍼플/유틸 골드 아웃라인) + Pretendard */
+:root{--fd:'Pretendard Variable',Pretendard,'Noto Sans KR','Jua',sans-serif;--gold:#FFD54F;--goldB:#FFB300}
+body,button,input{font-family:var(--fd) !important}
+button{letter-spacing:-.3px;font-weight:700;transition:transform .06s ease,filter .15s ease}
+button:active{transform:translateY(2px)}
+/* 메인 CTA — 웜 오렌지골드 */
+#btn-start{background:linear-gradient(180deg,#FFB300 0%,#E65100 100%) !important;border:1px solid #FFE082 !important;color:#1A1A1A !important;font-weight:800 !important;border-radius:20px !important;box-shadow:0 4px 12px rgba(230,81,0,.4),inset 0 1px 1px rgba(255,255,255,.6) !important;text-shadow:none !important}
+/* 서브 솔리드 — 덱 편성(틸)·명예의 전당(퍼플) */
+#btn-deck{background:linear-gradient(180deg,#00795F 0%,#004D40 100%) !important;border:1px solid #26A69A !important;color:#fff !important;border-radius:18px !important;box-shadow:0 3px 10px rgba(0,77,64,.45),inset 0 1px 1px rgba(255,255,255,.35) !important}
+#btn-hof{background:linear-gradient(180deg,#7B1FA2 0%,#4A148C 100%) !important;border:1px solid #CE93D8 !important;color:#fff !important;border-radius:18px !important;box-shadow:0 3px 10px rgba(74,20,140,.5),inset 0 1px 1px rgba(255,255,255,.35) !important}
+/* 유틸리티 골드 아웃라인(고스트) — 탭·게임 방법·닫기·메인으로·랭크탭 */
+#screen-title button:not(#btn-start):not(#btn-deck):not(#btn-hof),
+#btn-info,#btn-info-close,#btn-main,#btn-hof-close,#rtab-score,#rtab-rank{
+  background:rgba(18,24,43,.85) !important;border:1.5px solid var(--goldB) !important;color:var(--gold) !important;border-radius:16px !important;box-shadow:inset 0 0 6px rgba(255,179,0,.15) !important}
+/* 결과 모달 — 다시 배틀 CTA / 메인으로 고스트 */
+#btn-again{background:linear-gradient(180deg,#FFB300 0%,#E65100 100%) !important;border:1px solid #FFE082 !important;color:#1A1A1A !important;font-weight:800 !important;border-radius:20px !important;box-shadow:0 4px 12px rgba(230,81,0,.4) !important}
+/* 덱 편성 오버레이 버튼 통일 */
+#deck-edit button{border-radius:14px;font-weight:700}
+#dk-save{background:linear-gradient(180deg,#FFB300,#E65100);border:1px solid #FFE082;color:#1A1A1A;font-weight:800}
+</style>
 </head>
 <body>
-<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v94</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v95</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
