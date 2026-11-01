@@ -567,7 +567,7 @@ button:active{transform:translateY(2px)}
 </style>
 </head>
 <body>
-<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v114</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v115</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -2272,7 +2272,7 @@ function tryDeploy(e){
   playCard(P,P.sel,clamp(p.x,0.7,COLS-0.7), c.kind==='spell'?clamp(p.y,0.7,ROWS-0.7):Math.max(p.y,BLUE_DEPLOY_MIN));
   P.sel=null; dragFrom=-1; syncHand();
 }
-canvas.addEventListener('pointerdown',e=>{ ensureAudio(); S._pan={x:e.clientX,y:e.clientY,moved:false}; });
+canvas.addEventListener('pointerdown',e=>{ ensureAudio(); S._pan={x:e.clientX,y:e.clientY,moved:false}; try{ if(canvas.setPointerCapture&&e.pointerId!=null) canvas.setPointerCapture(e.pointerId); }catch(err){} });   // v115: \ud3ec\uc778\ud130 \uce99\cc98 — \uc908\uc778 \uc0c1\ud0dc \ub4dc\ub798\uadf8 \ud3f0 \uc720\uc9c0
 window.addEventListener('pointermove',e=>{
   if(!S._pan) return;
   const dx=e.clientX-S._pan.x, dy=e.clientY-S._pan.y;
@@ -2370,7 +2370,7 @@ function show(scene){
 function startMatch(){
   units=[];projs=[];fx=[];floats=[];parts=[];ambient=[];
   S.over=false;S.shown=false;S.winner=null;S.t=180;S.overtime=false;S.double=false;
-  S.crowns={blue:0,red:0}; S.kills={blue:0,red:0}; S.deaths={blue:0,red:0}; S.spells={blue:0,red:0}; S.shake=0; S.clash=null; S.cam={x:W/2,y:H/2,z:1}; S.focus=null; S.slow=0;   // v111: 구 추적 객체 2종 폐지(단일 S.focus만) S.boss=null; S.bossSpawned=false; S.ks=false; S.ksCd=0; S.focusGap=0; S._tp=0; S.repCd=0; try{ syncGradeVisual(); }catch(e){} try{ S.relic=(function(){try{return localStorage.getItem('ra_relic_v1')||''}catch(e){return ''}})(); applyRelics(); }catch(e){}
+  S.crowns={blue:0,red:0}; S.kills={blue:0,red:0}; S.deaths={blue:0,red:0}; S.spells={blue:0,red:0}; S.shake=0; S.clash=null; S.cam={x:W/2,y:H/2,z:1}; S._home={x:W/2,y:H/2,z:1}; S.focus=null; S.slow=0;   // v115: 초기 화면 상태 기억 — 강제 복귀 기준점   // v111: 구 추적 객체 2종 폐지(단일 S.focus만) S.boss=null; S.bossSpawned=false; S.ks=false; S.ksCd=0; S.focusGap=0; S._tp=0; S.repCd=0; try{ syncGradeVisual(); }catch(e){} try{ S.relic=(function(){try{return localStorage.getItem('ra_relic_v1')||''}catch(e){return ''}})(); applyRelics(); }catch(e){}
   P.elixir=5;A.elixir=5;A.timer=4.5;P.sel=null;P._full=false;
   try{ var __sb2=document.getElementById('screen-battle'); if(__sb2) __sb2.classList.remove('ended'); }catch(e){}
   initDeck(P);initDeck(A);
@@ -2490,13 +2490,18 @@ function raFocus(x,y,dur,v,force){   // v111: 카메라 포커스 단일 생성�
   if(!force&&(S.focusGap>0||S.focus)) return;
   S.focus={x:x||0,y:y||0,t:dur,dur:dur,a:0,v:(v&&!v.dead)?v:null};
 }
+function forceHomeCam(){   // v115: 초기 화면 상태 강제 복귀 — ⟲ 버튼·감시견 공용(즉시 스냅)
+  S.focus=null; S.focusGap=0.8; S._hiAge=0;
+  var hm=S._home||{x:W/2,y:H/2,z:1};
+  if(S.cam){ S.cam.x=hm.x; S.cam.y=hm.y; S.cam.z=hm.z; }
+}
 function updateCam(dt){
   const c=S.cam||(S.cam={x:W/2,y:H/2,z:1});
   if(S.focus){ const f=S.focus; f.t-=dt; f.a=(f.a||0)+dt;
     if(f.v){ if(f.v.dead){ f.v=null; } else { f.x=f.v.x*TILE; f.y=f.v.y*TILE; } }
     if(f.t<=0||f.a>(((f.dur)||1.6)+1.2)){ S.focus=null; S.focusGap=2.2; } }   // v111: 신 포커스 감시 — 단일 상태·전 필드 상시 보유·연령 하드캡(dur+1.2s)
   if(S.focusGap>0) S.focusGap-=dt;   // v91: 쿨다운 동안 1배 유지
-  if(c.z>1.05){ S._hiAge=(S._hiAge||0)+dt; if(S._hiAge>5){ S.focus=null; S.focusGap=1.0; S._hiAge=0; } } else S._hiAge=0;   // v112: 고정 감시견 — 5s 초과 줌인 지속 강제 해제
+  if(c.z>1.05){ S._hiAge=(S._hiAge||0)+dt; if(S._hiAge>3.5){ S.focus=null; S.focusGap=1.0; S._hiAge=0; } } else S._hiAge=0;   // v112: 고정 감시견 — 5s 초과 줌인 지속 강제 해제
   const tgt=S.focus? {x:S.focus.x, y:S.focus.y, z:1.6} : {x:W/2,y:H/2,z:1};
   const k=1-Math.exp(-5.0*dt), kz=1-Math.exp(-3.2*dt);
   c.x=lerp(c.x,tgt.x,k); c.y=lerp(c.y,tgt.y,k); c.z=lerp(c.z,tgt.z,kz);
@@ -2506,6 +2511,12 @@ function updateCam(dt){
   if(!zc){ zc=document.createElement('div'); zc.id='zoom-chip';
     zc.style.cssText="z-index:61;font-family:var(--fd,'Pretendard Variable','Noto Sans KR',sans-serif);font-size:14px;font-weight:700;letter-spacing:-.3px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.8);pointer-events:none;white-space:nowrap";
     var __tb=document.getElementById('topbar'); if(__tb){ __tb.insertBefore(zc, document.getElementById('btn-sound')); } else { var __sc=document.getElementById('arena-wrap'); if(__sc) __sc.appendChild(zc); } }
+  var hb=document.getElementById('cam-home-btn');
+  if(!hb){ hb=document.createElement('button'); hb.id='cam-home-btn'; hb.textContent='\u27F2'; hb.title='\uc908 \ud574\uc81c\u00b7\ud654\uba74 \uc6d0\uc0c1\ud0dc \ubcf5\uadc0';
+    hb.style.cssText="z-index:61;font-family:var(--fd,'Pretendard Variable','Noto Sans KR',sans-serif);font-size:15px;font-weight:800;line-height:1;color:#FFD54F;background:rgba(18,24,43,.88);border:1px solid rgba(255,213,79,.55);border-radius:9px;padding:5px 9px;cursor:pointer;pointer-events:auto";
+    hb.addEventListener('click',function(){ ensureAudio(); forceHomeCam(); });
+    var __tb2=document.getElementById('topbar'); if(__tb2){ __tb2.insertBefore(hb, document.getElementById('btn-sound')); } else { var __aw2=document.getElementById('arena-wrap'); if(__aw2) __aw2.appendChild(hb); } }
+  hb.classList.toggle('hidden',!(c.z>1.05));   // v115: \uc908\uc778 \uc911\uc5d0\ub9cc \uc6d0\uc0c1\ubcf5\uadc0 \ubc84\ud2bc \ub178\ucd9c
   if(zc.__v==null||Math.abs(zc.__v-c.z)>0.009){ zc.__v=c.z; zc.textContent='🔍 '+c.z.toFixed(2)+'x'+(S.focus?(S.focus.v?' · 추적':' · 주시'):''); }
 }
 function loop(t){
@@ -2714,6 +2725,7 @@ try{ if(!SPR.boss&&ART.boss){ SPR.boss=new Image(); SPR.boss.src=ART.boss; ASPR.
 
 </script>
 <script>
+
 
 
 
