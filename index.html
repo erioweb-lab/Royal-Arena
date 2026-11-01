@@ -567,7 +567,7 @@ button:active{transform:translateY(2px)}
 </style>
 </head>
 <body>
-<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v113</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v114</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1181,7 +1181,7 @@ function castZap(team,x,y){
   fx.push({x,y,t:0,dur:0.3,kind:'flash'});
   addParts(x,y,14,'#ffe95e',3.6,0.45,50);
   for(const u of units){ if(u.dead||u.team!==et) continue;
-    if(Math.hypot(u.x-x,u.y-y)<=c.radius){ u.stun=c.stun; dealDamage(u,spellDmg(c.dmg),team); } }
+    if(Math.hypot(u.x-x,u.y-y)<=c.radius){ u.stun=c.stun; dealDamage(u,spellDmg(c.dmg),team,true); } }
   for(const t of towers){ if(t.dead||t.team!==et) continue;
     if(Math.hypot(t.x-x,t.y-y)<=c.radius+0.4) dealDamage(t,spellDmg(c.towerDmg),team); }
 }
@@ -1201,13 +1201,13 @@ function explodeFireball(p){
   fx.push({x:p.x1,y:p.y1,t:0,dur:0.5,kind:'ring',col:'rgba(255,177,77,.9)'});
   fx.push({x:p.x1,y:p.y1,t:0,dur:0.2,kind:'flash'});
   for(const u of units){ if(u.dead||u.team!==et) continue;
-    if(Math.hypot(u.x-p.x1,u.y-p.y1)<=c.radius) dealDamage(u,spellDmg(c.dmg),p.team); }
+    if(Math.hypot(u.x-p.x1,u.y-p.y1)<=c.radius) dealDamage(u,spellDmg(c.dmg),p.team,true); }
   for(const t of towers){ if(t.dead||t.team!==et) continue;
     if(Math.hypot(t.x-p.x1,t.y-p.y1)<=c.radius+0.5) dealDamage(t,spellDmg(c.towerDmg),p.team); }
 }
 
 /* ---------- 피해 / 파괴 / 승패 (REA 설계도 §2·§6) ---------- */
-function dealDamage(e,dmg,fromTeam){
+function dealDamage(e,dmg,fromTeam,fromSpell){   // v114: fromSpell — 주문(파이어볼·자패) 피해는 줌인 유발 없음, 일반 유닛 교전만 줌인
   if(S&&S.relic==='relic_atk'&&fromTeam==='blue'&&e&&e.team==='red'&&!e.isTower) dmg=Math.round(dmg*1.1);   // v109 #13: 유물 — 전투 문장
   if(e.dead) return;
   var __st=((e.burnT>0)?1:0)+((e.slowT>0)?1:0)+((e.stun>0)?1:0);
@@ -1220,7 +1220,7 @@ function dealDamage(e,dmg,fromTeam){
   }
   if((e.shield||0)>0){ const ab=Math.min(e.shield,dmg); e.shield-=ab; dmg-=ab; }
   e.hp-=dmg; e.hurt=0.09;
-  if(!(e===S.boss)&&!(e.isTower)&&!(S.focusGap>0)&&!S.focus&&S.cam&&S.cam.z<=1.05) raFocus(e.x*TILE,e.y*TILE,1.6,e);   // v113: 카메라가 1배로 완전 복귀한 뒤에만 신규 줌인 허용 — 줌인·복귀 중 화염병 등 추가 피해로 재점화되는 것 차단   // v112: 타워 피격은 줌인 유발하지 않음 — 유닛 교전만(왕관 파괴 강제 줌인은 유지)   // v111: 신 포커스 시스템 — 단일 생성자 경유(좌표 즉시 확정)   // v91: 줌 펄스 쿨다운 — 지속 교전 중 1.6배 고정 방지
+  if(!(e===S.boss)&&!(e.isTower)&&fromSpell!==true&&!(S.focusGap>0)&&!S.focus&&S.cam&&S.cam.z<=1.05) raFocus(e.x*TILE,e.y*TILE,1.6,e);   // v113 완전복귀 게이트 + v114 주문 피해 제외   // v113: 카메라가 1배로 완전 복귀한 뒤에만 신규 줌인 허용 — 줌인·복귀 중 화염병 등 추가 피해로 재점화되는 것 차단   // v112: 타워 피격은 줌인 유발하지 않음 — 유닛 교전만(왕관 파괴 강제 줌인은 유지)   // v111: 신 포커스 시스템 — 단일 생성자 경유(좌표 즉시 확정)   // v91: 줌 펄스 쿨다운 — 지속 교전 중 1.6배 고정 방지
   const big=dmg>=150;
   floats.push({x:e.x+(Math.random()-0.5)*0.7,y:e.y-(e.r||0.45)-0.35-Math.random()*0.5,txt:Math.round(dmg)+(big?'!':''),t:big?0.9:0.7,col:big?'#ff9d3c':(fromTeam==='blue'?'#bfe0ff':'#ffd2d2'),big});
   if(e.isTower&&e.kind==='king') e.active=true;   // 킹타워 피격 시 각성
@@ -2714,6 +2714,9 @@ try{ if(!SPR.boss&&ART.boss){ SPR.boss=new Image(); SPR.boss.src=ART.boss; ASPR.
 
 </script>
 <script>
+
+
+
 
 
 
