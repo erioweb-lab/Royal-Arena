@@ -397,9 +397,29 @@ button:active{transform:translateY(2px)}
 #elixir-num{font-family:var(--fd);font-weight:800}
 #zoom-chip{font-family:var(--fd) !important;font-weight:700 !important}
 </style>
+<style id="ui-v97">
+/* v97: 상태창·카드창 게임화 — 레퍼런스 2장 반영(상단 상태바 캡슐 + 골드 프레임 카드 시스템) */
+/* 상단 상태창(시간·스코어·사운드·기권) */
+#screen-battle .crown-chip,#screen-battle #timer,#screen-battle #btn-sound,#screen-battle #btn-quit{
+  font-family:var(--fd) !important;font-weight:700;font-size:14px !important;letter-spacing:-.3px;
+  color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.8);
+  background:rgba(11,17,30,.88) !important;border:1px solid #d4af37 !important;border-radius:999px !important;
+  padding:5px 14px;box-shadow:0 4px 12px rgba(0,0,0,.5);display:inline-flex;align-items:center;gap:6px}
+#screen-battle #timer{font-size:19px !important;font-weight:800;color:#FFD54F;padding:6px 20px}
+#screen-battle .crown-chip.red{border-color:#e06565 !important}
+#screen-battle .crown-chip.blue{border-color:#6d9cf8 !important}
+#screen-battle #btn-sound,#screen-battle #btn-quit{padding:5px 12px}
+/* 카드창 프레임(덱 핸드) — 골드 프레임 + 메탈 그라데이션 */
+#screen-battle #hand-row .card{border:1.5px solid #d4af37;border-radius:12px}
+#screen-battle #hand-row .card.sel{border-color:#FFD54F;box-shadow:0 0 16px rgba(255,213,79,.75),0 6px 14px rgba(0,0,0,.5)}
+#screen-battle #next-card{border:1.5px dashed rgba(212,175,55,.55);border-radius:10px;background:rgba(28,51,87,.7)}
+#screen-battle #hand-row .card .nm{font-family:var(--fd);font-weight:700;letter-spacing:-.2px}
+#screen-battle #hand-row .card .cost{border:1px solid #FFD54F}
+/* 킹샷 쿨다운 표기는 CTA 유지(12.3 계층1) */
+</style>
 </head>
 <body>
-<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v96</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v97</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -2365,7 +2385,7 @@ function updateCam(dt){
   c.x=clamp(c.x,vw/2,W-vw/2); c.y=clamp(c.y,vh/2,H-vh/2);   // 아레나 밖 노출 방지
   var zc=document.getElementById('zoom-chip');
   if(!zc){ zc=document.createElement('div'); zc.id='zoom-chip';
-    zc.style.cssText="position:absolute;left:8px;top:34px;z-index:61;font-family:Jua,sans-serif;font-size:13px;font-weight:700;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.9);background:rgba(8,14,26,.8);border:1px solid rgba(255,224,138,.5);border-radius:8px;padding:3px 10px;pointer-events:none";
+    zc.style.cssText="position:absolute;left:8px;top:40px;z-index:61;font-family:var(--fd,'Pretendard Variable','Noto Sans KR',sans-serif);font-size:12px;font-weight:700;color:#FFD54F;text-shadow:0 1px 2px rgba(0,0,0,.8);background:rgba(10,15,29,.85);border:1.5px solid #d4af37;border-radius:999px;padding:3px 10px;pointer-events:none";
     var __sc=document.getElementById('screen-battle'); if(__sc) __sc.appendChild(zc); }
   if(zc.__v==null||Math.abs(zc.__v-c.z)>0.009){ zc.__v=c.z; zc.textContent='🔍 '+c.z.toFixed(2)+'x'+(S.focus?' · 추적':''); }
 }
@@ -2392,6 +2412,9 @@ try{ var __rq=new URLSearchParams(location.search); var __rw=__rq.get('result');
 requestAnimationFrame(loop);
 </script>
 <script>
+
+
+
 
 
 

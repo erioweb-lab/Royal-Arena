@@ -1566,7 +1566,10 @@ $$\text{HP}(\text{wave}) = \text{baseHp} + (\text{effectiveWave}^2 - 1) \times \
 
 1. **텍스트 줄바꿈 엄격 금지 (Strict Single-Line Constraint for UI Labels)**:
    - 모든 버튼(Button), 뱃지/칩(Badge/Pill), 탭(Tab), 액션 컨트롤, 스탯 라벨 내 텍스트는 반드시 **한 줄(Single-Line)**로 표시되어야 합니다.
-   - 단어가 분절되어 위아래로 줄바꿈(wrapping/break-word)되는 현상(예: `진화/강 \n 화`, `💀 0 \n 처치`)은 중대한 결함으로 취급하며 엄격히 금지합니다.
+   - 단어가 분절되어 위아래로 줄바꿈(wrapping/break-word)되는 현상(예: `진화/강 \n 화`, `💀 0 \n
+| 2026-11-01 | v97: 상태창(시간·스코어·사운드·기권) 필 캡슐 게임화 + 카드창(핸드) 골드 프레임 시스템(레퍼런스 2장 반영) + 줌칩 스타일 통일, sw v97 | (이번) |
+| 2026-11-01 | v97: 상태창(시간·스코어·사운드·기권) 필 캡슐 게임화 + 카드창(핸드) 골드 프레임 시스템(레퍼런스 2장 반영) + 줌칩 스타일 통일, sw v97 | (이번) |
+| 2026-11-01 | v97: 상태창(시간·스코어·사운드·기권) 필 캡슐 게임화 + 카드창(핸드) 골드 프레임 시스템(레퍼런스 2장 반영) + 줌칩 스타일 통일, sw v97 | (이번) | 처치`)은 중대한 결함으로 취급하며 엄격히 금지합니다.
    - 모든 UI 요소에는 `whitespace-nowrap`을 필수로 적용하고, 부모 및 자식 요소에 적절한 `flex-shrink-0`, `min-w-0`, `truncate` 처리를 통해 좁은 모바일 화면(360px~420px)에서도 줄바꿈 없는 깔끔한 단일 행 레이아웃을 보장해야 합니다.
 
 2. **화면 및 요소 잘림(Clipping/Overflow) 방지 및 품질 검증 필수 규칙 (Zero Clipping & Viewport Width Verification)**:
@@ -1784,7 +1787,8 @@ $$\text{HP}(\text{wave}) = \text{baseHp} + (\text{effectiveWave}^2 - 1) \times \
 4. **눌림**: :active{transform:translateY(2px)} 공통, transition transform .06s / filter .15s
 
 ### 12.4 상태창·HUD
-- 상태바/모니터 칩: rgba(8,14,26,.8) 바탕 + 골드 보더 + Pretendard 700 — 예: #zoom-chip
+- 상태바/모니터 칩: rgba(11,17,30,.88) 바탕 + 골드 보더(#d4af37 1px, 강조 #FFB300 1.5px) + Pretendard 700 + 필 캡슐(radius 999px) — 예: #zoom-chip, #timer(19px #FFD54F 800), .crown-chip, #btn-sound/#btn-quit (v97)
+- 카드창(핸드): 카드 프레임 border 1.5px #d4af37 + radius 12px, 선택 시 #FFD54F + 발광, 코스트 배지 골드 테두리, 다음 슬롯 점선 골드(rgba(212,175,55,.55)) — 카드 메탈 그라데이션 몸체는 유지 (v97)
 - 토스트(#toast): 필 칩(radius 999px) + 골드 텍스트
 - 엘릭서 바: 보라 게이지 + 골드 테두리(.full 시 골드 발광)
 - 캔버스 게이지(타워/보스 HP): 네이비 트랙 #20293A + 진행색(녹/적/오렌지) 유지
