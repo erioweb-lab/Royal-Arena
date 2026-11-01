@@ -430,9 +430,14 @@ button:active{transform:translateY(2px)}
   #screen-battle{width:calc(100% - 8px);height:calc(100dvh - 6px);max-height:calc(100dvh - 6px);border-radius:14px;margin:3px auto;padding:6px}
 }
 </style>
+<style id="ui-v99">
+/* v99: 프레임 골드 테두리 제거(다크 내비 그라데이션+라운드만 유지) + 줌칩 탑바 캡슐 토큰 통일 */
+#screen-battle{border:none !important;box-shadow:0 10px 40px rgba(0,0,0,.6) !important}
+#zoom-chip{position:absolute;left:12px;top:6px;z-index:61;font-family:var(--fd) !important;font-size:14px !important;font-weight:700 !important;letter-spacing:-.3px;color:#fff !important;text-shadow:0 1px 2px rgba(0,0,0,.8);background:rgba(11,17,30,.88) !important;border:1px solid #d4af37 !important;border-radius:999px !important;padding:5px 14px !important;box-shadow:0 4px 12px rgba(0,0,0,.5);pointer-events:none;white-space:nowrap}
+</style>
 </head>
 <body>
-<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v98</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:4px;z-index:99990;background:rgba(0,0,0,.7);color:#ffd75e;font:700 11px monospace;padding:2px 7px;border-radius:8px;pointer-events:none">v99</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -530,6 +535,8 @@ button:active{transform:translateY(2px)}
         <div class="rrow"><span>⚔️ 유닛 킬</span><b id="rt-kill">0</b></div>
         <div class="rrow"><span>🏰 잔존 타워 체력</span><b id="rt-hp">0</b></div>
         <div class="rrow"><span>⏱ 남은 시간</span><b id="rt-time">0</b></div>
+        <div class="rrow"><span>⚔️ 킬 / 데스</span><b id="rt-kd">0 / 0</b></div>
+        <div class="rrow"><span>✨ 주문 사용</span><b id="rt-spell">0회</b></div>
         <div class="rrow rsum"><span>총점</span><b id="rt-sum">0</b></div>
       </div>
       <div id="rpane-rank" class="rpane hidden">
@@ -1082,7 +1089,7 @@ function updateProjs(dt){
   }
   projs=projs.filter(p=>!p.done);
 }
-function castSpell(key,team,x,y){
+function castSpell(key,team,x,y){ if(S.spells) S.spells[team]=(S.spells[team]||0)+1;   // v99 P8: 주문 사용 집계
   if(key==='zap') castZap(team,x,y); else castFireball(team,x,y);
 }
 function castZap(team,x,y){
@@ -1135,6 +1142,7 @@ function dealDamage(e,dmg,fromTeam){
   if(e.isTower&&e.kind==='king') e.active=true;   // 킹타워 피격 시 각성
   if(e.hp<=0){ e.hp=0; e.dead=true;
     if(fromTeam&&S.kills&&!e.isTower) S.kills[fromTeam]++;
+    if(!e.isTower&&S.deaths&&e.team) S.deaths[e.team]=(S.deaths[e.team]||0)+1;   // v99 P8: 데스 집계
     if(e.isTower) destroyTower(e,fromTeam); else killUnit(e,false); }
 }
 function killUnit(u,expire){
@@ -1190,6 +1198,8 @@ function showResult(){
   $('#r-sub').innerHTML = `최종 왕관 <b>${crowns} : ${crownR}</b>${S.overtime?' · 연장전':''}<br>총점 <b>${score}</b>`;
   $('#rt-crown').textContent=crowns*300;
   $('#rt-kill').textContent=killsB*15;
+  $('#rt-kd').textContent=killsB+' / '+((S.deaths&&S.deaths.blue)||0);
+  $('#rt-spell').textContent=((S.spells&&S.spells.blue)||0)+'회';
   $('#rt-hp').textContent=tPct*2;
   $('#rt-time').textContent=timeLeft;
   $('#rt-sum').textContent=score;
@@ -1539,6 +1549,9 @@ function drawStatic(){
   }
 
 }
+</script>
+<script>
+'use strict';
 function flagPole(px,py,col){
   ctx.strokeStyle='#5a4632'; ctx.lineWidth=2;
   ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(px,py-22); ctx.stroke();
@@ -1547,9 +1560,6 @@ function flagPole(px,py,col){
   ctx.moveTo(px,py-22); ctx.quadraticCurveTo(px+10,py-21+wv,px+18,py-18+wv);
   ctx.lineTo(px,py-13); ctx.closePath(); ctx.fill();
 }
-</script>
-<script>
-'use strict';
 function drawTower(t){try{
       var __tc=(t.kind==='king'?'t_king':'t_princess')+(t.team==='blue'?'_b':'_r');
       var __im=(typeof TSPR!=='undefined')?TSPR[__tc]:null;
@@ -2270,7 +2280,7 @@ function show(scene){
 function startMatch(){
   units=[];projs=[];fx=[];floats=[];parts=[];ambient=[];
   S.over=false;S.shown=false;S.winner=null;S.t=180;S.overtime=false;S.double=false;
-  S.crowns={blue:0,red:0}; S.kills={blue:0,red:0}; S.shake=0; S.clash=null; S.cam={x:W/2,y:H/2,z:1}; S.focus=null; S.focusV=null; S.hot=null; S.slow=0; S.boss=null; S.bossSpawned=false; S.ks=false; S.ksCd=0; S.focusGap=0;
+  S.crowns={blue:0,red:0}; S.kills={blue:0,red:0}; S.deaths={blue:0,red:0}; S.spells={blue:0,red:0}; S.shake=0; S.clash=null; S.cam={x:W/2,y:H/2,z:1}; S.focus=null; S.focusV=null; S.hot=null; S.slow=0; S.boss=null; S.bossSpawned=false; S.ks=false; S.ksCd=0; S.focusGap=0;
   P.elixir=5;A.elixir=5;A.timer=4.5;P.sel=null;P._full=false;
   try{ var __sb2=document.getElementById('screen-battle'); if(__sb2) __sb2.classList.remove('ended'); }catch(e){}
   initDeck(P);initDeck(A);
@@ -2401,7 +2411,7 @@ function updateCam(dt){
   c.x=clamp(c.x,vw/2,W-vw/2); c.y=clamp(c.y,vh/2,H-vh/2);   // 아레나 밖 노출 방지
   var zc=document.getElementById('zoom-chip');
   if(!zc){ zc=document.createElement('div'); zc.id='zoom-chip';
-    zc.style.cssText="position:absolute;left:10px;top:8px;z-index:61;font-family:var(--fd,'Pretendard Variable','Noto Sans KR',sans-serif);font-size:12px;font-weight:700;color:#FFD54F;text-shadow:0 1px 2px rgba(0,0,0,.8);background:rgba(10,15,29,.85);border:1.5px solid #d4af37;border-radius:999px;padding:3px 10px;pointer-events:none";
+    zc.style.cssText="position:absolute;left:12px;top:6px;z-index:61;font-family:var(--fd,'Pretendard Variable','Noto Sans KR',sans-serif);font-size:14px;font-weight:700;letter-spacing:-.3px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.8);background:rgba(11,17,30,.88);border:1px solid #d4af37;border-radius:999px;padding:5px 14px;box-shadow:0 4px 12px rgba(0,0,0,.5);pointer-events:none;white-space:nowrap";
     var __sc=document.getElementById('arena-wrap'); if(__sc) __sc.appendChild(zc); }
   if(zc.__v==null||Math.abs(zc.__v-c.z)>0.009){ zc.__v=c.z; zc.textContent='🔍 '+c.z.toFixed(2)+'x'+(S.focus?' · 추적':''); }
 }
@@ -2424,10 +2434,11 @@ document.querySelectorAll('.t-btn[data-theme]').forEach(b=>b.addEventListener('c
 window.__auto=new URLSearchParams(location.search).has('auto');
 if(window.__auto) startMatch();
 try{ var __rq=new URLSearchParams(location.search); var __rw=__rq.get('result');
-  if(__rw){ S.winner=__rw; S.over=true; if(__rw==='blue'){ S.crowns={blue:2,red:1}; S.kills={blue:14,red:9}; } S.t=95; showResult(); } }catch(e){}
+  if(__rw){ S.winner=__rw; S.over=true; if(__rw==='blue'){ S.crowns={blue:2,red:1}; S.kills={blue:14,red:9}; S.deaths={blue:6,red:10}; S.spells={blue:4,red:3}; } S.t=95; showResult(); } }catch(e){}
 requestAnimationFrame(loop);
 </script>
 <script>
+
 
 
 
