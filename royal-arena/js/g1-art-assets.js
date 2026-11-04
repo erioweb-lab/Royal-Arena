@@ -2305,7 +2305,7 @@ function __raAddRandomBtn(){
     try{ toast('덱을 랜덤으로 구성했어요'); }catch(e){ }
   };
   var saveB=null; [].slice.call(de.querySelectorAll('button')).forEach(function(b){ if(/저장/.test(b.textContent||'')) saveB=b; });
-  if(saveB&&saveB.parentNode){ saveB.parentNode.insertBefore(btn,saveB); } else de.appendChild(btn);
+  if(saveB&&saveB.parentNode){ saveB.parentNode.parentNode&&saveB.parentNode!==de?de.insertBefore(btn,saveB.parentNode):de.appendChild(btn); btn.style.width='100%'; } else de.appendChild(btn);   /* v198: 랜덤 버튼 독립 행 — 저장행 3열 랩 비대칭 해소 */
 }
 (function(){ var orig=openDeckEditor;
   openDeckEditor=function(){ var r=orig.apply(this,arguments); try{ setTimeout(__raAddRandomBtn,40); }catch(e){ } return r; };
