@@ -1,0 +1,3 @@
+{
+  "buildCommand": "vite build && cp -r royal-arena dist/royal-arena"
+}
