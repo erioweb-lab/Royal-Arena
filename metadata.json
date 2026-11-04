@@ -1,0 +1,6 @@
+{
+  "name": "Royal Arena Studio & GitHub Sync",
+  "description": "로얄 아레나(Royal Arena) 실시간 게임 플레이, 로드맵/코드 수정 및 GitHub(erioweb-lab/Royal-Arena) 양방향 동기화 스튜디오",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
