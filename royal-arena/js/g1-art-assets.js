@@ -225,6 +225,7 @@ function noiseBurst(d,v){
 }
 function sfxBP(d,v,f0,f1){ if(!AC||S.muted) return; const n=AC.sampleRate*d, buf=AC.createBuffer(1,n,AC.sampleRate), ch=buf.getChannelData(0); for(let i=0;i<n;i++) ch[i]=(Math.random()*2-1)*(1-i/n); const src=AC.createBufferSource(); src.buffer=buf; const bp=AC.createBiquadFilter(); bp.type='bandpass'; bp.Q.value=1.1; bp.frequency.setValueAtTime(f0,AC.currentTime); bp.frequency.linearRampToValueAtTime(f1,AC.currentTime+d); const g=AC.createGain(); g.gain.value=v; src.connect(bp); bp.connect(g); g.connect(window.__COMP||AC.destination); src.start(); }   /* v164: 화염 밴드패스 스윕 — game-audio-synth-system 스킬 */
 function sfx(k){
+  var __n=(performance.now()); if(window.__sfxT&&window.__sfxT[k]&&__n-window.__sfxT[k]<25) return; (window.__sfxT=window.__sfxT||{})[k]=__n;   /* v194: 동일 효과음 25ms 스로틀 */
   if(!AC||S.muted) return;
   try{ const __n=performance.now(); if(!sfx._t) sfx._t={}; if((k==='hit'||k==='shoot'||k==='thud'||k==='spark'||k==='bow'||k==='musket')&&__n-(sfx._t[k]||0)<30) return; sfx._t[k]=__n; }catch(e){}   /* v163: 임팩트 스로틀 30ms */
   if(k==='deploy'){ tone(500,.12,'triangle',.10,140); }
@@ -468,7 +469,7 @@ function shoot(src,tgt,dmg,kind,splash){
   kind=kind||'arrow';
   const d0=Math.hypot(tgt.x-src.x,tgt.y-src.y);
   const v=kind==='bullet'?2.75:(kind==='bomb'?1.45:2.25);
-  try{ fx.push({x:src.x,y:src.y,t:0,dur:0.16,kind:'ring',col:'rgba(255,213,84,.9)'}); }catch(e){ }   /* v192 P14: 머즐 플래시 */
+  try{ fx.push({x:src.x,y:src.y,t:0,dur:0.22,kind:'star',col:'#ffd754',n:5}); }catch(e){ }   /* v194 P14: 별모양 머즐 스타버스트 */
   projs.push({x:src.x, y:src.y-(src.isTower?0.8:0.3), target:tgt, tx:tgt.x, ty:tgt.y,
               spd:v, dmg, team:src.team, kind, splash:splash||0, slow:src.c?src.c.slow:0, fromTower:!!src.isTower,
               arc:(kind==='bomb'||kind==='cannon'), t:0, dur:Math.max(0.12,d0/v)});
@@ -696,6 +697,7 @@ function destroyTower(t,fromTeam){
   }
 }
 function finish(winner){
+  try{ document.getElementById('screen-battle').classList.remove('sd-mode'); }catch(e){ }   /* v194 */
   if(S.over) return;
   S.over=true; S.winner=winner; try{ var __xu=S.__used||{}; var __mx=__cXpMap(); Object.keys(__xu).forEach(function(k){ __mx[k]=(__mx[k]||0)+(winner==='blue'?2:1); }); try{ localStorage.setItem('ra_cardxp_v1',JSON.stringify(__mx)); }catch(__e){} }catch(__e){}   /* v185: 전투 결과 카드 XP — 승 +2/패·무 +1 */
     try{ var __st=spState(); var __g=(winner==='blue')?3:1; __st.sp+=__g; __st.total+=__g; spSave(__st); setTimeout(function(){ toast('🎓 전술 SP +'+__g); },900); }catch(e){}   // v119: 승리 보상 SP — 승리 +3·패배 +1, 영구 저장 S.endTimer=1.4; P.sel=null; syncHand();
@@ -830,7 +832,7 @@ function update(dt){
   if(S.t<=0){
     if(!S.overtime){
       if(S.crowns.blue!==S.crowns.red) finish(S.crowns.blue>S.crowns.red?'blue':'red');
-      else { S.overtime=true; S.double=true; S.t=60; banner('⚔ 연장전 — 먼저 왕관을 뽑는 팀이 승리!',2200); }
+      else { S.overtime=true; S.double=true; S.t=60; banner('⚔ 연장전 — 먼저 왕관을 뽑는 팀이 승리!',2200); try{ document.getElementById('screen-battle').classList.add('sd-mode'); }catch(e){ } }   /* v194: 서든데스 붉은 펄스 */
     } else finish('draw');
   }
   regenElixir(dt);
@@ -1616,6 +1618,9 @@ function drawFx(f){
     if(im2&&im2.complete){ ctx.save(); ctx.translate(px,py); ctx.rotate((f.team==='blue'?-1:1)*k*0.9);
       const dsz=TILE*3.2*(1-k*0.15); ctx.globalAlpha=Math.max(0,1-k);
       ctx.globalAlpha=Math.max(0,1-(f.t/f.dur)*0.75);ctx.drawImage(im2,-dsz/2,-dsz*0.8,dsz,dsz); ctx.restore(); } }
+  else if(f.kind==='star'){ const p=f.t/f.dur, sz=10+26*p, a=1-p; ctx.save(); ctx.translate(f.x,f.y); ctx.rotate(p*1.2); ctx.globalAlpha=a; ctx.fillStyle=f.col;
+  for(let i=0;i<(f.n||5)*2;i++){ const r=i%2?sz*0.45:sz, an=i*Math.PI/(f.n||5); ctx.lineTo(Math.cos(an)*r*10,Math.sin(an)*r*10); }
+  ctx.closePath(); ctx.fill(); ctx.restore(); }
   else if(f.kind==='ring'){ ctx.strokeStyle=f.col; ctx.lineWidth=3; ctx.beginPath();
     ctx.ellipse(px,py,8+k*26,(8+k*26)*0.5,0,0,7); ctx.stroke(); }
   else if(f.kind==='warnring'){
@@ -2268,7 +2273,9 @@ function loop(t){
 
   requestAnimationFrame(loop);
 }
-buildCodex();
+buildCodex();   /* v194: 스탯·레벨 변경 시 도감 강제 동기화 */
+function __syncCodex(){ try{ var sig=JSON.stringify(CARDS); for(const k of DECK) sig+='|'+k+':'+(window.__CARD_LV&&__CARD_LV[k]||0); if(window.__cxSig===sig) return; window.__cxSig=sig; var box=document.getElementById('codex'); if(box){ box.innerHTML=''; buildCodex(); } }catch(e){ } }
+window.__syncCodex=__syncCodex; window.__qaCodex=function(){ try{ return DECK.length+':'+document.querySelectorAll('#codex .cx').length; }catch(e){ return 'n/a'; } };
 $('#elixir-ticks').innerHTML='<i></i>'.repeat(9);
 document.querySelectorAll('.t-btn[data-theme]').forEach(b=>b.addEventListener('click',()=>{
   S.theme=b.dataset.theme; drawStatic();   // 지면·강 톤 재페인트

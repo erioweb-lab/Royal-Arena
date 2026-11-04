@@ -41,8 +41,17 @@ function pixCount(){
     return 'PIX:'+n+'/'+(w2*h2);
   }catch(e){return 'PIXERR:'+(e.message||'?');}
 }
+function ovfCount(){
+  var n=0; try{ var vw=window.innerWidth;
+    [].slice.call(document.querySelectorAll('#screen-battle *, #screen-title *')).forEach(function(el){
+      if(el.offsetParent===null||el.id==='verchip'||el.closest('#verchip')) return;
+      var r=el.getBoundingClientRect();
+      if(r.width>2&&(r.right>vw+2||r.left<-2)) n++;
+    });
+  }catch(e){ } return n;
+}
 function battleVisible(){var b=document.querySelector('#screen-battle');return !!(b&&!b.classList.contains('hidden'));}
-function report(extra){set(mode+' DONE | ERR:'+errs.length+' W:'+warns.length+' | '+extra+(errs.length?('\nE1:'+errs.slice(0,2).join(' | ')):''));}
+function report(extra){set(mode+' DONE | ERR:'+errs.length+' W:'+warns.length+' OVF:'+ovfCount()+' | '+extra+(errs.length?('\nE1:'+errs.slice(0,2).join(' | ')):''));}
 function quitBattle(){
   try{
     var qb=document.querySelector('#btn-quit');
