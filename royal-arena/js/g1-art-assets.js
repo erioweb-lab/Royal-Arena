@@ -319,7 +319,7 @@ function openDeckEditor(){
      '<div style="display:flex;flex-wrap:wrap;justify-content:center;max-width:560px">'+Object.keys(CARDS).filter(k=>!deck.includes(k)).map(k=>
        '<div class="dk" data-add="'+k+'"><div class="dke">'+(ART[k]?'<img class="art" style="width:34px" src="'+ART[k]+'">':CARDS[k].emoji)+'</div><div class="dkn">'+CARDS[k].name+'</div><div class="dkc">'+CARDS[k].cost+'</div></div>').join('')+'</div>'+
      '<div style="margin:14px;display:flex;gap:10px">'+
-      '<button id="dk-save" class="dk-act">이 슬롯에 저장</button>'+
+      '<button id="dk-save" class="dk-act">💾 저장</button>'+
       '<button id="dk-close" class="dk-sub">닫기</button></div>';
     ov.querySelectorAll('[data-slot]').forEach(b=>b.onclick=()=>{ slot=parseInt(b.dataset.slot,10); deck=(loadDeckSlot(slot)||DECK.slice(0,8)).slice(); render(); });
     ov.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{ deck=deck.filter(k=>k!==b.dataset.rm); render(); });
@@ -469,7 +469,7 @@ function shoot(src,tgt,dmg,kind,splash){
   kind=kind||'arrow';
   const d0=Math.hypot(tgt.x-src.x,tgt.y-src.y);
   const v=kind==='bullet'?2.75:(kind==='bomb'?1.45:2.25);
-  try{ fx.push({x:src.x,y:src.y,t:0,dur:0.22,kind:'star',col:'#ffd754',n:5}); }catch(e){ }   /* v194 P14: 별모양 머즐 스타버스트 */
+  try{ fx.push({x:src.x+(tgt.x-src.x)*0.3,y:src.y+(tgt.y-src.y)*0.3,t:0,dur:0.16,kind:'star',col:'#ffd754',n:5}); }catch(e){ }   /* v195: 포구 방향 오프셋 */
   projs.push({x:src.x, y:src.y-(src.isTower?0.8:0.3), target:tgt, tx:tgt.x, ty:tgt.y,
               spd:v, dmg, team:src.team, kind, splash:splash||0, slow:src.c?src.c.slow:0, fromTower:!!src.isTower,
               arc:(kind==='bomb'||kind==='cannon'), t:0, dur:Math.max(0.12,d0/v)});
@@ -514,12 +514,12 @@ function updateUnit(u,dt){
   if(u.comboCd>0) u.comboCd-=dt;
   if(u.burnT>0){ u.burnT-=dt; u.burnAcc+=dt;
     if(Math.random()<0.25) addParts(u.x,u.y-0.3,1,'#ff9d3c',0.8,0.3,-30);
-    if(u.burnAcc>=0.5){ const __bd=Math.round(u.burnDps*u.burnAcc); u.burnAcc=0; u.hp-=__bd; u.hurt=0.06;
+    if(u.burnAcc>=0.5){ const __bd=Math.round(u.burnDps*u.burnAcc); u.burnAcc=0; u.hp-=__bd; u.hurt=0.06; addParts(u.x,u.y-0.4,2,'#ff9d3c',1.4,0.4,-30);   /* v195: 화염 연출 */
       floats.push({x:u.x+(Math.random()-0.5)*0.5,y:u.y-0.9,txt:__bd,t:0.55,col:'#ff9d3c',big:false});
       if(u.hp<=0){ u.hp=0; u.dead=true; killUnit(u,false); return; } } }
   if(u.slowT>0) u.slowT-=dt;
   if(u.stun>0){ u.stun-=dt; u.swing=0; return; }
-  if(u.frozenT>0){ u.frozenT-=dt; u.swing=0; return; }   /* v138: 빙결 — 이동·공격 불가, 콤보 원소 1로 계수 */
+  if(u.frozenT>0){ u.frozenT-=dt; u.swing=0; if(Math.random()<0.15) addParts(u.x,u.y-0.3,1,'#b4ebff',1.0,0.5,-15);   /* v195: 빙결 파편 */ return; }   /* v138: 빙결 — 이동·공격 불가, 콤보 원소 1로 계수 */
   if(u.building){ // 캐논(건물): 고정, 수명 있음
     u.life-=dt; if(u.life<=0){ killUnit(u,true); return; }
     u.cd-=dt; u.swing=Math.max(0,u.swing-dt);
@@ -530,7 +530,12 @@ function updateUnit(u,dt){
       shoot(u,u.target,u.c.dmg,'cannon',u.c.splash); }
     return;
   }
-  if(u.c.heal){ u.cd-=dt;
+  if(u.c.heal){   /* v195: 성직자 이동 — 부상 아군 추적, 없으면 전진 */
+    var __w=null,__wm=0.999; for(const a3 of units){ if(a3.dead||a3.team!==u.team||a3===u||a3.isTower) continue; var __r3=a3.hp/a3.maxHp; if(__r3<__wm){__wm=__r3;__w=a3;} }
+    if(__w&&__wm<0.92&&dist(u,__w)>1.6){ u.x+=Math.sign(__w.x-u.x)*u.c.spd*dt*0.55; u.y+=Math.sign(__w.y-u.y)*u.c.spd*dt*0.55; }
+    else if(__wm>=0.999){ u.y+=(u.team==='blue'?-1:1)*u.c.spd*dt*0.45; }
+    u.x=Math.max(0.7,Math.min(COLS-0.7,u.x)); u.y=Math.max(0.7,Math.min(ROWS-0.7,u.y));
+    u.cd-=dt;
     if(u.cd<=0){ u.cd=1.4; let healed=false;
       for(const a2 of units){ if(a2.dead||a2.team!==u.team||a2.hp>=a2.maxHp) continue;
         if(Math.hypot(a2.x-u.x,a2.y-u.y)<=2.5){ a2.hp=Math.min(a2.maxHp,a2.hp+u.c.heal); healed=true;
@@ -1618,9 +1623,7 @@ function drawFx(f){
     if(im2&&im2.complete){ ctx.save(); ctx.translate(px,py); ctx.rotate((f.team==='blue'?-1:1)*k*0.9);
       const dsz=TILE*3.2*(1-k*0.15); ctx.globalAlpha=Math.max(0,1-k);
       ctx.globalAlpha=Math.max(0,1-(f.t/f.dur)*0.75);ctx.drawImage(im2,-dsz/2,-dsz*0.8,dsz,dsz); ctx.restore(); } }
-  else if(f.kind==='star'){ const p=f.t/f.dur, sz=10+26*p, a=1-p; ctx.save(); ctx.translate(f.x,f.y); ctx.rotate(p*1.2); ctx.globalAlpha=a; ctx.fillStyle=f.col;
-  for(let i=0;i<(f.n||5)*2;i++){ const r=i%2?sz*0.45:sz, an=i*Math.PI/(f.n||5); ctx.lineTo(Math.cos(an)*r*10,Math.sin(an)*r*10); }
-  ctx.closePath(); ctx.fill(); ctx.restore(); }
+  else if(f.kind==='star'){ const p=f.t/f.dur, r1=4+k*9, r0=r1*0.45; ctx.save(); ctx.translate(px,py); ctx.rotate(p*1.1); ctx.globalAlpha=1-p; ctx.fillStyle=f.col; ctx.beginPath(); for(let i=0;i<10;i++){ const rr=(i%2)?r0:r1, an=i*Math.PI/5; ctx.lineTo(Math.cos(an)*rr,Math.sin(an)*rr); } ctx.closePath(); ctx.fill(); ctx.restore(); }   /* v195: 픽셀 좌표·소형 수복 */
   else if(f.kind==='ring'){ ctx.strokeStyle=f.col; ctx.lineWidth=3; ctx.beginPath();
     ctx.ellipse(px,py,8+k*26,(8+k*26)*0.5,0,0,7); ctx.stroke(); }
   else if(f.kind==='warnring'){
@@ -2083,6 +2086,7 @@ function startMatch(){
   show('battle');
   bgmStart();
   S.pre=3.6;
+  try{ if(typeof localStorage!=='undefined'&&!localStorage.getItem('ra_hint_done')&&!localStorage.getItem('ra_hist_v1')){ banner('🎴 아래 카드를 탭해 선택',2000); setTimeout(function(){ banner('🗺️ 원하는 위치를 탭해 배치!',2200); },2400); setTimeout(function(){ banner('💧 엘릭서가 차오르면 다음 카드!',2000); },5000); localStorage.setItem('ra_hint_done','1'); } }catch(e){ }   /* v195 P1 간이 온보딩 */
   if(window.__auto){
     spawnCard('knight','blue',6,20); spawnCard('archers','blue',9.5,21);
     spawnCard('wizard','blue',12,20.5); spawnCard('prince','red',6,11);
