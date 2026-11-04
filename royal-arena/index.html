@@ -1778,7 +1778,6 @@ function spawnBoss(){
   }
 }
 function destroyTower(t,fromTeam){
-  if(t.kind!="king") spawnBoss();
   fx.push({x:t.x,y:t.y,t:0,dur:0.9,kind:'boom'});
   S.shake=0.8; S.slow=0.6; S.clash={x:t.x,y:t.y,a:1};  // 타워 파괴 클로즈업
   sfx('boom');
