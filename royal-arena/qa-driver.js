@@ -3,7 +3,7 @@
 if(window.__qaDrv)return; window.__qaDrv=1;
 var errs=[],warns=[],notes=[];
 function loc(e){return (e&&((e.message||'?')+'@'+(e.filename||'').split('/').pop()+':'+(e.lineno||0)))||'?';}
-window.addEventListener('error',function(e){errs.push('err:'+loc(e));},true);
+window.addEventListener('error',function(e){var st=(e.error&&e.error.stack)||'';errs.push('err:'+loc(e)+(st?(' ^ '+st.replace(/\n/g,' < ').slice(0,150)):''));},true);
 window.addEventListener('unhandledrejection',function(e){errs.push('rej:'+((e.reason&&e.reason.message)||e.reason));},true);
 var ce=console.error,cw=console.warn;
 console.error=function(){try{errs.push('con:'+String(arguments[0]).slice(0,140));ce.apply(console,arguments);}catch(_){}};
