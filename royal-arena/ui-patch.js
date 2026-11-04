@@ -1076,6 +1076,8 @@
             setImp(t, 'font-size', '9.5px');
             setImp(t, 'line-height', '1.05');
             setImp(t, 'white-space', 'nowrap');
+            setImp(t, 'overflow', 'hidden');
+            setImp(t, 'text-overflow', 'ellipsis');
           }
         });
       };
@@ -1115,13 +1117,14 @@
         setImp(poolGrid, 'flex', '1 1 0%');
         setImp(poolGrid, 'display', 'grid');
         setImp(poolGrid, 'grid-template-columns', 'repeat(6, 1fr)');
-        setImp(poolGrid, 'grid-template-rows', 'repeat(3, 1fr)');
+        setImp(poolGrid, 'grid-template-rows', 'auto');
         setImp(poolGrid, 'gap', '4px');
         setImp(poolGrid, 'width', '100%');
-        setImp(poolGrid, 'min-height', '168px');
-        setImp(poolGrid, 'max-height', '186px');
+        setImp(poolGrid, 'min-height', '0px');
+        setImp(poolGrid, 'max-height', '100%');
         setImp(poolGrid, 'padding', '5px');
         setImp(poolGrid, 'background', 'rgba(8, 15, 30, 0.55)');
+        setImp(poolGrid, 'overflow-y', 'auto');
         setImp(poolGrid, 'border', '1px solid rgba(148, 163, 184, 0.25)');
         setImp(poolGrid, 'border-radius', '12px');
         Array.from(poolGrid.children).forEach(c => styleCardItem(c, 26));
