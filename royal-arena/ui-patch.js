@@ -1374,23 +1374,17 @@
       }
 
       const realBtns = Array.from(deckEdit.querySelectorAll('button'));
-      const randBtn = realBtns.find(b => (b.textContent || '').includes('랜덤') || b.id === 'dk-rand');
-      const saveBtn = realBtns.find(b => (b.textContent || '').includes('저장') || b.id === 'dk-save');
-      let closeBtn = realBtns.find(b => (b.textContent || '').includes('닫기') || b.id === 'deck-close' || b.id === 'btn-deck-close' || b.id === 'ra-deck-close-btn' || b.id === 'dk-close');
+      const saveBtn = realBtns.find(b => (b.textContent || '').includes('저장'));
+      let closeBtn = realBtns.find(b => (b.textContent || '').includes('닫기') || b.id === 'deck-close' || b.id === 'btn-deck-close' || b.id === 'ra-deck-close-btn');
 
       if (saveBtn) {
         const actionRow = saveBtn.parentElement;
         if (actionRow && actionRow !== deckEdit) {
           setImp(actionRow, 'flex', '0 0 auto');
           setImp(actionRow, 'display', 'grid');
-          if (randBtn) {
-            setImp(actionRow, 'grid-template-columns', '1fr 1.25fr 0.8fr');
-          } else {
-            setImp(actionRow, 'grid-template-columns', '1fr 1fr');
-          }
-          setImp(actionRow, 'gap', '6px');
+          setImp(actionRow, 'grid-template-columns', '1fr 1fr');
+          setImp(actionRow, 'gap', '10px');
           setImp(actionRow, 'width', '100%');
-          setImp(actionRow, 'margin', '4px 0 0 0');
 
           if (!closeBtn) {
             closeBtn = document.createElement('button');
@@ -1402,31 +1396,15 @@
             actionRow.appendChild(closeBtn);
           }
 
-          if (randBtn) {
-            setImp(randBtn, 'width', '100%');
-            setImp(randBtn, 'height', '42px');
-            setImp(randBtn, 'border-radius', '12px');
-            setImp(randBtn, 'background', 'linear-gradient(180deg, #3f7bf5 0%, #1e40af 100%)');
-            setImp(randBtn, 'border', '1.5px solid #60a5fa');
-            setImp(randBtn, 'color', '#ffffff');
-            setImp(randBtn, 'font-size', '12.5px');
-            setImp(randBtn, 'font-weight', '800');
-            setImp(randBtn, 'text-shadow', 'none');
-            setImp(randBtn, 'white-space', 'nowrap');
-            setImp(randBtn, 'padding', '0 4px');
-          }
-
           setImp(saveBtn, 'width', '100%');
           setImp(saveBtn, 'height', '42px');
           setImp(saveBtn, 'border-radius', '12px');
           setImp(saveBtn, 'background', 'linear-gradient(180deg, #ffca28 0%, #ff8f00 100%)');
           setImp(saveBtn, 'border', '1.5px solid #ffe082');
           setImp(saveBtn, 'color', '#140b00');
-          setImp(saveBtn, 'font-size', '12.5px');
+          setImp(saveBtn, 'font-size', '14px');
           setImp(saveBtn, 'font-weight', '800');
           setImp(saveBtn, 'text-shadow', 'none');
-          setImp(saveBtn, 'white-space', 'nowrap');
-          setImp(saveBtn, 'padding', '0 4px');
 
           setImp(closeBtn, 'width', '100%');
           setImp(closeBtn, 'height', '42px');
@@ -1434,18 +1412,16 @@
           setImp(closeBtn, 'background', 'linear-gradient(180deg, #2b3f66 0%, #18243d 100%)');
           setImp(closeBtn, 'border', '1.5px solid #6482b8');
           setImp(closeBtn, 'color', '#f0f6ff');
-          setImp(closeBtn, 'font-size', '12.5px');
+          setImp(closeBtn, 'font-size', '14px');
           setImp(closeBtn, 'font-weight', '800');
           setImp(closeBtn, 'text-shadow', 'none');
-          setImp(closeBtn, 'white-space', 'nowrap');
-          setImp(closeBtn, 'padding', '0 4px');
 
           if (!closeBtn.__closeBound) {
             closeBtn.__closeBound = true;
             closeBtn.addEventListener('click', (e) => {
               e.preventDefault();
               e.stopPropagation();
-              deckEdit.remove();
+              deckEdit.classList.add('hidden');
             });
           }
           if (!saveBtn.__autoCloseBound) {
@@ -1453,7 +1429,7 @@
             saveBtn.addEventListener('click', () => {
               const count = curGrid ? Array.from(curGrid.children).filter(c => !c.classList.contains('ra-empty-slot')).length : 8;
               if (count === 8) {
-                setTimeout(() => deckEdit.remove(), 120);
+                setTimeout(() => deckEdit.classList.add('hidden'), 120);
               }
             });
           }

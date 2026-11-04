@@ -1394,8 +1394,7 @@ function loadDeckSlot(n){ try{ if(typeof localStorage==='undefined') return null
 function activeSlot(){ try{ if(typeof localStorage==='undefined') return 0;
   return parseInt(localStorage.getItem('ra_deck_active')||'0',10)===1?1:0; }catch(e){ return 0; } }
 function getActiveDeck(){ if(typeof localStorage==='undefined') return null; return loadDeckSlot(activeSlot()); }
-function getRandomDeck(){ return shuffle([...Object.keys(CARDS)]).slice(0,8); }
-function initDeck(p,isEnemy){ const cards=isEnemy?getRandomDeck():(getActiveDeck()||DECK.slice(0,8)); const q=shuffle([...cards]); p.hand=q.slice(0,4); p.queue=q.slice(4); }
+function initDeck(p){ const q=shuffle([...(getActiveDeck()||DECK)]); p.hand=q.slice(0,4); p.queue=q.slice(4); }
 /* v72: 덱 편성 오버레이 — 덱 슬롯 2개 + 카드 교체 */
 function openDeckEditor(){
   if(document.getElementById('deck-edit')) return;
@@ -1420,14 +1419,12 @@ function openDeckEditor(){
      '<div style="display:flex;flex-wrap:wrap;justify-content:center;max-width:560px">'+Object.keys(CARDS).filter(k=>!deck.includes(k)).map(k=>
        '<div class="dk" data-add="'+k+'"><div class="dke">'+(ART[k]?'<img class="art" style="width:34px" src="'+ART[k]+'">':CARDS[k].emoji)+'</div><div class="dkn">'+CARDS[k].name+'</div><div class="dkc">'+CARDS[k].cost+'</div></div>').join('')+'</div>'+
      '<div style="margin:14px;display:flex;gap:10px">'+
-      '<button id="dk-rand" class="dk-sub">🎲 랜덤 조합</button>'+
       '<button id="dk-save" class="dk-act">이 슬롯에 저장</button>'+
       '<button id="dk-close" class="dk-sub">닫기</button></div>';
     ov.querySelectorAll('[data-slot]').forEach(b=>b.onclick=()=>{ slot=parseInt(b.dataset.slot,10); deck=(loadDeckSlot(slot)||DECK.slice(0,8)).slice(); render(); });
     ov.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{ deck=deck.filter(k=>k!==b.dataset.rm); render(); });
     ov.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>{ if(deck.includes(b.dataset.add)) return;
       if(deck.length>=8) deck.shift(); deck.push(b.dataset.add); render(); });
-    ov.querySelector('#dk-rand').onclick=()=>{ deck=getRandomDeck(); render(); try{sfx('crown');}catch(e){} };
     ov.querySelector('#dk-close').onclick=()=>{ ov.remove(); style.remove(); };
     ov.querySelector('#dk-save').onclick=()=>{ if(deck.length!==8) return;
       try{ localStorage.setItem(DECK_SLOTS[slot],JSON.stringify(deck)); localStorage.setItem('ra_deck_active',String(slot)); }catch(e){}
@@ -1781,6 +1778,7 @@ function spawnBoss(){
   }
 }
 function destroyTower(t,fromTeam){
+  if(t.kind!="king") spawnBoss();
   fx.push({x:t.x,y:t.y,t:0,dur:0.9,kind:'boom'});
   S.shake=0.8; S.slow=0.6; S.clash={x:t.x,y:t.y,a:1};  // 타워 파괴 클로즈업
   sfx('boom');
@@ -3181,7 +3179,7 @@ function startMatch(){
   try{ DPSW.acc={}; DPSW.cnt={}; DPSW.time=0; DPSW._c=0; dpswEnsure(); }catch(e){}  try{ heroPlxReset(); }catch(e){}   /* v150: 전투 진입 시 패럴럭스 리셋 */S.crowns={blue:0,red:0};   /* v148: 위젯 리셋 */ S.kills={blue:0,red:0}; S.deaths={blue:0,red:0}; S.spells={blue:0,red:0}; S.shake=0; S.clash=null; S.cam={x:W/2,y:H/2,z:1}; S._home={x:W/2,y:H/2,z:1}; S.focus=null; S.slow=0; S.spellQuiet=0; S._sk={}; try{ relayoutHud(); }catch(e){}   // v122: 경기 시작 기둥 배치   // v115: 초기 화면 상태 기억 — 강제 복귀 기준점 + v118: 주문 진정 기간 리셋   // v111: 구 추적 객체 2종 폐지(단일 S.focus만) S.boss=null; S.bossSpawned=false; S.ks=false; S.ksCd=0; S.focusGap=0; S.zHold=0; S._tp=0; S.repCd=0; S.__used={}; try{ syncGradeVisual(); }catch(e){} try{ S.relic=(function(){try{return localStorage.getItem('ra_relic_v1')||''}catch(e){return ''}})(); applyRelics(); applySkills(); }catch(e){}   // v119: 스킬트리 반영
   P.elixir=5;A.elixir=5;A.timer=4.5;P.sel=null;P._full=false;
   try{ var __sb2=document.getElementById('screen-battle'); if(__sb2) __sb2.classList.remove('ended'); }catch(e){}
-  initDeck(P,false);initDeck(A,true);
+  initDeck(P);initDeck(A);
   buildTowers(); drawStatic();
   buildHandUI();
   show('battle');
