@@ -293,7 +293,7 @@ function loadDeckSlot(n){ try{ if(typeof localStorage==='undefined') return null
 function activeSlot(){ try{ if(typeof localStorage==='undefined') return 0;
   return parseInt(localStorage.getItem('ra_deck_active')||'0',10)===1?1:0; }catch(e){ return 0; } }
 function getActiveDeck(){ if(typeof localStorage==='undefined') return null; return loadDeckSlot(activeSlot()); }
-function initDeck(p){ const q=shuffle([...(getActiveDeck()||DECK)]); p.hand=q.slice(0,4); p.queue=q.slice(4); }
+function initDeck(p,rd){ const q=shuffle([...(rd?DECK:(getActiveDeck()||DECK))]); p.hand=q.slice(0,4); p.queue=q.slice(4); }   /* v192: rd=true면 18종 풀 랜덤 */
 /* v72: 덱 편성 오버레이 — 덱 슬롯 2개 + 카드 교체 */
 function openDeckEditor(){
   if(document.getElementById('deck-edit')) return;
@@ -463,6 +463,7 @@ function shoot(src,tgt,dmg,kind,splash){
   kind=kind||'arrow';
   const d0=Math.hypot(tgt.x-src.x,tgt.y-src.y);
   const v=kind==='bullet'?2.75:(kind==='bomb'?1.45:2.25);
+  try{ fx.push({x:src.x,y:src.y,t:0,dur:0.16,kind:'ring',col:'rgba(255,213,84,.9)'}); }catch(e){ }   /* v192 P14: 머즐 플래시 */
   projs.push({x:src.x, y:src.y-(src.isTower?0.8:0.3), target:tgt, tx:tgt.x, ty:tgt.y,
               spd:v, dmg, team:src.team, kind, splash:splash||0, slow:src.c?src.c.slow:0, fromTower:!!src.isTower,
               arc:(kind==='bomb'||kind==='cannon'), t:0, dur:Math.max(0.12,d0/v)});
@@ -681,6 +682,7 @@ function destroyTower(t,fromTeam){
     finish(fromTeam);
   } else {
     S.crowns[fromTeam]++; try{ tutCrown(fromTeam); }catch(e){}   /* v147 */
+    if(fromTeam==='blue'&&!S.bossSpawned&&!S.over){ spawnBossNow(); }   /* v192: 적군 타워 1개 파괴 즉시 강림 */
     banner(fromTeam==='blue'?'타워 파괴! 왕관 획득 👑':'아군 타워가 파괴됐어요…');
     S.slow=3.0;   // v116: 타워 파괴 줌인 삭제(사용자 지정) — 슬로모·왕관 연출은 유지   // v113: 이미 줌인 중이면 강제 대체하지 않음(슬로모는 유지)   // v102 #9 슬로모 + v111: 강제 포커스(진행 중 포커스 대체)   // v102 #9: 마지막 왕관 순간 3초 슬로모 하이라이트(고정 클로즈업)
     sfx('crown');
@@ -830,10 +832,11 @@ function update(dt){
   aiTick(dt);
   if(S.ksCd>0) S.ksCd-=dt;
   if(S.repCd>0) S.repCd-=dt;   // v106 #12: 수리 쿨다운
-  if(!S.bossSpawned&&S.t<=90&&!S.over){ S.bossSpawned=true;
+  function spawnBossNow(){ if(S.bossSpawned||S.over) return; S.bossSpawned=true;
     const kt=towers.find(t=>t.team==='blue'&&t.kind==='king'&&!t.dead);
     if(kt){ const BU={key:'boss',team:'red',x:9,y:3.2,c:BOSS_STATS,hp:BOSS_STATS.hp,maxHp:BOSS_STATS.hp,shield:900,cd:1.2,dir:Math.PI/2,dead:false,swing:0,bob:1,spawnFx:0.45,doom:0,chargeT:0};
-      BU.target=kt; units.push(BU); S.boss=BU; ensureKsBtn(); banner('💀 부활한 왕이 강림했다!',2200); sfx('boomL'); } }
+      BU.target=kt; units.push(BU); S.boss=BU; ensureKsBtn(); banner('💀 부활한 왕이 강림했다!',2200); sfx('boomL'); }   /* v192: 보스 강림 함수화 */
+  if(!S.bossSpawned&&S.t<=90&&!S.over){ spawnBossNow(); }
   if(S.boss&&!S.boss.dead){ const b=S.boss; b.doom+=dt;
     if(b.doom>=12){ b.doom=0; const kt=towers.find(t=>t.team==='blue'&&t.kind==='king'&&!t.dead);
       if(kt){ dealDamage(kt,500,'red'); fx.push({x:kt.x,y:kt.y,t:0,dur:0.7,kind:'boom'}); S.shake=0.6; banner('💥 파멸기 폭발!',1800); } } }
@@ -1702,6 +1705,7 @@ function render(){
     ctx.fillStyle='rgba(0,0,0,.26)'; ctx.beginPath(); ctx.ellipse(2,gsz*0.42,gsz*0.40,gsz*0.12,0,0,7); ctx.fill();
     ctx.drawImage(gim,-gsz/2,-gsz/2,gsz,gsz); ctx.restore(); } }
   if(P.sel!=null&&!S.over){
+    try{ ctx.save(); ctx.globalAlpha=0.09+0.05*Math.sin((S._now||0)*5); ctx.fillStyle='#ffd75e'; ctx.fillRect(0,BLUE_DEPLOY_MIN*TILE,W,(ROWS-BLUE_DEPLOY_MIN)*TILE); ctx.restore(); }catch(e){ }   /* v192 P13: 배치 구역 펄스 */
     const c=CARDS[P.hand[P.sel]];
     ctx.fillStyle=c.kind==='spell'?'rgba(199,125,255,.15)':'rgba(63,123,245,.17)';
     if(c.kind==='spell') ctx.fillRect(0,0,W,H);
@@ -2066,7 +2070,8 @@ function startMatch(){
   try{ DPSW.acc={}; DPSW.cnt={}; DPSW.time=0; DPSW._c=0; dpswEnsure(); }catch(e){}  try{ heroPlxReset(); }catch(e){}   /* v150: 전투 진입 시 패럴럭스 리셋 */S.crowns={blue:0,red:0};   /* v148: 위젯 리셋 */ S.kills={blue:0,red:0}; S.deaths={blue:0,red:0}; S.spells={blue:0,red:0}; S.shake=0; S.clash=null; S.cam={x:W/2,y:H/2,z:1}; S._home={x:W/2,y:H/2,z:1}; S.focus=null; S.slow=0; S.spellQuiet=0; S._sk={}; try{ relayoutHud(); }catch(e){}   // v122: 경기 시작 기둥 배치   // v115: 초기 화면 상태 기억 — 강제 복귀 기준점 + v118: 주문 진정 기간 리셋   // v111: 구 추적 객체 2종 폐지(단일 S.focus만) S.boss=null; S.bossSpawned=false; S.ks=false; S.ksCd=0; S.focusGap=0; S.zHold=0; S._tp=0; S.repCd=0; S.__used={}; try{ syncGradeVisual(); }catch(e){} try{ S.relic=(function(){try{return localStorage.getItem('ra_relic_v1')||''}catch(e){return ''}})(); applyRelics(); applySkills(); }catch(e){}   // v119: 스킬트리 반영
   P.elixir=5;A.elixir=5;A.timer=4.5;P.sel=null;P._full=false;
   try{ var __sb2=document.getElementById('screen-battle'); if(__sb2) __sb2.classList.remove('ended'); }catch(e){}
-  initDeck(P);initDeck(A);
+  initDeck(P);initDeck(A,true);   /* v192: 적 덱 = 아군과 무관 랜덤 */
+  try{ window.__qaDecks={blue:P.hand.join(','),red:A.hand.join(',')}; }catch(e){ }
   buildTowers(); drawStatic();
   buildHandUI();
   show('battle');
@@ -2267,3 +2272,21 @@ try{ var __rq=new URLSearchParams(location.search); var __rw=__rq.get('result');
   if(__rw){ S.winner=__rw; S.over=true; if(__rw==='blue'){ S.crowns={blue:2,red:1}; S.kills={blue:14,red:9}; S.deaths={blue:6,red:10}; S.spells={blue:4,red:3}; } S.t=95; showResult(); } }catch(e){}
 requestAnimationFrame(loop);
 
+
+/* v192: 덱 편성 화면 — 🎲 랜덤 선택(18종 풀 → 랜덤 8장 저장·재렌더) */
+function __raAddRandomBtn(){
+  var de=document.getElementById('deck-edit'); if(!de||document.getElementById('btn-deck-random')) return;
+  var btn=document.createElement('button'); btn.id='btn-deck-random'; btn.textContent='🎲 랜덤';
+  btn.onclick=function(){
+    var q=shuffle([...DECK]).slice(0,8);
+    try{ hofSave(activeSlot(),q); }catch(e){ }
+    var cur=document.getElementById('deck-edit'); if(cur) cur.remove();
+    openDeckEditor();
+    try{ toast('덱을 랜덤으로 구성했어요'); }catch(e){ }
+  };
+  var saveB=null; [].slice.call(de.querySelectorAll('button')).forEach(function(b){ if(/저장/.test(b.textContent||'')) saveB=b; });
+  if(saveB&&saveB.parentNode){ saveB.parentNode.insertBefore(btn,saveB); } else de.appendChild(btn);
+}
+(function(){ var orig=openDeckEditor;
+  openDeckEditor=function(){ var r=orig.apply(this,arguments); try{ setTimeout(__raAddRandomBtn,40); }catch(e){ } return r; };
+})();

@@ -63,7 +63,7 @@ function runBattle(cb){
   clickEl(st);
   setTimeout(function(){
     var tm=document.querySelector('#timer');
-    cb('BATTLE:'+(battleVisible()?'OK':'FAIL')+' '+pixCount()+' TIME:'+(tm&&tm.textContent?'ok':'empty'));
+    cb('BATTLE:'+(battleVisible()?'OK':'FAIL')+' '+pixCount()+' TIME:'+(tm&&tm.textContent?'ok':'empty')+' ENEMYD:'+(function(){try{var q2=window.__qaDecks;return q2?(q2.blue===q2.red?'SAME':'diff'):'n/a'}catch(e){return 'n/a'}})());
   },3800);
 }
 setTimeout(function(){
