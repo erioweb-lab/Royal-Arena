@@ -1,7 +1,7 @@
 /* 로얄 아레나 서비스 워커 — 오프라인 지원
    전략: 설치 시 앱 셸 프리캐시, 이후 stale-while-revalidate
    (오프라인 → 캐시로 즉시 표시 / 온라인 → 백그라운드 갱신) */
-const CACHE = 'royal-arena-v192';
+const CACHE = 'royal-arena-v193';
 const CORE = ['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png', 'maskable-512.png', 'js/g1-art-assets.js', 'js/g2-sprite-assets.js', 'js/g3-frame-assets.js', 'js/g4-ux-data.js', 'js/g5-core.js', 'js/g6-battle.js', 'js/g7-ui-systems.js', 'js/g8-boot.js', 'qa-driver.js', 'ui-patch.js'];
 
 self.addEventListener('install', e => {

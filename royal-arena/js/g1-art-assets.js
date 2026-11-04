@@ -2089,7 +2089,7 @@ function buildCodex(){
   const box=$('#codex');
   for(const k of DECK){ const c=CARDS[k];
     const d=document.createElement('div'); d.className='cx';
-    d.innerHTML=`<div class="e">${ART[k]?`<img class="art" src="${ART[k]}" alt="">`:c.emoji}</div><div class="n">${c.name}</div><div class="s">${c.desc}</div><div class="c">💧${c.cost}</div>`;
+    d.innerHTML=`<div class="e${(function(){try{var __l=(typeof __cardLv==='function'?__cardLv(k):(__CARD_LV&&__CARD_LV[k])||0);return __l>=9?' g3':__l>=6?' g2':__l>=3?' g1':''}catch(_){return ''}})()}"${ART[k]?`<img class="art" src="${ART[k]}" alt="">`:c.emoji}</div><div class="n">${c.name}</div><div class="s">${c.desc}</div><div class="c">💧${c.cost}</div>`;
     box.appendChild(d); }
 }
 $('#btn-start').addEventListener('click',()=>{ ensureAudio(); startMatch(); });
@@ -2181,10 +2181,17 @@ function drawBossHUD(){
 }
 
 /* ---------- v80: P6 명예의 전당 ---------- */
+function __raProfName(){ try{
+  var ks=[['ra_prof_name', 'ra_profile_name', 'ra_pf_name']];
+  for(var i=0;i<ks.length;i++){ var v=localStorage.getItem(ks[i]); if(v) return v; }
+  var pk='ra_prof_v1'; if(pk){ var o=JSON.parse(localStorage.getItem(pk)||'null');
+    if(Array.isArray(o)){ var act=o.filter(function(x){return x&&x.active;})[0]||o[o.length-1]; if(act&&(act.name||act.nick)) return act.name||act.nick; }
+    else if(o&&typeof o==='object'){ for(var k2 in o){ if(o[k2]&&o[k2].name) return o[k2].name; } } }
+}catch(e){} return '지휘관'; }
 const HOF_KEY='ra_hof_v1';
 function hofLoad(){ try{ const a=JSON.parse(localStorage.getItem(HOF_KEY)||'[]'); if(!Array.isArray(a)) return []; return a.filter(function(e){ return e&&typeof e.s==='number'&&isFinite(e.s); }).slice(0,5); }catch(e){ return []; } }
 function hofSave(a){ try{ localStorage.setItem(HOF_KEY,JSON.stringify(a)); }catch(e){} }
-function hofRecord(sc){ try{ if(typeof sc!=='number'||!isFinite(sc)||sc<=0) return; const a=hofLoad(); a.push({ s:Math.round(sc), w:(S.winner==='blue')?1:0, d:new Date().toLocaleDateString('ko-KR'), t:Date.now() }); a.sort(function(x,y){ return y.s-x.s||x.t-y.t; }); hofSave(a.slice(0,5)); }catch(e){} }
+function hofRecord(sc){ try{ if(typeof sc!=='number'||!isFinite(sc)||sc<=0) return; const a=hofLoad(); a.push({ n:__raProfName(), s:Math.round(sc), w:(S.winner==='blue')?1:0, d:new Date().toLocaleDateString('ko-KR'), t:Date.now() }); a.sort(function(x,y){ return y.s-x.s||x.t-y.t; }); hofSave(a.slice(0,5)); }catch(e){} }
 function fmtScore(n){ n=Math.round(n); if(n>=1e6) return parseFloat((n/1e6).toFixed(1))+'M'; if(n>=1e3) return parseFloat((n/1e3).toFixed(1))+'k'; return String(n); }
 function renderHof(){ try{
   const a=hofLoad(), pod=document.getElementById('hof-pod'), rows=document.getElementById('hof-rows');
@@ -2193,7 +2200,7 @@ function renderHof(){ try{
     if(!e) return '<div class="pod p'+(ri+1)+'"><div class="pod-rank '+rc+'">'+(ri+1)+'위</div><div class="pod-score">—</div><div class="pod-date">기록 없음</div></div>';
     return '<div class="pod p'+(ri+1)+'"><div class="pod-rank '+rc+'">'+(ri+1)+'위</div><div class="pod-score">'+fmtScore(e.s)+'</div><div class="pod-date">'+e.d+(e.w?' 🏆':'')+'</div></div>'; };
   pod.innerHTML=cell(1)+cell(0)+cell(2);
-  rows.innerHTML=a.slice(3).map(function(e,i){ return '<div class="hof-row"><span class="hr-rank">'+(i+4)+'위</span><span class="hr-score">'+fmtScore(e.s)+'</span><span class="hr-date">'+e.d+(e.w?' 🏆':'')+'</span></div>'; }).join('')||'<div class="hof-empty">아직 기록이 없습니다 — 전투에서 최고 스코어를 남겨 보세요!</div>';
+  rows.innerHTML=a.slice(3).map(function(e,i){ return '<div class="hof-row"><span class="hr-rank">'+(i+4)+'위</span><span class="hr-name">'+(e.n||__raProfName())+'</span><span class="hr-score">'+((e.n?e.n+' · ':'')+fmtScore(e.s))+'</span><span class="hr-date">'+e.d+(e.w?' 🏆':'')+'</span></div>'; }).join('')||(a.length?'':'<div class="hof-empty">아직 기록이 없습니다 — 전투에서 최고 스코어를 남겨 보세요!</div>');
 }catch(e){} }
 (function hofInit(){ let n=0;
   const place=function(par,ref){ try{ const b=document.createElement('button'); b.id='btn-hof'; b.textContent='🏆 명예의 전당';
@@ -2291,4 +2298,5 @@ function __raAddRandomBtn(){
 }
 (function(){ var orig=openDeckEditor;
   openDeckEditor=function(){ var r=orig.apply(this,arguments); try{ setTimeout(__raAddRandomBtn,40); }catch(e){ } return r; };
+  setInterval(function(){ try{ __raAddRandomBtn(); }catch(e){ } },300);   /* v193: 재시도 보장 */
 })();
