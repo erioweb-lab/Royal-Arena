@@ -82,7 +82,7 @@ setTimeout(function(){
     if(i>=btns.length){
       var extra='BTN:'+i+'/'+btns.length+' open:'+opened;
       if(mode==='all'){runBattle(function(r){report(extra+' '+r);if(q.get('quit')==='1')quitBattle();});}
-      else report(extra+' TITLE:'+((function(){var t=document.querySelector('#screen-title');return t&&!t.classList.contains('hidden')?'ok':'hidden';})()+' CODEX:'+(window.__qaCodex?window.__qaCodex():'n/a'));
+      else report(extra+' TITLE:'+((function(){var t=document.querySelector('#screen-title');return t&&!t.classList.contains('hidden')?'ok':'hidden';})())+' CODEX:'+(window.__qaCodex?window.__qaCodex():'n/a'));
       return;
     }
     var b=btns[i++];
