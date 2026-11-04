@@ -1768,15 +1768,6 @@ function killUnit(u,expire){
   if(!expire&&u.maxHp>=900){ S.slow=0.45; S.clash={x:u.x,y:u.y,a:1}; }  // 대형 킬 하이라이트
   if(!expire) sfx('hit');
 }
-function spawnBoss(){
-  if(S.bossSpawned||S.over) return;
-  S.bossSpawned=true;
-  const kt=towers.find(t=>t.team==="blue"&&t.kind==="king"&&!t.dead);
-  if(kt){
-    const BU={key:"boss",team:"red",x:9,y:3.2,c:BOSS_STATS,hp:BOSS_STATS.hp,maxHp:BOSS_STATS.hp,shield:900,cd:1.2,dir:Math.PI/2,dead:false,swing:0,bob:1,spawnFx:0.45,doom:0,chargeT:0};
-    BU.target=kt; units.push(BU); S.boss=BU; ensureKsBtn(); banner("💀 부활한 왕이 강림했다!",2200); sfx("boomL");
-  }
-}
 function destroyTower(t,fromTeam){
   fx.push({x:t.x,y:t.y,t:0,dur:0.9,kind:'boom'});
   S.shake=0.8; S.slow=0.6; S.clash={x:t.x,y:t.y,a:1};  // 타워 파괴 클로즈업
@@ -1795,7 +1786,6 @@ function destroyTower(t,fromTeam){
     S.slow=3.0;   // v116: 타워 파괴 줌인 삭제(사용자 지정) — 슬로모·왕관 연출은 유지   // v113: 이미 줌인 중이면 강제 대체하지 않음(슬로모는 유지)   // v102 #9 슬로모 + v111: 강제 포커스(진행 중 포커스 대체)   // v102 #9: 마지막 왕관 순간 3초 슬로모 하이라이트(고정 클로즈업)
     sfx('crown');
     if(typeof showEmote==='function' && Math.random()<0.5) setTimeout(()=>showEmote(fromTeam==='red'?'😂':'😭','red'),700);
-    spawnBoss();
     if(S.overtime) finish(fromTeam);   // 서든데스: 왕관 즉시 승부
   }
 }
@@ -1941,7 +1931,7 @@ function update(dt){
   aiTick(dt);
   if(S.ksCd>0) S.ksCd-=dt;
   if(S.repCd>0) S.repCd-=dt;   // v106 #12: 수리 쿨다운
-  if(!S.bossSpawned&&!S.over&&(S.t<=90||towers.some(t=>t.dead))){ spawnBoss(); }
+  if(!S.bossSpawned&&S.t<=90&&!S.over){ S.bossSpawned=true;
     const kt=towers.find(t=>t.team==='blue'&&t.kind==='king'&&!t.dead);
     if(kt){ const BU={key:'boss',team:'red',x:9,y:3.2,c:BOSS_STATS,hp:BOSS_STATS.hp,maxHp:BOSS_STATS.hp,shield:900,cd:1.2,dir:Math.PI/2,dead:false,swing:0,bob:1,spawnFx:0.45,doom:0,chargeT:0};
       BU.target=kt; units.push(BU); S.boss=BU; ensureKsBtn(); banner('💀 부활한 왕이 강림했다!',2200); sfx('boomL'); } }
