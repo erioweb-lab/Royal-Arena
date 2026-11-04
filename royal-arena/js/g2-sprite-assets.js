@@ -283,13 +283,11 @@ function profSnapshot(){ try{ return {tro:parseInt(localStorage.getItem('ra_trop
   sk:JSON.parse(localStorage.getItem('ra_skills_v1')||'{}'),
   rel:localStorage.getItem('ra_relic_v1')||''}; }catch(e){ return {tro:0,wins:0,sp:{sp:0,total:0},sk:{},rel:''}; } }
 function profStore(n,s){ try{ localStorage.setItem(profKey(n), JSON.stringify(s)); }catch(e){} }
-function profLoad(n){ try{ return JSON.parse(localStorage.getItem(profKey(n))||'null')||profSnapshot(); }catch(e){ return profSnapshot(); } }
 function profActive(){ var d=profDb();
   if(localStorage.getItem('ra_profiles_v1')===null){   // v120: 최초 실행 — 기존 진행도를 기본 지휘관 버킷으로 이관
     profStore('지휘관', profSnapshot()); profDbSave(d); }
   if(d.list.indexOf(d.active)<0) d.active=d.list[0];
   return d.active; }
-function profSync(){ var d=profDb(); d.active=profActive(); profStore(d.active, profSnapshot()); profDbSave(d); }   // v120: 라이브 키 → 활성 버킷 미러
 function profApply(n){ var s=profLoad(n);
   try{ localStorage.setItem('ra_trophies_v1', String(s.tro||0)); localStorage.setItem('ra_wins_v1', String(s.wins||0));
     localStorage.setItem('ra_sp_v1', JSON.stringify(s.sp||{sp:0,total:0})); localStorage.setItem('ra_skills_v1', JSON.stringify(s.sk||{}));
@@ -372,12 +370,6 @@ const SKILLS=[
  {id:'mag1',col:'🧪',tier:1,name:'신속 채취',desc:'엘릭서 회복 +6%'},
  {id:'mag2',col:'🧪',tier:2,name:'광역 주문',desc:'주문 피해 +10%'},
  {id:'mag3',col:'🧪',tier:3,name:'마나 급류',desc:'엘릭서 회복 추가 +6%'}];
-function skillLv(k){ try{ var o=JSON.parse(localStorage.getItem('ra_skills_v1')||'{}'); return o[k]||0; }catch(e){ return 0; } }
-function spState(){ try{ var s=JSON.parse(localStorage.getItem('ra_sp_v1')||'{"sp":0,"total":0}'); if(typeof s.sp!=='number') s={sp:0,total:0}; return s; }catch(e){ return {sp:0,total:0}; } }
-function spSave(st){ try{ localStorage.setItem('ra_sp_v1', JSON.stringify(st)); }catch(e){} try{ profSync(); }catch(e){} }   // v120: SP 변경 프로필 미러
-function skillsObj(){ try{ return JSON.parse(localStorage.getItem('ra_skills_v1')||'{}'); }catch(e){ return {}; } }
-function skillsSave(o){ try{ localStorage.setItem('ra_skills_v1', JSON.stringify(o)); }catch(e){} try{ profSync(); }catch(e){} }   // v120: 스킬 변경 프로필 미러
-function colSkill(col,tier){ return SKILLS.find(function(s){ return s.col===col&&s.tier===tier; }); }
 function canBuySkill(id){ var d=SKILLS.find(function(s){ return s.id===id; }); if(!d) return false;
   if(skillLv(id)>=3) return false; if(spState().sp<1) return false;
   if(d.tier>=2){ var low=colSkill(d.col,d.tier-1); if(skillLv(low.id)<2) return false; }
@@ -489,15 +481,10 @@ const RELICS=[
   {id:'relic_spell',icon:'✨',name:'마력 봉인구',desc:'주문 피해 +25%',need:5},
   {id:'relic_gold',icon:'💰',name:'황금 엘릭서 통',desc:'엘릭서 재생 +10%',need:7}
 ];
-function spellDmg(d){ d=Math.round(d*(1+0.10*((S._sk&&S._sk.mag2)||0))); return (S&&S.relic==='relic_spell')?Math.round(d*1.25):d; }   // v119: 스킬트리 광역 술영 — 주문 피해 +10%
-function relicWins(){ try{ return Math.max(0,parseInt(localStorage.getItem('ra_wins_v1')||'0',10)||0); }catch(e){ return 0; } }
-function loadRelicEquip(){ try{ return localStorage.getItem('ra_relic_v1')||''; }catch(e){ return ''; } }
-function saveRelicEquip(id){ try{ if(id) localStorage.setItem('ra_relic_v1',id); else localStorage.removeItem('ra_relic_v1'); }catch(e){} }
 function applyRelics(){
   if(S.relic!=='relic_tower') return;
   for(const t of towers){ if(t.team==='blue'&&!t.__rl){ t.__rl=1; t.maxHp=Math.round(t.maxHp*1.1); t.hp=Math.min(t.maxHp,Math.round(t.hp*1.1)); } }
 }
-function castSpell(key,team,x,y){ try{ if(team==='blue') DPSW.cnt[key]=(DPSW.cnt[key]||0)+1; }catch(e){}   /* v148: 주문도 배치수 집계 */ var __pn=projs.length; castSpellBase(key,team,x,y); try{ if(team==='blue'&&S.relic==='relic_spell'&&projs.length>__pn){ for(var __i=__pn;__i<projs.length;__i++){ if(projs[__i]&&projs[__i].dmg) projs[__i].dmg=Math.round(projs[__i].dmg*1.25); } } }catch(e){} }
 function renderRelicList(){
   var box=document.getElementById('relic-list'); if(!box) return;
   var wins=relicWins(), eq=loadRelicEquip(); box.innerHTML='';
@@ -627,12 +614,6 @@ var SKILLS_LEGACY=[
  {id:'mag1',col:'🧪',tier:1,name:'신속 채취',desc:'엘릭서 회복 +6%'},
  {id:'mag2',col:'🧪',tier:2,name:'광역 주문',desc:'주문 피해 +10%'},
  {id:'mag3',col:'🧪',tier:3,name:'마나 급류',desc:'엘릭서 회복 추가 +6%'}];
-function skillLv(k){ try{ var o=JSON.parse(localStorage.getItem('ra_skills_v1')||'{}'); return o[k]||0; }catch(e){ return 0; } }
-function spState(){ try{ var s=JSON.parse(localStorage.getItem('ra_sp_v1')||'{"sp":0,"total":0}'); if(typeof s.sp!=='number') s={sp:0,total:0}; return s; }catch(e){ return {sp:0,total:0}; } }
-function spSave(st){ try{ localStorage.setItem('ra_sp_v1', JSON.stringify(st)); }catch(e){} try{ profSync(); }catch(e){} }   // v120: SP 변경 프로필 미러
-function skillsObj(){ try{ return JSON.parse(localStorage.getItem('ra_skills_v1')||'{}'); }catch(e){ return {}; } }
-function skillsSave(o){ try{ localStorage.setItem('ra_skills_v1', JSON.stringify(o)); }catch(e){} try{ profSync(); }catch(e){} }   // v120: 스킬 변경 프로필 미러
-function colSkill(col,tier){ return SKILLS.find(function(s){ return s.col===col&&s.tier===tier; }); }
 function canBuySkill(id){ var d=SKILLS.find(function(s){ return s.id===id; }); if(!d) return false;
   if(skillLv(id)>=3) return false; if(spState().sp<1) return false;
   if(d.tier>=2){ var low=colSkill(d.col,d.tier-1); if(skillLv(low.id)<2) return false; }
@@ -744,15 +725,10 @@ var RELICS_LEGACY=[
   {id:'relic_spell',icon:'✨',name:'마력 봉인구',desc:'주문 피해 +25%',need:5},
   {id:'relic_gold',icon:'💰',name:'황금 엘릭서 통',desc:'엘릭서 재생 +10%',need:7}
 ];
-function spellDmg(d){ d=Math.round(d*(1+0.10*((S._sk&&S._sk.mag2)||0))); return (S&&S.relic==='relic_spell')?Math.round(d*1.25):d; }   // v119: 스킬트리 광역 술영 — 주문 피해 +10%
-function relicWins(){ try{ return Math.max(0,parseInt(localStorage.getItem('ra_wins_v1')||'0',10)||0); }catch(e){ return 0; } }
-function loadRelicEquip(){ try{ return localStorage.getItem('ra_relic_v1')||''; }catch(e){ return ''; } }
-function saveRelicEquip(id){ try{ if(id) localStorage.setItem('ra_relic_v1',id); else localStorage.removeItem('ra_relic_v1'); }catch(e){} }
 function applyRelics(){
   if(S.relic!=='relic_tower') return;
   for(const t of towers){ if(t.team==='blue'&&!t.__rl){ t.__rl=1; t.maxHp=Math.round(t.maxHp*1.1); t.hp=Math.min(t.maxHp,Math.round(t.hp*1.1)); } }
 }
-function castSpell(key,team,x,y){ try{ if(team==='blue') DPSW.cnt[key]=(DPSW.cnt[key]||0)+1; }catch(e){}   /* v148: 주문도 배치수 집계 */ var __pn=projs.length; castSpellBase(key,team,x,y); try{ if(team==='blue'&&S.relic==='relic_spell'&&projs.length>__pn){ for(var __i=__pn;__i<projs.length;__i++){ if(projs[__i]&&projs[__i].dmg) projs[__i].dmg=Math.round(projs[__i].dmg*1.25); } } }catch(e){} }
 function renderRelicList(){
   var box=document.getElementById('relic-list'); if(!box) return;
   var wins=relicWins(), eq=loadRelicEquip(); box.innerHTML='';
@@ -858,12 +834,6 @@ var SKILLS_LEGACY=[
  {id:'mag1',col:'🧪',tier:1,name:'신속 채취',desc:'엘릭서 회복 +6%'},
  {id:'mag2',col:'🧪',tier:2,name:'광역 주문',desc:'주문 피해 +10%'},
  {id:'mag3',col:'🧪',tier:3,name:'마나 급류',desc:'엘릭서 회복 추가 +6%'}];
-function skillLv(k){ try{ var o=JSON.parse(localStorage.getItem('ra_skills_v1')||'{}'); return o[k]||0; }catch(e){ return 0; } }
-function spState(){ try{ var s=JSON.parse(localStorage.getItem('ra_sp_v1')||'{"sp":0,"total":0}'); if(typeof s.sp!=='number') s={sp:0,total:0}; return s; }catch(e){ return {sp:0,total:0}; } }
-function spSave(st){ try{ localStorage.setItem('ra_sp_v1', JSON.stringify(st)); }catch(e){} try{ profSync(); }catch(e){} }   // v120: SP 변경 프로필 미러
-function skillsObj(){ try{ return JSON.parse(localStorage.getItem('ra_skills_v1')||'{}'); }catch(e){ return {}; } }
-function skillsSave(o){ try{ localStorage.setItem('ra_skills_v1', JSON.stringify(o)); }catch(e){} try{ profSync(); }catch(e){} }   // v120: 스킬 변경 프로필 미러
-function colSkill(col,tier){ return SKILLS.find(function(s){ return s.col===col&&s.tier===tier; }); }
 function canBuySkill(id){ var d=SKILLS.find(function(s){ return s.id===id; }); if(!d) return false;
   if(skillLv(id)>=3) return false; if(spState().sp<1) return false;
   if(d.tier>=2){ var low=colSkill(d.col,d.tier-1); if(skillLv(low.id)<2) return false; }
@@ -975,15 +945,10 @@ var RELICS_LEGACY=[
   {id:'relic_spell',icon:'✨',name:'마력 봉인구',desc:'주문 피해 +25%',need:5},
   {id:'relic_gold',icon:'💰',name:'황금 엘릭서 통',desc:'엘릭서 재생 +10%',need:7}
 ];
-function spellDmg(d){ d=Math.round(d*(1+0.10*((S._sk&&S._sk.mag2)||0))); return (S&&S.relic==='relic_spell')?Math.round(d*1.25):d; }   // v119: 스킬트리 광역 술영 — 주문 피해 +10%
-function relicWins(){ try{ return Math.max(0,parseInt(localStorage.getItem('ra_wins_v1')||'0',10)||0); }catch(e){ return 0; } }
-function loadRelicEquip(){ try{ return localStorage.getItem('ra_relic_v1')||''; }catch(e){ return ''; } }
-function saveRelicEquip(id){ try{ if(id) localStorage.setItem('ra_relic_v1',id); else localStorage.removeItem('ra_relic_v1'); }catch(e){} }
 function applyRelics(){
   if(S.relic!=='relic_tower') return;
   for(const t of towers){ if(t.team==='blue'&&!t.__rl){ t.__rl=1; t.maxHp=Math.round(t.maxHp*1.1); t.hp=Math.min(t.maxHp,Math.round(t.hp*1.1)); } }
 }
-function castSpell(key,team,x,y){ try{ if(team==='blue') DPSW.cnt[key]=(DPSW.cnt[key]||0)+1; }catch(e){}   /* v148: 주문도 배치수 집계 */ var __pn=projs.length; castSpellBase(key,team,x,y); try{ if(team==='blue'&&S.relic==='relic_spell'&&projs.length>__pn){ for(var __i=__pn;__i<projs.length;__i++){ if(projs[__i]&&projs[__i].dmg) projs[__i].dmg=Math.round(projs[__i].dmg*1.25); } } }catch(e){} }
 function renderRelicList(){
   var box=document.getElementById('relic-list'); if(!box) return;
   var wins=relicWins(), eq=loadRelicEquip(); box.innerHTML='';
@@ -1089,12 +1054,6 @@ var SKILLS_LEGACY=[
  {id:'mag1',col:'🧪',tier:1,name:'신속 채취',desc:'엘릭서 회복 +6%'},
  {id:'mag2',col:'🧪',tier:2,name:'광역 주문',desc:'주문 피해 +10%'},
  {id:'mag3',col:'🧪',tier:3,name:'마나 급류',desc:'엘릭서 회복 추가 +6%'}];
-function skillLv(k){ try{ var o=JSON.parse(localStorage.getItem('ra_skills_v1')||'{}'); return o[k]||0; }catch(e){ return 0; } }
-function spState(){ try{ var s=JSON.parse(localStorage.getItem('ra_sp_v1')||'{"sp":0,"total":0}'); if(typeof s.sp!=='number') s={sp:0,total:0}; return s; }catch(e){ return {sp:0,total:0}; } }
-function spSave(st){ try{ localStorage.setItem('ra_sp_v1', JSON.stringify(st)); }catch(e){} try{ profSync(); }catch(e){} }   // v120: SP 변경 프로필 미러
-function skillsObj(){ try{ return JSON.parse(localStorage.getItem('ra_skills_v1')||'{}'); }catch(e){ return {}; } }
-function skillsSave(o){ try{ localStorage.setItem('ra_skills_v1', JSON.stringify(o)); }catch(e){} try{ profSync(); }catch(e){} }   // v120: 스킬 변경 프로필 미러
-function colSkill(col,tier){ return SKILLS.find(function(s){ return s.col===col&&s.tier===tier; }); }
 function canBuySkill(id){ var d=SKILLS.find(function(s){ return s.id===id; }); if(!d) return false;
   if(skillLv(id)>=3) return false; if(spState().sp<1) return false;
   if(d.tier>=2){ var low=colSkill(d.col,d.tier-1); if(skillLv(low.id)<2) return false; }
@@ -1206,15 +1165,10 @@ var RELICS_LEGACY=[
   {id:'relic_spell',icon:'✨',name:'마력 봉인구',desc:'주문 피해 +25%',need:5},
   {id:'relic_gold',icon:'💰',name:'황금 엘릭서 통',desc:'엘릭서 재생 +10%',need:7}
 ];
-function spellDmg(d){ d=Math.round(d*(1+0.10*((S._sk&&S._sk.mag2)||0))); return (S&&S.relic==='relic_spell')?Math.round(d*1.25):d; }   // v119: 스킬트리 광역 술영 — 주문 피해 +10%
-function relicWins(){ try{ return Math.max(0,parseInt(localStorage.getItem('ra_wins_v1')||'0',10)||0); }catch(e){ return 0; } }
-function loadRelicEquip(){ try{ return localStorage.getItem('ra_relic_v1')||''; }catch(e){ return ''; } }
-function saveRelicEquip(id){ try{ if(id) localStorage.setItem('ra_relic_v1',id); else localStorage.removeItem('ra_relic_v1'); }catch(e){} }
 function applyRelics(){
   if(S.relic!=='relic_tower') return;
   for(const t of towers){ if(t.team==='blue'&&!t.__rl){ t.__rl=1; t.maxHp=Math.round(t.maxHp*1.1); t.hp=Math.min(t.maxHp,Math.round(t.hp*1.1)); } }
 }
-function castSpell(key,team,x,y){ try{ if(team==='blue') DPSW.cnt[key]=(DPSW.cnt[key]||0)+1; }catch(e){}   /* v148: 주문도 배치수 집계 */ var __pn=projs.length; castSpellBase(key,team,x,y); try{ if(team==='blue'&&S.relic==='relic_spell'&&projs.length>__pn){ for(var __i=__pn;__i<projs.length;__i++){ if(projs[__i]&&projs[__i].dmg) projs[__i].dmg=Math.round(projs[__i].dmg*1.25); } } }catch(e){} }
 function renderRelicList(){
   var box=document.getElementById('relic-list'); if(!box) return;
   var wins=relicWins(), eq=loadRelicEquip(); box.innerHTML='';
@@ -1314,12 +1268,6 @@ var SKILLS_LEGACY=[
  {id:'mag1',col:'🧪',tier:1,name:'신속 채취',desc:'엘릭서 회복 +6%'},
  {id:'mag2',col:'🧪',tier:2,name:'광역 주문',desc:'주문 피해 +10%'},
  {id:'mag3',col:'🧪',tier:3,name:'마나 급류',desc:'엘릭서 회복 추가 +6%'}];
-function skillLv(k){ try{ var o=JSON.parse(localStorage.getItem('ra_skills_v1')||'{}'); return o[k]||0; }catch(e){ return 0; } }
-function spState(){ try{ var s=JSON.parse(localStorage.getItem('ra_sp_v1')||'{"sp":0,"total":0}'); if(typeof s.sp!=='number') s={sp:0,total:0}; return s; }catch(e){ return {sp:0,total:0}; } }
-function spSave(st){ try{ localStorage.setItem('ra_sp_v1', JSON.stringify(st)); }catch(e){} try{ profSync(); }catch(e){} }   // v120: SP 변경 프로필 미러
-function skillsObj(){ try{ return JSON.parse(localStorage.getItem('ra_skills_v1')||'{}'); }catch(e){ return {}; } }
-function skillsSave(o){ try{ localStorage.setItem('ra_skills_v1', JSON.stringify(o)); }catch(e){} try{ profSync(); }catch(e){} }   // v120: 스킬 변경 프로필 미러
-function colSkill(col,tier){ return SKILLS.find(function(s){ return s.col===col&&s.tier===tier; }); }
 function canBuySkill(id){ var d=SKILLS.find(function(s){ return s.id===id; }); if(!d) return false;
   if(skillLv(id)>=3) return false; if(spState().sp<1) return false;
   if(d.tier>=2){ var low=colSkill(d.col,d.tier-1); if(skillLv(low.id)<2) return false; }
@@ -1431,15 +1379,10 @@ var RELICS_LEGACY=[
   {id:'relic_spell',icon:'✨',name:'마력 봉인구',desc:'주문 피해 +25%',need:5},
   {id:'relic_gold',icon:'💰',name:'황금 엘릭서 통',desc:'엘릭서 재생 +10%',need:7}
 ];
-function spellDmg(d){ d=Math.round(d*(1+0.10*((S._sk&&S._sk.mag2)||0))); return (S&&S.relic==='relic_spell')?Math.round(d*1.25):d; }   // v119: 스킬트리 광역 술영 — 주문 피해 +10%
-function relicWins(){ try{ return Math.max(0,parseInt(localStorage.getItem('ra_wins_v1')||'0',10)||0); }catch(e){ return 0; } }
-function loadRelicEquip(){ try{ return localStorage.getItem('ra_relic_v1')||''; }catch(e){ return ''; } }
-function saveRelicEquip(id){ try{ if(id) localStorage.setItem('ra_relic_v1',id); else localStorage.removeItem('ra_relic_v1'); }catch(e){} }
 function applyRelics(){
   if(S.relic!=='relic_tower') return;
   for(const t of towers){ if(t.team==='blue'&&!t.__rl){ t.__rl=1; t.maxHp=Math.round(t.maxHp*1.1); t.hp=Math.min(t.maxHp,Math.round(t.hp*1.1)); } }
 }
-function castSpell(key,team,x,y){ try{ if(team==='blue') DPSW.cnt[key]=(DPSW.cnt[key]||0)+1; }catch(e){}   /* v148: 주문도 배치수 집계 */ var __pn=projs.length; castSpellBase(key,team,x,y); try{ if(team==='blue'&&S.relic==='relic_spell'&&projs.length>__pn){ for(var __i=__pn;__i<projs.length;__i++){ if(projs[__i]&&projs[__i].dmg) projs[__i].dmg=Math.round(projs[__i].dmg*1.25); } } }catch(e){} }
 function renderRelicList(){
   var box=document.getElementById('relic-list'); if(!box) return;
   var wins=relicWins(), eq=loadRelicEquip(); box.innerHTML='';
@@ -1539,12 +1482,6 @@ var SKILLS_LEGACY=[
  {id:'mag1',col:'🧪',tier:1,name:'신속 채취',desc:'엘릭서 회복 +6%'},
  {id:'mag2',col:'🧪',tier:2,name:'광역 주문',desc:'주문 피해 +10%'},
  {id:'mag3',col:'🧪',tier:3,name:'마나 급류',desc:'엘릭서 회복 추가 +6%'}];
-function skillLv(k){ try{ var o=JSON.parse(localStorage.getItem('ra_skills_v1')||'{}'); return o[k]||0; }catch(e){ return 0; } }
-function spState(){ try{ var s=JSON.parse(localStorage.getItem('ra_sp_v1')||'{"sp":0,"total":0}'); if(typeof s.sp!=='number') s={sp:0,total:0}; return s; }catch(e){ return {sp:0,total:0}; } }
-function spSave(st){ try{ localStorage.setItem('ra_sp_v1', JSON.stringify(st)); }catch(e){} try{ profSync(); }catch(e){} }   // v120: SP 변경 프로필 미러
-function skillsObj(){ try{ return JSON.parse(localStorage.getItem('ra_skills_v1')||'{}'); }catch(e){ return {}; } }
-function skillsSave(o){ try{ localStorage.setItem('ra_skills_v1', JSON.stringify(o)); }catch(e){} try{ profSync(); }catch(e){} }   // v120: 스킬 변경 프로필 미러
-function colSkill(col,tier){ return SKILLS.find(function(s){ return s.col===col&&s.tier===tier; }); }
 function canBuySkill(id){ var d=SKILLS.find(function(s){ return s.id===id; }); if(!d) return false;
   if(skillLv(id)>=3) return false; if(spState().sp<1) return false;
   if(d.tier>=2){ var low=colSkill(d.col,d.tier-1); if(skillLv(low.id)<2) return false; }
@@ -1656,15 +1593,10 @@ var RELICS_LEGACY=[
   {id:'relic_spell',icon:'✨',name:'마력 봉인구',desc:'주문 피해 +25%',need:5},
   {id:'relic_gold',icon:'💰',name:'황금 엘릭서 통',desc:'엘릭서 재생 +10%',need:7}
 ];
-function spellDmg(d){ d=Math.round(d*(1+0.10*((S._sk&&S._sk.mag2)||0))); return (S&&S.relic==='relic_spell')?Math.round(d*1.25):d; }   // v119: 스킬트리 광역 술영 — 주문 피해 +10%
-function relicWins(){ try{ return Math.max(0,parseInt(localStorage.getItem('ra_wins_v1')||'0',10)||0); }catch(e){ return 0; } }
-function loadRelicEquip(){ try{ return localStorage.getItem('ra_relic_v1')||''; }catch(e){ return ''; } }
-function saveRelicEquip(id){ try{ if(id) localStorage.setItem('ra_relic_v1',id); else localStorage.removeItem('ra_relic_v1'); }catch(e){} }
 function applyRelics(){
   if(S.relic!=='relic_tower') return;
   for(const t of towers){ if(t.team==='blue'&&!t.__rl){ t.__rl=1; t.maxHp=Math.round(t.maxHp*1.1); t.hp=Math.min(t.maxHp,Math.round(t.hp*1.1)); } }
 }
-function castSpell(key,team,x,y){ try{ if(team==='blue') DPSW.cnt[key]=(DPSW.cnt[key]||0)+1; }catch(e){}   /* v148: 주문도 배치수 집계 */ var __pn=projs.length; castSpellBase(key,team,x,y); try{ if(team==='blue'&&S.relic==='relic_spell'&&projs.length>__pn){ for(var __i=__pn;__i<projs.length;__i++){ if(projs[__i]&&projs[__i].dmg) projs[__i].dmg=Math.round(projs[__i].dmg*1.25); } } }catch(e){} }
 function renderRelicList(){
   var box=document.getElementById('relic-list'); if(!box) return;
   var wins=relicWins(), eq=loadRelicEquip(); box.innerHTML='';
