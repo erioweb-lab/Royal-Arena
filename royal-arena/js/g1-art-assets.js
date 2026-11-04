@@ -2297,6 +2297,7 @@ function __raSaveDeck(q){ localStorage.setItem(DECK_SLOTS[activeSlot()], JSON.st
 function __raAddRandomBtn(){
   var de=document.getElementById('deck-edit'); if(!de||document.getElementById('btn-deck-random')) return;
   var btn=document.createElement('button'); btn.id='btn-deck-random'; btn.textContent='🎲 랜덤';
+  btn.style.cssText='flex:0 0 auto!important;height:42px!important;min-height:42px!important;max-height:42px!important;width:100%;margin-top:4px;border-radius:12px;font-weight:800;background:linear-gradient(180deg,#2f6d4f,#1c4231);color:#d9fbe8;border:1.5px solid #63d69a';   /* v199b: 인라인 강제 — 시트 규칙 무시 환경 차단 */
   btn.onclick=function(){
     var q=shuffle([...DECK]).slice(0,8);
     try{ __raSaveDeck(q); }catch(e){ }
