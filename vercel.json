@@ -1,3 +1,3 @@
 {
-  "buildCommand": "vite build && cp -r royal-arena dist/royal-arena"
+  "buildCommand": "npm run build"
 }
