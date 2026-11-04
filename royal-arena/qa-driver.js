@@ -84,7 +84,8 @@ function runBattle(cb){
       var trunc=0,clip=0;
       if(de){ [].slice.call(de.querySelectorAll('.dk b,.dk span,.dk div')).forEach(function(el){ if(el.scrollWidth>el.clientWidth+1) trunc++; });
         [].slice.call(de.querySelectorAll('button')).forEach(function(b){ if(b.scrollHeight>b.clientHeight+2) clip++; }); }
-      set(mode+' DECK:'+(de?'OK':'FAIL')+' LBL-trunc:'+trunc+' BTN-clip:'+clip);
+      var rnd=document.getElementById('btn-deck-random'); var slab=rnd&&rnd.clientHeight>90?1:0;
+      set(mode+' DECK:'+(de?'OK':'FAIL')+' LBL-trunc:'+trunc+' BTN-clip:'+clip+' RND-slab:'+slab+' RND-h:'+(rnd?rnd.clientHeight:'-'));
       setTimeout(function(){ var c=[].slice.call(document.querySelectorAll('#deck-edit button')).filter(function(b){return vis(b)&&/닫기/.test(b.textContent||'')})[0]; if(c)clickEl(c); },250);
     },900);
   },600); return; }
