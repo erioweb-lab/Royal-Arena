@@ -88,7 +88,7 @@ window.__deckPick=function(){ try{
     b.onclick=function(){ try{ localStorage.setItem('ra_deck_active',b.getAttribute('data-slot')); }catch(e){} window.__deckPick(); };
   });
 }catch(e){} };
-window.__deckPick(); setInterval(function(){ try{ window.__deckPick(); }catch(e){} },1500);
+window.__deckPick(); document.addEventListener('visibilitychange',function(){ try{ window.__deckPick(); }catch(e){} }); document.addEventListener('pointerdown',function(){ try{ window.__deckPick(); }catch(e){} },true); window.addEventListener('storage',function(e){ try{ if(!e||!e.key||e.key.indexOf('ra_deck')===0) window.__deckPick(); }catch(e2){} });   /* v224: 1.5s 블라인드 폴링 제거 — 재빌드×ui-patch 250ms 경합으로 '평균 엘릭서' 텍스트가 주기적으로 변조되는 현상 제거(실기기 증거). 이벤트 시점에만 갱신 */
 
 /* v183: DH 리스킨 — 디펜스 히어로즈 레퍼런스(다크 네이비 패널·골드 텍스트·정상 자간·44px 터치) */
 window.__navUp=function(){ try{
