@@ -338,6 +338,19 @@ try{ (function(){ const __db=document.createElement('button'); __db.id='btn-deck
   __db.onclick=function(){ ensureAudio(); openDeckEditor(); };
   const __ac=document.getElementById('title-actions'); const __st=document.getElementById('screen-title'); if(__ac) __ac.appendChild(__db); else if(__st) __st.appendChild(__db); })(); }catch(e){}
 
+/* v207: 결과 화면 전적 집계 바(P8) — 킬·데스·주문 사용 요약 */
+try{ (function(){ var iv=setInterval(function(){
+  var ov=document.getElementById('overlay-result'); if(!ov) return;
+  if(ov.classList.contains('hidden')){ var x=document.getElementById('ra-stats'); if(x) x.remove(); return; }
+  if(document.getElementById('ra-stats')) return;
+  var bar=document.createElement('div'); bar.id='ra-stats';
+  var k=(window.S&&S.kills)?S.kills:{}, d=(window.S&&S.deaths)?S.deaths:{}, sp=(window.S&&S.spells)?S.spells:{};
+  var kb=(k.blue||0),kr=(k.red||0),db=(d.blue||0),dr=(d.red||0),sb=(sp.blue||0);
+  bar.style.cssText='margin:8px auto 0;padding:6px 12px;border-radius:10px;background:rgba(18,24,43,.85);border:1px solid rgba(255,179,0,.4);font-size:12px;color:#ffd54f;font-weight:700;text-align:center;max-width:340px';
+  bar.textContent='⚔ 킬 '+kb+' : '+kr+' · 💀 데스 '+db+' : '+dr+' · ✨ 주문 '+sb+'회';
+  ov.insertBefore(bar, ov.firstChild.nextSibling||ov.firstChild);
+ },600); })(); }catch(e){}
+
 /* ---------- 타워 생성 (REA 설계도 §2) ---------- */
 function mkTower(team,kind,x,y){
   const st= kind==='king' ? {hp:2600,dmg:60,hs:1.0,range:7.0,r:1.6} : {hp:1400,dmg:55,hs:0.8,range:7.5,r:1.3};
@@ -1816,6 +1829,15 @@ document.addEventListener('keydown',e=>{
 
 /* ---------- HUD ---------- */
 let cardEls=[];
+window.__raTierCards=function(){ try{
+  if(!window.cardEls||!cardEls.length) return;
+  cardEls.forEach(function(c){
+    var nm=c.querySelector('.nm'); if(!nm) return; var key=nm.textContent.trim();
+    var cd=CARDS[key]; if(!cd) return;
+    c.classList.remove('ra-t1','ra-t2','ra-t3');
+    c.classList.add(cd.cost<=2?'ra-t1':(cd.cost===3?'ra-t2':'ra-t3'));
+  });
+}catch(e){} };
 function buildHandUI(){
   const box=$('#cards'); box.innerHTML=''; cardEls=[];
   for(let i=0;i<4;i++){
@@ -1825,6 +1847,7 @@ function buildHandUI(){
       P.sel=i; dragFrom=i; syncHand(); try{ tutCardTap(i); }catch(e){} });   /* v147 */
     box.appendChild(d); cardEls.push(d);
   }
+  setTimeout(function(){ try{ __raTierCards(); }catch(e){} },0);   /* v207: 등급 프레임 전투 손카드 확장 */
   syncHand();
 }
 function syncHand(){
