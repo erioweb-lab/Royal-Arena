@@ -1134,7 +1134,21 @@ html body #overlay-info #btn-info-close{flex-shrink:0 !important;margin-top:8px 
 html body #btn-start, html body .dk-act{background:linear-gradient(180deg,#ffcc00 0%,#ff9d00 100%) !important;border:1px solid #ffe082 !important;color:#111111 !important;font-weight:800 !important;text-shadow:none !important}
 html body #btn-start *{color:#111111 !important;text-shadow:none !important}
 </style>
-<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v241</div><div id="app">
+<style id="ui-v242">
+/* v242: 버튼 스타일 최종 일관화(사용자 최종 목표) — 전 버튼 금색 테두리+네이비 배경+흰 볼드 텍스트·테두리 안 텍스트 무잘림. 예외는 뒤에서 재선언 */
+html body #title-actions button, html body .theme-row .t-btn, html body #btn-diff, html body #btn-info-close, html body #btn-skill-close, html body #btn-prf-close, html body .dk-sub, html body .t-links button, html body #overlay-hof button, html body #overlay-profile button, html body #overlay-relic button, html body #overlay-skill button, html body #overlay-info button, html body #overlay-result button{background:linear-gradient(180deg,rgba(14,34,61,.95),rgba(10,22,40,.95)) !important;border:1px solid #c89b3c !important;border-radius:14px !important;color:#f2f6ff !important;font-weight:700 !important;line-height:1.2 !important;letter-spacing:-0.2px !important;text-shadow:none !important;min-height:34px !important;display:flex !important;align-items:center !important;justify-content:center !important;overflow:hidden !important;text-overflow:ellipsis !important;white-space:nowrap !important;padding:4px 8px !important}
+/* 예외 1: 덱 슬롯 카드 — 렌더러 상태 스타일 유지(선택 골드/비선택 슬레이트) */
+html body #deck-pick .dkpick{background:rgba(13,22,40,.78) !important;border:2px solid rgba(120,140,180,.45) !important;color:#cfd8ea !important}
+html body #deck-pick .dkpick.on{background:linear-gradient(180deg,rgba(247,197,49,.22),rgba(13,22,40,.92)) !important;border:2px solid rgba(247,197,49,.95) !important;color:#ffe08a !important}
+/* 예외 2: 프라이머리(배틀 시작·저장) 골드 그라데이션+검정 텍스트 */
+html body button#btn-start.t-cta, html body .dk-act{background:linear-gradient(180deg,#ffcc00 0%,#ff9d00 100%) !important;border:1px solid #ffe082 !important;color:#111111 !important;font-weight:800 !important}
+html body button#btn-start.t-cta *, html body #app button#btn-start.t-cta{color:#111111 !important}
+/* 예외 3: 덱편성 퍼플 */
+html body #btn-deck{background:linear-gradient(180deg,#4c1d95 0%,#2e1065 100%) !important;border:1px solid #a855f7 !important;color:#f3e8ff !important}
+/* 텍스트 무잘림 보정 — 이모지 아이콘과 라벨 간격 */
+html body #title-actions button *{line-height:1.2 !important;flex-shrink:0 !important}
+</style>
+<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v242</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
