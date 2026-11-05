@@ -331,7 +331,7 @@ function openDeckEditor(){
     const cost=Math.round(deck.reduce((a,k)=>a+CARDS[k].cost,0)/deck.length*10)/10;
     ov.innerHTML='<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center;margin-top:4px">'+
      '<span style="font-family:Jua,sans-serif;font-size:21px;color:#f7c531;white-space:nowrap">🃏 덱 편성</span>'+
-      DECK_SLOTS.map((_,n)=>'<button class="dk'+(n===slot?' on':'')+'" data-slot="'+n+'"><div class="dke">'+(n===0?'🅰':'🅱')+'</div><div class="dkn">덱 슬롯 '+(n+1)+'</div></button>').join('')+
+      DECK_SLOTS.map((_,n)=>'<button class="dk'+(n===slot?' on':'')+'" data-slot="'+n+'"><div class="dke">'+(n===0?'🅰':(n===1?'🅱':'🅲'))+'</div><div class="dkn">덱 슬롯 '+(n+1)+'</div></button>').join('')+
       '<span style="font-family:Jua,sans-serif;color:#c3d2f2;font-size:13px">평균 엘릭서 '+cost+' · 슬롯 '+(slot+1)+' 편집 중</span></div>'+
      '<div style="font-family:Jua,sans-serif;color:#dfe8ff;font-size:14px;margin-top:8px">전투 덱 '+deck.length+'/8 — 카드를 누르면 빠짐</div>'+
      '<div style="display:flex;flex-wrap:wrap;justify-content:center;max-width:560px">'+deck.map(k=>
@@ -439,7 +439,7 @@ function mkTower(team,kind,x,y){
 }
 function spawnBossNow(){ if(S.bossSpawned||S.over) return; S.bossSpawned=true;
     const kt=towers.find(t=>t.team==='blue'&&t.kind==='king'&&!t.dead);
-    if(kt){ const BU={key:'boss',team:'red',x:9,y:3.2,c:BOSS_STATS,hp:Math.round(BOSS_STATS.hp*__raDiffHp()),maxHp:Math.round(BOSS_STATS.hp*__raDiffHp()),   /* v212: 보스 난이도 연동 */shield:900,cd:1.2,dir:Math.PI/2,dead:false,swing:0,bob:1,spawnFx:0.45,doom:0,chargeT:0};
+    if(kt){ var __bw=(S.__bossWave||0), __bh=Math.round(BOSS_STATS.hp*__raDiffHp()*(1+0.35*__bw)), __bs2=Object.assign({},BOSS_STATS,{dmg:Math.round(BOSS_STATS.dmg*(1+0.15*__bw))}); const BU={key:'boss',team:'red',x:9,y:3.2,c:__bs2,hp:__bh,maxHp:__bh,shield:900,cd:1.2,dir:Math.PI/2,dead:false,swing:0,bob:1,spawnFx:0.45,doom:0,chargeT:0};
       BU.target=kt; units.push(BU); S.boss=BU; ensureKsBtn(); banner('💀 부활한 왕이 강림했다!',2200); sfx('boomL'); } }   /* v192: 보스 강림(최상위 — 타워 파괴·타이머 폴백 공용) */
 
 
