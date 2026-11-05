@@ -213,7 +213,7 @@ const DECOC=[{x:1.9,y:12.6,k:'t1',s:1.05,rot:0.06,f:0},{x:16.1,y:19.3,k:'t1',s:1
   {x:11.8,y:25.6,k:'rk',s:0.62,rot:0.15,f:0},{x:6.4,y:6.6,k:'rk',s:0.58,rot:-0.20,f:1},
   {x:8.9,y:14.5,k:'bs',s:0.50,rot:0,f:0},{x:5.2,y:14.3,k:'bs',s:0.45,rot:0,f:1},{x:12.8,y:17.7,k:'bs',s:0.45,rot:0,f:0}];
 const S={scene:'title', over:false, shown:false, winner:null, t:300, overtime:false, double:false,
-         crowns:{blue:0,red:0}, kills:{blue:0,red:0}, endTimer:0, slow:0, muted:(function(){ try{ return localStorage.getItem('ra_muted')==='1'; }catch(e){ return false; } })(), shake:0, theme:'classic', pre:0};
+         crowns:{blue:0,red:0}, kills:{blue:0,red:0}, endTimer:0, slow:0, muted:(function(){ try{ return localStorage.getItem('ra_muted')==='1'; }catch(e){ return false; } })(), shake:0, theme:(function(){ try{ var t=localStorage.getItem('ra_theme_v1'); return (t&&window.THEMES&&THEMES[t])?t:'classic'; }catch(e){ return 'classic'; } })(), pre:0};   /* v222: 테마 선택 기억 */
 const P={elixir:5, hand:[], queue:[], sel:null};        // 플레이어(파랑)
 const A={elixir:5, hand:[], queue:[], timer:2.0};       // AI(빨강)
 let units=[], towers=[], projs=[], fx=[], floats=[], parts=[];
@@ -332,6 +332,7 @@ function openDeckEditor(){
     ov.innerHTML='<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center;margin-top:4px">'+
      '<span style="font-family:Jua,sans-serif;font-size:21px;color:#f7c531;white-space:nowrap">🃏 덱 편성</span>'+
       DECK_SLOTS.map((_,n)=>'<button class="dk'+(n===slot?' on':'')+'" data-slot="'+n+'"><div class="dke">'+(n===0?'🅰':(n===1?'🅱':'🅲'))+'</div><div class="dkn">덱 슬롯 '+(n+1)+'</div></button>').join('')+
+      '<button class="dk" id="dk-copy" style="padding:6px 10px;font-size:11px">📋 슬롯'+((slot+1)%3+1)+' 복사</button>'+
       '<span style="font-family:Jua,sans-serif;color:#c3d2f2;font-size:13px">평균 엘릭서 '+cost+' · 슬롯 '+(slot+1)+' 편집 중</span></div>'+
      '<div style="font-family:Jua,sans-serif;color:#dfe8ff;font-size:14px;margin-top:8px">전투 덱 '+deck.length+'/8 — 카드를 누르면 빠짐</div>'+
      '<div style="display:flex;flex-wrap:wrap;justify-content:center;max-width:560px">'+deck.map(k=>
@@ -343,6 +344,7 @@ function openDeckEditor(){
       '<button id="dk-save" class="dk-act">💾 저장</button>'+
       '<button id="dk-close" class="dk-sub">닫기</button></div>';
     ov.querySelectorAll('[data-slot]').forEach(b=>b.onclick=()=>{ slot=parseInt(b.dataset.slot,10); deck=(loadDeckSlot(slot)||DECK.slice(0,8)).slice(); render(); });
+    var __cp=ov.querySelector('#dk-copy'); if(__cp) __cp.onclick=()=>{ try{ var __src=JSON.parse(localStorage.getItem(DECK_SLOTS[(slot+1)%3])||'null'); if(__src&&__src.length===8){ deck=__src.slice(); render(); toast('슬롯 '+(((slot+1)%3)+1)+' 덱을 복사했어요'); sfx('tap'); } else toast('복사할 덱이 없어요'); }catch(e){} };   /* v222: 슬롯 간 덱 복사 */
     ov.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{ deck=deck.filter(k=>k!==b.dataset.rm); render(); });
     ov.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>{ if(deck.includes(b.dataset.add)) return;
       if(deck.length>=8) deck.shift(); deck.push(b.dataset.add); render(); });
@@ -374,7 +376,8 @@ try{ (function(){ var iv=setInterval(function(){
   var __td=new Date().toISOString().slice(0,10); bar.textContent+=' · 🌅 첫승 보너스 '+(localStorage.getItem('ra_daily_v1')===__td?'소진':'대기');   /* v214: 첫승 상태 */
   var __lv=localStorage.getItem('ra_lvup_v1'); if(__lv) bar.textContent+=' · 🆙 Lv.UP '+(CARDS[__lv.split(',')[0]]||{}).name;
   var __dd=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; bar.textContent+=' · ⚔ '+(window.__raDIFF?__raDIFF.name[__dd]:__dd)+' · 💀 보스 '+(S.__bossWave||0)+'/5';
-  var __xg2=localStorage.getItem('ra_xp_gain_v1'); if(__xg2) bar.textContent+=' · ⭐ XP +'+__xg2;   /* v220 */   /* v214: Lv.UP 카드 표시 */
+  var __xg2=localStorage.getItem('ra_xp_gain_v1'); if(__xg2) bar.textContent+=' · ⭐ XP +'+__xg2;   /* v220 */
+  var __tb={lava:'⚔ 공격 +2%',ice:'🛡 체력 +2%',wasteland:'⭐ XP +1',abyss:'📦 이벤트 +15%'}[S.theme]; if(__tb) bar.textContent+=' · 🗺 '+__tb;   /* v222: 테마 보너스 */   /* v214: Lv.UP 카드 표시 */
  }catch(e){}   /* v213~214: 누적 승률·연승·첫승·Lv.UP */
   ov.insertBefore(bar, ov.firstChild.nextSibling||ov.firstChild);
  },600); })(); }catch(e){}
@@ -402,7 +405,9 @@ try{ (function(){ var iv3=setInterval(function(){
   var __sb=parseInt(localStorage.getItem('ra_streak_best_v1')||'0',10)||0, __tp=(typeof loadTrophies==='function')?loadTrophies():0;
   var __d=document.createElement('div'); __d.id='ra-pstats';
   __d.style.cssText='margin:8px auto;padding:6px 10px;border-radius:10px;background:rgba(18,24,43,.85);border:1px solid rgba(255,179,0,.4);font-size:12px;color:#ffd54f;font-weight:700;text-align:center;max-width:320px';
+  var __hist=(function(){ try{ return (JSON.parse(localStorage.getItem('ra_hist_v1')||'[]')||[]).map(function(x){ return x==='W'?'승':(x==='L'?'패':'무'); }).join(' ')||'기록 없음'; }catch(e){ return '기록 없음'; } })();
   __d.textContent='🏆 '+__w+'승 '+__l+'패('+((__w+__l)?Math.round(__w/(__w+__l)*100):0)+'%) · 🥇 최고 '+__sb+'연승 · 👑 '+__tp+'트로피';
+  var __d2=document.createElement('div'); __d2.style.cssText='font-size:11px;color:#c3d2f2;margin-top:2px'; __d2.textContent='최근 5전: '+__hist; __d.appendChild(__d2);   /* v222 */
   ov.insertBefore(__d, ov.firstChild);
  },700); })(); }catch(e){}
 
@@ -1146,7 +1151,9 @@ function updateAmbient(dt){
 function drawAmbient(){
   for(const a of ambient){
     const px=a.x*TILE, py=a.y*TILE, fade=Math.min(1,a.t*2,(a.max-a.t)*2);
-    if(S.theme==='lava'){ ctx.globalAlpha=fade*(0.55+0.4*Math.sin(now*6+a.x*7));
+    if(S.theme==='wasteland'){ try{ ctx.globalAlpha=fade*0.55; ctx.fillStyle='rgba(225,205,140,.85)'; ctx.fillRect(((a.x*W)+now*46)%W, a.y*H, 16, 1.6); ctx.fillStyle='rgba(200,180,120,.6)'; ctx.fillRect(((a.x*W)+now*28+60)%W, a.y*H+5, 10, 1.2); }catch(e){} }   /* v222: 황야 모래바람 */
+  if(S.theme==='abyss'){ try{ ctx.globalAlpha=fade*(0.4+0.3*Math.sin(now*5+a.y*9)); ctx.fillStyle='#a893ff'; ctx.beginPath(); ctx.arc(a.x*W, a.y*H-((now*14)%40), 2.1, 0, 7); ctx.fill(); }catch(e){} }   /* v222: 심연 아케인 스파크 */
+  if(S.theme==='lava'){ ctx.globalAlpha=fade*(0.55+0.4*Math.sin(now*6+a.x*7));
       ctx.fillStyle='#ff9d3c'; ctx.beginPath(); ctx.arc(px,py,2.2,0,7); ctx.fill();
       ctx.globalAlpha=fade*0.3; ctx.fillStyle='#ffd75e'; ctx.beginPath(); ctx.arc(px,py,4.5,0,7); ctx.fill(); }
     else { ctx.globalAlpha=fade*0.8; ctx.fillStyle='#fff';
@@ -2467,9 +2474,10 @@ buildCodex();   /* v194: 스탯·레벨 변경 시 도감 강제 동기화 */
 function __syncCodex(){ try{ var sig=JSON.stringify(CARDS); for(const k of DECK) sig+='|'+k+':'+(window.__CARD_LV&&__CARD_LV[k]||0); if(window.__cxSig===sig) return; window.__cxSig=sig; var box=document.getElementById('codex'); if(box){ box.innerHTML=''; buildCodex(); } }catch(e){ } }
 window.__syncCodex=__syncCodex; window.__qaCodex=function(){ try{ return DECK.length+':'+document.querySelectorAll('#codex .cx').length; }catch(e){ return 'n/a'; } };
 $('#elixir-ticks').innerHTML='<i></i>'.repeat(9);
+try{ var __st0=localStorage.getItem('ra_theme_v1'); if(__st0) document.querySelectorAll('.t-btn[data-theme]').forEach(function(x){ x.classList.toggle('sel',x.dataset.theme===__st0); }); }catch(e){}
 document.querySelectorAll('.t-btn[data-theme]').forEach(b=>b.addEventListener('click',()=>{
   S.theme=b.dataset.theme; drawStatic();   // 지면·강 톤 재페인트
-  document.querySelectorAll('.t-btn[data-theme]').forEach(x=>x.classList.toggle('sel',x===b));
+  document.querySelectorAll('.t-btn[data-theme]').forEach(x=>x.classList.toggle('sel',x===b)); try{ localStorage.setItem('ra_theme_v1',S.theme); }catch(e){}   /* v222 */
 }));
 window.__auto=new URLSearchParams(location.search).has('auto');
 if(window.__auto) startMatch();

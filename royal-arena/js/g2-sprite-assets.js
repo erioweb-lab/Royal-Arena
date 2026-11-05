@@ -300,7 +300,7 @@ function profNew(n){ var d=profDb(); n=String(n||'').trim().slice(0,12); if(!n||
   profSync(); d.list.push(n); d.active=n; profDbSave(d);
   try{ localStorage.setItem('ra_trophies_v1','0'); localStorage.setItem('ra_wins_v1','0');
     localStorage.setItem('ra_sp_v1','{"sp":0,"total":0}'); localStorage.setItem('ra_skills_v1','{}'); localStorage.removeItem('ra_relic_v1');
-    S.relic=''; applyRelics(); S._sk={}; syncTrophyChip(); syncGradeVisual(); }catch(e){} return true; }   // v120: 신규 지휘관 — 기본 상태 시작
+    S.relic=''; applyRelics(); S._sk={}; syncTrophyChip(); syncGradeVisual(); ['ra_wins_v1','ra_losses_v1','ra_streak_v1','ra_streak_best_v1','ra_daily_v1','ra_lvup_v1','ra_xp_gain_v1'].forEach(function(k2){ try{ localStorage.removeItem(k2); }catch(e2){} }); }catch(e){} return true; }   // v120: 신규 지휘관 — 기본 상태 시작
 function profRename(n){ var d=profDb(); n=String(n||'').trim().slice(0,12); if(!n||d.list.indexOf(n)>=0||n===d.active) return false;
   var old=d.active; profStore(n, profLoad(old)); try{ localStorage.removeItem(profKey(old)); }catch(e){}
   d.list=d.list.map(function(x){ return x===old?n:x; }); d.active=n; profDbSave(d); return true; }
@@ -309,7 +309,7 @@ function profDelete(n){ var d=profDb(); if(d.list.indexOf(n)<0||n===d.active||d.
 function resetProgression(){ try{ localStorage.setItem('ra_prof_backup_v1', JSON.stringify({n:profActive(),s:profSnapshot()}));
     localStorage.setItem('ra_trophies_v1','0'); localStorage.setItem('ra_wins_v1','0');
     localStorage.setItem('ra_sp_v1','{"sp":0,"total":0}'); localStorage.setItem('ra_skills_v1','{}'); localStorage.removeItem('ra_relic_v1');
-    S.relic=''; applyRelics(); S._sk={}; syncTrophyChip(); syncGradeVisual(); }catch(e){} return true; }   // v120: 진행도 리셋 — 직전 상태 자동 백업
+    S.relic=''; applyRelics(); S._sk={}; syncTrophyChip(); syncGradeVisual(); ['ra_wins_v1','ra_losses_v1','ra_streak_v1','ra_streak_best_v1','ra_daily_v1','ra_lvup_v1','ra_xp_gain_v1'].forEach(function(k2){ try{ localStorage.removeItem(k2); }catch(e2){} }); }catch(e){} return true; }   // v120: 진행도 리셋 — 직전 상태 자동 백업
 function undoProgression(){ try{ var b=JSON.parse(localStorage.getItem('ra_prof_backup_v1')||'null'); if(!b) return false;
     profStore(b.n, b.s); if(b.n===profActive()) profApply(b.n); localStorage.removeItem('ra_prof_backup_v1'); }catch(e){ return false; } return true; }   // v120: 복원 — 리셋 직전 진행도 1회 복구
 function ensureProfileUI(){
@@ -544,7 +544,7 @@ function profNew(n){ var d=profDb(); n=String(n||'').trim().slice(0,12); if(!n||
   profSync(); d.list.push(n); d.active=n; profDbSave(d);
   try{ localStorage.setItem('ra_trophies_v1','0'); localStorage.setItem('ra_wins_v1','0');
     localStorage.setItem('ra_sp_v1','{"sp":0,"total":0}'); localStorage.setItem('ra_skills_v1','{}'); localStorage.removeItem('ra_relic_v1');
-    S.relic=''; applyRelics(); S._sk={}; syncTrophyChip(); syncGradeVisual(); }catch(e){} return true; }   // v120: 신규 지휘관 — 기본 상태 시작
+    S.relic=''; applyRelics(); S._sk={}; syncTrophyChip(); syncGradeVisual(); ['ra_wins_v1','ra_losses_v1','ra_streak_v1','ra_streak_best_v1','ra_daily_v1','ra_lvup_v1','ra_xp_gain_v1'].forEach(function(k2){ try{ localStorage.removeItem(k2); }catch(e2){} }); }catch(e){} return true; }   // v120: 신규 지휘관 — 기본 상태 시작
 function profRename(n){ var d=profDb(); n=String(n||'').trim().slice(0,12); if(!n||d.list.indexOf(n)>=0||n===d.active) return false;
   var old=d.active; profStore(n, profLoad(old)); try{ localStorage.removeItem(profKey(old)); }catch(e){}
   d.list=d.list.map(function(x){ return x===old?n:x; }); d.active=n; profDbSave(d); return true; }
@@ -553,7 +553,7 @@ function profDelete(n){ var d=profDb(); if(d.list.indexOf(n)<0||n===d.active||d.
 function resetProgression(){ try{ localStorage.setItem('ra_prof_backup_v1', JSON.stringify({n:profActive(),s:profSnapshot()}));
     localStorage.setItem('ra_trophies_v1','0'); localStorage.setItem('ra_wins_v1','0');
     localStorage.setItem('ra_sp_v1','{"sp":0,"total":0}'); localStorage.setItem('ra_skills_v1','{}'); localStorage.removeItem('ra_relic_v1');
-    S.relic=''; applyRelics(); S._sk={}; syncTrophyChip(); syncGradeVisual(); }catch(e){} return true; }   // v120: 진행도 리셋 — 직전 상태 자동 백업
+    S.relic=''; applyRelics(); S._sk={}; syncTrophyChip(); syncGradeVisual(); ['ra_wins_v1','ra_losses_v1','ra_streak_v1','ra_streak_best_v1','ra_daily_v1','ra_lvup_v1','ra_xp_gain_v1'].forEach(function(k2){ try{ localStorage.removeItem(k2); }catch(e2){} }); }catch(e){} return true; }   // v120: 진행도 리셋 — 직전 상태 자동 백업
 function undoProgression(){ try{ var b=JSON.parse(localStorage.getItem('ra_prof_backup_v1')||'null'); if(!b) return false;
     profStore(b.n, b.s); if(b.n===profActive()) profApply(b.n); localStorage.removeItem('ra_prof_backup_v1'); }catch(e){ return false; } return true; }   // v120: 복원 — 리셋 직전 진행도 1회 복구
 function ensureProfileUI(){
@@ -773,7 +773,7 @@ try{ relayoutHud(); }catch(e){}
 function resetProgression(){ try{ localStorage.setItem('ra_prof_backup_v1', JSON.stringify({n:profActive(),s:profSnapshot()}));
     localStorage.setItem('ra_trophies_v1','0'); localStorage.setItem('ra_wins_v1','0');
     localStorage.setItem('ra_sp_v1','{"sp":0,"total":0}'); localStorage.setItem('ra_skills_v1','{}'); localStorage.removeItem('ra_relic_v1');
-    S.relic=''; applyRelics(); S._sk={}; syncTrophyChip(); syncGradeVisual(); }catch(e){} return true; }   // v120: 진행도 리셋 — 직전 상태 자동 백업
+    S.relic=''; applyRelics(); S._sk={}; syncTrophyChip(); syncGradeVisual(); ['ra_wins_v1','ra_losses_v1','ra_streak_v1','ra_streak_best_v1','ra_daily_v1','ra_lvup_v1','ra_xp_gain_v1'].forEach(function(k2){ try{ localStorage.removeItem(k2); }catch(e2){} }); }catch(e){} return true; }   // v120: 진행도 리셋 — 직전 상태 자동 백업
 function undoProgression(){ try{ var b=JSON.parse(localStorage.getItem('ra_prof_backup_v1')||'null'); if(!b) return false;
     profStore(b.n, b.s); if(b.n===profActive()) profApply(b.n); localStorage.removeItem('ra_prof_backup_v1'); }catch(e){ return false; } return true; }   // v120: 복원 — 리셋 직전 진행도 1회 복구
 function ensureProfileUI(){
@@ -993,7 +993,7 @@ try{ relayoutHud(); }catch(e){}
 function resetProgression(){ try{ localStorage.setItem('ra_prof_backup_v1', JSON.stringify({n:profActive(),s:profSnapshot()}));
     localStorage.setItem('ra_trophies_v1','0'); localStorage.setItem('ra_wins_v1','0');
     localStorage.setItem('ra_sp_v1','{"sp":0,"total":0}'); localStorage.setItem('ra_skills_v1','{}'); localStorage.removeItem('ra_relic_v1');
-    S.relic=''; applyRelics(); S._sk={}; syncTrophyChip(); syncGradeVisual(); }catch(e){} return true; }   // v120: 진행도 리셋 — 직전 상태 자동 백업
+    S.relic=''; applyRelics(); S._sk={}; syncTrophyChip(); syncGradeVisual(); ['ra_wins_v1','ra_losses_v1','ra_streak_v1','ra_streak_best_v1','ra_daily_v1','ra_lvup_v1','ra_xp_gain_v1'].forEach(function(k2){ try{ localStorage.removeItem(k2); }catch(e2){} }); }catch(e){} return true; }   // v120: 진행도 리셋 — 직전 상태 자동 백업
 function undoProgression(){ try{ var b=JSON.parse(localStorage.getItem('ra_prof_backup_v1')||'null'); if(!b) return false;
     profStore(b.n, b.s); if(b.n===profActive()) profApply(b.n); localStorage.removeItem('ra_prof_backup_v1'); }catch(e){ return false; } return true; }   // v120: 복원 — 리셋 직전 진행도 1회 복구
 function ensureProfileUI(){
