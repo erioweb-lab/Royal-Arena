@@ -1148,7 +1148,13 @@ html body #btn-deck{background:linear-gradient(180deg,#4c1d95 0%,#2e1065 100%) !
 /* 텍스트 무잘림 보정 — 이모지 아이콘과 라벨 간격 */
 html body #title-actions button *{line-height:1.2 !important;flex-shrink:0 !important}
 </style>
-<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v242</div><div id="app">
+<style id="ui-v243">
+/* v243: v242 검증 잔여 수복 — 테마 버튼 텍스트 잘림·표준 미적용 버튼·덱편성 마지막 행 가림 */
+html body .theme-row .t-btn{height:34px !important;font-size:11px !important;line-height:1.2 !important;padding:2px 4px !important;white-space:nowrap !important;overflow:hidden !important;text-overflow:ellipsis !important}
+html body .t-links button, html body #btn-deck-random, html body #btn-deck-edit{background:linear-gradient(180deg,rgba(14,34,61,.95),rgba(10,22,40,.95)) !important;border:1px solid #c89b3c !important;border-radius:14px !important;color:#f2f6ff !important;font-weight:700 !important;line-height:1.2 !important;text-shadow:none !important;min-height:34px !important;display:flex !important;align-items:center !important;justify-content:center !important;overflow:hidden !important;text-overflow:ellipsis !important;white-space:nowrap !important;padding:4px 8px !important}
+html body #deck-edit{padding-bottom:150px !important}
+</style>
+<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v243</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
