@@ -2306,7 +2306,12 @@ function __raAddRandomBtn(){
     try{ toast('덱을 랜덤으로 구성했어요'); }catch(e){ }
   };
   var saveB=null; [].slice.call(de.querySelectorAll('button')).forEach(function(b){ if(/저장/.test(b.textContent||'')) saveB=b; });
-  if(saveB&&saveB.parentNode){ var row=saveB.parentNode; try{ row.style.display='grid'; row.style.gridTemplateColumns='repeat(3,1fr)'; row.style.gap='10px'; row.style.width='100%'; }catch(e){} saveB.parentNode.insertBefore(btn,saveB.nextSibling); btn.style.flex='0 0 auto'; btn.style.height='42px'; btn.style.width='auto'; } else de.appendChild(btn);   /* v198: 랜덤 버튼 독립 행 — 저장행 3열 랩 비대칭 해소 */
+  if(saveB&&saveB.parentNode){ var row=saveB.parentNode, closeB=de.querySelector('#dk-close');
+    if(closeB&&closeB.parentNode!==row) row.appendChild(closeB);
+    try{ row.style.display='grid'; row.style.gridTemplateColumns='repeat(3,1fr)'; row.style.gap='10px'; row.style.width='100%'; row.style.margin='14px 0 4px'; }catch(e){}
+    saveB.parentNode.insertBefore(btn,saveB.nextSibling);
+    [saveB,btn,closeB].forEach(function(b){ if(!b) return; b.style.height='42px'; b.style.minHeight='42px'; b.style.maxHeight='42px'; b.style.borderRadius='12px'; b.style.width='100%'; b.style.minWidth='0'; b.style.fontSize='13.5px'; });
+  } else de.appendChild(btn);   /* v198: 랜덤 버튼 독립 행 — 저장행 3열 랩 비대칭 해소 */
 }
 (function(){ var orig=openDeckEditor;
   openDeckEditor=function(){ var r=orig.apply(this,arguments); try{ setTimeout(__raAddRandomBtn,40); }catch(e){ } return r; };

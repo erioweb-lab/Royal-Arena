@@ -1073,8 +1073,9 @@
         card.querySelectorAll('b, span, div').forEach(t => {
           if (t.children.length === 0) {
             cleanFont(t, '700');
-            setImp(t, 'font-size', '9.5px');
-            setImp(t, 'line-height', '1.05');
+            setImp(t, 'font-size', '9px');
+            setImp(t, 'line-height', '1.15');
+            setImp(t, 'letter-spacing', '-0.2px');
             setImp(t, 'white-space', 'nowrap');
             setImp(t, 'overflow', 'hidden');
             setImp(t, 'text-overflow', 'ellipsis');
@@ -1121,13 +1122,13 @@
         setImp(poolGrid, 'gap', '4px');
         setImp(poolGrid, 'width', '100%');
         setImp(poolGrid, 'min-height', '0px');
-        setImp(poolGrid, 'max-height', '100%');
+        setImp(poolGrid, 'max-height', 'none');
         setImp(poolGrid, 'padding', '5px');
         setImp(poolGrid, 'background', 'rgba(8, 15, 30, 0.55)');
         setImp(poolGrid, 'overflow-y', 'auto');
         setImp(poolGrid, 'border', '1px solid rgba(148, 163, 184, 0.25)');
         setImp(poolGrid, 'border-radius', '12px');
-        Array.from(poolGrid.children).forEach(c => styleCardItem(c, 26));
+        Array.from(poolGrid.children).forEach(c => styleCardItem(c, 24));
       }
 
       const realBtns = Array.from(deckEdit.querySelectorAll('button'));
@@ -1138,7 +1139,7 @@
         const actionRow = saveBtn.parentElement;
         setImp(actionRow, 'flex', '0 0 auto');
         setImp(actionRow, 'display', 'grid');
-        setImp(actionRow, 'grid-template-columns', '1fr 1fr');
+        setImp(actionRow, 'grid-template-columns', 'repeat(3, 1fr)');
         setImp(actionRow, 'gap', '10px');
         setImp(actionRow, 'width', '100%');
 
