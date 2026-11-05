@@ -677,6 +677,8 @@ button:active{transform:translateY(2px)}
 .t-btn[data-theme="classic"]{background:linear-gradient(180deg,#12291c,#0a1a12) !important;border:1px solid rgba(76,175,80,.65) !important;color:#c8e6c9 !important}
 .t-btn[data-theme="lava"]{background:linear-gradient(180deg,#2b1410,#1a0c0a) !important;border:1px solid rgba(255,112,67,.65) !important;color:#ffccbc !important}
 .t-btn[data-theme="ice"]{background:linear-gradient(180deg,#0f2438,#0a1826) !important;border:1px solid rgba(129,212,250,.65) !important;color:#e1f5fe !important}
+.t-btn[data-theme="wasteland"]{background:linear-gradient(180deg,#2b2413,#1a140a) !important;border:1px solid rgba(205,180,90,.65) !important;color:#eee5c1 !important}
+.t-btn[data-theme="abyss"]{background:linear-gradient(180deg,#191b38,#101226) !important;border:1px solid rgba(140,125,255,.65) !important;color:#d9d4ff !important}
 .t-btn.sel{border-color:#FFD54F !important;box-shadow:0 0 10px rgba(247,197,49,.45) !important}
 #title-actions>button{height:42px !important;padding:0 6px !important;font-size:12px !important;font-weight:700 !important;line-height:1 !important;white-space:nowrap !important;overflow:hidden !important;text-overflow:ellipsis !important;border-radius:14px !important;text-shadow:none !important;box-shadow:inset 0 1px 0 rgba(255,255,255,.06) !important}
 #title-actions #btn-deck{background:linear-gradient(180deg,#0d4a44,#082e2a) !important;border:1px solid rgba(38,166,154,.65) !important;color:#b2dfdb !important}
@@ -1024,7 +1026,7 @@ html,body{overflow:hidden !important;height:100%}
 #screen-battle #cards .cost{background:rgba(10,18,34,.85)!important;border:2px solid rgba(255,255,255,.85)!important}
 </style></head>
 <body>
-<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v217</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v218</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1036,6 +1038,8 @@ html,body{overflow:hidden !important;height:100%}
       <button class="t-btn sel" data-theme="classic"><span class="sw" style="background:linear-gradient(#67ab49,#3d9be9)"></span>로얄 클래식<small>잔디 아레나</small></button>
       <button class="t-btn" data-theme="lava"><span class="sw" style="background:linear-gradient(#5a4440,#e86a1e)"></span>용암 협곡<small>불꽃 테마</small></button>
       <button class="t-btn" data-theme="ice"><span class="sw" style="background:linear-gradient(#c2e0f0,#7fb6d9)"></span>서리 왕국<small>얼음 테마</small></button>
+      <button class="t-btn" data-theme="wasteland"><span class="sw" style="background:linear-gradient(#9c8a56,#57a68f)"></span>황야의 문<small>모래 테마</small></button>
+      <button class="t-btn" data-theme="abyss"><span class="sw" style="background:linear-gradient(#343857,#6a5ac9)"></span>심연 소굴<small>아케인 테마</small></button>
     </div>
     <button id="btn-start" class="t-cta"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px;margin-right:6px" aria-hidden="true"><path d="M4.5 3.5l11 11M19.5 3.5l-11 11" stroke="#1a0e00" stroke-width="2.6" stroke-linecap="round"/><path d="M17.3 16.3l2.2 2.2M14.7 19.3l4.6-4.6M6.7 16.3l-2.2 2.2M4.7 14.7l4.6 4.6" stroke="#1a0e00" stroke-width="2.6" stroke-linecap="round"/></svg>배틀 시작</button>
   <div id="title-actions"></div>

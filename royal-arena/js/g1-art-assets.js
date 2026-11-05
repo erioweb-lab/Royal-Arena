@@ -57,7 +57,13 @@ const THEMES={
     bush:'#8a4a20',flower:'#ffcf5e',stone:'#6f6a72',stoneHi:'#8a8490',stoneEdge:'rgba(35,25,30,.6)',amb:'ember'},
   ice:{g1:'#a9cde3',g2:'#c2e0f0',speck:'rgba(255,255,255,.50)',blade:'rgba(120,170,210,.35)',
     road:'rgba(180,205,230,.55)',riverA:'#7fb6d9',riverB:'#a8d8f0',spark:'rgba(255,255,255,.65)',
-    bush:'#7fa8c4',flower:'#ffffff',stone:'#9fb4c4',stoneHi:'#c4d6e4',stoneEdge:'rgba(70,95,120,.5)',amb:'snow'}
+    bush:'#7fa8c4',flower:'#ffffff',stone:'#9fb4c4',stoneHi:'#c4d6e4',stoneEdge:'rgba(70,95,120,.5)',amb:'snow'},
+  wasteland:{g1:'#8a7a4a',g2:'#9c8a56',speck:'rgba(255,240,180,.10)',blade:'rgba(120,100,40,.25)',
+    road:'rgba(210,180,120,.35)',riverA:'#3a7d6b',riverB:'#57a68f',spark:'rgba(255,235,170,.5)',
+    bush:'#6b6a2f',flower:'#d9c46b',stone:'#8f8574',stoneHi:'#ab9f8a',stoneEdge:'rgba(60,50,30,.55)',amb:null},
+  abyss:{g1:'#2a2d4a',g2:'#343857',speck:'rgba(140,120,255,.10)',blade:'rgba(90,80,180,.28)',
+    road:'rgba(120,110,200,.22)',riverA:'#453a8f',riverB:'#6a5ac9',spark:'rgba(180,160,255,.6)',
+    bush:'#3a3a6e',flower:'#9f8fff',stone:'#5a5f7d',stoneHi:'#767c9d',stoneEdge:'rgba(20,20,45,.6)',amb:null}
 };
 const RARC={c:['#8fa6bd','#4a5f85','#22304f'], r:['#e8b053','#916022','#4e2f10'], e:['#cf6df5','#7233a8','#2e1150']};
 const RKEY={giant:'r',musketeer:'r',wizard:'r',fireball:'r',sniper:'r',prince:'e',zap:'e',valk:'r',babyd:'r',cleric:'e',boar:'r',icem:'r'};
@@ -294,7 +300,7 @@ function toast(txt,ms){
 
 /* ---------- 덱 사이클 ---------- */
 function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=(Math.random()*(i+1))|0; [a[i],a[j]]=[a[j],a[i]]; } return a; }
-const DECK_SLOTS=['ra_deck_slot1','ra_deck_slot2'];
+const DECK_SLOTS=['ra_deck_slot1','ra_deck_slot2','ra_deck_slot3'];   /* v218: 슬롯 3 추가 */
 const DECK_DEFAULTS=[['knight','archers','giant','minions','musketeer','fireball','skarmy','cannon'],
                      ['prince','wizard','sniper','valk','boar','bomber','babyd','cleric']];
 function loadDeckSlot(n){ try{ if(typeof localStorage==='undefined') return null;
@@ -305,7 +311,11 @@ function loadDeckSlot(n){ try{ if(typeof localStorage==='undefined') return null
 function activeSlot(){ try{ if(typeof localStorage==='undefined') return 0;
   return parseInt(localStorage.getItem('ra_deck_active')||'0',10)===1?1:0; }catch(e){ return 0; } }
 function getActiveDeck(){ if(typeof localStorage==='undefined') return null; return loadDeckSlot(activeSlot()); }
-function initDeck(p,rd){ const q=shuffle([...(rd?DECK:(getActiveDeck()||DECK))]); p.hand=q.slice(0,4); p.queue=q.slice(4); }   /* v192: rd=true → 18종 풀 랜덤 */
+function initDeck(p,rd){ if(!rd){ const q=shuffle([...(getActiveDeck()||DECK)]); p.hand=q.slice(0,4); p.queue=q.slice(4); return; }
+  var __df=0; try{ __df=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; }catch(e){}
+  var __bias=1+0.35*__df, __pool=DECK.slice(), __q=[];
+  while(__q.length<8&&__pool.length){ var __bi=0,__bsc=-1; for(var __i=0;__i<__pool.length;__i++){ var __sc=Math.random()+CARDS[__pool[__i]].cost*0.09*__bias; if(__sc>__bsc){__bsc=__sc;__bi=__i;} } __q.push(__pool.splice(__bi,1)[0]); }
+  p.hand=__q.slice(0,4); p.queue=__q.slice(4); }   /* v192 랜덤 → v218: 난이도 고코스트 가중치 */
 /* v72: 덱 편성 오버레이 — 덱 슬롯 2개 + 카드 교체 */
 function openDeckEditor(){
   if(document.getElementById('deck-edit')) return;
@@ -322,7 +332,7 @@ function openDeckEditor(){
     ov.innerHTML='<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center;margin-top:4px">'+
      '<span style="font-family:Jua,sans-serif;font-size:21px;color:#f7c531;white-space:nowrap">🃏 덱 편성</span>'+
       DECK_SLOTS.map((_,n)=>'<button class="dk'+(n===slot?' on':'')+'" data-slot="'+n+'"><div class="dke">'+(n===0?'🅰':'🅱')+'</div><div class="dkn">덱 슬롯 '+(n+1)+'</div></button>').join('')+
-      '<span style="font-family:Jua,sans-serif;color:#c3d2f2;font-size:13px">평균 엘릭서 '+cost+' · '+(slot===0?'슬롯 1':'슬롯 2')+' 편집 중</span></div>'+
+      '<span style="font-family:Jua,sans-serif;color:#c3d2f2;font-size:13px">평균 엘릭서 '+cost+' · 슬롯 '+(slot+1)+' 편집 중</span></div>'+
      '<div style="font-family:Jua,sans-serif;color:#dfe8ff;font-size:14px;margin-top:8px">전투 덱 '+deck.length+'/8 — 카드를 누르면 빠짐</div>'+
      '<div style="display:flex;flex-wrap:wrap;justify-content:center;max-width:560px">'+deck.map(k=>
        '<div class="dk" data-rm="'+k+'"><div class="dke">'+(ART[k]?'<img class="art" style="width:34px" src="'+ART[k]+'">':CARDS[k].emoji)+'</div><div class="dkn">'+CARDS[k].name+'</div><div class="dkc">'+CARDS[k].cost+'</div></div>').join('')+'</div>'+
@@ -362,10 +372,24 @@ try{ (function(){ var iv=setInterval(function(){
   try{ var __w=(parseInt(localStorage.getItem('ra_wins_v1')||'0',10)||0)+(S.winner==='blue'?1:0), __l=(parseInt(localStorage.getItem('ra_losses_v1')||'0',10)||0)+(S.winner!=='blue'?1:0), __st=parseInt(localStorage.getItem('ra_streak_v1')||'0',10)||0; var __rt=((__w+__l)>0)?Math.round(__w/(__w+__l)*100):0; bar.textContent+=' · 🏆 '+__w+'승 '+__l+'패('+__rt+'%)'+(__st>=2?' · 🔥 '+__st+'연승':'');
   var __sb=parseInt(localStorage.getItem('ra_streak_best_v1')||'0',10)||0; if(__st>__sb){ __sb=__st; try{ localStorage.setItem('ra_streak_best_v1',String(__sb)); }catch(e2){} } if(__sb>=2) bar.textContent+=' · 🥇 최고 '+__sb+'연승';   /* v214: 최고 연승 */
   var __td=new Date().toISOString().slice(0,10); bar.textContent+=' · 🌅 첫승 보너스 '+(localStorage.getItem('ra_daily_v1')===__td?'소진':'대기');   /* v214: 첫승 상태 */
-  var __lv=localStorage.getItem('ra_lvup_v1'); if(__lv) bar.textContent+=' · 🆙 Lv.UP '+(CARDS[__lv.split(',')[0]]||{}).name;   /* v214: Lv.UP 카드 표시 */
+  var __lv=localStorage.getItem('ra_lvup_v1'); if(__lv) bar.textContent+=' · 🆙 Lv.UP '+(CARDS[__lv.split(',')[0]]||{}).name;
+  var __dd=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; bar.textContent+=' · ⚔ '+(window.__raDIFF?__raDIFF.name[__dd]:__dd)+' · 💀 보스 '+(S.__bossWave||0)+'/4';   /* v218 */   /* v214: Lv.UP 카드 표시 */
  }catch(e){}   /* v213~214: 누적 승률·연승·첫승·Lv.UP */
   ov.insertBefore(bar, ov.firstChild.nextSibling||ov.firstChild);
  },600); })(); }catch(e){}
+
+/* v218: 프로필 통계 주입(승/패/승률/최고연승/트로피) */
+try{ (function(){ var iv3=setInterval(function(){
+  var ov=document.getElementById('overlay-profile'); if(!ov) return;
+  if(ov.classList.contains('hidden')){ var x0=document.getElementById('ra-pstats'); if(x0) x0.remove(); return; }
+  if(document.getElementById('ra-pstats')) return;
+  var __w=parseInt(localStorage.getItem('ra_wins_v1')||'0',10)||0, __l=parseInt(localStorage.getItem('ra_losses_v1')||'0',10)||0;
+  var __sb=parseInt(localStorage.getItem('ra_streak_best_v1')||'0',10)||0, __tp=(typeof loadTrophies==='function')?loadTrophies():0;
+  var __d=document.createElement('div'); __d.id='ra-pstats';
+  __d.style.cssText='margin:8px auto;padding:6px 10px;border-radius:10px;background:rgba(18,24,43,.85);border:1px solid rgba(255,179,0,.4);font-size:12px;color:#ffd54f;font-weight:700;text-align:center;max-width:320px';
+  __d.textContent='🏆 '+__w+'승 '+__l+'패('+((__w+__l)?Math.round(__w/(__w+__l)*100):0)+'%) · 🥇 최고 '+__sb+'연승 · 👑 '+__tp+'트로피';
+  ov.insertBefore(__d, ov.firstChild);
+ },700); })(); }catch(e){}
 
 /* v212: 선택형 이벤트 노드 + 인런 렐릭(다음 배틀 1회) */
 try{ (function(){ var EV=[
@@ -390,6 +414,7 @@ try{ (function(){
   window.__raDIFF={name:['보통','악몽','지옥'],col:['#67d98a','#e0a13c','#e05c6e'],hp:[1,1.25,1.55],dmg:[1,1.15,1.35]};   /* v210: 단일 진실원 통합 */
   window.__raDiffHp=function(){ var d=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; return __raDIFF.hp[d]||1; };
   window.__raDiffDmg=function(){ var d=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; return __raDIFF.dmg[d]||1; };
+  window.__raClearLv=function(){ try{ return Math.max(0,parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)+1); }catch(e){ return 0; } };   /* v218 */
   window.__raWaveHp=function(el){ try{ if(typeof el!=='number'){ var S0=(typeof S!=='undefined'&&S)?S:0; el=S0?Math.max(0,180-(S0.t||180)):0; } return 1+0.10*Math.pow(el/60,1.8); }catch(e){ return 1; } };   /* v212: 웨이브 HP 이중 곡선 — 경과 180s 최대 ×1.9 */
   var DN=__raDIFF.name, DC=__raDIFF.col;
   var iv=setInterval(function(){ var ta=document.getElementById('title-actions'); if(!ta) return; clearInterval(iv);
@@ -409,7 +434,7 @@ try{ (function(){
 /* ---------- 타워 생성 (REA 설계도 §2) ---------- */
 function mkTower(team,kind,x,y){
   const st= kind==='king' ? {hp:2600,dmg:60,hs:1.0,range:7.0,r:1.6} : {hp:1400,dmg:55,hs:0.8,range:7.5,r:1.3};
-  if(team==='blue'){ try{ var __cl2=parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)+1; if(__cl2>0) st.hp=Math.round(st.hp*(1+0.06*__cl2)); if(S&&S.__rin==='relic_bulwark') st.hp=Math.round(st.hp*1.3); if(S&&S.__rin==='relic_frenzy') st.hp=Math.round(st.hp*0.9); }catch(__e){} }   /* v209 영구 강화 + v212 인런 방벽·공세 */
+  if(team==='blue'){ try{ var __cl2=parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)+1; if(__cl2>0) st.hp=Math.round(st.hp*(1+0.06*__cl2)); if(S&&S.__rin==='relic_bulwark') st.hp=Math.round(st.hp*1.3*(S.__rinMul||1));   /* v218 증폭 */ if(S&&S.__rin==='relic_frenzy') st.hp=Math.round(st.hp*0.9); }catch(__e){} }   /* v209 영구 강화 + v212 인런 방벽·공세 */
   return {isTower:true, kind, team, x, y, hp:st.hp, maxHp:st.hp, dmg:st.dmg, hs:st.hs, range:st.range, r:st.r, cd:0, dead:false, active:kind!=='king'};
 }
 function spawnBossNow(){ if(S.bossSpawned||S.over) return; S.bossSpawned=true;
@@ -602,7 +627,7 @@ function updateUnit(u,dt){
       if(u.hp<=0){ u.hp=0; u.dead=true; killUnit(u,false); return; } } }
   if(u.slowT>0) u.slowT-=dt;
   if(u.healer&&!u.dead&&u.hp<u.maxHp) u.hp=Math.min(u.maxHp,u.hp+10*dt);   /* v209: 힐러 특성 — 자가 재생 10/s */
-  if(u.team==='blue'&&S.__rin==='relic_mend'&&!u.dead&&u.hp<u.maxHp) u.hp=Math.min(u.maxHp,u.hp+2*dt);   /* v212: 재생의 인장 */
+  if(u.team==='blue'&&S.__rin==='relic_mend'&&!u.dead&&u.hp<u.maxHp) u.hp=Math.min(u.maxHp,u.hp+2*(S.__rinMul||1)*dt);   /* v218 증폭 */   /* v212: 재생의 인장 */
   if(u.stun>0){ u.stun-=dt; u.swing=0; return; }
   if(u.frozenT>0){ u.frozenT-=dt; u.swing=0; if(Math.random()<0.15) addParts(u.x,u.y-0.3,1,'#b4ebff',1.0,0.5,-15);   /* v195: 빙결 파편 */ return; }   /* v138: 빙결 — 이동·공격 불가, 콤보 원소 1로 계수 */
   if(u.building){ // 캐논(건물): 고정, 수명 있음
@@ -750,7 +775,7 @@ function dealDamage(e,dmg,fromTeam,fromSpell){
    // v114: fromSpell — 주문(파이어볼·자패) 피해는 줌인 유발 없음, 일반 유닛 교전만 줌인
   if(S&&S.relic==='relic_atk'&&fromTeam==='blue'&&e&&e.team==='red'&&!e.isTower) dmg=Math.round(dmg*1.1);   // v109 #13: 유물 — 전투 문장
   if(fromTeam==='blue'&&e&&e.team==='red'&&!e.isTower&&fromSpell!==true) dmg=Math.round(dmg*(1+0.08*((S._sk&&S._sk.off1)||0)+0.06*((S._sk&&S._sk.off2)||0)+0.12*((S._sk&&S._sk.off3)||0)));   // v119: 스킬트리 공세 계통 — 일반 유닛 공격만(주문 제외)
-  var __rinM=1; if(S.__rin==='relic_frenzy') __rinM*=1.15; if(S.__rin==='relic_bulwark') __rinM*=0.9; if(S.__rin==='relic_gamble') __rinM*=(S.__rinRoll||1); if(fromTeam==='blue'&&e&&!e.isTower&&__rinM!==1) dmg=Math.round(dmg*__rinM);   /* v212: 인런 렐릭 — 공세·방벽·도박 */
+  var __rinM=1; if(S.__rin==='relic_frenzy') __rinM*=1.15*(S.__rinMul||1);   /* v218 증폭 */ if(S.__rin==='relic_bulwark') __rinM*=0.9; if(S.__rin==='relic_gamble') __rinM*=(S.__rinRoll||1); if(fromTeam==='blue'&&e&&!e.isTower&&__rinM!==1) dmg=Math.round(dmg*__rinM);   /* v212: 인런 렐릭 — 공세·방벽·도박 */
   if(e.dead) return;
   if(fromTeam==='red'&&e&&!e.isTower) dmg=Math.round(dmg*__raDiffDmg());   /* v208: 난이도 — 적 공격력 배율 */
   var __st=((e.burnT>0)?1:0)+((e.slowT>0)?1:0)+((e.stun>0)?1:0)+((e.frozenT>0)?1:0);
@@ -779,7 +804,7 @@ function dealDamage(e,dmg,fromTeam,fromSpell){
     if(fromTeam&&S.kills&&!e.isTower) S.kills[fromTeam]++;
     if(!e.isTower&&S.deaths&&e.team) S.deaths[e.team]=(S.deaths[e.team]||0)+1;   // v99 P8: 데스 집계
   if(e.isTower&&e.kind==='king'&&fromTeam==='blue'){ try{ var __cd0=parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)||-1; var __dc0=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; if(__dc0>__cd0) localStorage.setItem('ra_diff_clear_v1',String(__dc0)); }catch(__e){} }   /* v209: 난이도 토벌 기록 — 다음 난이도 해금 */
-  if(fromTeam==='blue'&&!e.isTower){ try{ var __kg=parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)+1; if(typeof P!=='undefined'&&P&&typeof P.elixir==='number') P.elixir=Math.min(10,P.elixir+0.04*(1+Math.max(0,__kg))*(S&&S.__rin==='relic_hoard'?2:1));   /* v212: 금고의 인장 — 보상 2배 */ }catch(__e){} }   /* v209: 처치 보상 — 킬 엘릭서(토벌 단계 계수, killGoldBonus 프레임) */
+  if(fromTeam==='blue'&&!e.isTower){ try{ var __kg=parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)+1; if(typeof P!=='undefined'&&P&&typeof P.elixir==='number') P.elixir=Math.min(10,P.elixir+0.04*(1+Math.max(0,__kg))*(S&&S.__rin==='relic_hoard'?2*(S.__rinMul||1):1)   /* v218 증폭 */);   /* v212: 금고의 인장 — 보상 2배 */ }catch(__e){} }   /* v209: 처치 보상 — 킬 엘릭서(토벌 단계 계수, killGoldBonus 프레임) */
   if(!e.isTower&&e.split&&e.team==='red'){ setTimeout(function(){ try{ if(S.over) return; var __sc=Object.assign({},CARDS.minions,{hp:70,dmg:22,name:'분열체',count:1}); for(var __si=0;__si<2;__si++){ units.push({id:uid++, key:'minions', team:'red', c:__sc, r:0.32, x:clamp(e.x+(__si?0.35:-0.35),0.7,COLS-0.7), y:clamp(e.y+0.3,0.7,ROWS-0.7), hp:70, maxHp:70, cd:0.4, swing:0, bob:Math.random()*6.28, target:null, spawnFx:0.45, building:false, life:0, dead:false, stun:0, slowT:0, frozenT:0, chargeT:0, charging:false, dir:Math.PI/2}); } }catch(__e){} },60); }   /* v209: 분열 특성 — 사망 시 소형 2체 */
     if(e.isTower) destroyTower(e,fromTeam); else killUnit(e,false); }
 }
@@ -816,7 +841,7 @@ function destroyTower(t,fromTeam){
 function finish(winner){
   try{ document.getElementById('screen-battle').classList.remove('sd-mode'); }catch(e){ }   /* v194 */
   if(S.over) return;
-  S.over=true; S.winner=winner; try{ var __xu=S.__used||{}; var __mx=__cXpMap(); var __lvB={}; Object.keys(__xu).forEach(function(k){ __lvB[k]=__cLv(k); }); var __dfb=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; var __today=new Date().toISOString().slice(0,10); var __firstw=(winner==='blue'&&localStorage.getItem('ra_daily_v1')!==__today); Object.keys(__xu).forEach(function(k){ __mx[k]=(__mx[k]||0)+(winner==='blue'?2:1)+__dfb+(__firstw?2:0); }); if(winner==='blue'){ try{ localStorage.setItem('ra_daily_v1',__today); }catch(__e){} } try{ localStorage.setItem('ra_cardxp_v1',JSON.stringify(__mx)); }catch(__e){}   /* v213: 난이도 XP +첫승 가산 */ var __ups=Object.keys(__xu).filter(function(k){ return __cLv(k)>__lvB[k]; }); if(__ups.length){ var __un=__ups.map(function(k){ return (CARDS[k]||{}).name||k; }).join(', '); try{ localStorage.setItem('ra_lvup_v1',__ups.join(',')); }catch(__e){} setTimeout(function(){ try{ banner('🆙 카드 Lv.UP! '+__un,2400); sfx('crown'); }catch(e){} },500); }   /* v212 P17: Lv.UP 배너 팝업 */ }catch(__e){} try{ var __win=(S.winner==='blue'); if(__win){ var __w1=(parseInt(localStorage.getItem('ra_wins_v1')||'0',10)||0)+1, __s1=(parseInt(localStorage.getItem('ra_streak_v1')||'0',10)||0)+1; localStorage.setItem('ra_wins_v1',String(__w1)); localStorage.setItem('ra_streak_v1',String(__s1)); if(__s1%3===0) setTimeout(function(){ try{ banner('🔥 '+__s1+'연승!',2200); sfx('crown'); }catch(e){} },3200); } else { localStorage.setItem('ra_losses_v1',String((parseInt(localStorage.getItem('ra_losses_v1')||'0',10)||0)+1)); localStorage.setItem('ra_streak_v1','0'); } }catch(__e){}   /* v213: 전적 카운터·연승 */
+  S.over=true; S.winner=winner; try{ var __xu=S.__used||{}; var __mx=__cXpMap(); var __lvB={}; Object.keys(__xu).forEach(function(k){ __lvB[k]=__cLv(k); }); var __dfb=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; var __today=new Date().toISOString().slice(0,10); var __firstw=(winner==='blue'&&localStorage.getItem('ra_daily_v1')!==__today); Object.keys(__xu).forEach(function(k){ __mx[k]=(__mx[k]||0)+(winner==='blue'?2:1)+__dfb+(__firstw?2:0); }); if(winner==='blue'){ try{ localStorage.setItem('ra_daily_v1',__today); }catch(__e){} } if(__firstw) setTimeout(function(){ try{ banner('🌅 첫 승 보너스 XP +2!',2200); sfx('crown'); }catch(e){} },1600);   /* v218 */ try{ localStorage.setItem('ra_cardxp_v1',JSON.stringify(__mx)); }catch(__e){}   /* v213: 난이도 XP +첫승 가산 */ var __ups=Object.keys(__xu).filter(function(k){ return __cLv(k)>__lvB[k]; }); if(__ups.length){ var __un=__ups.map(function(k){ return (CARDS[k]||{}).name||k; }).join(', '); try{ localStorage.setItem('ra_lvup_v1',__ups.join(',')); }catch(__e){} setTimeout(function(){ try{ banner('🆙 카드 Lv.UP! '+__un,2400); sfx('crown'); }catch(e){} },500); }   /* v212 P17: Lv.UP 배너 팝업 */ }catch(__e){} try{ var __win=(S.winner==='blue'); if(__win){ var __w1=(parseInt(localStorage.getItem('ra_wins_v1')||'0',10)||0)+1, __s1=(parseInt(localStorage.getItem('ra_streak_v1')||'0',10)||0)+1; localStorage.setItem('ra_wins_v1',String(__w1)); localStorage.setItem('ra_streak_v1',String(__s1)); if(__s1%3===0) setTimeout(function(){ try{ banner('🔥 '+__s1+'연승!',2200); sfx('crown'); }catch(e){} },3200); } else { localStorage.setItem('ra_losses_v1',String((parseInt(localStorage.getItem('ra_losses_v1')||'0',10)||0)+1)); localStorage.setItem('ra_streak_v1','0'); } }catch(__e){}   /* v213: 전적 카운터·연승 */
     try{ var __st=spState(); var __g=(winner==='blue')?3:1; __st.sp+=__g; __st.total+=__g; spSave(__st); setTimeout(function(){ toast('🎓 전술 SP +'+__g); },900); }catch(e){}   // v119: 승리 보상 SP — 승리 +3·패배 +1, 영구 저장 S.endTimer=1.4; P.sel=null; syncHand();
   if(winner==='blue') sfx('win'); else if(winner==='red') sfx('lose');
   bgmStop();
@@ -2212,7 +2237,7 @@ function startMatch(){
   try{ if(false&&typeof localStorage!=='undefined'&&localStorage.getItem('ra_tut_done')!=='1'&&!localStorage.getItem('ra_hist_v1')) tutBegin();   /* v176: 튜토리얼 모드 일단 제외 — 재활성 시 if(false&&) 제거 */ }catch(e){}   /* v147: 첫 실행(기록 없음)만 활성 */
   units=[];projs=[];fx=[];floats=[];parts=[];ambient=[];
   S.over=false;S.shown=false;S.winner=null;S.t=300;S.overtime=false;S.double=false;   /* v142: 경기 시간 5분 */
-  try{ DPSW.acc={}; DPSW.cnt={}; DPSW.time=0; DPSW._c=0; dpswEnsure(); }catch(e){}  try{ heroPlxReset(); }catch(e){}   /* v150: 전투 진입 시 패럴럭스 리셋 */S.crowns={blue:0,red:0};   /* v148: 위젯 리셋 */ S.kills={blue:0,red:0}; S.deaths={blue:0,red:0}; S.spells={blue:0,red:0}; S.shake=0; S.clash=null; S.cam={x:W/2,y:H/2,z:1}; S._home={x:W/2,y:H/2,z:1}; S.focus=null; S.slow=0; S.spellQuiet=0; S._sk={}; S.__rin=(function(){try{var r=localStorage.getItem('ra_relic_inrun_v1'); if(r) localStorage.removeItem('ra_relic_inrun_v1'); return r;}catch(e){return null;}})(); S.__rinRoll=(S.__rin==='relic_gamble')?(Math.random()<0.5?1.25:0.85):1;   /* v212: 인런 렐릭 소비(1회) */ try{ relayoutHud(); }catch(e){}   // v122: 경기 시작 기둥 배치   // v115: 초기 화면 상태 기억 — 강제 복귀 기준점 + v118: 주문 진정 기간 리셋   // v111: 구 추적 객체 2종 폐지(단일 S.focus만) S.boss=null; S.bossSpawned=false; S.ks=false; S.ksCd=0; S.focusGap=0; S.zHold=0; S._tp=0; S.repCd=0; S.__used={}; try{ syncGradeVisual(); }catch(e){} try{ S.relic=(function(){try{return localStorage.getItem('ra_relic_v1')||''}catch(e){return ''}})(); applyRelics(); applySkills(); }catch(e){}   // v119: 스킬트리 반영
+  try{ DPSW.acc={}; DPSW.cnt={}; DPSW.time=0; DPSW._c=0; dpswEnsure(); }catch(e){}  try{ heroPlxReset(); }catch(e){}   /* v150: 전투 진입 시 패럴럭스 리셋 */S.crowns={blue:0,red:0};   /* v148: 위젯 리셋 */ S.kills={blue:0,red:0}; S.deaths={blue:0,red:0}; S.spells={blue:0,red:0}; S.shake=0; S.clash=null; S.cam={x:W/2,y:H/2,z:1}; S._home={x:W/2,y:H/2,z:1}; S.focus=null; S.slow=0; S.spellQuiet=0; S._sk={}; S.__rin=(function(){try{var r=localStorage.getItem('ra_relic_inrun_v1'); if(r) localStorage.removeItem('ra_relic_inrun_v1'); return r;}catch(e){return null;}})(); S.__rinRoll=(S.__rin==='relic_gamble')?(Math.random()<0.5?1.25:0.85):1; S.__rinMul=1+0.05*__raClearLv();   /* v212 소비 + v218: 토벌 단계 렐릭 증폭 */ try{ relayoutHud(); }catch(e){}   // v122: 경기 시작 기둥 배치   // v115: 초기 화면 상태 기억 — 강제 복귀 기준점 + v118: 주문 진정 기간 리셋   // v111: 구 추적 객체 2종 폐지(단일 S.focus만) S.boss=null; S.bossSpawned=false; S.ks=false; S.ksCd=0; S.focusGap=0; S.zHold=0; S._tp=0; S.repCd=0; S.__used={}; try{ syncGradeVisual(); }catch(e){} try{ S.relic=(function(){try{return localStorage.getItem('ra_relic_v1')||''}catch(e){return ''}})(); applyRelics(); applySkills(); }catch(e){}   // v119: 스킬트리 반영
   P.elixir=5;A.elixir=5;A.timer=4.5;P.sel=null;P._full=false;
   try{ var __sb2=document.getElementById('screen-battle'); if(__sb2) __sb2.classList.remove('ended'); }catch(e){}
   initDeck(P);initDeck(A,true);   /* v192: 적 덱 = 아군과 무관 랜덤 */
