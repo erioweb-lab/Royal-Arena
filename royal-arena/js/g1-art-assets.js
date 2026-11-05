@@ -358,14 +358,15 @@ try{ (function(){ var iv=setInterval(function(){
 
 /* v208: 난이도 3단계(영구 저장) + P13 배치 구역 하이라이트 */
 try{ (function(){
-  window.__raDiffHp=function(){ var d=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; return [1,1.25,1.55][d]||1; };
-  window.__raDiffDmg=function(){ var d=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; return [1,1.15,1.35][d]||1; };
-  var DN=['보통','악몽','지옥'], DC=['#67d98a','#e0a13c','#e05c6e'];
+  window.__raDIFF={name:['보통','악몽','지옥'],col:['#67d98a','#e0a13c','#e05c6e'],hp:[1,1.25,1.55],dmg:[1,1.15,1.35]};   /* v210: 단일 진실원 통합 */
+  window.__raDiffHp=function(){ var d=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; return __raDIFF.hp[d]||1; };
+  window.__raDiffDmg=function(){ var d=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; return __raDIFF.dmg[d]||1; };
+  var DN=__raDIFF.name, DC=__raDIFF.col;
   var iv=setInterval(function(){ var ta=document.getElementById('title-actions'); if(!ta) return; clearInterval(iv);
     var b=document.createElement('button'); b.id='btn-diff';
     var __cl0=parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)+1; var d=Math.max(0,Math.min(2,Math.min(parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0,__cl0)));   /* v209: 미해금 난이도 저장값 클램프 */
     b.textContent='⚔ 난이도: '+DN[d]; b.style.marginTop='12px'; b.style.color=DC[d]; b.title='토벌 단계당 아군 성벽 HP +6%·처치 시 엘릭서 +4%×단계';
-    b.onclick=function(){ var __cl=parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)+1; var __nd=(d+1)%3; if(__nd>__cl){ toast('잠금 — 이전 난이도 토벌(왕 타워 파괴) 후 해금'); sfx('tap'); return; } d=__nd; localStorage.setItem('ra_diff_v1',String(d)); b.textContent='⚔ 난이도: '+DN[d]; b.style.color=DC[d]; sfx('tap'); toast('난이도: '+DN[d]+' — 적 체력×'+[1,1.25,1.55][d]+' 공격×'+[1,1.15,1.35][d]); };   /* v209: 토벌 해금 게이트 */
+    b.onclick=function(){ var __cl=parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)+1; var __nd=(d+1)%3; if(__nd>__cl){ toast('잠금 — 이전 난이도 토벌(왕 타워 파괴) 후 해금'); sfx('tap'); return; } d=__nd; localStorage.setItem('ra_diff_v1',String(d)); b.textContent='⚔ 난이도: '+DN[d]; b.style.color=DC[d]; sfx('tap'); toast('난이도: '+DN[d]+' — 적 체력×'+__raDIFF.hp[d]+' 공격×'+__raDIFF.dmg[d]); };   /* v209: 토벌 해금 게이트 */
     ta.appendChild(b); },300);
   window.__raZoneHL=function(on){ try{
     var w=document.getElementById('arena-wrap'); if(!w) return;
@@ -651,7 +652,7 @@ function updateProjs(dt){
         for(const s2 of units){ if(s2.dead||s2.team===p.team||s2===tgt) continue;
           if(Math.hypot(s2.x-p.tx,s2.y-p.ty)<=p.splash) dealDamage(s2,Math.round(p.dmg*0.7),p.team); }
       if(p.slow){ for(const s2 of units){ if(s2.dead||s2.team===p.team) continue;
-        if(Math.hypot(s2.x-p.tx,s2.y-p.ty)<=p.splash) s2.slowT=p.slow; }
+        if(Math.hypot(s2.x-p.tx,s2.y-p.ty)<=p.splash){ s2.slowT=p.slow; floats.push({dx:(Math.random()*10-5),dy:0,x:s2.x,y:s2.y-1.2,txt:'❄ 둔화',t:0.7,col:'#7fe6ff',big:false}); } }
         if(tgt&&!tgt.dead&&Math.random()<0.25){ tgt.frozenT=1.2; fx.push({x:tgt.x,y:tgt.y,t:0,dur:0.5,kind:'ring',col:'rgba(180,235,255,.9)'}); addParts(tgt.x,tgt.y,5,'#b4ebff',2.0,0.4,-40); }   /* v138: 빙결 확정 부여(직격 25%) */ } } }
     else { p.x+=dx/d*step; p.y+=dy/d*step;
       if(p.dur) p.t+=dt;
@@ -666,7 +667,7 @@ function castSpellBase(key,team,x,y){ if(S.spells) S.spells[team]=(S.spells[team
 function castMeteor(team,x,y){ const c=CARDS.meteor, et=enemyOf(team);
   fx.push({x,y,t:0,dur:0.55,kind:'warnring'}); fx.push({x,y,t:0,dur:0.5,kind:'boom'}); fx.push({x,y,t:0,dur:0.35,kind:'flash'}); S.shake=0.6; S.spellQuiet=2.2; sfx('boom');
   addParts(x,y,26,'#ff9d3c',3.6,0.6,70);
-  for(const u of units){ if(u.dead||u.team!==et) continue; if(Math.hypot(u.x-x,u.y-y)<=c.radius){ u.burnT=Math.max(u.burnT||0,3); u.burnDps=24; u.burnAcc=0; dealDamage(u,spellDmg(c.dmg),team,true); } }
+  for(const u of units){ if(u.dead||u.team!==et) continue; if(Math.hypot(u.x-x,u.y-y)<=c.radius){ u.burnT=Math.max(u.burnT||0,3); u.burnDps=24; u.burnAcc=0; floats.push({dx:(Math.random()*10-5),dy:0,x:u.x,y:u.y-1.2,txt:'🔥 화상',t:0.7,col:'#ff9d3c',big:false}); dealDamage(u,spellDmg(c.dmg),team,true); } }
   for(const t of towers){ if(t.dead||t.team!==et) continue; if(Math.hypot(t.x-x,t.y-y)<=c.radius+0.5) dealDamage(t,spellDmg(c.towerDmg),team); } }
 /* v208: 눈보라 — 광역 둔화 3초 */
 function castBlizzard(team,x,y){ const c=CARDS.blizzard, et=enemyOf(team);
@@ -679,7 +680,7 @@ function castZap(team,x,y){
   fx.push({x,y,t:0,dur:0.3,kind:'flash'});
   addParts(x,y,14,'#ffe95e',3.6,0.45,50);
   for(const u of units){ if(u.dead||u.team!==et) continue;
-    if(Math.hypot(u.x-x,u.y-y)<=c.radius){ u.stun=c.stun; dealDamage(u,spellDmg(c.dmg),team,true); } }
+    if(Math.hypot(u.x-x,u.y-y)<=c.radius){ u.stun=c.stun; floats.push({dx:(Math.random()*10-5),dy:0,x:u.x,y:u.y-1.2,txt:'⚡ 기절',t:0.7,col:'#ffe95e',big:false}); dealDamage(u,spellDmg(c.dmg),team,true); } }
   var __ch=null,__chd=1e9;
   for(const u2 of units){ if(u2.dead||u2.team!==et||u2.stun>0) continue; var __d2=Math.hypot(u2.x-x,u2.y-y); if(__d2>c.radius&&__d2<=c.radius+2.2&&__d2<__chd){ __chd=__d2; __ch=u2; } }
   if(__ch){ __ch.stun=c.stun*0.8; dealDamage(__ch,Math.round(spellDmg(c.dmg)*0.4),team,true); fx.push({x:x,y:y,tx:__ch.x,ty:__ch.y,t:0,dur:0.22,kind:'bolt'}); addParts(__ch.x,__ch.y,6,'#ffe95e',2.4,0.3,30); }   /* v138: 전기 연쇄 번개 — 반경 밖 최근접 1기 */
@@ -724,7 +725,9 @@ function dealDamage(e,dmg,fromTeam,fromSpell){
   if(fromTeam==='blue'&&e&&!e.isTower&&Math.random()<0.12){ dmg=Math.round(dmg*2); floats.push({dx:(Math.random()*14-7),dy:(Math.random()*6-3),x:e.x,y:e.y-(e.r||0.45)-1.9,txt:'치명타!',t:0.9,col:'#ffd54f',big:true}); sfx('crown'); }   /* v208: 크리티컬 12% ×2 — 아군 공격 한정 */
   if(__st>=2&&!(e.comboCd>0)){
     e.comboCd=1.2;
-    floats.push({dx:(Math.random()*14-7),dy:(Math.random()*6-3),x:e.x,y:e.y-(e.r||0.45)-1.1,txt:__st>=3?'3원소 콤보 ×2!':'2원소 콤보 +40%',t:0.8,col:__st>=3?'#ff9d3c':'#ffe95e',big:true});
+    var __ck=(e.burnT>0?'b':'')+(e.slowT>0?'s':'')+(e.stun>0?'t':'')+(e.frozenT>0?'f':'');
+    var __cn=__st>=3?'3원소 대콤보 ×2!':((({bs:'증기 폭발',bt:'용암 감전',bf:'서리 화염',st:'감전 빙결',sf:'혹한 서리',tf:'파쇄 얼음'})[__ck]||'2원소 콤보')+' +40%');   /* v210: 명명된 2원소 콤보 6종 */
+    floats.push({dx:(Math.random()*14-7),dy:(Math.random()*6-3),x:e.x,y:e.y-(e.r||0.45)-1.1,txt:__cn,t:0.8,col:__st>=3?'#ff9d3c':'#ffe95e',big:true});
     fx.push({x:e.x,y:e.y,t:0,dur:0.35,kind:'ring',col:__st>=3?'rgba(255,157,60,.9)':'rgba(255,233,94,.9)'});
   }
   if((e.shield||0)>0){ const ab=Math.min(e.shield,dmg); e.shield-=ab; dmg-=ab; }
@@ -922,6 +925,7 @@ function update(dt){
   if(S.boss&&S.boss.dead){ S.kills.blue+=5; P.elixir=10; P._full=false;
     S.focus=null; S.focusGap=1.5;   // v116: 보스 격파 줌인 삭제(사용자 지정) — 즉시 해제 + 1.5s 신규 포커스 억제
     banner('💀 보스 토벌! 엘릭서 만땅 · 킬 +5',2200); sfx('crown');
+    if((S.__bossWave||0)<2){ S.__bossWave=(S.__bossWave||0)+1; setTimeout(function(){ try{ if(S.over) return; S.bossSpawned=false; spawnBossNow(); banner('💀 보스 웨이브 '+(S.__bossWave+1)+' 강림!',2200); }catch(e){} },75000); }   /* v210: 보스 재강림 주기 75s·최대 2회 */
     fx.push({x:S.boss.x,y:S.boss.y,t:0,dur:0.9,kind:'ring',col:'rgba(247,197,49,.95)'});
     S.boss=null; const kb=document.getElementById('ks-btn'); if(kb) kb.classList.add('hidden'); }
   for(const u of units) if(!u.dead){ try{ updateUnit(u,dt); }catch(err){ u.target=null; } }
@@ -1891,6 +1895,7 @@ window.__raTierCards=function(){ try{
     var cd=CARDS[key]; if(!cd) return;
     c.classList.remove('ra-t1','ra-t2','ra-t3');
     c.classList.add(cd.cost<=2?'ra-t1':(cd.cost===3?'ra-t2':'ra-t3'));
+    var __lv=(typeof __cLv==='function')?__cLv(key):1; var __lb=c.querySelector('.ra-lv'); if(!__lb){ __lb=document.createElement('div'); __lb.className='ra-lv'; c.appendChild(__lb); } __lb.textContent='Lv.'+__lv;   /* v210 P17 */
   });
 }catch(e){} };
 function buildHandUI(){
@@ -1983,7 +1988,8 @@ function tutSkip(){ tutFinish(); try{ toast('튜토리얼을 건너뛰었어요'
 /* v148 실시간 DPS 위젯(§4): 우상단 유닛별 누적 피해/경과 DPS·배치수 브리핑 — 펼침/접기 토글, 표시 전용(배치 영역 비침범) */
 const DPSW={acc:{},cnt:{},time:0,open:true,_c:0};
 function dpswEnsure(){ if(document.getElementById('dpsw')) return; const st=document.createElement('style'); st.id='dpswst'; st.textContent='#dpsw{position:fixed;right:8px;top:calc(64px + env(safe-area-inset-top,0px));z-index:1400;font-family:var(--fd);pointer-events:none;max-width:118px}#dpsw .dw-t{pointer-events:auto;background:rgba(13,27,46,.74);border:1px solid #f7c531;color:#f7c531;border-radius:10px;font:800 11px var(--fd);padding:4px 8px;box-shadow:0 3px 10px rgba(0,0,0,.4);width:100%;text-align:right}#dpsw .dw-b{margin-top:4px;background:rgba(13,27,46,.74);border:1px solid rgba(247,197,49,.45);border-radius:10px;padding:5px 7px;display:flex;flex-direction:column;gap:3px}#dpsw.hidden{display:none}#dpsw .dw-r{display:flex;align-items:center;gap:4px;color:#dfe8f5;font-size:10px;white-space:nowrap}#dpsw .dw-r b{color:#f7c531;font-size:10px}#dpsw .dw-r .dw-n{overflow:hidden;text-overflow:ellipsis;max-width:54px}'; document.head.appendChild(st); const w=document.createElement('div'); w.id='dpsw'; w.className='hidden'; w.innerHTML='<button class="dw-t">📊 DPS</button><div class="dw-b"></div>'; w.querySelector('.dw-t').addEventListener('pointerdown',function(e){ e.stopPropagation(); DPSW.open=!DPSW.open; dpswRender(); }); document.body.appendChild(w); }
-function dpswRender(){ try{ const w=document.getElementById('dpsw'); if(!w||typeof S==='undefined'||!S||S.pre!==0||S.over){ if(w) w.classList.add('hidden'); return; } w.classList.remove('hidden'); const ks=Object.keys(DPSW.cnt).filter(function(k){ return DPSW.cnt[k]>0; }); let tot=0; ks.forEach(function(k){ tot+=DPSW.acc[k]||0; }); const dps=tot/Math.max(1,DPSW.time); w.querySelector('.dw-t').textContent=DPSW.open?('📊 DPS '+Math.round(dps)+' ▾'):'📊 DPS ▸'; const b=w.querySelector('.dw-b'); if(!DPSW.open){ b.style.display='none'; return; } b.style.display='flex'; b.innerHTML=ks.sort(function(a,c){ return (DPSW.acc[c]||0)-(DPSW.acc[a]||0); }).slice(0,5).map(function(k){ const c=CARDS[k]||{}; const d=Math.round((DPSW.acc[k]||0)/Math.max(1,DPSW.time)); return '<div class="dw-r"><b>'+d+'</b><span class="dw-n">'+(c.name||k)+'</span><span>×'+DPSW.cnt[k]+'</span></div>'; }).join('')||'<div class="dw-r"><span>배치 대기 중</span></div>'; }catch(e){} }
+function dpswRender(){ try{ const w=document.getElementById('dpsw'); if(!w||typeof S==='undefined'||!S||S.pre!==0||S.over){ if(w) w.classList.add('hidden'); return; } w.classList.remove('hidden'); const ks=Object.keys(DPSW.cnt).filter(function(k){ return DPSW.cnt[k]>0; }); let tot=0; ks.forEach(function(k){ tot+=DPSW.acc[k]||0; }); const dps=tot/Math.max(1,DPSW.time); var __al=0; if(typeof units!=='undefined'){ for(var __ui=0;__ui<units.length;__ui++){ if(!units[__ui].dead&&units[__ui].team==='blue') __al++; } }   /* v210 P7: 생존 브리핑 */
+  w.querySelector('.dw-t').textContent=DPSW.open?('📊 DPS '+Math.round(dps)+' · 🛡 '+__al+' ▾'):'📊 DPS · 🛡 '+__al+' ▸'; const b=w.querySelector('.dw-b'); if(!DPSW.open){ b.style.display='none'; return; } b.style.display='flex'; b.innerHTML=ks.sort(function(a,c){ return (DPSW.acc[c]||0)-(DPSW.acc[a]||0); }).slice(0,5).map(function(k){ const c=CARDS[k]||{}; const d=Math.round((DPSW.acc[k]||0)/Math.max(1,DPSW.time)); return '<div class="dw-r"><b>'+d+'</b><span class="dw-n">'+(c.name||k)+'</span><span>×'+DPSW.cnt[k]+'</span></div>'; }).join('')||'<div class="dw-r"><span>배치 대기 중</span></div>'; }catch(e){} }
 
 
 /* v149 캔버스 타일 하이라이트(§5-2): 카드 선택 중 배치 가능 타일 점선 회전+펄스 스케일 발광 — 배치 가이드·튜토리얼 겸용 */
