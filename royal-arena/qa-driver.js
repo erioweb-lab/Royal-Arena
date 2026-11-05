@@ -85,7 +85,7 @@ function runBattle(cb){
       if(de){ [].slice.call(de.querySelectorAll('.dk b,.dk span,.dk div')).forEach(function(el){ if(el.scrollWidth>el.clientWidth+1) trunc++; });
         [].slice.call(de.querySelectorAll('button')).forEach(function(b){ if(b.scrollHeight>b.clientHeight+2) clip++; }); }
       var rnd=document.getElementById('btn-deck-random'); var slab=rnd&&rnd.clientHeight>90?1:0;
-      set(mode+' DECK:'+(de?'OK':'FAIL')+' LBL-trunc:'+trunc+' BTN-clip:'+clip+' RND-slab:'+slab+' RND-h:'+(rnd?rnd.clientHeight:'-'));
+      set(mode+' DECK:'+(de?'OK':'FAIL')+' LBL-trunc:'+trunc+' BTN-clip:'+clip+' RND-slab:'+slab+' RND-h:'+(rnd?rnd.clientHeight:'-')+' RND-pos:'+(function(){try{var sv=[].slice.call(de.querySelectorAll('button')).filter(function(b){return /저장/.test(b.textContent||'')})[0];if(!sv||!rnd)return 'n/a';var r1=rnd.getBoundingClientRect(),r2=sv.getBoundingClientRect();return (r1.left>r2.left&&Math.abs(r1.top-r2.top)<8&&Math.abs(r1.height-r2.height)<3)?'ok':'off';}catch(e){return 'n/a'}})());
       setTimeout(function(){ var c=[].slice.call(document.querySelectorAll('#deck-edit button')).filter(function(b){return vis(b)&&/닫기/.test(b.textContent||'')})[0]; if(c)clickEl(c); },250);
     },900);
   },600); return; }

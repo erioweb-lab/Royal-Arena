@@ -2297,7 +2297,7 @@ function __raSaveDeck(q){ localStorage.setItem(DECK_SLOTS[activeSlot()], JSON.st
 function __raAddRandomBtn(){
   var de=document.getElementById('deck-edit'); if(!de||document.getElementById('btn-deck-random')) return;
   var btn=document.createElement('button'); btn.id='btn-deck-random'; btn.textContent='🎲 랜덤';
-  btn.style.cssText='flex:0 0 auto!important;height:42px!important;min-height:42px!important;max-height:42px!important;width:100%;margin-top:4px;border-radius:12px;font-weight:800;background:linear-gradient(180deg,#2f6d4f,#1c4231);color:#d9fbe8;border:1.5px solid #63d69a';   /* v199b: 인라인 강제 — 시트 규칙 무시 환경 차단 */
+  btn.style.cssText='flex:0 0 auto!important;height:42px!important;min-height:42px!important;max-height:42px!important;border-radius:12px;font-weight:800;background:linear-gradient(180deg,#2f6d4f,#1c4231);color:#d9fbe8;border:1.5px solid #63d69a';   /* v199b: 인라인 강제 — 시트 규칙 무시 환경 차단 */
   btn.onclick=function(){
     var q=shuffle([...DECK]).slice(0,8);
     try{ __raSaveDeck(q); }catch(e){ }
@@ -2306,7 +2306,7 @@ function __raAddRandomBtn(){
     try{ toast('덱을 랜덤으로 구성했어요'); }catch(e){ }
   };
   var saveB=null; [].slice.call(de.querySelectorAll('button')).forEach(function(b){ if(/저장/.test(b.textContent||'')) saveB=b; });
-  if(saveB&&saveB.parentNode){ saveB.parentNode.parentNode&&saveB.parentNode!==de?de.insertBefore(btn,saveB.parentNode):de.appendChild(btn); btn.style.width='100%'; } else de.appendChild(btn);   /* v198: 랜덤 버튼 독립 행 — 저장행 3열 랩 비대칭 해소 */
+  if(saveB&&saveB.parentNode){ var row=saveB.parentNode; try{ row.style.display='grid'; row.style.gridTemplateColumns='repeat(3,1fr)'; row.style.gap='10px'; row.style.width='100%'; }catch(e){} saveB.parentNode.insertBefore(btn,saveB.nextSibling); btn.style.flex='0 0 auto'; btn.style.height='42px'; btn.style.width='auto'; } else de.appendChild(btn);   /* v198: 랜덤 버튼 독립 행 — 저장행 3열 랩 비대칭 해소 */
 }
 (function(){ var orig=openDeckEditor;
   openDeckEditor=function(){ var r=orig.apply(this,arguments); try{ setTimeout(__raAddRandomBtn,40); }catch(e){ } return r; };
