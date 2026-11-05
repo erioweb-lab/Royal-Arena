@@ -1154,7 +1154,7 @@ html body .theme-row .t-btn{height:34px !important;font-size:11px !important;lin
 html body .t-links button, html body #btn-deck-random, html body #btn-deck-edit{background:linear-gradient(180deg,rgba(14,34,61,.95),rgba(10,22,40,.95)) !important;border:1px solid #c89b3c !important;border-radius:14px !important;color:#f2f6ff !important;font-weight:700 !important;line-height:1.2 !important;text-shadow:none !important;min-height:34px !important;display:flex !important;align-items:center !important;justify-content:center !important;overflow:hidden !important;text-overflow:ellipsis !important;white-space:nowrap !important;padding:4px 8px !important}
 html body #deck-edit{padding-bottom:150px !important}
 </style>
-<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v248</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v249</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1526,6 +1526,12 @@ html body #deck-edit .dkn{white-space:normal !important;overflow:visible !import
 html body #deck-edit [data-slot], html body #deck-edit .dk-act, html body #deck-edit .dk-sub{white-space:nowrap !important;overflow:visible !important;text-overflow:clip !important}
 html body [id^="overlay-"] p, html body [id^="overlay-"] small, html body [id^="overlay-"] .t-note, html body [id^="overlay-"] .t-how{white-space:normal !important;overflow:visible !important;text-overflow:clip !important;word-break:keep-all !important;line-height:1.4 !important}
 html body [id^="overlay-"] .rpanel{max-height:min(calc(100svh - 90px),560px) !important;overflow-y:auto !important}
+</style>
+<style id="ui-v249">
+/* v249: 이중검증 최종 — .rsub 설명 잘림 제압(rsub 고유 규칙 무력화)·덱 슬롯 라벨 완전 표기(높이 자동+2줄) */
+html body [id^="overlay-"] .rsub{white-space:normal !important;overflow:visible !important;text-overflow:clip !important;display:block !important;line-height:1.4 !important;word-break:keep-all !important;padding-right:10px !important}
+html body #deck-edit button[data-slot]{height:auto !important;min-height:34px !important;white-space:normal !important;overflow:visible !important;text-overflow:clip !important;line-height:1.25 !important;font-size:10.5px !important;padding:5px 6px !important}
+html body #deck-edit button[data-slot] *{line-height:1.25 !important}
 </style>
 </body>
 </html>
