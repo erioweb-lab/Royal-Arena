@@ -76,6 +76,7 @@ function runBattle(cb){
   },3800);
 }
   if(q.get('screen')&&mode!=='battle'){ setTimeout(function(){
+    var OPENFNS={"hof": "hofInit"};
     var SM={hof:['명예의 전당','overlay-hof'],profile:['프로필','overlay-profile'],relic:['유물','overlay-relic'],skill:['전술 연구소','overlay-skill'],info:['게임 방법','overlay-info']};
     var sn=q.get('screen'), cfg=SM[sn];
     if(sn==='codex'){ var cx=document.getElementById('codex'); if(cx){ try{cx.scrollIntoView({block:'start'});}catch(e){} set('SCREEN-codex:SCROLLED'); } else set('SCREEN-codex:FAIL'); return; }
@@ -85,7 +86,15 @@ function runBattle(cb){
       var ov=cfg?document.getElementById(cfg[1]):null, st;
       if(!ov) st='FAIL';
       else if(!ov.classList.contains('hidden')) st='OPEN';
-      else { ov.classList.remove('hidden'); st='FORCED'; }
+      else {
+        if(bs){ ['pointerdown','touchstart','mousedown','pointerup','touchend','mouseup','click'].forEach(function(t){ try{ bs.dispatchEvent(new Event(t,{bubbles:true,cancelable:true})); }catch(e){} }); }
+        setTimeout(function(){
+          if(ov.classList.contains('hidden')){ var __fn=OPENFNS[sn]; if(__fn&&typeof window[__fn]==='function'){ try{ window[__fn](); }catch(e){} } }
+          if(ov.classList.contains('hidden')) ov.classList.remove('hidden');
+          set('SCREEN-'+sn+'-2:'+(ov.classList.contains('hidden')?'FAIL':'OPENED'));
+        },350);
+        return;
+      }
       set('SCREEN-'+sn+':'+(bs?'CLICK':'NOBTN')+'-'+st);
     },400);
   },900); }
