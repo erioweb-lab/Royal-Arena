@@ -1153,7 +1153,7 @@ html body .theme-row .t-btn{height:34px !important;font-size:11px !important;lin
 html body .t-links button, html body #btn-deck-random, html body #btn-deck-edit{background:linear-gradient(180deg,rgba(14,34,61,.95),rgba(10,22,40,.95)) !important;border:1px solid #c89b3c !important;border-radius:14px !important;color:#f2f6ff !important;font-weight:700 !important;line-height:1.2 !important;text-shadow:none !important;min-height:34px !important;display:flex !important;align-items:center !important;justify-content:center !important;overflow:hidden !important;text-overflow:ellipsis !important;white-space:nowrap !important;padding:4px 8px !important}
 html body #deck-edit{padding-bottom:150px !important}
 </style>
-<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v267</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v268</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1659,6 +1659,10 @@ html body #title-actions>button{min-height:38px !important;display:flex !importa
 html body #screen-title .t-links{gap:8px !important;align-items:stretch !important}
 html body #screen-title .t-links button{min-height:38px !important;display:flex !important;align-items:center !important;justify-content:center !important}
 html body #screen-title .t-codex{gap:8px !important}
+</style>
+<style id="ui-v268">
+/* v268: 난이도 버튼 전체 폭 확장 — 2열 그리드 좌측 칸 쏠림(실기기 지적) 해소 */
+html body #btn-diff{grid-column:1/-1 !important;width:100% !important;min-height:38px !important;display:flex !important;align-items:center !important;justify-content:center !important}
 </style>
 </body>
 </html>
