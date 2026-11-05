@@ -112,7 +112,7 @@ function runBattle(cb){
   if(mode==='deck'){ setTimeout(function(){ try{ var de=document.getElementById('deck-edit'); if(!de){ set('BORDCHK:no-de'); return; }   /* v262: 버튼 경계 상자 숫자 실측 — AI 판독 대신 클립 포함 여부를 숫자로 판정 */
     var dr=de.getBoundingClientRect(); var out=[];
     [].slice.call(de.children).slice(0,4).forEach(function(rw,i){ var rc=rw.getBoundingClientRect(); out.push('row'+(i+1)+':ov'+getComputedStyle(rw).overflowY+'/t'+Math.round(rc.top)+'/b'+Math.round(rc.bottom)); });
-    [].slice.call(de.querySelectorAll('button[data-slot],button.dk-act,button.dk-sub')).forEach(function(b,i){ var r=b.getBoundingClientRect(); var miss=(r.top<dr.top-0.5||r.bottom>dr.bottom+0.5||r.left<dr.left-0.5||r.right>dr.right+0.5)?'!OUT':'in'; out.push('btn'+i+':'+(b.getAttribute('data-slot')!==null?('slot'+b.getAttribute('data-slot')):(b.id||b.className))+'/t'+Math.round(r.top)+'/b'+Math.round(r.bottom)+'/l'+Math.round(r.left)+'/r'+Math.round(r.right)+'/'+miss); });
+    [].slice.call(de.querySelectorAll('button[data-slot],button.dk-act,button.dk-sub,button#btn-deck-random')).forEach(function(b,i){ var r=b.getBoundingClientRect(); var miss=(r.top<dr.top-0.5||r.bottom>dr.bottom+0.5||r.left<dr.left-0.5||r.right>dr.right+0.5)?'!OUT':'in'; out.push('btn'+i+':'+(b.getAttribute('data-slot')!==null?('slot'+b.getAttribute('data-slot')):(b.id||b.className))+'/t'+Math.round(r.top)+'/b'+Math.round(r.bottom)+'/l'+Math.round(r.left)+'/r'+Math.round(r.right)+'/'+miss); });
     set('BORDCHK:'+out.join(' | '));
   }catch(e){ set('BORDCHK:err'); } },1800); }
   if(mode==='deck'){ setTimeout(function(){ try{ var de=document.getElementById('deck-edit'); if(!de){ set('SCROLL:no-de'); return; }   /* v264: 무스크롤 최종 판정 — 초컴팩트 출력(박스 클립 방지) */

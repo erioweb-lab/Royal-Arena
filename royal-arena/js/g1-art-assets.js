@@ -342,14 +342,16 @@ function openDeckEditor(){
      '<div style="font-family:Jua,sans-serif;color:#c3d2f2;font-size:13px;margin-top:10px;word-break:keep-all;line-height:1.45;text-align:center">보유 카드 풀 — 카드를 누르면 추가<br><span style="font-size:11.5px;color:#a9bce6">(8장이면 마지막 카드와 교체)</span></div>'+
      '<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px;width:100%;max-width:430px">'+Object.keys(CARDS).filter(k=>!deck.includes(k)).map(k=>
        '<div class="dk" data-add="'+k+'"><div class="dke">'+(ART[k]?'<img class="art" style="width:34px" src="'+ART[k]+'">':CARDS[k].emoji)+'</div><div class="dkn">'+CARDS[k].name+'</div><div class="dkc">'+CARDS[k].cost+'</div></div>').join('')+'</div>'+
-     '<div style="margin:14px;display:flex;gap:10px">'+
+     '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0 4px;width:100%">'+
       '<button id="dk-save" class="dk-act">💾 저장</button>'+
+      '<button id="btn-deck-random" class="dk-sub">🎲 랜덤</button>'+
       '<button id="dk-close" class="dk-sub">닫기</button></div>';
     ov.querySelectorAll('[data-slot]').forEach(b=>b.onclick=()=>{ slot=parseInt(b.dataset.slot,10); deck=(loadDeckSlot(slot)||DECK.slice(0,8)).slice(); render(); });
     ov.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{ deck=deck.filter(k=>k!==b.dataset.rm); render(); });
     ov.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>{ if(deck.includes(b.dataset.add)) return;
       if(deck.length>=8) deck.shift(); deck.push(b.dataset.add); render(); });
     ov.querySelector('#dk-close').onclick=()=>{ ov.remove(); style.remove(); };
+    var __rb=ov.querySelector('#btn-deck-random'); if(__rb) __rb.onclick=function(){ var q=shuffle([...DECK]).slice(0,8); try{ localStorage.setItem(DECK_SLOTS[slot],JSON.stringify(q)); }catch(e){} deck=q.slice(); render(); try{ toast('덱을 랜덤으로 구성했어요'); }catch(e){} try{ sfx('tap'); }catch(e){} };   /* v267: 랜덤 버튼 빌더 내장 — 렌더 후에도 생존·편집 슬롯에 저장 */
     ov.querySelector('#dk-save').onclick=()=>{ if(deck.length!==8) return;
       try{ localStorage.setItem(DECK_SLOTS[slot],JSON.stringify(deck)); localStorage.setItem('ra_deck_active',String(slot)); }catch(e){}
       sfx('crown'); toast('덱 슬롯 '+(slot+1)+'에 저장했어요'); ov.remove(); style.remove(); };
