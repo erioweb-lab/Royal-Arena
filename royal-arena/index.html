@@ -1154,7 +1154,7 @@ html body .theme-row .t-btn{height:34px !important;font-size:11px !important;lin
 html body .t-links button, html body #btn-deck-random, html body #btn-deck-edit{background:linear-gradient(180deg,rgba(14,34,61,.95),rgba(10,22,40,.95)) !important;border:1px solid #c89b3c !important;border-radius:14px !important;color:#f2f6ff !important;font-weight:700 !important;line-height:1.2 !important;text-shadow:none !important;min-height:34px !important;display:flex !important;align-items:center !important;justify-content:center !important;overflow:hidden !important;text-overflow:ellipsis !important;white-space:nowrap !important;padding:4px 8px !important}
 html body #deck-edit{padding-bottom:150px !important}
 </style>
-<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v253</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v254</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1552,6 +1552,25 @@ html body #deck-edit{padding-bottom:12px !important}
 html body #deck-edit .rpanel{height:auto !important;max-height:min(calc(100svh - 20px),600px) !important;display:flex !important;flex-direction:column !important;justify-content:flex-start !important}
 html body #deck-edit .rpanel>div:nth-last-child(2){flex:1 1 0 !important;min-height:0 !important;overflow-y:auto !important;overscroll-behavior:contain !important}
 html body #deck-edit .rpanel>div:last-child{margin-top:auto !important;flex-shrink:0 !important}
+</style>
+<style id="ui-v254">
+/* v254: 덱편성 기기 높이 피팅 — 8장 무스크롤·헤더 겹침 제거·C슬롯 우측 잘림 제거·버튼 높이 38px 완전 통일 */
+html body #deck-edit .rpanel{height:min(calc(100svh - 20px),600px) !important;gap:0 !important}
+html body #deck-edit .rpanel>div{flex-shrink:0 !important}
+html body #deck-edit .rpanel>div:first-child{max-width:100% !important;row-gap:6px !important;margin-top:0 !important}
+/* 전투 덱 카드 축소 — 8장이 카드풀 영역에 2행으로 무스크롤 수납 */
+html body #deck-edit .dk{min-width:0 !important;width:58px !important;padding:4px 2px !important;margin:2px !important}
+html body #deck-edit .dk .dke{font-size:20px !important;line-height:1.15 !important}
+html body #deck-edit .dk .dke img.art{width:28px !important}
+html body #deck-edit .dk .dkn{font-size:9px !important;white-space:nowrap !important;overflow:hidden !important;text-overflow:ellipsis !important}
+/* 버튼 높이 완전 통일(슬롯·액션 공통 38px) */
+html body #deck-edit button{min-height:38px !important;height:38px !important;box-sizing:border-box !important}
+html body #deck-edit button[data-slot] .dke{font-size:16px !important}
+html body #deck-edit button[data-slot] .dkn{font-size:9.5px !important}
+/* 헤더 텍스트 겹침 제거 — 행 간 최소 간격 보장 */
+html body #deck-edit .rpanel>div{margin-top:6px !important}
+html body #deck-edit .rpanel>div:first-child{margin-top:0 !important}
+html body #deck-edit .rpanel>div:last-child{margin-top:auto !important}
 </style>
 </body>
 </html>
