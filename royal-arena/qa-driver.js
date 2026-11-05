@@ -59,7 +59,7 @@ function quitBattle(){
     setTimeout(function(){
       var conf=[].slice.call(document.querySelectorAll('button')).filter(function(b){return vis(b)&&/기권|확인|예$/.test((b.textContent||'').trim())&&b.id!=='btn-quit';});
       if(conf.length)clickEl(conf[0]);
-      setTimeout(function(){
+      if(q.get('hold')==='1'){}else setTimeout(function(){
         var home=[].slice.call(document.querySelectorAll('#overlay-result button')).filter(function(b){return vis(b)&&/메인|홈/.test((b.textContent||''));});
         if(home.length)clickEl(home[0]);
       },900);
@@ -73,31 +73,27 @@ function runBattle(cb){
   setTimeout(function(){
     var tm=document.querySelector('#timer');
     cb('BATTLE:'+(battleVisible()?'OK':'FAIL')+' '+pixCount()+' TIME:'+(tm&&tm.textContent?'ok':'empty')+' ENEMYD:'+(function(){try{var q2=window.__qaDecks;return q2?(q2.blue===q2.red?'SAME':'diff'):'n/a'}catch(e){return 'n/a'}})())+' HUD:'+(function(){try{var vw=window.innerWidth,vh=window.innerHeight,gg=function(s){var e=document.querySelector(s);return e?e.getBoundingClientRect():null},rt=gg('#timer'),so=gg('#btn-sound'),ks=gg('#ks-btn')||gg('.kingshot-btn'),rp=gg('#repair-btn')||gg('.repair-btn'),dp=document.getElementById('dpsw'),ok=0;if(rt&&rt.top<26&&rt.left<26)ok++;if(so&&so.right>vw-26&&so.top<26)ok++;if(ks&&ks.bottom>vh-26&&ks.left<26)ok++;if(rp&&rp.bottom>vh-26&&rp.right>vw-26)ok++;var dop=dp?parseFloat(getComputedStyle(dp).opacity):1,dm=dp?(function(){var r=dp.getBoundingClientRect();return r.top>vh*0.3&&r.top<vh*0.65;}):false;return ok+'/4 '+(dop<0.9&&dm?'DPS-mid':'DPS-off');}catch(e){return 'n/a'}})();
-  },3800);
+  },(q.get('quit')==='1'?1400:3800));
 }
-  if(q.get('screen')&&mode!=='battle'){ setTimeout(function(){
-    var OPENFNS={"hof": "hofInit"};
-    var SM={hof:['명예의 전당','overlay-hof'],profile:['프로필','overlay-profile'],relic:['유물','overlay-relic'],skill:['전술 연구소','overlay-skill'],info:['게임 방법','overlay-info']};
-    var sn=q.get('screen'), cfg=SM[sn];
-    if(sn==='codex'){ var cx=document.getElementById('codex'); if(cx){ try{cx.scrollIntoView({block:'start'});}catch(e){} set('SCREEN-codex:SCROLLED'); } else set('SCREEN-codex:FAIL'); return; }
-    var bs=cfg?[].slice.call(document.querySelectorAll('#screen-title button')).filter(function(b){return vis(b)&&(b.textContent||'').indexOf(cfg[0])>=0;})[0]:null;
-    if(bs) clickEl(bs);
-    setTimeout(function(){
-      var ov=cfg?document.getElementById(cfg[1]):null, st;
-      if(!ov) st='FAIL';
-      else if(!ov.classList.contains('hidden')) st='OPEN';
-      else {
-        if(bs){ ['pointerdown','touchstart','mousedown','pointerup','touchend','mouseup','click'].forEach(function(t){ try{ bs.dispatchEvent(new Event(t,{bubbles:true,cancelable:true})); }catch(e){} }); }
-        setTimeout(function(){
-          if(ov.classList.contains('hidden')){ var __fn=OPENFNS[sn]; if(__fn&&typeof window[__fn]==='function'){ try{ window[__fn](); }catch(e){} } }
-          if(ov.classList.contains('hidden')) ov.classList.remove('hidden');
-          set('SCREEN-'+sn+'-2:'+(ov.classList.contains('hidden')?'FAIL':'OPENED'));
-        },350);
-        return;
-      }
-      set('SCREEN-'+sn+':'+(bs?'CLICK':'NOBTN')+'-'+st);
-    },400);
-  },900); }
+  if(q.get('screen')&&mode!=='battle'){ (function(){   /* v230: 직접 강제 개방 — 실버튼 클릭(동적 오버레이 생성) 후 감시 루프로 개방 유지 */
+    var SM={hof:'명예의 전당',profile:'프로필',relic:'유물',skill:'전술 연구소',info:'게임 방법'};
+    var sn=q.get('screen'), tries=0;
+    function visOv(){ var l=[].slice.call(document.querySelectorAll('[id^="overlay-"]')).filter(function(o){return !o.classList.contains('hidden')&&o.offsetWidth>60&&o.offsetHeight>60;}); return l[0]||null; }
+    function keep(){ var o=visOv(); if(o){ setInterval(function(){ try{ o.classList.remove('hidden'); }catch(e){} },300); set('SCREEN-'+sn+':OPEN:'+(o.id||'anon')); return true; } return false; }
+    function attempt(){ tries++;
+      var btn=[].slice.call(document.querySelectorAll('#screen-title button,#title-actions button')).filter(function(b){return vis(b)&&(b.textContent||'').indexOf(SM[sn])>=0;})[0];
+      if(btn){ try{ btn.click(); }catch(e){} ['pointerdown','mousedown','pointerup','mouseup','click'].forEach(function(t){ try{ btn.dispatchEvent(new Event(t,{bubbles:true,cancelable:true})); }catch(e){} }); }
+      setTimeout(function(){ if(keep()) return; if(tries<10){ setTimeout(attempt,400); } else { set('SCREEN-'+sn+':FAIL'); } },450);
+    }
+    setTimeout(attempt,350);
+  })(); }
+  if(q.get('screen')==='codex'){ (function(){   /* v230: 도감 섹션 강제 표시 — ui-patch display:none 무력화 */
+    var tries=0;
+    function go(){ tries++; var cx=document.getElementById('codex')||document.querySelector('#screen-title .t-codex,#screen-title .cards-sec');
+      if(cx){ try{ cx.style.setProperty('display','block','important'); cx.scrollIntoView({block:'start'}); }catch(e){} set('SCREEN-codex:SHOWN'); }
+      else if(tries<10){ setTimeout(go,400); } else { set('SCREEN-codex:FAIL'); } }
+    setTimeout(go,400);
+  })(); }
   if(mode==='deck'){ setTimeout(function(){
     var db=document.getElementById('btn-deck-edit')||[].slice.call(document.querySelectorAll('#screen-title button')).filter(function(b){return /덱 편성/.test(b.textContent||'')})[0];
     if(!db){ set(mode+' DECK:FAIL(no-btn)'); return; }
@@ -114,6 +110,7 @@ function runBattle(cb){
   },600); return; }
 setTimeout(function(){
   if(mode==='battle'){runBattle(function(r){report(r);if(q.get('quit')==='1')quitBattle();});return;}
+  if(q.get('screen')){return;}   /* v230: screen 모드 — 순회 금지 */
   var btns=walkButtons(),i=0,opened=0;
   function step(){
     if(i>=btns.length){
