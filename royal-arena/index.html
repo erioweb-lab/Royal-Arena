@@ -1154,7 +1154,7 @@ html body .theme-row .t-btn{height:34px !important;font-size:11px !important;lin
 html body .t-links button, html body #btn-deck-random, html body #btn-deck-edit{background:linear-gradient(180deg,rgba(14,34,61,.95),rgba(10,22,40,.95)) !important;border:1px solid #c89b3c !important;border-radius:14px !important;color:#f2f6ff !important;font-weight:700 !important;line-height:1.2 !important;text-shadow:none !important;min-height:34px !important;display:flex !important;align-items:center !important;justify-content:center !important;overflow:hidden !important;text-overflow:ellipsis !important;white-space:nowrap !important;padding:4px 8px !important}
 html body #deck-edit{padding-bottom:150px !important}
 </style>
-<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v257</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v258</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1583,6 +1583,12 @@ html body #deck-edit .rpanel>div:first-child #dk-copy{min-height:38px !important
 html body #deck-edit .rpanel>div:first-child button[data-slot]{width:auto !important;min-width:76px !important}
 html body #deck-edit .rpanel>div:first-child #dk-copy{flex:0 0 100% !important;max-width:220px !important;margin:2px auto 0 !important;white-space:nowrap !important}
 html body #deck-edit .rpanel>div:first-child span:last-child{flex:0 0 100% !important}
+</style>
+<style id="ui-v258">
+/* v258: 덱슬롯 2행 재구성(빌더 수복) — 제목행/슬롯행(3개 전용)/복사행/평균행 분리 확정 */
+html body #deck-edit>div:nth-of-type(2){flex-wrap:nowrap !important;justify-content:center !important;gap:8px !important}
+html body #deck-edit>div:nth-of-type(2) button[data-slot]{min-width:0 !important;padding:5px 6px !important}
+html body #deck-edit #dk-copy{min-width:132px !important}
 </style>
 </body>
 </html>

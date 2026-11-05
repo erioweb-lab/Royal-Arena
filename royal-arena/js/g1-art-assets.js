@@ -329,11 +329,15 @@ function openDeckEditor(){
   document.head.appendChild(style);
   function render(){
     const cost=Math.round(deck.reduce((a,k)=>a+CARDS[k].cost,0)/deck.length*10)/10;
-    ov.innerHTML='<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center;margin-top:4px">'+
-     '<span style="font-family:Jua,sans-serif;font-size:21px;color:#f7c531;white-space:nowrap">🃏 덱 편성</span>'+
-      DECK_SLOTS.map((_,n)=>'<button class="dk'+(n===slot?' on':'')+'" data-slot="'+n+'"><div class="dke">'+(n===0?'🅰':(n===1?'🅱':'🅲'))+'</div><div class="dkn">덱 슬롯 '+(n+1)+'</div></button>').join('')+
-      '<button class="dk" id="dk-copy" style="padding:6px 10px;font-size:11px">📋 슬롯'+((slot+1)%3+1)+' 복사</button>'+
-      '<span style="font-family:Jua,sans-serif;color:#c3d2f2;font-size:13px">평균 엘릭서 '+cost+' · 슬롯 '+(slot+1)+' 편집 중</span></div>'+
+    ov.innerHTML='<div style="display:flex;gap:8px;align-items:stretch;justify-content:center;margin-top:4px">'+
+     '</div>'+
+   '<div style="text-align:center;margin-top:2px"><span style="font-family:Jua,sans-serif;font-size:21px;color:#f7c531;white-space:nowrap">🃏 덱 편성</span></div>'+
+   '<div style="display:flex;gap:8px;align-items:stretch;justify-content:center;margin-top:4px">'+
+      DECK_SLOTS.map((_,n)=>'<button class="dk'+(n===slot?' on':'')+'" data-slot="'+n+'"><div class="dke">'+(n===0?'🅰':(n===1?'🅱':'🅲'))+'</div><div class="dkn">덱 슬롯 '+(n+1)+'</div></button>').join('')+'</div>'+
+   '<div style="display:flex;justify-content:center;margin-top:6px"><button class="dk" id="dk-copy" style="padding:6px 12px;font-size:11px;white-space:nowrap">📋 슬롯'+((slot+1)%3+1)+' 복사</button></div>'+
+   '<div style="font-family:Jua,sans-serif;color:#c3d2f2;font-size:13px;margin-top:4px;text-align:center">평균 엘릭서 '+cost+' · 슬롯 '+(slot+1)+' 편집 중</div>'+
+      
+      
      '<div style="font-family:Jua,sans-serif;color:#dfe8ff;font-size:14px;margin-top:8px">전투 덱 '+deck.length+'/8 — 카드를 누르면 빠짐</div>'+
      '<div style="display:flex;flex-wrap:wrap;justify-content:center;max-width:560px">'+deck.map(k=>
        '<div class="dk" data-rm="'+k+'"><div class="dke">'+(ART[k]?'<img class="art" style="width:34px" src="'+ART[k]+'">':CARDS[k].emoji)+'</div><div class="dkn">'+CARDS[k].name+'</div><div class="dkc">'+CARDS[k].cost+'</div></div>').join('')+'</div>'+
