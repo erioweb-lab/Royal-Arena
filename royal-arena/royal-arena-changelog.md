@@ -1,3 +1,4 @@
+- v253(사용자 지적·하단 빈 공간): 덱편성 패널의 액션바가 콘텐츠 뒤 흐름 배치라 바 아래 630px(26%) 빈 검은 영역 방치 → 액션바 패널 하단 고정(margin-top:auto)·카드풀 영역 flex:1 흡수·패딩 200→12px 정상화. 감사 누락 원인: 판정 프롬프트가 잘림·겹침 등 부정 요소 중심(빈 공간 낭비 미포함)+캡처 뷰포트 600px가 캡 높이와 동일해 기기 실효 높이의 낭비 재현 불가. 칩·sw v253
 - v252: GEO 실측 최종 — rsubR 365>360 해소(rpanel 중앙정렬+폭 330 제약)·슬롯 .dke 20px+min-width 84px(LBL-trunc 0 목표)·SLOTGEO 토큰 deck return 전 이동. 칩·sw v252
 - v251(실측 기반 수복): RSUBGEO 실측에서 .rpanel 폭 375>뷰포트 360(rsub 우측 378px 화면 밖) 확정 → max-width calc(100vw-12px)+min-width 0 제약 / 덱슬롯 LBL-trunc:3(드라이버 공식 측정) → 라벨 nowrap+폰트 10px+min-width 74px. 칩·sw v251
 - v249(이중검증 최종): 오버레이 .rsub 설명 잘림 제압(rsub 고유 규칙 무력화·keep-all)·덱 슬롯 라벨 높이 자동+2줄 완전 표기. 덱편성 카드명·마지막 행은 v248로 수복 완료. 칩·sw v249
