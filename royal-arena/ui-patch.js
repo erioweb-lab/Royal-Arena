@@ -962,33 +962,7 @@
       setImp(startBtn, 'box-shadow', '0 4px 14px rgba(255, 143, 0, 0.4)');
     }
 
-    // 2. 메인 화면 덱 1 / 덱 2 선택 강조
-    const deckPick = document.getElementById('deck-pick');
-    if (deckPick) {
-      Array.from(deckPick.children).forEach(card => {
-        const __sel = (card.textContent || '').trim().includes('선택됨') || card.classList.contains('on') || card.classList.contains('active');
-        if (card.__raP && card.__raSel === __sel) return;
-        card.__raP = 1; card.__raSel = __sel;
-        const txt = (card.textContent || '').trim();
-        const isSelected = txt.includes('선택됨') || card.classList.contains('on') || card.classList.contains('active');
-        setImp(card, 'width', '100%');
-        setImp(card, 'min-height', '52px');
-        setImp(card, 'padding', '8px 14px');
-        setImp(card, 'border-radius', '14px');
-        if (isSelected) {
-          setImp(card, 'background', 'linear-gradient(135deg, rgba(66, 50, 18, 0.92) 0%, rgba(26, 38, 68, 0.96) 100%)');
-          setImp(card, 'border', '2px solid #ffd54f');
-          setImp(card, 'box-shadow', '0 0 14px rgba(255, 213, 79, 0.3)');
-          setImp(card, 'opacity', '1');
-        } else {
-          setImp(card, 'background', 'rgba(13, 22, 42, 0.72)');
-          setImp(card, 'border', '1px solid rgba(148, 163, 184, 0.25)');
-          setImp(card, 'box-shadow', 'none');
-          setImp(card, 'opacity', '0.68');
-        }
-        card.querySelectorAll('*').forEach(ch => cleanFont(ch, '700'));
-      });
-    }
+    /* v228: 덱1/덱2 스타일러 제거 — 주기 접점 소멸. 스타일은 셸 CSS+g2 재생성 렌더러로 일원화 */
 
     // 3. 메인 하단 메뉴 버튼 컬러 & 정렬
     document.querySelectorAll('#title-actions > *, .t-links button, #btn-info').forEach(btn => {
