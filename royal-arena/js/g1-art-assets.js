@@ -222,7 +222,6 @@ const AUTO=false; // 테스트용 자동 시작 플래그 (?auto=1로도 활성�
 /* ---------- 사운드 (WebAudio 합성) ---------- */
 let AC=null;
 function ensureAudio(){
-  if(!AC){ try{ AC=new (window.AudioContext||window.webkitAudioContext)(); if(AC){ const __cp=AC.createDynamicsCompressor(); __cp.threshold.value=-20; __cp.knee.value=40; __cp.ratio.value=12; __cp.attack.value=0; __cp.release.value=0.25; __cp.connect(AC.destination); window.__COMP=__cp; } }catch(e){ AC=null; } }   /* v162 마스터 컴프레서 */
   if(AC && AC.state==='suspended') AC.resume();
 }
 function tone(f,d,type,v,slide){
@@ -300,7 +299,7 @@ function toast(txt,ms){
 
 /* ---------- 덱 사이클 ---------- */
 function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=(Math.random()*(i+1))|0; [a[i],a[j]]=[a[j],a[i]]; } return a; }
-const DECK_SLOTS=['ra_deck_slot1','ra_deck_slot2','ra_deck_slot3'];   /* v218: 슬롯 3 추가 */
+const DECK_SLOTS=['ra_deck_slot1','ra_deck_slot2'];   /* v262: 슬롯 3 제거 — activeSlot()이 1·2만 사용하는 유령 슬롯 */
 const DECK_DEFAULTS=[['knight','archers','giant','minions','musketeer','fireball','skarmy','cannon'],
                      ['prince','wizard','sniper','valk','boar','bomber','babyd','cleric']];
 function loadDeckSlot(n){ try{ if(typeof localStorage==='undefined') return null;
@@ -332,7 +331,7 @@ function openDeckEditor(){
     ov.innerHTML=
    '<div style="text-align:center;margin-top:2px"><span style="font-family:Jua,sans-serif;font-size:21px;color:#f7c531;white-space:nowrap">🃏 덱 편성</span></div>'+
    '<div style="display:flex;gap:8px;align-items:stretch;justify-content:center;margin-top:4px">'+
-      DECK_SLOTS.slice(0,2).map((_,n)=>'<button class="dk'+(n===slot?' on':'')+'" data-slot="'+n+'"><div class="dke">'+(n===0?'🅰':(n===1?'🅱':'🅲'))+'</div><div class="dkn">덱 슬롯 '+(n+1)+'</div></button>').join('')+'<button class="dk" id="dk-copy" style="padding:6px 12px;font-size:11px;white-space:nowrap;align-self:center">📋 슬롯'+((slot+1)%2+1)+' 복사</button></div>'+
+      DECK_SLOTS.map((_,n)=>'<button class="dk'+(n===slot?' on':'')+'" data-slot="'+n+'"><div class="dke">'+(n===0?'🅰':(n===1?'🅱':'🅲'))+'</div><div class="dkn">덱 슬롯 '+(n+1)+'</div></button>').join('')+'</div>'+
 
    '<div style="font-family:Jua,sans-serif;color:#c3d2f2;font-size:13px;margin-top:6px;padding-bottom:3px;line-height:1.45;text-align:center">평균 엘릭서 '+cost+' · 슬롯 '+(slot+1)+' 편집 중</div>'+
       
@@ -347,7 +346,6 @@ function openDeckEditor(){
       '<button id="dk-save" class="dk-act">💾 저장</button>'+
       '<button id="dk-close" class="dk-sub">닫기</button></div>';
     ov.querySelectorAll('[data-slot]').forEach(b=>b.onclick=()=>{ slot=parseInt(b.dataset.slot,10); deck=(loadDeckSlot(slot)||DECK.slice(0,8)).slice(); render(); });
-    var __cp=ov.querySelector('#dk-copy'); if(__cp) __cp.onclick=()=>{ try{ var __src=JSON.parse(localStorage.getItem(DECK_SLOTS[(slot+1)%2])||'null'); if(__src&&__src.length===8){ deck=__src.slice(); render(); toast('슬롯 '+(((slot+1)%2)+1)+' 덱을 복사했어요'); sfx('tap'); } else toast('복사할 덱이 없어요'); }catch(e){} };   /* v222: 슬롯 간 덱 복사 */
     ov.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{ deck=deck.filter(k=>k!==b.dataset.rm); render(); });
     ov.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>{ if(deck.includes(b.dataset.add)) return;
       if(deck.length>=8) deck.shift(); deck.push(b.dataset.add); render(); });
