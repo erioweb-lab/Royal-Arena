@@ -1153,7 +1153,7 @@ html body .theme-row .t-btn{height:34px !important;font-size:11px !important;lin
 html body .t-links button, html body #btn-deck-random, html body #btn-deck-edit{background:linear-gradient(180deg,rgba(14,34,61,.95),rgba(10,22,40,.95)) !important;border:1px solid #c89b3c !important;border-radius:14px !important;color:#f2f6ff !important;font-weight:700 !important;line-height:1.2 !important;text-shadow:none !important;min-height:34px !important;display:flex !important;align-items:center !important;justify-content:center !important;overflow:hidden !important;text-overflow:ellipsis !important;white-space:nowrap !important;padding:4px 8px !important}
 html body #deck-edit{padding-bottom:150px !important}
 </style>
-<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v265</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v266</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1632,6 +1632,22 @@ html body #deck-edit [data-rm] .dke,html body #deck-edit [data-add] .dke{font-si
 html body #deck-edit [data-rm] .dkn,html body #deck-edit [data-add] .dkn{font-size:8.5px !important;line-height:1.1 !important}
 html body #deck-edit [data-rm] .art,html body #deck-edit [data-add] .art{width:20px !important}
 html body #deck-edit>div:nth-of-type(6){margin-top:4px !important}
+</style>
+<style id="ui-v266">
+/* v266: 무스크롤 최종 — v265 실측 sh677>ch598(−79px 필요) 회수: 풀 그리드 auto-fit 7열화(행 수 축소)+타이틀·간격·카드 추가 축소 */
+html body #deck-edit>div:nth-of-type(7){grid-template-columns:repeat(auto-fill,minmax(44px,1fr)) !important;gap:3px !important;max-width:none !important}
+html body #deck-edit>div:nth-of-type(1) span{font-size:18px !important}
+html body #deck-edit>div:nth-of-type(2){margin-top:0 !important}
+html body #deck-edit>div:nth-of-type(3){margin-top:2px !important;padding-bottom:0 !important}
+html body #deck-edit>div:nth-of-type(4){margin-top:4px !important}
+html body #deck-edit [data-rm],html body #deck-edit [data-add]{padding:2px 2px !important;margin:1px !important}
+html body #deck-edit [data-rm] .dke,html body #deck-edit [data-add] .dke{font-size:14px !important}
+html body #deck-edit [data-rm] .art,html body #deck-edit [data-add] .art{width:18px !important}
+html body #deck-edit [data-rm] .dkn,html body #deck-edit [data-add] .dkn{font-size:8px !important}
+html body #deck-edit [data-rm] .dkc,html body #deck-edit [data-add] .dkc{font-size:9px !important}
+html body #deck-edit>div:nth-of-type(6){font-size:11.5px !important;margin-top:4px !important;line-height:1.3 !important}
+html body #deck-edit>div:nth-of-type(6) span{font-size:10px !important}
+html body #deck-edit>div:last-of-type{margin-top:4px !important}
 </style>
 </body>
 </html>
