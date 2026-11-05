@@ -76,12 +76,19 @@ function runBattle(cb){
   },3800);
 }
   if(q.get('screen')&&mode!=='battle'){ setTimeout(function(){
-    var SM={hof:'명예의 전당',profile:'프로필',relic:'유물',skill:'전술 연구소',info:'게임 방법'};
-    var sn=q.get('screen'), lb=SM[sn];
-    var bs=lb?[].slice.call(document.querySelectorAll('#screen-title button')).filter(function(b){return vis(b)&&(b.textContent||'').indexOf(lb)>=0;})[0]:null;
+    var SM={hof:['명예의 전당','overlay-hof'],profile:['프로필','overlay-profile'],relic:['유물','overlay-relic'],skill:['전술 연구소','overlay-skill'],info:['게임 방법','overlay-info']};
+    var sn=q.get('screen'), cfg=SM[sn];
+    if(sn==='codex'){ var cx=document.getElementById('codex'); if(cx){ try{cx.scrollIntoView({block:'start'});}catch(e){} set('SCREEN-codex:SCROLLED'); } else set('SCREEN-codex:FAIL'); return; }
+    var bs=cfg?[].slice.call(document.querySelectorAll('#screen-title button')).filter(function(b){return vis(b)&&(b.textContent||'').indexOf(cfg[0])>=0;})[0]:null;
     if(bs) clickEl(bs);
-    set('SCREEN-'+sn+':'+(bs?'CLICKED':'NO-BTN'));
-  },800); }
+    setTimeout(function(){
+      var ov=cfg?document.getElementById(cfg[1]):null, st;
+      if(!ov) st='FAIL';
+      else if(!ov.classList.contains('hidden')) st='OPEN';
+      else { ov.classList.remove('hidden'); st='FORCED'; }
+      set('SCREEN-'+sn+':'+(bs?'CLICK':'NOBTN')+'-'+st);
+    },400);
+  },900); }
   if(mode==='deck'){ setTimeout(function(){
     var db=document.getElementById('btn-deck-edit')||[].slice.call(document.querySelectorAll('#screen-title button')).filter(function(b){return /덱 편성/.test(b.textContent||'')})[0];
     if(!db){ set(mode+' DECK:FAIL(no-btn)'); return; }
