@@ -12,7 +12,7 @@ for(const m of body.matchAll(/(\w+):\s*\{name:'([^']+)'/g)){
   const n=cnt?+cnt:1, sw=Math.sqrt(n);   /* v211: 다중 스폰 √count 감쇠(뗴전 AOE 취약 반영) */
   rows.push({key:m[1],name:m[2],cost:+cost,unit,eff:unit?Math.round(((+hp*0.3)+((+dmg/+hs)*12))*sw/(+cost)):0});
 }
-const WLIST={greed:'트레이드오프 특례(최소 체력 보상)'};   /* v211: 의도된 특례 */
+const WLIST={greed:'트레이드오프 특례(최소 체력 보상)',fort:'트레이드오프 특례(견고·약화력)'};   /* v211: 의도된 특례 */
 const units=rows.filter(r=>r.unit);
 const med=a=>{const s=[...a].sort((x,y)=>x-y);return s[Math.floor(s.length/2)];};
 const mEff=med(units.map(r=>r.eff));
