@@ -106,7 +106,7 @@ function runBattle(cb){
   if(mode==='deck'){ setTimeout(function(){ try{ var out=[];   /* v250: 덱슬롯 지오메트리 실측 */
     [].slice.call(document.querySelectorAll('#deck-edit button[data-slot]')).forEach(function(b,i){ out.push('s'+i+':h'+b.offsetHeight+'/sh'+b.scrollHeight+'/w'+b.clientWidth+'/sw'+b.scrollWidth); });
     var de=document.getElementById('deck-edit'); if(de){ out.push('de:sw'+de.scrollWidth+'/cw'+de.clientWidth+'/pb'+getComputedStyle(de).paddingBottom); }
-    set('SLOTGEO:'+out.join(' | '));
+    set('SLOTGEO:'+out.join(' | '));   /* v253: 지연 후 출력 */
   }catch(e){ set('SLOTGEO:err'); } },1500); }
   if(mode==='deck'){ setTimeout(function(){
     var db=document.getElementById('btn-deck-edit')||[].slice.call(document.querySelectorAll('#screen-title button')).filter(function(b){return /덱 편성/.test(b.textContent||'')})[0];
