@@ -356,11 +356,30 @@ try{ (function(){ var iv=setInterval(function(){
   ov.insertBefore(bar, ov.firstChild.nextSibling||ov.firstChild);
  },600); })(); }catch(e){}
 
+/* v212: 선택형 이벤트 노드 + 인런 렐릭(다음 배틀 1회) */
+try{ (function(){ var EV=[
+ {t:'📦 보물 상자', d:'나무 상자가 반짝인다.', a:['안전 회수 — 금고','relic_hoard'], b:['도박 — 확률 강화','relic_gamble']},
+ {t:'🧙 전술 상담', d:'노병이 전술서를 내민다.', a:['공세 중시','relic_frenzy'], b:['방벽 중시','relic_bulwark']},
+ {t:'🏕️ 급행 훈련', d:'훈련관이 두 코스를 제안한다.', a:['기동 중시','relic_sprint'], b:['재생 중시','relic_mend']},
+ {t:'🎭 수수께끼 상인', d:'가면 상인이 거래를 제안한다.', a:['도박 — 확률 강화','relic_gamble'], b:['거절','null']}];
+ var iv2=setInterval(function(){ var ov=document.getElementById('overlay-result'); if(!ov) return;
+  if(ov.classList.contains('hidden')){ var m0=document.getElementById('overlay-event'); if(m0) m0.remove(); window.__raEvSeen=false; return; }
+  if(window.__raEvSeen) return; window.__raEvSeen=true; if(Math.random()>=0.30) return;
+  var ev=EV[Math.floor(Math.random()*EV.length)];
+  var m=document.createElement('div'); m.id='overlay-event'; m.style.cssText='position:fixed;inset:0;z-index:120;background:rgba(5,8,18,.9);display:flex;align-items:center;justify-content:center';
+  var box=document.createElement('div'); box.style.cssText='width:min(340px,88vw);background:linear-gradient(180deg,#152544,#0b1426);border:1.5px solid rgba(255,202,40,.65);border-radius:16px;padding:16px;text-align:center;font-family:Jua,sans-serif';
+  box.innerHTML='<div style="font-size:19px;color:#f7c531;margin-bottom:6px">'+ev.t+'</div><div style="font-size:12.5px;color:#c3d2f2;margin-bottom:10px">'+ev.d+'</div><div style="font-size:11px;color:#9fb3dd;margin-bottom:10px">선택 시 다음 배틀 1회에만 적용</div>';
+  [['a'],['b']].forEach(function(p){ var opt=ev[p[0]], btn=document.createElement('button'); btn.textContent=opt[0]; btn.className='dk-act'; btn.style.cssText='display:block;width:100%;margin:6px 0;font-family:Jua,sans-serif';
+   btn.onclick=function(){ if(opt[1]!=='null'){ try{ localStorage.setItem('ra_relic_inrun_v1',opt[1]); }catch(e){} toast('인런 렐릭: '+opt[0]); } sfx('tap'); m.remove(); }; box.appendChild(btn); });
+  m.appendChild(box); document.body.appendChild(m);
+ },700); })(); }catch(e){}
+
 /* v208: 난이도 3단계(영구 저장) + P13 배치 구역 하이라이트 */
 try{ (function(){
   window.__raDIFF={name:['보통','악몽','지옥'],col:['#67d98a','#e0a13c','#e05c6e'],hp:[1,1.25,1.55],dmg:[1,1.15,1.35]};   /* v210: 단일 진실원 통합 */
   window.__raDiffHp=function(){ var d=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; return __raDIFF.hp[d]||1; };
   window.__raDiffDmg=function(){ var d=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; return __raDIFF.dmg[d]||1; };
+  window.__raWaveHp=function(el){ try{ if(typeof el!=='number'){ var S0=(typeof S!=='undefined'&&S)?S:0; el=S0?Math.max(0,180-(S0.t||180)):0; } return 1+0.10*Math.pow(el/60,1.8); }catch(e){ return 1; } };   /* v212: 웨이브 HP 이중 곡선 — 경과 180s 최대 ×1.9 */
   var DN=__raDIFF.name, DC=__raDIFF.col;
   var iv=setInterval(function(){ var ta=document.getElementById('title-actions'); if(!ta) return; clearInterval(iv);
     var b=document.createElement('button'); b.id='btn-diff';
@@ -379,12 +398,12 @@ try{ (function(){
 /* ---------- 타워 생성 (REA 설계도 §2) ---------- */
 function mkTower(team,kind,x,y){
   const st= kind==='king' ? {hp:2600,dmg:60,hs:1.0,range:7.0,r:1.6} : {hp:1400,dmg:55,hs:0.8,range:7.5,r:1.3};
-  if(team==='blue'){ try{ var __cl2=parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)+1; if(__cl2>0) st.hp=Math.round(st.hp*(1+0.06*__cl2)); }catch(__e){} }   /* v209: 영구 강화 — 성벽 HP(토벌 단계당 +6%, castleHpBonus 프레임) */
+  if(team==='blue'){ try{ var __cl2=parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)+1; if(__cl2>0) st.hp=Math.round(st.hp*(1+0.06*__cl2)); if(S&&S.__rin==='relic_bulwark') st.hp=Math.round(st.hp*1.3); if(S&&S.__rin==='relic_frenzy') st.hp=Math.round(st.hp*0.9); }catch(__e){} }   /* v209 영구 강화 + v212 인런 방벽·공세 */
   return {isTower:true, kind, team, x, y, hp:st.hp, maxHp:st.hp, dmg:st.dmg, hs:st.hs, range:st.range, r:st.r, cd:0, dead:false, active:kind!=='king'};
 }
 function spawnBossNow(){ if(S.bossSpawned||S.over) return; S.bossSpawned=true;
     const kt=towers.find(t=>t.team==='blue'&&t.kind==='king'&&!t.dead);
-    if(kt){ const BU={key:'boss',team:'red',x:9,y:3.2,c:BOSS_STATS,hp:BOSS_STATS.hp,maxHp:BOSS_STATS.hp,shield:900,cd:1.2,dir:Math.PI/2,dead:false,swing:0,bob:1,spawnFx:0.45,doom:0,chargeT:0};
+    if(kt){ const BU={key:'boss',team:'red',x:9,y:3.2,c:BOSS_STATS,hp:Math.round(BOSS_STATS.hp*__raDiffHp()),maxHp:Math.round(BOSS_STATS.hp*__raDiffHp()),   /* v212: 보스 난이도 연동 */shield:900,cd:1.2,dir:Math.PI/2,dead:false,swing:0,bob:1,spawnFx:0.45,doom:0,chargeT:0};
       BU.target=kt; units.push(BU); S.boss=BU; ensureKsBtn(); banner('💀 부활한 왕이 강림했다!',2200); sfx('boomL'); } }   /* v192: 보스 강림(최상위 — 타워 파괴·타이머 폴백 공용) */
 
 
@@ -421,7 +440,7 @@ function spawnCard(key,team,x,y){ try{ tutOnSpawn(key,team); }catch(e){}   /* v1
   var __cL=1; try{ __cL=(team==='blue')?__cLv(key):1; }catch(__e){}   /* v185: 카드 레벨 시스템 */
   var __m=1+0.04*(__cL-1);
   const cc=(__m>1)?Object.assign({},c,{hp:Math.round(c.hp*__m),dmg:Math.round((c.dmg||0)*__m)}):c;   /* CARDS 원본 보존 — 유닛별 클론 */
-  var __dm=(team==='red')?__raDiffHp():1;   /* v208: 난이도 배율 — 적 스폰 HP */
+  var __dm=(team==='red')?__raDiffHp()*__raWaveHp():1;   /* v208 난이도 + v212 웨이브 곡선 */
   var __sh=0,__hl=false,__sp=false; if(team==='red'&&!c.kind&&key!=='boss'){ var __tq=Math.random(); if(__tq<0.08){ __sh=Math.round(cc.hp*0.3); } else if(__tq<0.15){ __hl=true; } else if(__tq<0.22){ __sp=true; } }   /* v209: 적 특성 패턴 — 실드·힐러·분열 */
   for(const o of formation(c.count||1)){
     let ux=clamp(x+o[0],0.7,COLS-0.7), uy=clamp(y+o[1],0.7,ROWS-0.7);
@@ -481,7 +500,7 @@ function moveUnit(u,dt){
     else { gx=bx; gy=u.y<RIVER_MID? RIVER_Y0-0.7 : RIVER_Y1+0.7; }
   }
   const a=Math.atan2(gy-u.y,gx-u.x); u.dir=a;
-  const sp=u.c.spd*(u.charging?1.7:1)*(u.slowT>0?0.55:1);
+  const sp=u.c.spd*(u.charging?1.7:1)*(u.slowT>0?0.55:1)*(u.team==='blue'&&S.__rin==='relic_sprint'?1.15:1);   /* v212: 기동의 인장 */
   let nx=u.x+Math.cos(a)*sp*dt, ny=u.y+Math.sin(a)*sp*dt;
   if(!u.c.flying&&ny>RIVER_Y0-0.25&&ny<RIVER_Y1+0.25){
     const onB=BRIDGES.some(b=>Math.abs(nx-b)<0.75);
@@ -572,6 +591,7 @@ function updateUnit(u,dt){
       if(u.hp<=0){ u.hp=0; u.dead=true; killUnit(u,false); return; } } }
   if(u.slowT>0) u.slowT-=dt;
   if(u.healer&&!u.dead&&u.hp<u.maxHp) u.hp=Math.min(u.maxHp,u.hp+10*dt);   /* v209: 힐러 특성 — 자가 재생 10/s */
+  if(u.team==='blue'&&S.__rin==='relic_mend'&&!u.dead&&u.hp<u.maxHp) u.hp=Math.min(u.maxHp,u.hp+2*dt);   /* v212: 재생의 인장 */
   if(u.stun>0){ u.stun-=dt; u.swing=0; return; }
   if(u.frozenT>0){ u.frozenT-=dt; u.swing=0; if(Math.random()<0.15) addParts(u.x,u.y-0.3,1,'#b4ebff',1.0,0.5,-15);   /* v195: 빙결 파편 */ return; }   /* v138: 빙결 — 이동·공격 불가, 콤보 원소 1로 계수 */
   if(u.building){ // 캐논(건물): 고정, 수명 있음
@@ -715,6 +735,7 @@ function dealDamage(e,dmg,fromTeam,fromSpell){
    // v114: fromSpell — 주문(파이어볼·자패) 피해는 줌인 유발 없음, 일반 유닛 교전만 줌인
   if(S&&S.relic==='relic_atk'&&fromTeam==='blue'&&e&&e.team==='red'&&!e.isTower) dmg=Math.round(dmg*1.1);   // v109 #13: 유물 — 전투 문장
   if(fromTeam==='blue'&&e&&e.team==='red'&&!e.isTower&&fromSpell!==true) dmg=Math.round(dmg*(1+0.08*((S._sk&&S._sk.off1)||0)+0.06*((S._sk&&S._sk.off2)||0)+0.12*((S._sk&&S._sk.off3)||0)));   // v119: 스킬트리 공세 계통 — 일반 유닛 공격만(주문 제외)
+  var __rinM=1; if(S.__rin==='relic_frenzy') __rinM*=1.15; if(S.__rin==='relic_bulwark') __rinM*=0.9; if(S.__rin==='relic_gamble') __rinM*=(S.__rinRoll||1); if(fromTeam==='blue'&&e&&!e.isTower&&__rinM!==1) dmg=Math.round(dmg*__rinM);   /* v212: 인런 렐릭 — 공세·방벽·도박 */
   if(e.dead) return;
   if(fromTeam==='red'&&e&&!e.isTower) dmg=Math.round(dmg*__raDiffDmg());   /* v208: 난이도 — 적 공격력 배율 */
   var __st=((e.burnT>0)?1:0)+((e.slowT>0)?1:0)+((e.stun>0)?1:0)+((e.frozenT>0)?1:0);
@@ -742,7 +763,7 @@ function dealDamage(e,dmg,fromTeam,fromSpell){
     if(fromTeam&&S.kills&&!e.isTower) S.kills[fromTeam]++;
     if(!e.isTower&&S.deaths&&e.team) S.deaths[e.team]=(S.deaths[e.team]||0)+1;   // v99 P8: 데스 집계
   if(e.isTower&&e.kind==='king'&&fromTeam==='blue'){ try{ var __cd0=parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)||-1; var __dc0=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; if(__dc0>__cd0) localStorage.setItem('ra_diff_clear_v1',String(__dc0)); }catch(__e){} }   /* v209: 난이도 토벌 기록 — 다음 난이도 해금 */
-  if(fromTeam==='blue'&&!e.isTower){ try{ var __kg=parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)+1; if(typeof P!=='undefined'&&P&&typeof P.elixir==='number') P.elixir=Math.min(10,P.elixir+0.04*(1+Math.max(0,__kg))); }catch(__e){} }   /* v209: 처치 보상 — 킬 엘릭서(토벌 단계 계수, killGoldBonus 프레임) */
+  if(fromTeam==='blue'&&!e.isTower){ try{ var __kg=parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)+1; if(typeof P!=='undefined'&&P&&typeof P.elixir==='number') P.elixir=Math.min(10,P.elixir+0.04*(1+Math.max(0,__kg))*(S&&S.__rin==='relic_hoard'?2:1));   /* v212: 금고의 인장 — 보상 2배 */ }catch(__e){} }   /* v209: 처치 보상 — 킬 엘릭서(토벌 단계 계수, killGoldBonus 프레임) */
   if(!e.isTower&&e.split&&e.team==='red'){ setTimeout(function(){ try{ if(S.over) return; var __sc=Object.assign({},CARDS.minions,{hp:70,dmg:22,name:'분열체',count:1}); for(var __si=0;__si<2;__si++){ units.push({id:uid++, key:'minions', team:'red', c:__sc, r:0.32, x:clamp(e.x+(__si?0.35:-0.35),0.7,COLS-0.7), y:clamp(e.y+0.3,0.7,ROWS-0.7), hp:70, maxHp:70, cd:0.4, swing:0, bob:Math.random()*6.28, target:null, spawnFx:0.45, building:false, life:0, dead:false, stun:0, slowT:0, frozenT:0, chargeT:0, charging:false, dir:Math.PI/2}); } }catch(__e){} },60); }   /* v209: 분열 특성 — 사망 시 소형 2체 */
     if(e.isTower) destroyTower(e,fromTeam); else killUnit(e,false); }
 }
@@ -779,7 +800,7 @@ function destroyTower(t,fromTeam){
 function finish(winner){
   try{ document.getElementById('screen-battle').classList.remove('sd-mode'); }catch(e){ }   /* v194 */
   if(S.over) return;
-  S.over=true; S.winner=winner; try{ var __xu=S.__used||{}; var __mx=__cXpMap(); Object.keys(__xu).forEach(function(k){ __mx[k]=(__mx[k]||0)+(winner==='blue'?2:1); }); try{ localStorage.setItem('ra_cardxp_v1',JSON.stringify(__mx)); }catch(__e){} }catch(__e){}   /* v185: 전투 결과 카드 XP — 승 +2/패·무 +1 */
+  S.over=true; S.winner=winner; try{ var __xu=S.__used||{}; var __mx=__cXpMap(); var __lvB={}; Object.keys(__xu).forEach(function(k){ __lvB[k]=__cLv(k); }); Object.keys(__xu).forEach(function(k){ __mx[k]=(__mx[k]||0)+(winner==='blue'?2:1); }); try{ localStorage.setItem('ra_cardxp_v1',JSON.stringify(__mx)); }catch(__e){} var __ups=Object.keys(__xu).filter(function(k){ return __cLv(k)>__lvB[k]; }); if(__ups.length){ var __un=__ups.map(function(k){ return (CARDS[k]||{}).name||k; }).join(', '); try{ localStorage.setItem('ra_lvup_v1',__ups.join(',')); }catch(__e){} setTimeout(function(){ try{ banner('🆙 카드 Lv.UP! '+__un,2400); sfx('crown'); }catch(e){} },500); }   /* v212 P17: Lv.UP 배너 팝업 */ }catch(__e){}   /* v185: 전투 결과 카드 XP — 승 +2/패·무 +1 */
     try{ var __st=spState(); var __g=(winner==='blue')?3:1; __st.sp+=__g; __st.total+=__g; spSave(__st); setTimeout(function(){ toast('🎓 전술 SP +'+__g); },900); }catch(e){}   // v119: 승리 보상 SP — 승리 +3·패배 +1, 영구 저장 S.endTimer=1.4; P.sel=null; syncHand();
   if(winner==='blue') sfx('win'); else if(winner==='red') sfx('lose');
   bgmStop();
@@ -1912,7 +1933,7 @@ function buildHandUI(){
   syncHand();
 }
 function syncHand(){
-  try{ __raZoneHL(dragFrom>=0||P.sel!=null); }catch(e){}   /* v208 P13: 카드 드래그·선택 중 배치 구역 하이라이트 */
+  try{ __raZoneHL(dragFrom>=0||P.sel!=null||(TUT.on&&TUT.step===2)); }catch(e){}   /* v208 P13 + v212: 튜토리얼 배치 단계 상시 */
   try{ if(TUT.on&&(TUT.step===1||TUT.step===4)) setTimeout(tutShow,0); }catch(e){}   /* v147: 핸드 재구성 후 링·디밍 재적용(buildHandUI가 카드 DOM을 재생성하는 결함 수복) */
   for(let i=0;i<4;i++){
     const d=cardEls[i]; if(!d) continue;
@@ -2173,7 +2194,7 @@ function startMatch(){
   try{ if(false&&typeof localStorage!=='undefined'&&localStorage.getItem('ra_tut_done')!=='1'&&!localStorage.getItem('ra_hist_v1')) tutBegin();   /* v176: 튜토리얼 모드 일단 제외 — 재활성 시 if(false&&) 제거 */ }catch(e){}   /* v147: 첫 실행(기록 없음)만 활성 */
   units=[];projs=[];fx=[];floats=[];parts=[];ambient=[];
   S.over=false;S.shown=false;S.winner=null;S.t=300;S.overtime=false;S.double=false;   /* v142: 경기 시간 5분 */
-  try{ DPSW.acc={}; DPSW.cnt={}; DPSW.time=0; DPSW._c=0; dpswEnsure(); }catch(e){}  try{ heroPlxReset(); }catch(e){}   /* v150: 전투 진입 시 패럴럭스 리셋 */S.crowns={blue:0,red:0};   /* v148: 위젯 리셋 */ S.kills={blue:0,red:0}; S.deaths={blue:0,red:0}; S.spells={blue:0,red:0}; S.shake=0; S.clash=null; S.cam={x:W/2,y:H/2,z:1}; S._home={x:W/2,y:H/2,z:1}; S.focus=null; S.slow=0; S.spellQuiet=0; S._sk={}; try{ relayoutHud(); }catch(e){}   // v122: 경기 시작 기둥 배치   // v115: 초기 화면 상태 기억 — 강제 복귀 기준점 + v118: 주문 진정 기간 리셋   // v111: 구 추적 객체 2종 폐지(단일 S.focus만) S.boss=null; S.bossSpawned=false; S.ks=false; S.ksCd=0; S.focusGap=0; S.zHold=0; S._tp=0; S.repCd=0; S.__used={}; try{ syncGradeVisual(); }catch(e){} try{ S.relic=(function(){try{return localStorage.getItem('ra_relic_v1')||''}catch(e){return ''}})(); applyRelics(); applySkills(); }catch(e){}   // v119: 스킬트리 반영
+  try{ DPSW.acc={}; DPSW.cnt={}; DPSW.time=0; DPSW._c=0; dpswEnsure(); }catch(e){}  try{ heroPlxReset(); }catch(e){}   /* v150: 전투 진입 시 패럴럭스 리셋 */S.crowns={blue:0,red:0};   /* v148: 위젯 리셋 */ S.kills={blue:0,red:0}; S.deaths={blue:0,red:0}; S.spells={blue:0,red:0}; S.shake=0; S.clash=null; S.cam={x:W/2,y:H/2,z:1}; S._home={x:W/2,y:H/2,z:1}; S.focus=null; S.slow=0; S.spellQuiet=0; S._sk={}; S.__rin=(function(){try{var r=localStorage.getItem('ra_relic_inrun_v1'); if(r) localStorage.removeItem('ra_relic_inrun_v1'); return r;}catch(e){return null;}})(); S.__rinRoll=(S.__rin==='relic_gamble')?(Math.random()<0.5?1.25:0.85):1;   /* v212: 인런 렐릭 소비(1회) */ try{ relayoutHud(); }catch(e){}   // v122: 경기 시작 기둥 배치   // v115: 초기 화면 상태 기억 — 강제 복귀 기준점 + v118: 주문 진정 기간 리셋   // v111: 구 추적 객체 2종 폐지(단일 S.focus만) S.boss=null; S.bossSpawned=false; S.ks=false; S.ksCd=0; S.focusGap=0; S.zHold=0; S._tp=0; S.repCd=0; S.__used={}; try{ syncGradeVisual(); }catch(e){} try{ S.relic=(function(){try{return localStorage.getItem('ra_relic_v1')||''}catch(e){return ''}})(); applyRelics(); applySkills(); }catch(e){}   // v119: 스킬트리 반영
   P.elixir=5;A.elixir=5;A.timer=4.5;P.sel=null;P._full=false;
   try{ var __sb2=document.getElementById('screen-battle'); if(__sb2) __sb2.classList.remove('ended'); }catch(e){}
   initDeck(P);initDeck(A,true);   /* v192: 적 덱 = 아군과 무관 랜덤 */
