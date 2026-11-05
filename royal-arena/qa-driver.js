@@ -75,6 +75,13 @@ function runBattle(cb){
     cb('BATTLE:'+(battleVisible()?'OK':'FAIL')+' '+pixCount()+' TIME:'+(tm&&tm.textContent?'ok':'empty')+' ENEMYD:'+(function(){try{var q2=window.__qaDecks;return q2?(q2.blue===q2.red?'SAME':'diff'):'n/a'}catch(e){return 'n/a'}})())+' HUD:'+(function(){try{var vw=window.innerWidth,vh=window.innerHeight,gg=function(s){var e=document.querySelector(s);return e?e.getBoundingClientRect():null},rt=gg('#timer'),so=gg('#btn-sound'),ks=gg('#ks-btn')||gg('.kingshot-btn'),rp=gg('#repair-btn')||gg('.repair-btn'),dp=document.getElementById('dpsw'),ok=0;if(rt&&rt.top<26&&rt.left<26)ok++;if(so&&so.right>vw-26&&so.top<26)ok++;if(ks&&ks.bottom>vh-26&&ks.left<26)ok++;if(rp&&rp.bottom>vh-26&&rp.right>vw-26)ok++;var dop=dp?parseFloat(getComputedStyle(dp).opacity):1,dm=dp?(function(){var r=dp.getBoundingClientRect();return r.top>vh*0.3&&r.top<vh*0.65;}):false;return ok+'/4 '+(dop<0.9&&dm?'DPS-mid':'DPS-off');}catch(e){return 'n/a'}})();
   },3800);
 }
+  if(q.get('screen')&&mode!=='battle'){ setTimeout(function(){
+    var SM={hof:'명예의 전당',profile:'프로필',relic:'유물',skill:'전술 연구소',info:'게임 방법'};
+    var sn=q.get('screen'), lb=SM[sn];
+    var bs=lb?[].slice.call(document.querySelectorAll('#screen-title button')).filter(function(b){return vis(b)&&(b.textContent||'').indexOf(lb)>=0;})[0]:null;
+    if(bs) clickEl(bs);
+    set('SCREEN-'+sn+':'+(bs?'CLICKED':'NO-BTN'));
+  },800); }
   if(mode==='deck'){ setTimeout(function(){
     var db=document.getElementById('btn-deck-edit')||[].slice.call(document.querySelectorAll('#screen-title button')).filter(function(b){return /덱 편성/.test(b.textContent||'')})[0];
     if(!db){ set(mode+' DECK:FAIL(no-btn)'); return; }
