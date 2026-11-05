@@ -308,14 +308,14 @@ function openDeckEditor(){
   document.head.appendChild(style);
   function render(){
     const cost=Math.round(deck.reduce((a,k)=>a+CARDS[k].cost,0)/deck.length*10)/10;
-    ov.innerHTML='<div style="font-family:Jua,sans-serif;font-size:24px;color:#f7c531;margin:6px">🃏 덱 편성</div>'+
-     '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center">'+
+    ov.innerHTML='<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center;margin-top:4px">'+
+     '<span style="font-family:Jua,sans-serif;font-size:21px;color:#f7c531;white-space:nowrap">🃏 덱 편성</span>'+
       DECK_SLOTS.map((_,n)=>'<button class="dk'+(n===slot?' on':'')+'" data-slot="'+n+'"><div class="dke">'+(n===0?'🅰':'🅱')+'</div><div class="dkn">덱 슬롯 '+(n+1)+'</div></button>').join('')+
       '<span style="font-family:Jua,sans-serif;color:#9fb3dd;font-size:13px">평균 엘릭서 '+cost+' · '+(slot===0?'슬롯 1':'슬롯 2')+' 편집 중</span></div>'+
      '<div style="font-family:Jua,sans-serif;color:#dfe8ff;font-size:14px;margin-top:8px">전투 덱 '+deck.length+'/8 — 카드를 누르면 빠짐</div>'+
      '<div style="display:flex;flex-wrap:wrap;justify-content:center;max-width:560px">'+deck.map(k=>
        '<div class="dk" data-rm="'+k+'"><div class="dke">'+(ART[k]?'<img class="art" style="width:34px" src="'+ART[k]+'">':CARDS[k].emoji)+'</div><div class="dkn">'+CARDS[k].name+'</div><div class="dkc">'+CARDS[k].cost+'</div></div>').join('')+'</div>'+
-     '<div style="font-family:Jua,sans-serif;color:#9fb3dd;font-size:13px;margin-top:10px">보유 카드 풀 — 카드를 누르면 추가(8장이면 마지막 카드와 교체)</div>'+
+     '<div style="font-family:Jua,sans-serif;color:#9fb3dd;font-size:13px;margin-top:10px;word-break:keep-all;line-height:1.45;text-align:center">보유 카드 풀 — 카드를 누르면 추가<br><span style="font-size:11.5px;color:#7e93c4">(8장이면 마지막 카드와 교체)</span></div>'+
      '<div style="display:flex;flex-wrap:wrap;justify-content:center;max-width:560px">'+Object.keys(CARDS).filter(k=>!deck.includes(k)).map(k=>
        '<div class="dk" data-add="'+k+'"><div class="dke">'+(ART[k]?'<img class="art" style="width:34px" src="'+ART[k]+'">':CARDS[k].emoji)+'</div><div class="dkn">'+CARDS[k].name+'</div><div class="dkc">'+CARDS[k].cost+'</div></div>').join('')+'</div>'+
      '<div style="margin:14px;display:flex;gap:10px">'+

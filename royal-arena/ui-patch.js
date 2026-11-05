@@ -1019,6 +1019,7 @@
     const deckEdit = document.getElementById('deck-edit');
     if (deckEdit) {
       if (deckEdit.parentElement !== document.body) document.body.appendChild(deckEdit);
+      setImp(deckEdit, 'padding-bottom', '80px');
 
       deckEdit.querySelectorAll('span, div, b, p, button').forEach(el => {
         if (el.children.length === 0 && el.textContent) {
@@ -1128,6 +1129,7 @@
         setImp(poolGrid, 'overflow-y', 'auto');
         setImp(poolGrid, 'border', '1px solid rgba(148, 163, 184, 0.25)');
         setImp(poolGrid, 'border-radius', '12px');
+        setImp(poolGrid, 'margin-bottom', '10px');
         Array.from(poolGrid.children).forEach(c => styleCardItem(c, 24));
       }
 
@@ -1150,14 +1152,16 @@
           actionRow.appendChild(closeBtn);
         }
 
-        cleanFont(saveBtn, '800');
+        cleanFont(saveBtn, '900');
         setImp(saveBtn, 'width', '100%');
         setImp(saveBtn, 'height', '42px');
         setImp(saveBtn, 'border-radius', '12px');
         setImp(saveBtn, 'background', 'linear-gradient(180deg, #ffca28 0%, #ff8f00 100%)');
-        setImp(saveBtn, 'color', '#1a0e00');
+        setImp(saveBtn, 'color', '#000000');
         setImp(saveBtn, 'border', '1.5px solid #ffe082');
-        setImp(saveBtn, 'font-size', '14px');
+        setImp(saveBtn, 'font-size', '16.5px');
+        setImp(saveBtn, 'text-shadow', '0 1px 1px rgba(255,255,255,.7)');
+        setImp(saveBtn, 'letter-spacing', '-0.2px');
 
         if (!saveBtn.__autoCloseBound) {
           saveBtn.__autoCloseBound = true;
