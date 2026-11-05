@@ -1,3 +1,4 @@
+- v265(내부 스크롤 제거+카드 축소): v263 실측 lpb620/deob600!CUT 수복 — v240 포괄 규칙의 overflow-y:auto가 풀·덱 그리드 자체에 적용돼 마지막 행이 그리드 내부 스크롤에 갇힘(스티키바가 가림) → 전체 자식 overflow:visible. 풀/덱 카드 축소(dke 16px·art 20px·padding 2px·dkn 8.5px)로 598px 실수용. 칩·sw v265
 - v264(판정 도구): SCROLL 초컴팩트 토큰 — 무스크롤 여부(FIT/SCROLLS)·sh/ch·마지막 풀 카드 위치를 박스 클립 없이 단독 출력(v263 BORDCHK 확장분이 디버그 박스 폭에 잘려 판독 불가 → 우회). 게임 로직 변경 없음. 칩·sw v264
 - v263(무스크롤 수복): 실기기 확정 결함 — 보유 풀 마지막 행 잘림. 근본 원인=v248 하단 여백 200px가 내용 증가 후 스크롤 강제 → safe 12px 회수, 행 간격·덱/풀 카드(art 24px·padding 3px) 축소. BORDCHK 확장: de sh/ch(스크롤 여부)+lastpool !CUT 판정. 칩·sw v263
 - v262(복사 제거+테두리 근본 수복): 슬롯2 복사 기능 완전 삭제(버튼·__cp 핸들러·잔여 CSS)·DECK_SLOTS 2개 확정. 테두리 잘림 근본 원인=v240 포괄 규칙(#deck-edit>* overflow-y:auto)의 행 클립 → 상단 4행 overflow:visible 예외. BORDCHK 토큰 신설: 버튼 rect 숫자 실측 — row1~4 ov visible·btn 전부 /in·!OUT 0건. 칩·sw v262
