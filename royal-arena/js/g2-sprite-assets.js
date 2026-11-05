@@ -58,6 +58,7 @@ function applyTrophyDelta(w){
   const cur=loadTrophies();
   const d=(w==='blue')?30:(w==='red'?-20:10);
   const nv=Math.max(0,cur+d);
+  try{ if(nv>cur&&typeof gradeOf==='function'&&typeof banner==='function'){ var __g0=gradeOf(cur), __g1=gradeOf(nv); if(__g1>__g0){ var __gn=(typeof GRADES!=='undefined'&&GRADES[__g1])?GRADES[__g1][0]:''; setTimeout(function(){ banner('👑 등급 상승! '+__gn,2400); try{ sfx('crown'); }catch(e){} },2600); } } }catch(e){}   /* v220: 등급 상승 배너 */
   try{ localStorage.setItem('ra_trophies_v1',String(nv)); }catch(e){}
   try{ var __h=JSON.parse(localStorage.getItem('ra_hist_v1')||'[]'); if(!Array.isArray(__h))__h=[]; __h.push(w==='blue'?'W':(w==='red'?'L':'D')); while(__h.length>5)__h.shift(); localStorage.setItem('ra_hist_v1',JSON.stringify(__h)); }catch(e){}   /* v143: 승패 이력 5전 저장 */
   if(w==='blue'){ try{ var __wv=parseInt(localStorage.getItem('ra_wins_v1')||'0',10)||0; localStorage.setItem('ra_wins_v1',String(__wv+1)); }catch(e){} }   // v109: 승수 기록 — 유물 해금 try{ profSync(); }catch(e){}   // v120: 트로피 갱신 프로필 미러

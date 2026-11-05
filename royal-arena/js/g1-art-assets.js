@@ -373,10 +373,25 @@ try{ (function(){ var iv=setInterval(function(){
   var __sb=parseInt(localStorage.getItem('ra_streak_best_v1')||'0',10)||0; if(__st>__sb){ __sb=__st; try{ localStorage.setItem('ra_streak_best_v1',String(__sb)); }catch(e2){} } if(__sb>=2) bar.textContent+=' · 🥇 최고 '+__sb+'연승';   /* v214: 최고 연승 */
   var __td=new Date().toISOString().slice(0,10); bar.textContent+=' · 🌅 첫승 보너스 '+(localStorage.getItem('ra_daily_v1')===__td?'소진':'대기');   /* v214: 첫승 상태 */
   var __lv=localStorage.getItem('ra_lvup_v1'); if(__lv) bar.textContent+=' · 🆙 Lv.UP '+(CARDS[__lv.split(',')[0]]||{}).name;
-  var __dd=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; bar.textContent+=' · ⚔ '+(window.__raDIFF?__raDIFF.name[__dd]:__dd)+' · 💀 보스 '+(S.__bossWave||0)+'/4';   /* v218 */   /* v214: Lv.UP 카드 표시 */
+  var __dd=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; bar.textContent+=' · ⚔ '+(window.__raDIFF?__raDIFF.name[__dd]:__dd)+' · 💀 보스 '+(S.__bossWave||0)+'/5';
+  var __xg2=localStorage.getItem('ra_xp_gain_v1'); if(__xg2) bar.textContent+=' · ⭐ XP +'+__xg2;   /* v220 */   /* v214: Lv.UP 카드 표시 */
  }catch(e){}   /* v213~214: 누적 승률·연승·첫승·Lv.UP */
   ov.insertBefore(bar, ov.firstChild.nextSibling||ov.firstChild);
  },600); })(); }catch(e){}
+
+/* v220: HOF 기록 바 + 게임방법 신규 시스템 안내 */
+try{ (function(){ var iv4=setInterval(function(){
+  var hw=document.getElementById('overlay-hof'); if(hw&&!hw.classList.contains('hidden')&&!document.getElementById('ra-hstats')){
+    var __w=parseInt(localStorage.getItem('ra_wins_v1')||'0',10)||0, __l=parseInt(localStorage.getItem('ra_losses_v1')||'0',10)||0, __sb=parseInt(localStorage.getItem('ra_streak_best_v1')||'0',10)||0;
+    var d1=document.createElement('div'); d1.id='ra-hstats'; d1.style.cssText='margin:8px auto;padding:6px 10px;border-radius:10px;background:rgba(18,24,43,.85);border:1px solid rgba(255,179,0,.4);font-size:12px;color:#ffd54f;font-weight:700;text-align:center;max-width:320px';
+    d1.textContent='🥇 최고 '+__sb+'연승 · 🏆 '+__w+'승 '+__l+'패'; hw.insertBefore(d1, hw.firstChild); }
+  var iw=document.getElementById('overlay-info'); if(iw&&!iw.classList.contains('hidden')&&!document.getElementById('ra-inote')){
+    var d2=document.createElement('div'); d2.id='ra-inote'; d2.style.cssText='margin:6px auto;padding:6px 10px;border-radius:10px;background:rgba(18,24,43,.85);border:1px solid rgba(255,179,0,.4);font-size:11.5px;color:#ffd54f;font-weight:700;text-align:center;max-width:340px';
+    d2.textContent='🆕 난이도 3단계(토벌 해금) · 인런 렐릭(승리 후 이벤트 보상·다음 배틀 1회) · 연승·첫승 보너스 · 테마별 보너스(용암 공격/서리 체력/황야 XP/심연 이벤트)';
+    iw.insertBefore(d2, iw.firstChild); }
+  if(hw&&hw.classList.contains('hidden')){ var x1=document.getElementById('ra-hstats'); if(x1) x1.remove(); }
+  if(iw&&iw.classList.contains('hidden')){ var x2=document.getElementById('ra-inote'); if(x2) x2.remove(); }
+ },700); })(); }catch(e){}
 
 /* v218: 프로필 통계 주입(승/패/승률/최고연승/트로피) */
 try{ (function(){ var iv3=setInterval(function(){
@@ -399,7 +414,7 @@ try{ (function(){ var EV=[
  {t:'🎭 수수께끼 상인', d:'가면 상인이 거래를 제안한다.', a:['도박 — 확률 강화','relic_gamble'], b:['거절','null']}];
  var iv2=setInterval(function(){ var ov=document.getElementById('overlay-result'); if(!ov) return;
   if(ov.classList.contains('hidden')){ var m0=document.getElementById('overlay-event'); if(m0) m0.remove(); window.__raEvSeen=false; return; }
-  if(window.__raEvSeen) return; window.__raEvSeen=true; if(Math.random()>=0.30) return;
+  if(window.__raEvSeen) return; window.__raEvSeen=true; var __ec=(window.S&&S.theme==='abyss')?0.45:0.30; if(Math.random()>=__ec) return;   /* v220: 심연 테마 — 이벤트 확률 +15%p */
   var ev=EV[Math.floor(Math.random()*EV.length)];
   var m=document.createElement('div'); m.id='overlay-event'; m.style.cssText='position:fixed;inset:0;z-index:120;background:rgba(5,8,18,.9);display:flex;align-items:center;justify-content:center';
   var box=document.createElement('div'); box.style.cssText='width:min(340px,88vw);background:linear-gradient(180deg,#152544,#0b1426);border:1.5px solid rgba(255,202,40,.65);border-radius:16px;padding:16px;text-align:center;font-family:Jua,sans-serif';
@@ -476,6 +491,7 @@ function spawnCard(key,team,x,y){ try{ tutOnSpawn(key,team); }catch(e){}   /* v1
   var __cL=1; try{ __cL=(team==='blue')?__cLv(key):1; }catch(__e){}   /* v185: 카드 레벨 시스템 */
   var __m=1+0.04*(__cL-1);
   const cc=(__m>1)?Object.assign({},c,{hp:Math.round(c.hp*__m),dmg:Math.round((c.dmg||0)*__m)}):c;   /* CARDS 원본 보존 — 유닛별 클론 */
+  if(team==='blue'&&S.theme==='ice') cc.hp=Math.round(cc.hp*1.02);   /* v220: 서리 테마 보너스 — 아군 HP +2% */
   var __dm=(team==='red')?__raDiffHp()*__raWaveHp():1;   /* v208 난이도 + v212 웨이브 곡선 */
   var __sh=0,__hl=false,__sp=false; if(team==='red'&&!c.kind&&key!=='boss'){ var __tq=Math.random(); if(__tq<0.08){ __sh=Math.round(cc.hp*0.3); } else if(__tq<0.15){ __hl=true; } else if(__tq<0.22){ __sp=true; } }   /* v209: 적 특성 패턴 — 실드·힐러·분열 */
   for(const o of formation(c.count||1)){
@@ -775,6 +791,7 @@ function dealDamage(e,dmg,fromTeam,fromSpell){
    // v114: fromSpell — 주문(파이어볼·자패) 피해는 줌인 유발 없음, 일반 유닛 교전만 줌인
   if(S&&S.relic==='relic_atk'&&fromTeam==='blue'&&e&&e.team==='red'&&!e.isTower) dmg=Math.round(dmg*1.1);   // v109 #13: 유물 — 전투 문장
   if(fromTeam==='blue'&&e&&e.team==='red'&&!e.isTower&&fromSpell!==true) dmg=Math.round(dmg*(1+0.08*((S._sk&&S._sk.off1)||0)+0.06*((S._sk&&S._sk.off2)||0)+0.12*((S._sk&&S._sk.off3)||0)));   // v119: 스킬트리 공세 계통 — 일반 유닛 공격만(주문 제외)
+  if(fromTeam==='blue'&&S.theme==='lava'&&!e.isTower) dmg=Math.round(dmg*1.02);   /* v220: 용암 테마 보너스 — 아군 공격 +2% */
   var __rinM=1; if(S.__rin==='relic_frenzy') __rinM*=1.15*(S.__rinMul||1);   /* v218 증폭 */ if(S.__rin==='relic_bulwark') __rinM*=0.9; if(S.__rin==='relic_gamble') __rinM*=(S.__rinRoll||1); if(fromTeam==='blue'&&e&&!e.isTower&&__rinM!==1) dmg=Math.round(dmg*__rinM);   /* v212: 인런 렐릭 — 공세·방벽·도박 */
   if(e.dead) return;
   if(fromTeam==='red'&&e&&!e.isTower) dmg=Math.round(dmg*__raDiffDmg());   /* v208: 난이도 — 적 공격력 배율 */
@@ -841,7 +858,7 @@ function destroyTower(t,fromTeam){
 function finish(winner){
   try{ document.getElementById('screen-battle').classList.remove('sd-mode'); }catch(e){ }   /* v194 */
   if(S.over) return;
-  S.over=true; S.winner=winner; try{ var __xu=S.__used||{}; var __mx=__cXpMap(); var __lvB={}; Object.keys(__xu).forEach(function(k){ __lvB[k]=__cLv(k); }); var __dfb=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; var __today=new Date().toISOString().slice(0,10); var __firstw=(winner==='blue'&&localStorage.getItem('ra_daily_v1')!==__today); Object.keys(__xu).forEach(function(k){ __mx[k]=(__mx[k]||0)+(winner==='blue'?2:1)+__dfb+(__firstw?2:0); }); if(winner==='blue'){ try{ localStorage.setItem('ra_daily_v1',__today); }catch(__e){} } if(__firstw) setTimeout(function(){ try{ banner('🌅 첫 승 보너스 XP +2!',2200); sfx('crown'); }catch(e){} },1600);   /* v218 */ try{ localStorage.setItem('ra_cardxp_v1',JSON.stringify(__mx)); }catch(__e){}   /* v213: 난이도 XP +첫승 가산 */ var __ups=Object.keys(__xu).filter(function(k){ return __cLv(k)>__lvB[k]; }); if(__ups.length){ var __un=__ups.map(function(k){ return (CARDS[k]||{}).name||k; }).join(', '); try{ localStorage.setItem('ra_lvup_v1',__ups.join(',')); }catch(__e){} setTimeout(function(){ try{ banner('🆙 카드 Lv.UP! '+__un,2400); sfx('crown'); }catch(e){} },500); }   /* v212 P17: Lv.UP 배너 팝업 */ }catch(__e){} try{ var __win=(S.winner==='blue'); if(__win){ var __w1=(parseInt(localStorage.getItem('ra_wins_v1')||'0',10)||0)+1, __s1=(parseInt(localStorage.getItem('ra_streak_v1')||'0',10)||0)+1; localStorage.setItem('ra_wins_v1',String(__w1)); localStorage.setItem('ra_streak_v1',String(__s1)); if(__s1%3===0) setTimeout(function(){ try{ banner('🔥 '+__s1+'연승!',2200); sfx('crown'); }catch(e){} },3200); } else { localStorage.setItem('ra_losses_v1',String((parseInt(localStorage.getItem('ra_losses_v1')||'0',10)||0)+1)); localStorage.setItem('ra_streak_v1','0'); } }catch(__e){}   /* v213: 전적 카운터·연승 */
+  S.over=true; S.winner=winner; try{ var __xu=S.__used||{}; var __mx=__cXpMap(); var __lvB={}; Object.keys(__xu).forEach(function(k){ __lvB[k]=__cLv(k); }); var __dfb=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; var __today=new Date().toISOString().slice(0,10); var __firstw=(winner==='blue'&&localStorage.getItem('ra_daily_v1')!==__today); var __tb=(winner==='blue'&&S.theme==='wasteland')?1:0; var __xg=0; Object.keys(__xu).forEach(function(k){ var __add=(winner==='blue'?2:1)+__dfb+(__firstw?2:0)+__tb; __mx[k]=(__mx[k]||0)+__add; __xg+=__add; }); try{ localStorage.setItem('ra_xp_gain_v1',String(__xg)); }catch(__e){}   /* v213 + v220: 황야 XP+1·획득량 기록 */ if(winner==='blue'){ try{ localStorage.setItem('ra_daily_v1',__today); }catch(__e){} } if(__firstw) setTimeout(function(){ try{ banner('🌅 첫 승 보너스 XP +2!',2200); sfx('crown'); }catch(e){} },1600);   /* v218 */ try{ localStorage.setItem('ra_cardxp_v1',JSON.stringify(__mx)); }catch(__e){}   /* v213: 난이도 XP +첫승 가산 */ var __ups=Object.keys(__xu).filter(function(k){ return __cLv(k)>__lvB[k]; }); if(__ups.length){ var __un=__ups.map(function(k){ return (CARDS[k]||{}).name||k; }).join(', '); try{ localStorage.setItem('ra_lvup_v1',__ups.join(',')); }catch(__e){} setTimeout(function(){ try{ banner('🆙 카드 Lv.UP! '+__un,2400); sfx('crown'); }catch(e){} },500); }   /* v212 P17: Lv.UP 배너 팝업 */ }catch(__e){} try{ var __win=(S.winner==='blue'); if(__win){ var __w1=(parseInt(localStorage.getItem('ra_wins_v1')||'0',10)||0)+1, __s1=(parseInt(localStorage.getItem('ra_streak_v1')||'0',10)||0)+1; localStorage.setItem('ra_wins_v1',String(__w1)); localStorage.setItem('ra_streak_v1',String(__s1)); if(__s1%3===0) setTimeout(function(){ try{ banner('🔥 '+__s1+'연승!',2200); sfx('crown'); }catch(e){} },3200); } else { localStorage.setItem('ra_losses_v1',String((parseInt(localStorage.getItem('ra_losses_v1')||'0',10)||0)+1)); localStorage.setItem('ra_streak_v1','0'); } }catch(__e){}   /* v213: 전적 카운터·연승 */
     try{ var __st=spState(); var __g=(winner==='blue')?3:1; __st.sp+=__g; __st.total+=__g; spSave(__st); setTimeout(function(){ toast('🎓 전술 SP +'+__g); },900); }catch(e){}   // v119: 승리 보상 SP — 승리 +3·패배 +1, 영구 저장 S.endTimer=1.4; P.sel=null; syncHand();
   if(winner==='blue') sfx('win'); else if(winner==='red') sfx('lose');
   bgmStop();
@@ -988,7 +1005,7 @@ function update(dt){
   if(S.boss&&S.boss.dead){ S.kills.blue+=5; P.elixir=10; P._full=false;
     S.focus=null; S.focusGap=1.5;   // v116: 보스 격파 줌인 삭제(사용자 지정) — 즉시 해제 + 1.5s 신규 포커스 억제
     banner('💀 보스 토벌! 엘릭서 만땅 · 킬 +5',2200); sfx('crown');
-    if((S.__bossWave||0)<4){ S.__bossWave=(S.__bossWave||0)+1; setTimeout(function(){ try{ if(S.over) return; S.bossSpawned=false; spawnBossNow(); banner('💀 보스 웨이브 '+(S.__bossWave+1)+' 강림!',2200); }catch(e){} },60000); }   /* v214 P9: 보스 레이드 — 최대 4웨이브·60s 주기 */
+    if((S.__bossWave||0)<5){ S.__bossWave=(S.__bossWave||0)+1;   /* v220 P9: 5웨이브 확장 */ setTimeout(function(){ try{ if(S.over) return; S.bossSpawned=false; spawnBossNow(); banner('💀 보스 웨이브 '+(S.__bossWave+1)+' 강림!',2200); }catch(e){} },60000); }   /* v214 P9: 보스 레이드 — 최대 4웨이브·60s 주기 */
     fx.push({x:S.boss.x,y:S.boss.y,t:0,dur:0.9,kind:'ring',col:'rgba(247,197,49,.95)'});
     S.boss=null; const kb=document.getElementById('ks-btn'); if(kb) kb.classList.add('hidden'); }
   for(const u of units) if(!u.dead){ try{ updateUnit(u,dt); }catch(err){ u.target=null; } }
