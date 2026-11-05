@@ -36,9 +36,12 @@ const CARDS={
   blizzard: {name:'눈보라',     emoji:'🌨️', cost:4, kind:'spell', dmg:180, towerDmg:60, radius:2.4, slow:3, desc:'광역 둔화 3초 주문'},
   greed:    {name:'탐욕 정령',   emoji:'😈', cost:2, count:1, hp:520,  dmg:230, hs:1.3, range:0.9, spd:2.2, flying:false, hitsAir:false, targets:'any', r:0.42, charge:true, desc:'트레이드오프 — 초고속 고화력·최소 체력'},
   glass:    {name:'유리 대포',   emoji:'🎇', cost:4, kind:'building', count:1, hp:520, dmg:230, hs:1.6, range:6.0, hitsAir:true, targets:'any', r:0.68, life:15, splash:1.2, desc:'트레이드오프 — 강력 포격·수명 15초'},
-  fort:     {name:'최전방 요새', emoji:'🏰', cost:5, kind:'building', count:1, hp:2600, dmg:45, hs:1.8, range:4.5, hitsAir:true, targets:'any', r:0.75, life:40, desc:'트레이드오프 — 견고한 방벽·약한 화력'}
+  fort:     {name:'최전방 요새', emoji:'🏰', cost:5, kind:'building', count:1, hp:2600, dmg:45, hs:1.8, range:4.5, hitsAir:true, targets:'any', r:0.75, life:40, desc:'트레이드오프 — 견고한 방벽·약한 화력'},
+  lordknight:{name:'기사단장',   emoji:'👑', cost:6, count:1, hp:3200, dmg:220, hs:1.3, range:1.0, spd:1.0, flying:false, hitsAir:false, targets:'any', r:0.60, splash:1.4, desc:'에픽 — 광역 일격 근접 대장'},
+  xbow:     {name:'석궁병',     emoji:'🏹', cost:3, count:1, hp:640,  dmg:95,  hs:1.0, range:4.5, spd:1.2, flying:false, hitsAir:true, targets:'any', r:0.42, desc:'속사 원거리 · 대공'},
+  healwind: {name:'회복의 바람', emoji:'🍃', cost:3, kind:'spell', heal:220, radius:2.5, desc:'아군 광역 회복 주문'}
 };
-const DECK=['knight','archers','giant','minions','musketeer','fireball','skarmy','cannon','wizard','sniper','prince','zap','valk','bomber','babyd','cleric','boar','icem','meteor','blizzard','greed','glass','fort'];   /* v209: 23종 — 트레이드오프 카드 확장 */
+const DECK=['knight','archers','giant','minions','musketeer','fireball','skarmy','cannon','wizard','sniper','prince','zap','valk','bomber','babyd','cleric','boar','icem','meteor','blizzard','greed','glass','fort','lordknight','xbow','healwind'];   /* v213: 26종 — 기사단장·석궁병·회복의 바람 */
 const __ch2=document.getElementById('cards-h2'); if(__ch2) __ch2.textContent='🃏 카드 도감 ('+DECK.length+'종)';
 const __cs=document.getElementById('cards-sub'); if(__cs) __cs.textContent=DECK.length+'종 카드로 승부하는 실시간 아레나 배틀';
 /* ---------- 아레나 테마 (레퍼런스: 클래시 로얄 스토어 스크린샷) ---------- */
@@ -353,6 +356,7 @@ try{ (function(){ var iv=setInterval(function(){
   var kb=(k.blue||0),kr=(k.red||0),db=(d.blue||0),dr=(d.red||0),sb=(sp.blue||0);
   bar.style.cssText='margin:8px auto 0;padding:6px 12px;border-radius:10px;background:rgba(18,24,43,.85);border:1px solid rgba(255,179,0,.4);font-size:12px;color:#ffd54f;font-weight:700;text-align:center;max-width:340px';
   bar.textContent='⚔ 킬 '+kb+' : '+kr+' · 💀 데스 '+db+' : '+dr+' · ✨ 주문 '+sb+'회';
+  try{ var __w=(parseInt(localStorage.getItem('ra_wins_v1')||'0',10)||0)+(S.winner==='blue'?1:0), __l=(parseInt(localStorage.getItem('ra_losses_v1')||'0',10)||0)+(S.winner!=='blue'?1:0), __st=parseInt(localStorage.getItem('ra_streak_v1')||'0',10)||0; var __rt=((__w+__l)>0)?Math.round(__w/(__w+__l)*100):0; bar.textContent+=' · 🏆 '+__w+'승 '+__l+'패('+__rt+'%)'+(__st>=2?' · 🔥 '+__st+'연승':''); }catch(e){}   /* v213: 누적 승률·연승 */
   ov.insertBefore(bar, ov.firstChild.nextSibling||ov.firstChild);
  },600); })(); }catch(e){}
 
@@ -681,8 +685,12 @@ function updateProjs(dt){
   projs=projs.filter(p=>!p.done);
 }
 function castSpellBase(key,team,x,y){ if(S.spells) S.spells[team]=(S.spells[team]||0)+1;   // v99 P8: 주문 사용 집계
-  if(key==='meteor') castMeteor(team,x,y); else if(key==='blizzard') castBlizzard(team,x,y); else if(key==='zap') castZap(team,x,y); else castFireball(team,x,y);
+  if(key==='healwind') castHealWind(team,x,y); else if(key==='meteor') castMeteor(team,x,y); else if(key==='blizzard') castBlizzard(team,x,y); else if(key==='zap') castZap(team,x,y); else castFireball(team,x,y);
 }
+/* v213: 회복의 바람 — 아군 광역 회복 */
+function castHealWind(team,x,y){ const c=CARDS.healwind;
+  fx.push({x,y,t:0,dur:0.6,kind:'ring',col:'rgba(143,230,168,.9)'}); addParts(x,y,12,'#8fe6a8',2.6,0.5,35); sfx('cast'); S.spellQuiet=1.2;
+  for(const u of units){ if(u.dead||u.team!==team||u.isTower) continue; if(Math.hypot(u.x-x,u.y-y)<=c.radius&&u.hp<u.maxHp){ var __hv=Math.min(c.heal,u.maxHp-u.hp); u.hp+=__hv; floats.push({dx:(Math.random()*10-5),dy:0,x:u.x,y:u.y-1.1,txt:'+'+Math.round(__hv),t:0.8,col:'#8fe6a8',big:false}); } } }
 /* v208: 유성우 — 즉시 착탄 광역+화상 3초 */
 function castMeteor(team,x,y){ const c=CARDS.meteor, et=enemyOf(team);
   fx.push({x,y,t:0,dur:0.55,kind:'warnring'}); fx.push({x,y,t:0,dur:0.5,kind:'boom'}); fx.push({x,y,t:0,dur:0.35,kind:'flash'}); S.shake=0.6; S.spellQuiet=2.2; sfx('boom');
@@ -800,7 +808,7 @@ function destroyTower(t,fromTeam){
 function finish(winner){
   try{ document.getElementById('screen-battle').classList.remove('sd-mode'); }catch(e){ }   /* v194 */
   if(S.over) return;
-  S.over=true; S.winner=winner; try{ var __xu=S.__used||{}; var __mx=__cXpMap(); var __lvB={}; Object.keys(__xu).forEach(function(k){ __lvB[k]=__cLv(k); }); Object.keys(__xu).forEach(function(k){ __mx[k]=(__mx[k]||0)+(winner==='blue'?2:1); }); try{ localStorage.setItem('ra_cardxp_v1',JSON.stringify(__mx)); }catch(__e){} var __ups=Object.keys(__xu).filter(function(k){ return __cLv(k)>__lvB[k]; }); if(__ups.length){ var __un=__ups.map(function(k){ return (CARDS[k]||{}).name||k; }).join(', '); try{ localStorage.setItem('ra_lvup_v1',__ups.join(',')); }catch(__e){} setTimeout(function(){ try{ banner('🆙 카드 Lv.UP! '+__un,2400); sfx('crown'); }catch(e){} },500); }   /* v212 P17: Lv.UP 배너 팝업 */ }catch(__e){}   /* v185: 전투 결과 카드 XP — 승 +2/패·무 +1 */
+  S.over=true; S.winner=winner; try{ var __xu=S.__used||{}; var __mx=__cXpMap(); var __lvB={}; Object.keys(__xu).forEach(function(k){ __lvB[k]=__cLv(k); }); var __dfb=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; var __today=new Date().toISOString().slice(0,10); var __firstw=(winner==='blue'&&localStorage.getItem('ra_daily_v1')!==__today); Object.keys(__xu).forEach(function(k){ __mx[k]=(__mx[k]||0)+(winner==='blue'?2:1)+__dfb+(__firstw?2:0); }); if(winner==='blue'){ try{ localStorage.setItem('ra_daily_v1',__today); }catch(__e){} } try{ localStorage.setItem('ra_cardxp_v1',JSON.stringify(__mx)); }catch(__e){}   /* v213: 난이도 XP +첫승 가산 */ var __ups=Object.keys(__xu).filter(function(k){ return __cLv(k)>__lvB[k]; }); if(__ups.length){ var __un=__ups.map(function(k){ return (CARDS[k]||{}).name||k; }).join(', '); try{ localStorage.setItem('ra_lvup_v1',__ups.join(',')); }catch(__e){} setTimeout(function(){ try{ banner('🆙 카드 Lv.UP! '+__un,2400); sfx('crown'); }catch(e){} },500); }   /* v212 P17: Lv.UP 배너 팝업 */ }catch(__e){} try{ var __win=(S.winner==='blue'); if(__win){ var __w1=(parseInt(localStorage.getItem('ra_wins_v1')||'0',10)||0)+1, __s1=(parseInt(localStorage.getItem('ra_streak_v1')||'0',10)||0)+1; localStorage.setItem('ra_wins_v1',String(__w1)); localStorage.setItem('ra_streak_v1',String(__s1)); if(__s1%3===0) setTimeout(function(){ try{ banner('🔥 '+__s1+'연승!',2200); sfx('crown'); }catch(e){} },3200); } else { localStorage.setItem('ra_losses_v1',String((parseInt(localStorage.getItem('ra_losses_v1')||'0',10)||0)+1)); localStorage.setItem('ra_streak_v1','0'); } }catch(__e){}   /* v213: 전적 카운터·연승 */
     try{ var __st=spState(); var __g=(winner==='blue')?3:1; __st.sp+=__g; __st.total+=__g; spSave(__st); setTimeout(function(){ toast('🎓 전술 SP +'+__g); },900); }catch(e){}   // v119: 승리 보상 SP — 승리 +3·패배 +1, 영구 저장 S.endTimer=1.4; P.sel=null; syncHand();
   if(winner==='blue') sfx('win'); else if(winner==='red') sfx('lose');
   bgmStop();
@@ -1934,6 +1942,7 @@ function buildHandUI(){
 }
 function syncHand(){
   try{ __raZoneHL(dragFrom>=0||P.sel!=null||(TUT.on&&TUT.step===2)); }catch(e){}   /* v208 P13 + v212: 튜토리얼 배치 단계 상시 */
+  try{ var __px=(typeof P!=='undefined'&&P)?P.elixir:10; for(var __ci=0;__ci<4;__ci++){ var __ce=(typeof cardEls!=='undefined')?cardEls[__ci]:null; if(!__ce) continue; var __nk=P&&P.hand?P.hand[__ci]:null, __cc=__nk?CARDS[__nk]:null; __ce.classList.toggle('ra-noelx',!!(__cc&&__cc.cost>__px)); } }catch(e){}   /* v213: 엘릭서 부족 카드 흐림 */
   try{ if(TUT.on&&(TUT.step===1||TUT.step===4)) setTimeout(tutShow,0); }catch(e){}   /* v147: 핸드 재구성 후 링·디밍 재적용(buildHandUI가 카드 DOM을 재생성하는 결함 수복) */
   for(let i=0;i<4;i++){
     const d=cardEls[i]; if(!d) continue;
