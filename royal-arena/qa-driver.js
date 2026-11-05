@@ -117,6 +117,17 @@ function runBattle(cb){
       if(q.get('hold')==='1'){}else setTimeout(function(){ var c=[].slice.call(document.querySelectorAll('#deck-edit button')).filter(function(b){return vis(b)&&/닫기/.test(b.textContent||'')})[0]; if(c)clickEl(c); },250);
     },900);
   },600); return; }
+  if(mode==='deck'){ setTimeout(function(){ try{ var out=[];   /* v250: 덱슬롯 지오메트리 실측 */
+    [].slice.call(document.querySelectorAll('#deck-edit button[data-slot]')).forEach(function(b,i){ out.push('s'+i+':h'+b.offsetHeight+'/sh'+b.scrollHeight+'/w'+b.clientWidth+'/sw'+b.scrollWidth); });
+    var de=document.getElementById('deck-edit'); if(de){ out.push('de:sw'+de.scrollWidth+'/cw'+de.clientWidth+'/pb'+getComputedStyle(de).paddingBottom); }
+    set('SLOTGEO:'+out.join(' | '));
+  }catch(e){ set('SLOTGEO:err'); } },1500); }
+  if(q.get('screen')==='profile'){ setTimeout(function(){ try{   /* v250: .rsub 지오메트리 실측 */
+    var rp=document.querySelector('#overlay-profile .rpanel'), rs=document.querySelector('#overlay-profile .rsub');
+    if(!rp||!rs){ set('RSUBGEO:no-el'); return; }
+    var rr=rs.getBoundingClientRect(), pr=rp.getBoundingClientRect();
+    set('RSUBGEO:vw'+window.innerWidth+' panelW:'+Math.round(pr.width)+' panelSW:'+rp.scrollWidth+' rsubR:'+Math.round(rr.right)+' rsubSW:'+rs.scrollWidth+' rsubCW:'+rs.clientWidth);
+  }catch(e){ set('RSUBGEO:err'); } },1600); }
 setTimeout(function(){
   if(mode==='battle'){runBattle(function(r){report(r);if(q.get('quit')==='1')quitBattle();});return;}
   if(q.get('screen')){return;}   /* v230: screen 모드 — 순회 금지 */
