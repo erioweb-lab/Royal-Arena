@@ -39,9 +39,12 @@ const CARDS={
   fort:     {name:'최전방 요새', emoji:'🏰', cost:5, kind:'building', count:1, hp:2600, dmg:45, hs:1.8, range:4.5, hitsAir:true, targets:'any', r:0.75, life:40, desc:'트레이드오프 — 견고한 방벽·약한 화력'},
   lordknight:{name:'기사단장',   emoji:'👑', cost:6, count:1, hp:3200, dmg:220, hs:1.3, range:1.0, spd:1.0, flying:false, hitsAir:false, targets:'any', r:0.60, splash:1.4, desc:'에픽 — 광역 일격 근접 대장'},
   xbow:     {name:'석궁병',     emoji:'🏹', cost:3, count:1, hp:640,  dmg:95,  hs:1.0, range:4.5, spd:1.2, flying:false, hitsAir:true, targets:'any', r:0.42, desc:'속사 원거리 · 대공'},
-  healwind: {name:'회복의 바람', emoji:'🍃', cost:3, kind:'spell', heal:220, radius:2.5, desc:'아군 광역 회복 주문'}
+  healwind: {name:'회복의 바람', emoji:'🍃', cost:3, kind:'spell', heal:220, radius:2.5, desc:'아군 광역 회복 주문'},
+  flamer:   {name:'화염방사병', emoji:'🔥', cost:4, count:1, hp:960,  dmg:85,  hs:0.8, range:1.2, spd:1.1, flying:false, hitsAir:false, targets:'any', r:0.45, splash:1.0, desc:'근접 속사 광역 화염'},
+  golem:    {name:'수정 골렘',  emoji:'💎', cost:6, count:1, hp:5200, dmg:140, hs:1.8, range:1.0, spd:0.7, flying:false, hitsAir:false, targets:'buildings', r:0.70, desc:'초대형 건물 탱커'},
+  scarecrow:{name:'허수아비',   emoji:'🎭', cost:1, count:1, hp:950,  dmg:6,   hs:1.0, range:0.5, spd:1.4, flying:false, hitsAir:false, targets:'any', r:0.40, desc:'미끼 — 값싼 어그로 방벽'}
 };
-const DECK=['knight','archers','giant','minions','musketeer','fireball','skarmy','cannon','wizard','sniper','prince','zap','valk','bomber','babyd','cleric','boar','icem','meteor','blizzard','greed','glass','fort','lordknight','xbow','healwind'];   /* v213: 26종 — 기사단장·석궁병·회복의 바람 */
+const DECK=['knight','archers','giant','minions','musketeer','fireball','skarmy','cannon','wizard','sniper','prince','zap','valk','bomber','babyd','cleric','boar','icem','meteor','blizzard','greed','glass','fort','lordknight','xbow','healwind','flamer','golem','scarecrow'];   /* v214: 29종 — 화염방사병·수정 골렘·허수아비 */
 const __ch2=document.getElementById('cards-h2'); if(__ch2) __ch2.textContent='🃏 카드 도감 ('+DECK.length+'종)';
 const __cs=document.getElementById('cards-sub'); if(__cs) __cs.textContent=DECK.length+'종 카드로 승부하는 실시간 아레나 배틀';
 /* ---------- 아레나 테마 (레퍼런스: 클래시 로얄 스토어 스크린샷) ---------- */
@@ -356,7 +359,11 @@ try{ (function(){ var iv=setInterval(function(){
   var kb=(k.blue||0),kr=(k.red||0),db=(d.blue||0),dr=(d.red||0),sb=(sp.blue||0);
   bar.style.cssText='margin:8px auto 0;padding:6px 12px;border-radius:10px;background:rgba(18,24,43,.85);border:1px solid rgba(255,179,0,.4);font-size:12px;color:#ffd54f;font-weight:700;text-align:center;max-width:340px';
   bar.textContent='⚔ 킬 '+kb+' : '+kr+' · 💀 데스 '+db+' : '+dr+' · ✨ 주문 '+sb+'회';
-  try{ var __w=(parseInt(localStorage.getItem('ra_wins_v1')||'0',10)||0)+(S.winner==='blue'?1:0), __l=(parseInt(localStorage.getItem('ra_losses_v1')||'0',10)||0)+(S.winner!=='blue'?1:0), __st=parseInt(localStorage.getItem('ra_streak_v1')||'0',10)||0; var __rt=((__w+__l)>0)?Math.round(__w/(__w+__l)*100):0; bar.textContent+=' · 🏆 '+__w+'승 '+__l+'패('+__rt+'%)'+(__st>=2?' · 🔥 '+__st+'연승':''); }catch(e){}   /* v213: 누적 승률·연승 */
+  try{ var __w=(parseInt(localStorage.getItem('ra_wins_v1')||'0',10)||0)+(S.winner==='blue'?1:0), __l=(parseInt(localStorage.getItem('ra_losses_v1')||'0',10)||0)+(S.winner!=='blue'?1:0), __st=parseInt(localStorage.getItem('ra_streak_v1')||'0',10)||0; var __rt=((__w+__l)>0)?Math.round(__w/(__w+__l)*100):0; bar.textContent+=' · 🏆 '+__w+'승 '+__l+'패('+__rt+'%)'+(__st>=2?' · 🔥 '+__st+'연승':'');
+  var __sb=parseInt(localStorage.getItem('ra_streak_best_v1')||'0',10)||0; if(__st>__sb){ __sb=__st; try{ localStorage.setItem('ra_streak_best_v1',String(__sb)); }catch(e2){} } if(__sb>=2) bar.textContent+=' · 🥇 최고 '+__sb+'연승';   /* v214: 최고 연승 */
+  var __td=new Date().toISOString().slice(0,10); bar.textContent+=' · 🌅 첫승 보너스 '+(localStorage.getItem('ra_daily_v1')===__td?'소진':'대기');   /* v214: 첫승 상태 */
+  var __lv=localStorage.getItem('ra_lvup_v1'); if(__lv) bar.textContent+=' · 🆙 Lv.UP '+(CARDS[__lv.split(',')[0]]||{}).name;   /* v214: Lv.UP 카드 표시 */
+ }catch(e){}   /* v213~214: 누적 승률·연승·첫승·Lv.UP */
   ov.insertBefore(bar, ov.firstChild.nextSibling||ov.firstChild);
  },600); })(); }catch(e){}
 
@@ -757,7 +764,7 @@ function dealDamage(e,dmg,fromTeam,fromSpell){
     var __ck=(e.burnT>0?'b':'')+(e.slowT>0?'s':'')+(e.stun>0?'t':'')+(e.frozenT>0?'f':'');
     var __cn=__st>=3?'3원소 대콤보 ×2!':((({bs:'증기 폭발',bt:'용암 감전',bf:'서리 화염',st:'감전 빙결',sf:'혹한 서리',tf:'파쇄 얼음'})[__ck]||'2원소 콤보')+' +40%');   /* v210: 명명된 2원소 콤보 6종 */
     floats.push({dx:(Math.random()*14-7),dy:(Math.random()*6-3),x:e.x,y:e.y-(e.r||0.45)-1.1,txt:(__st>=4?'4원소 붕괴 ×2.5!':__cn),t:0.9,col:__st>=4?'#c77dff':(__st>=3?'#ff9d3c':'#ffe95e'),big:true});
-    if(__st>=3) addParts(e.x,e.y,__st>=4?20:12,__st>=4?'#c77dff':'#ff9d3c',3,0.5,60); if(__st>=3) addParts(e.x,e.y,__st>=4?14:8,'#7fe6ff',2.6,0.45,45);   /* v211: 2색 파티클 — 3원소 대콤보·4원소 궁극 */
+    if(__st>=3) addParts(e.x,e.y,__st>=4?20:12,__st>=4?'#c77dff':'#ff9d3c',3,0.5,60); if(__st>=3) addParts(e.x,e.y,__st>=4?14:8,'#7fe6ff',2.6,0.45,45); if(__st>=4) sfx('boomL');   /* v211 파티클 + v214: 4원소 궁극 사운드 */
     fx.push({x:e.x,y:e.y,t:0,dur:0.35,kind:'ring',col:__st>=3?'rgba(255,157,60,.9)':'rgba(255,233,94,.9)'});
   }
   if((e.shield||0)>0){ const ab=Math.min(e.shield,dmg); e.shield-=ab; dmg-=ab; }
@@ -767,6 +774,7 @@ function dealDamage(e,dmg,fromTeam,fromSpell){
   const big=dmg>=150;
   floats.push({dx:(Math.random()*14-7),dy:(Math.random()*6-3),x:e.x+(Math.random()-0.5)*0.7,y:e.y-(e.r||0.45)-0.35-Math.random()*0.5,txt:Math.round(dmg)+(big?'!':''),t:big?0.9:0.7,col:big?'#ff9d3c':(fromTeam==='blue'?'#bfe0ff':'#ffd2d2'),big});
   if(e.isTower&&e.kind==='king') e.active=true;   // 킹타워 피격 시 각성
+  if(e.isTower&&e.kind==='king'&&e.team==='blue'&&e.hp<e.maxHp*0.3&&!S.__kingWarn){ S.__kingWarn=1; banner('⚠ 왕 타워 위험!',2000); sfx('boomL'); }   /* v214: 왕타워 위험 경고 1회 */
   if(e.hp<=0){ e.hp=0; e.dead=true;
     if(fromTeam&&S.kills&&!e.isTower) S.kills[fromTeam]++;
     if(!e.isTower&&S.deaths&&e.team) S.deaths[e.team]=(S.deaths[e.team]||0)+1;   // v99 P8: 데스 집계
@@ -955,7 +963,7 @@ function update(dt){
   if(S.boss&&S.boss.dead){ S.kills.blue+=5; P.elixir=10; P._full=false;
     S.focus=null; S.focusGap=1.5;   // v116: 보스 격파 줌인 삭제(사용자 지정) — 즉시 해제 + 1.5s 신규 포커스 억제
     banner('💀 보스 토벌! 엘릭서 만땅 · 킬 +5',2200); sfx('crown');
-    if((S.__bossWave||0)<2){ S.__bossWave=(S.__bossWave||0)+1; setTimeout(function(){ try{ if(S.over) return; S.bossSpawned=false; spawnBossNow(); banner('💀 보스 웨이브 '+(S.__bossWave+1)+' 강림!',2200); }catch(e){} },75000); }   /* v210: 보스 재강림 주기 75s·최대 2회 */
+    if((S.__bossWave||0)<4){ S.__bossWave=(S.__bossWave||0)+1; setTimeout(function(){ try{ if(S.over) return; S.bossSpawned=false; spawnBossNow(); banner('💀 보스 웨이브 '+(S.__bossWave+1)+' 강림!',2200); }catch(e){} },60000); }   /* v214 P9: 보스 레이드 — 최대 4웨이브·60s 주기 */
     fx.push({x:S.boss.x,y:S.boss.y,t:0,dur:0.9,kind:'ring',col:'rgba(247,197,49,.95)'});
     S.boss=null; const kb=document.getElementById('ks-btn'); if(kb) kb.classList.add('hidden'); }
   for(const u of units) if(!u.dead){ try{ updateUnit(u,dt); }catch(err){ u.target=null; } }
@@ -1942,6 +1950,7 @@ function buildHandUI(){
 }
 function syncHand(){
   try{ __raZoneHL(dragFrom>=0||P.sel!=null||(TUT.on&&TUT.step===2)); }catch(e){}   /* v208 P13 + v212: 튜토리얼 배치 단계 상시 */
+  try{ var __px2=(typeof P!=='undefined'&&P)?P.elixir:0, __tr=document.getElementById('elixir-track'); if(__tr){ var __full=__px2>=9.9; __tr.classList.toggle('ra-full',__full); if(__full&&!S.__elxFull){ S.__elxFull=1; toast('엘릭서 만원 — 카드를 배치하세요'); } if(!__full) S.__elxFull=0; } }catch(e){}   /* v214: 엘릭서 만원 UX(게이지 펄스+1회 토스트) */
   try{ var __px=(typeof P!=='undefined'&&P)?P.elixir:10; for(var __ci=0;__ci<4;__ci++){ var __ce=(typeof cardEls!=='undefined')?cardEls[__ci]:null; if(!__ce) continue; var __nk=P&&P.hand?P.hand[__ci]:null, __cc=__nk?CARDS[__nk]:null; __ce.classList.toggle('ra-noelx',!!(__cc&&__cc.cost>__px)); } }catch(e){}   /* v213: 엘릭서 부족 카드 흐림 */
   try{ if(TUT.on&&(TUT.step===1||TUT.step===4)) setTimeout(tutShow,0); }catch(e){}   /* v147: 핸드 재구성 후 링·디밍 재적용(buildHandUI가 카드 DOM을 재생성하는 결함 수복) */
   for(let i=0;i<4;i++){
