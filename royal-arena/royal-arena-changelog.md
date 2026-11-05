@@ -1,3 +1,4 @@
+- v267(버튼 통일): 실기기 지적 3건 수복 — ①편집기 하단 저장·랜덤·닫기: 랜덤 버튼을 빌더 내장으로 전환(주입식 인라인 42px·초록 개별 스타일·render 시 소실 문제 폐기), 3열 1fr 균등+38px+표준 네이비/골드 통일 ②메인 훈련캠프·덱편성 등 좌우 버튼 높이 38px 균일화 ③t-links·t-codex 간격 8px 통일. BORDCHK에 랜덤 버튼 포함. 칩·sw v267
 - v266(무스크롤 최종): v265 실측 sh677>ch598(−79px) 회수 — 풀 그리드 repeat(5,1fr)→auto-fill minmax(44px,1fr)(7열·행 수 축소), 타이틀 18px·라벨 11.5px·카드(dke 14/art 18/dkn 8/dkc 9·padding 2px) 추가 축소, 행 간격 정리. 칩·sw v266
 - v265(내부 스크롤 제거+카드 축소): v263 실측 lpb620/deob600!CUT 수복 — v240 포괄 규칙의 overflow-y:auto가 풀·덱 그리드 자체에 적용돼 마지막 행이 그리드 내부 스크롤에 갇힘(스티키바가 가림) → 전체 자식 overflow:visible. 풀/덱 카드 축소(dke 16px·art 20px·padding 2px·dkn 8.5px)로 598px 실수용. 칩·sw v265
 - v264(판정 도구): SCROLL 초컴팩트 토큰 — 무스크롤 여부(FIT/SCROLLS)·sh/ch·마지막 풀 카드 위치를 박스 클립 없이 단독 출력(v263 BORDCHK 확장분이 디버그 박스 폭에 잘려 판독 불가 → 우회). 게임 로직 변경 없음. 칩·sw v264
