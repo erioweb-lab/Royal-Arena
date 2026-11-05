@@ -990,7 +990,7 @@ html,body{overflow:hidden !important;height:100%}
 #screen-battle #btn-sound{top:12px!important;right:12px!important;width:34px!important;height:34px!important}
 #screen-battle #ks-btn,#screen-battle #btn-kingshot,.kingshot-btn{bottom:12px!important;left:12px!important;height:34px!important;padding:0 14px!important}
 #screen-battle #repair-btn,#screen-battle #btn-repair,.repair-btn{bottom:12px!important;right:12px!important;height:34px!important;padding:0 14px!important}
-#deck-edit{padding-bottom:24px!important}
+#deck-edit{padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))!important}
 #deck-edit .dk-sub{max-height:calc(100% - 150px)!important;overflow-y:auto!important}
 #btn-deck-random{flex:0 0 auto!important;height:42px!important;border-radius:12px;font-weight:800;background:linear-gradient(180deg,#2f6d4f,#1c4231)!important;color:#d9fbe8!important;border:1.5px solid #63d69a!important}
 #screen-battle #arena-wrap::after{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 42%,rgba(0,0,0,0) 46%,rgba(4,9,18,.42) 100%)}
@@ -1000,7 +1000,7 @@ html,body{overflow:hidden !important;height:100%}
 #screen-battle #cards .cost{background:rgba(10,18,34,.85)!important;border:2px solid rgba(255,255,255,.85)!important}
 </style></head>
 <body>
-<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v201</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v202</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1250,14 +1250,16 @@ html,body{overflow:hidden !important;height:100%}
   function stoneTower(g,isKing,tint){
     g.clearRect(0,0,256,256);
     g.fillStyle='rgba(0,0,0,.25)'; g.beginPath(); g.ellipse(128,214,74,26,0,0,7); g.fill();
-    var gr=g.createLinearGradient(0,60,0,220); gr.addColorStop(0,'#9aa6b8'); gr.addColorStop(1,'#5c6a80');
+    var __th=(window.S&&S.theme)||'classic'; var __bc={classic:['#9aa6b8','#5c6a80'],lava:['#a06a52','#5a2a1a'],ice:['#d5e6f2','#84b3d1']}[__th]||['#9aa6b8','#5c6a80'];
+    var gr=g.createLinearGradient(0,60,0,220); gr.addColorStop(0,__bc[0]); gr.addColorStop(1,__bc[1]);
     g.fillStyle=gr; g.fillRect(66,90,124,126);
     g.strokeStyle='rgba(20,26,40,.55)'; g.lineWidth=4; g.strokeRect(66,90,124,126);
     for(var i=0;i<5;i++){ g.fillStyle='#8a96aa'; g.fillRect(64+i*27,76,20,20); }
     g.fillStyle=tint; g.fillRect(84,118,88,74);
     g.fillStyle='rgba(255,255,255,.25)'; g.fillRect(84,118,88,16);
     g.beginPath(); g.moveTo(128,150); g.lineTo(172,150); g.lineTo(150,178); g.closePath(); g.fill();
-    var roof=g.createLinearGradient(0,26,0,92); roof.addColorStop(0,isKing?'#ffd75e':'#7d97c9'); roof.addColorStop(1,isKing?'#b8860b':'#3f5f96');
+    var __rc={classic:['#7d97c9','#3f5f96'],lava:['#c04a20','#6a2408'],ice:['#6fa8d0','#2f5f8a']}[__th]||['#7d97c9','#3f5f96'];
+    var roof=g.createLinearGradient(0,26,0,92); roof.addColorStop(0,isKing?'#ffd75e':__rc[0]); roof.addColorStop(1,isKing?'#b8860b':__rc[1]);
     g.fillStyle=roof; g.beginPath(); g.moveTo(58,92); g.lineTo(198,92); g.lineTo(128,30); g.closePath(); g.fill();
     if(isKing){ g.fillStyle='#ffd75e'; g.beginPath();
       g.moveTo(98,30); g.lineTo(112,52); g.lineTo(128,26); g.lineTo(144,52); g.lineTo(158,30); g.lineTo(152,58); g.lineTo(104,58); g.closePath(); g.fill(); }
@@ -1298,7 +1300,7 @@ html body #dpsw:not(.hidden){top:38%!important;transform:none!important;right:8p
 html body #dpsw .dw-t{font-size:10px!important;padding:0 6px!important;height:22px!important}
 html body #dpsw .dw-b{font-size:9px!important}
 html body #dpsw .dw-t,html body #dpsw .dw-b{background:rgba(10,18,34,.5)!important;border-color:rgba(255,202,40,.35)!important}
-#deck-edit{padding-bottom:24px!important}
+#deck-edit{padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))!important}
 #deck-edit .dk-sub{overflow-y:auto!important}
 #deck-edit .dk b,#deck-edit .dk span,#deck-edit .dk div{white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;max-width:100%}
 #deck-edit button{white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
