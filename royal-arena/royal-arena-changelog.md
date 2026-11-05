@@ -1,3 +1,4 @@
+- v252: GEO 실측 최종 — rsubR 365>360 해소(rpanel 중앙정렬+폭 330 제약)·슬롯 .dke 20px+min-width 84px(LBL-trunc 0 목표)·SLOTGEO 토큰 deck return 전 이동. 칩·sw v252
 - v251(실측 기반 수복): RSUBGEO 실측에서 .rpanel 폭 375>뷰포트 360(rsub 우측 378px 화면 밖) 확정 → max-width calc(100vw-12px)+min-width 0 제약 / 덱슬롯 LBL-trunc:3(드라이버 공식 측정) → 라벨 nowrap+폰트 10px+min-width 74px. 칩·sw v251
 - v249(이중검증 최종): 오버레이 .rsub 설명 잘림 제압(rsub 고유 규칙 무력화·keep-all)·덱 슬롯 라벨 높이 자동+2줄 완전 표기. 덱편성 카드명·마지막 행은 v248로 수복 완료. 칩·sw v249
 - v248(이중검증 확장 잔여 수복): 덱편성 카드명(.dkn 2줄 허용 9.5px)·슬롯 라벨 말줄임 제거+여백 200px, 오버레이 설명 텍스트(p·small·t-note·t-how) keep-all 완전 표기+본문 스크롤. 검증: info·profile 닫기·저장·전투 PASS, deck·profile 텍스트 잔여는 재검증 리포트 참조. 칩·sw v248
