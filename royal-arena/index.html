@@ -1154,7 +1154,7 @@ html body .theme-row .t-btn{height:34px !important;font-size:11px !important;lin
 html body .t-links button, html body #btn-deck-random, html body #btn-deck-edit{background:linear-gradient(180deg,rgba(14,34,61,.95),rgba(10,22,40,.95)) !important;border:1px solid #c89b3c !important;border-radius:14px !important;color:#f2f6ff !important;font-weight:700 !important;line-height:1.2 !important;text-shadow:none !important;min-height:34px !important;display:flex !important;align-items:center !important;justify-content:center !important;overflow:hidden !important;text-overflow:ellipsis !important;white-space:nowrap !important;padding:4px 8px !important}
 html body #deck-edit{padding-bottom:150px !important}
 </style>
-<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v260</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v261</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1602,6 +1602,14 @@ html body #deck-edit>div:nth-of-type(2){margin-top:2px !important}
 html body #deck-edit>div:nth-of-type(3){margin-top:4px !important}
 html body #deck-edit>div:nth-of-type(4){margin-top:4px !important;padding-bottom:0 !important;line-height:1.45 !important}
 html body #deck-edit>div:nth-of-type(5){margin-top:8px !important}
+</style>
+<style id="ui-v261">
+/* v261: 2슬롯 단순화 — 슬롯 A/B+복사 버튼 한 행, 별도 복사 행 제거(실기기 겹침·하단 테두리 잘림 수복) */
+html body #deck-edit>div:nth-of-type(1){margin-top:2px !important}
+html body #deck-edit>div:nth-of-type(2){margin-top:4px !important;flex-wrap:nowrap !important;justify-content:center !important;align-items:stretch !important;gap:8px !important}
+html body #deck-edit>div:nth-of-type(3){margin-top:6px !important;padding-bottom:3px !important;line-height:1.45 !important}
+html body #deck-edit>div:nth-of-type(4){margin-top:8px !important}
+html body #deck-edit>div:nth-of-type(2) .dk{overflow:visible !important}
 </style>
 </body>
 </html>
