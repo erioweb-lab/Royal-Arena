@@ -115,6 +115,11 @@ function runBattle(cb){
     [].slice.call(de.querySelectorAll('button[data-slot],button.dk-act,button.dk-sub')).forEach(function(b,i){ var r=b.getBoundingClientRect(); var miss=(r.top<dr.top-0.5||r.bottom>dr.bottom+0.5||r.left<dr.left-0.5||r.right>dr.right+0.5)?'!OUT':'in'; out.push('btn'+i+':'+(b.getAttribute('data-slot')!==null?('slot'+b.getAttribute('data-slot')):(b.id||b.className))+'/t'+Math.round(r.top)+'/b'+Math.round(r.bottom)+'/l'+Math.round(r.left)+'/r'+Math.round(r.right)+'/'+miss); });
     set('BORDCHK:'+out.join(' | '));
   }catch(e){ set('BORDCHK:err'); } },1800); }
+  if(mode==='deck'){ setTimeout(function(){ try{ var de=document.getElementById('deck-edit'); if(!de){ set('SCROLL:no-de'); return; }   /* v264: 무스크롤 최종 판정 — 초컴팩트 출력(박스 클립 방지) */
+    var lp=[].slice.call(de.querySelectorAll('[data-add]')).pop(); var db=de.getBoundingClientRect(); var lb=lp?lp.getBoundingClientRect():null;
+    var fit=de.scrollHeight<=de.clientHeight+1;
+    set('SCROLL:'+(fit?'FIT':'SCROLLS')+'/sh'+de.scrollHeight+'/ch'+de.clientHeight+(lb?('/lpb'+Math.round(lb.bottom)+'/deob'+Math.round(db.bottom)+(lb.bottom>db.bottom+0.5?'!CUT':'vis')):'/nolp'));
+  }catch(e){ set('SCROLL:err'); } },2400); }
   if(mode==='deck'){ setTimeout(function(){
     var db=document.getElementById('btn-deck-edit')||[].slice.call(document.querySelectorAll('#screen-title button')).filter(function(b){return /덱 편성/.test(b.textContent||'')})[0];
     if(!db){ set(mode+' DECK:FAIL(no-btn)'); return; }
