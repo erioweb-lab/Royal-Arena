@@ -1,3 +1,4 @@
+- v227(사용자 지시): 덱1/덱2 버튼 렌더를 완전 재생성 방식으로 개조 — sig 변경 시 기존 #deck-pick 노드를 removeChild 후 신규 생성(ui-patch 인라인 스타일·__raP 가드 잔여가 남는 문제 원천 차단, sig 보존은 window.__dpSig로 이동). 화면 감사 절차에 사용자 캡처(1080×2340, 주소창 포함)↔내부 캡처 크로스체크 게이트 운용. 칩·sw v227
 - v226(v225 회귀 수복): v225 주입 블록 말미의 미닫힘 <style id="ra-hud-x">가 verchip·#app 전체 DOM을 스타일 텍스트로 삼켜 라이브 빈 화면(클라우드 빈 캡처의 실체) — 잔여 태그 제거, DOM 무결성 게이트 신설(style 열림=닫힘 균형·최종 </style> 뒤 #app/verchip 존재). svh 단일화·safe-area 등 v225 수정 내용은 그대로 유지. 칩·sw v226
 - v225(실기기 증거 2건): ①타이틀 높이 3중 충돌(100dvh-12/100dvh/100dvh-16) 해소 — 100svh 단일화(주소창 고정 뷰포트)+safe-area-inset-bottom 패딩 → 주소창·하단 내비에 가리지 않는 무스크롤 고정 fit ②'평균 엘릭서' 줄었다 늘었다 진동 = dvh 동적 재계산×space-between 레이아웃 진동(텍스트 애니 부재 전수 확인) → svh 고정으로 소멸+deck-pick animation/transition 금지 방어 ③칩·sw v225
 - v224(실기기 증거 2건): ①타이틀 골드 가시성 수복 — background-clip:text 실기기 불안정(S24 카키색 전환) → 단색 로열 골드 #ffe27a+글로우 펄스(raGoldPulse) ②덱 프리뷰 1.5s 블라인드 폴링 제거→이벤트 드리븐 — 재빌드×ui-patch 250ms 경합으로 인한 '평균 엘릭서' 텍스트 주기 변조 제거 ③칩·sw v224

@@ -73,7 +73,11 @@ window.__deckPick=function(){ try{
     box.style.cssText='display:flex;gap:10px;justify-content:center;width:100%;max-width:560px;margin:2px auto 0';
     ta.parentNode.insertBefore(box,ta); }
   var cur=activeSlot(); var d0=loadDeckSlot(0)||DECK, d1=loadDeckSlot(1)||DECK;
-  var sig=cur+'|'+d0.join(',')+'|'+d1.join(','); if(box.__sig===sig) return; box.__sig=sig;
+  var sig=cur+'|'+d0.join(',')+'|'+d1.join(','); if(window.__dpSig===sig) return; window.__dpSig=sig;
+  try{ if(box&&box.parentNode) box.parentNode.removeChild(box); }catch(e){}
+  box=document.createElement('div'); box.id='deck-pick';
+  box.style.cssText='display:flex;gap:10px;justify-content:center;width:100%;max-width:560px;margin:2px auto 0';
+  ta.parentNode.insertBefore(box,ta);   /* v227: 덱 버튼 완전 재생성 — 기존 노드(ui-patch 인라인 스타일·가드 잔여 포함) 제거 후 신규 생성 */
   var html='';
   [d0,d1].forEach(function(dk,n){
     var avg=Math.round(dk.reduce(function(a,k){return a+(CARDS[k]?CARDS[k].cost||0:0);},0)/Math.max(1,dk.length)*10)/10;
