@@ -31,7 +31,7 @@ const CARDS={
   babyd:    {name:'아기 드래곤', emoji:'🐉', cost:4, count:1, hp:1800, dmg:100, hs:1.6, range:3.2, spd:1.2, flying:true, hitsAir:true, targets:'any', r:0.50, splash:1.0, desc:'비행 화염 브레스'},
   cleric:   {name:'성직자',   emoji:'💚', cost:3, count:1, hp:900,  heal:60, hs:1.4, range:0, spd:1.1, flying:false, hitsAir:false, targets:'any', r:0.45, desc:'아군 지속 회복 60'},
   boar:     {name:'돌격 멧돼지', emoji:'🐗', cost:4, count:1, hp:2300, dmg:160, hs:1.5, range:0.9, spd:2.0, flying:false, hitsAir:false, targets:'buildings', r:0.55, charge:true, desc:'건물만 빠른 돌진'},
-  icem:     {name:'서리 마법사', emoji:'❄️', cost:4, count:1, hp:840,  dmg:90,  hs:1.5, range:5.0, spd:1.1, flying:false, hitsAir:true, targets:'any', r:0.45, splash:1.4, slow:1.5, desc:'적중 시 둔화 · 광역'},
+  icem:     {name:'서리 마법사', emoji:'❄️', cost:4, count:1, hp:840,  dmg:90,  hs:1.4, range:5.0, spd:1.1, flying:false, hitsAir:true, targets:'any', r:0.45, splash:1.4, slow:1.5, desc:'적중 시 둔화 · 광역'}   /* v213 보정: 밸런스 패스(중앙값 대비 -45% 경계 → hs 1.4) */,
   meteor:   {name:'유성우',     emoji:'☄️', cost:5, kind:'spell', dmg:420, towerDmg:150, radius:2.0, desc:'낙하 유성 · 착탄 화상 3초'},
   blizzard: {name:'눈보라',     emoji:'🌨️', cost:4, kind:'spell', dmg:180, towerDmg:60, radius:2.4, slow:3, desc:'광역 둔화 3초 주문'},
   greed:    {name:'탐욕 정령',   emoji:'😈', cost:2, count:1, hp:520,  dmg:230, hs:1.3, range:0.9, spd:2.2, flying:false, hitsAir:false, targets:'any', r:0.42, charge:true, desc:'트레이드오프 — 초고속 고화력·최소 체력'},
