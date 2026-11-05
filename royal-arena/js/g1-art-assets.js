@@ -337,7 +337,7 @@ function openDeckEditor(){
      '<div style="display:flex;flex-wrap:wrap;justify-content:center;max-width:560px">'+deck.map(k=>
        '<div class="dk" data-rm="'+k+'"><div class="dke">'+(ART[k]?'<img class="art" style="width:34px" src="'+ART[k]+'">':CARDS[k].emoji)+'</div><div class="dkn">'+CARDS[k].name+'</div><div class="dkc">'+CARDS[k].cost+'</div></div>').join('')+'</div>'+
      '<div style="font-family:Jua,sans-serif;color:#c3d2f2;font-size:13px;margin-top:10px;word-break:keep-all;line-height:1.45;text-align:center">보유 카드 풀 — 카드를 누르면 추가<br><span style="font-size:11.5px;color:#a9bce6">(8장이면 마지막 카드와 교체)</span></div>'+
-     '<div style="display:flex;flex-wrap:wrap;justify-content:center;max-width:560px">'+Object.keys(CARDS).filter(k=>!deck.includes(k)).map(k=>
+     '<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px;width:100%;max-width:430px">'+Object.keys(CARDS).filter(k=>!deck.includes(k)).map(k=>
        '<div class="dk" data-add="'+k+'"><div class="dke">'+(ART[k]?'<img class="art" style="width:34px" src="'+ART[k]+'">':CARDS[k].emoji)+'</div><div class="dkn">'+CARDS[k].name+'</div><div class="dkc">'+CARDS[k].cost+'</div></div>').join('')+'</div>'+
      '<div style="margin:14px;display:flex;gap:10px">'+
       '<button id="dk-save" class="dk-act">💾 저장</button>'+
@@ -405,6 +405,13 @@ try{ (function(){ var iv3=setInterval(function(){
   __d.textContent='🏆 '+__w+'승 '+__l+'패('+((__w+__l)?Math.round(__w/(__w+__l)*100):0)+'%) · 🥇 최고 '+__sb+'연승 · 👑 '+__tp+'트로피';
   ov.insertBefore(__d, ov.firstChild);
  },700); })(); }catch(e){}
+
+/* v221 긴급: 엘릭서 실시간 카드 상태 — 흐림 고착 수복(회복 시 즉시 해제) */
+try{ setInterval(function(){ try{
+  if(typeof P==='undefined'||!P||!window.cardEls) return;
+  for(var __di=0;__di<4;__di++){ var __de=cardEls[__di], __dk=P.hand?P.hand[__di]:null, __dc=__dk?CARDS[__dk]:null;
+    if(__de) __de.classList.toggle('ra-noelx', !!(__dc&&__dc.cost>P.elixir)); }
+ }catch(e){} },300); }catch(e){}
 
 /* v212: 선택형 이벤트 노드 + 인런 렐릭(다음 배틀 1회) */
 try{ (function(){ var EV=[
