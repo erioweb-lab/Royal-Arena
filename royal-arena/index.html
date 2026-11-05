@@ -392,6 +392,9 @@ button:active{transform:translateY(2px)}
 /* v207: 히어로 타이틀 골드 시머 — 패럴랙스 3레이어 마감 */
 .t-hero h1{background:linear-gradient(100deg,#f7c531 0%,#fff3c4 25%,#f7c531 50%,#ffe082 75%,#f7c531 100%);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:raGoldSheen 7s ease-in-out infinite}
 @keyframes raGoldSheen{0%,100%{background-position:0% 0}50%{background-position:100% 0}}
+/* v208 P13: 배치 구역 하이라이트 — 점선+펄스 발광 */
+#ra-zone-hl{position:absolute;left:0;right:0;top:52%;bottom:0;border:2.5px dashed rgba(120,220,140,.8);border-radius:16px;background:rgba(120,220,140,.10);box-shadow:inset 0 0 26px rgba(120,220,140,.25);pointer-events:none;z-index:5;display:none;animation:raZonePulse 1.2s ease-in-out infinite}
+@keyframes raZonePulse{0%,100%{opacity:.55}50%{opacity:1;box-shadow:inset 0 0 40px rgba(120,220,140,.4)}}
 /* v207: 손카드 등급 프레임(코스트 티어 — v155 골드 등급 계보 확장) */
 .card.ra-t1{border-color:#8a6d3b}
 .card.ra-t2{border-color:#c9d4e8;box-shadow:inset 0 0 6px rgba(201,212,232,.18)}

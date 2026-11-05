@@ -31,9 +31,11 @@ const CARDS={
   babyd:    {name:'아기 드래곤', emoji:'🐉', cost:4, count:1, hp:1800, dmg:100, hs:1.6, range:3.2, spd:1.2, flying:true, hitsAir:true, targets:'any', r:0.50, splash:1.0, desc:'비행 화염 브레스'},
   cleric:   {name:'성직자',   emoji:'💚', cost:3, count:1, hp:900,  heal:60, hs:1.4, range:0, spd:1.1, flying:false, hitsAir:false, targets:'any', r:0.45, desc:'아군 지속 회복 60'},
   boar:     {name:'돌격 멧돼지', emoji:'🐗', cost:4, count:1, hp:2300, dmg:160, hs:1.5, range:0.9, spd:2.0, flying:false, hitsAir:false, targets:'buildings', r:0.55, charge:true, desc:'건물만 빠른 돌진'},
-  icem:     {name:'서리 마법사', emoji:'❄️', cost:4, count:1, hp:840,  dmg:90,  hs:1.5, range:5.0, spd:1.1, flying:false, hitsAir:true, targets:'any', r:0.45, splash:1.4, slow:1.5, desc:'적중 시 둔화 · 광역'}
+  icem:     {name:'서리 마법사', emoji:'❄️', cost:4, count:1, hp:840,  dmg:90,  hs:1.5, range:5.0, spd:1.1, flying:false, hitsAir:true, targets:'any', r:0.45, splash:1.4, slow:1.5, desc:'적중 시 둔화 · 광역'},
+  meteor:   {name:'유성우',     emoji:'☄️', cost:5, kind:'spell', dmg:420, towerDmg:150, radius:2.0, desc:'낙하 유성 · 착탄 화상 3초'},
+  blizzard: {name:'눈보라',     emoji:'🌨️', cost:4, kind:'spell', dmg:180, towerDmg:60, radius:2.4, slow:3, desc:'광역 둔화 3초 주문'}
 };
-const DECK=['knight','archers','giant','minions','musketeer','fireball','skarmy','cannon','wizard','sniper','prince','zap','valk','bomber','babyd','cleric','boar','icem'];
+const DECK=['knight','archers','giant','minions','musketeer','fireball','skarmy','cannon','wizard','sniper','prince','zap','valk','bomber','babyd','cleric','boar','icem','meteor','blizzard'];   /* v208: 20종 — 유성우·눈보라 확장 */
 const __ch2=document.getElementById('cards-h2'); if(__ch2) __ch2.textContent='🃏 카드 도감 ('+DECK.length+'종)';
 const __cs=document.getElementById('cards-sub'); if(__cs) __cs.textContent=DECK.length+'종 카드로 승부하는 실시간 아레나 배틀';
 /* ---------- 아레나 테마 (레퍼런스: 클래시 로얄 스토어 스크린샷) ---------- */
@@ -351,6 +353,25 @@ try{ (function(){ var iv=setInterval(function(){
   ov.insertBefore(bar, ov.firstChild.nextSibling||ov.firstChild);
  },600); })(); }catch(e){}
 
+/* v208: 난이도 3단계(영구 저장) + P13 배치 구역 하이라이트 */
+try{ (function(){
+  window.__raDiffHp=function(){ var d=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; return [1,1.25,1.55][d]||1; };
+  window.__raDiffDmg=function(){ var d=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; return [1,1.15,1.35][d]||1; };
+  var DN=['보통','악몽','지옥'], DC=['#67d98a','#e0a13c','#e05c6e'];
+  var iv=setInterval(function(){ var ta=document.getElementById('title-actions'); if(!ta) return; clearInterval(iv);
+    var b=document.createElement('button'); b.id='btn-diff';
+    var d=Math.max(0,Math.min(2,parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0));
+    b.textContent='⚔ 난이도: '+DN[d]; b.style.marginTop='12px'; b.style.color=DC[d];
+    b.onclick=function(){ d=(d+1)%3; localStorage.setItem('ra_diff_v1',String(d)); b.textContent='⚔ 난이도: '+DN[d]; b.style.color=DC[d]; sfx('tap'); toast('난이도: '+DN[d]+' — 적 체력×'+[1,1.25,1.55][d]+' 공격×'+[1,1.15,1.35][d]); };
+    ta.appendChild(b); },300);
+  window.__raZoneHL=function(on){ try{
+    var w=document.getElementById('arena-wrap'); if(!w) return;
+    var z=document.getElementById('ra-zone-hl');
+    if(on){ if(!z){ z=document.createElement('div'); z.id='ra-zone-hl'; w.appendChild(z); } z.style.display='block'; }
+    else if(z) z.style.display='none';
+  }catch(e){} };
+})(); }catch(e){}
+
 /* ---------- 타워 생성 (REA 설계도 §2) ---------- */
 function mkTower(team,kind,x,y){
   const st= kind==='king' ? {hp:2600,dmg:60,hs:1.0,range:7.0,r:1.6} : {hp:1400,dmg:55,hs:0.8,range:7.5,r:1.3};
@@ -395,10 +416,11 @@ function spawnCard(key,team,x,y){ try{ tutOnSpawn(key,team); }catch(e){}   /* v1
   var __cL=1; try{ __cL=(team==='blue')?__cLv(key):1; }catch(__e){}   /* v185: 카드 레벨 시스템 */
   var __m=1+0.04*(__cL-1);
   const cc=(__m>1)?Object.assign({},c,{hp:Math.round(c.hp*__m),dmg:Math.round((c.dmg||0)*__m)}):c;   /* CARDS 원본 보존 — 유닛별 클론 */
+  var __dm=(team==='red')?__raDiffHp():1;   /* v208: 난이도 배율 — 적 스폰 HP */
   for(const o of formation(c.count||1)){
     let ux=clamp(x+o[0],0.7,COLS-0.7), uy=clamp(y+o[1],0.7,ROWS-0.7);
     if(!c.flying && uy>RIVER_Y0-0.2 && uy<RIVER_Y1+0.2) uy = team==='blue'? RIVER_Y1+0.25 : RIVER_Y0-0.25;
-    units.push({id:uid++, key, team, c:cc, r:cc.r, x:ux, y:uy, hp:cc.hp, maxHp:cc.hp, cd:0.35, swing:0, bob:Math.random()*6.28,
+    units.push({id:uid++, key, team, c:cc, r:cc.r, x:ux, y:uy, hp:Math.round(cc.hp*__dm), maxHp:Math.round(cc.hp*__dm), cd:0.35, swing:0, bob:Math.random()*6.28,
                 target:null, spawnFx:0.45, building:c.kind==='building', life:c.life||0, dead:false,
                 stun:0, slowT:0, frozenT:0, chargeT:0, charging:false, dir:team==='blue'?-Math.PI/2:Math.PI/2});
   }
@@ -631,8 +653,19 @@ function updateProjs(dt){
   projs=projs.filter(p=>!p.done);
 }
 function castSpellBase(key,team,x,y){ if(S.spells) S.spells[team]=(S.spells[team]||0)+1;   // v99 P8: 주문 사용 집계
-  if(key==='zap') castZap(team,x,y); else castFireball(team,x,y);
+  if(key==='meteor') castMeteor(team,x,y); else if(key==='blizzard') castBlizzard(team,x,y); else if(key==='zap') castZap(team,x,y); else castFireball(team,x,y);
 }
+/* v208: 유성우 — 즉시 착탄 광역+화상 3초 */
+function castMeteor(team,x,y){ const c=CARDS.meteor, et=enemyOf(team);
+  fx.push({x,y,t:0,dur:0.55,kind:'warnring'}); fx.push({x,y,t:0,dur:0.5,kind:'boom'}); fx.push({x,y,t:0,dur:0.35,kind:'flash'}); S.shake=0.6; S.spellQuiet=2.2; sfx('boom');
+  addParts(x,y,26,'#ff9d3c',3.6,0.6,70);
+  for(const u of units){ if(u.dead||u.team!==et) continue; if(Math.hypot(u.x-x,u.y-y)<=c.radius){ u.burnT=Math.max(u.burnT||0,3); u.burnDps=24; u.burnAcc=0; dealDamage(u,spellDmg(c.dmg),team,true); } }
+  for(const t of towers){ if(t.dead||t.team!==et) continue; if(Math.hypot(t.x-x,t.y-y)<=c.radius+0.5) dealDamage(t,spellDmg(c.towerDmg),team); } }
+/* v208: 눈보라 — 광역 둔화 3초 */
+function castBlizzard(team,x,y){ const c=CARDS.blizzard, et=enemyOf(team);
+  fx.push({x,y,t:0,dur:0.6,kind:'zap'}); fx.push({x,y,t:0,dur:0.5,kind:'ring',col:'rgba(160,220,255,.9)'}); addParts(x,y,16,'#bfe4ff',2.8,0.55,40); sfx('cast'); S.spellQuiet=1.6;
+  for(const u of units){ if(u.dead||u.team!==et) continue; if(Math.hypot(u.x-x,u.y-y)<=c.radius){ u.slowT=Math.max(u.slowT||0,c.slow); dealDamage(u,spellDmg(c.dmg),team,true); } }
+  for(const t of towers){ if(t.dead||t.team!==et) continue; if(Math.hypot(t.x-x,t.y-y)<=c.radius+0.4) dealDamage(t,spellDmg(c.towerDmg),team); } }
 function castZap(team,x,y){
   const c=CARDS.zap, et=enemyOf(team);
   fx.push({x,y,t:0,dur:0.4,kind:'zap'}); fx.push({x,y,t:0,dur:0.4,kind:'zapx'}); S.shake=0.3; S.spellQuiet=2.6; sfx('zap');   // v118: 자패 진정 기간
@@ -675,9 +708,13 @@ function dealDamage(e,dmg,fromTeam,fromSpell){
   if(S&&S.relic==='relic_atk'&&fromTeam==='blue'&&e&&e.team==='red'&&!e.isTower) dmg=Math.round(dmg*1.1);   // v109 #13: 유물 — 전투 문장
   if(fromTeam==='blue'&&e&&e.team==='red'&&!e.isTower&&fromSpell!==true) dmg=Math.round(dmg*(1+0.08*((S._sk&&S._sk.off1)||0)+0.06*((S._sk&&S._sk.off2)||0)+0.12*((S._sk&&S._sk.off3)||0)));   // v119: 스킬트리 공세 계통 — 일반 유닛 공격만(주문 제외)
   if(e.dead) return;
+  if(fromTeam==='red'&&e&&!e.isTower) dmg=Math.round(dmg*__raDiffDmg());   /* v208: 난이도 — 적 공격력 배율 */
   var __st=((e.burnT>0)?1:0)+((e.slowT>0)?1:0)+((e.stun>0)?1:0)+((e.frozenT>0)?1:0);
   var __mult=__st>=3?2:(__st===2?1.4:1);
   dmg=Math.round(dmg*__mult);
+  var __weak=(e.slowT>0||e.stun>0||e.frozenT>0)?1.25:1;   /* v208: 약점 강타 — 상태이상 노출 대상 +25% */
+  if(__weak>1){ dmg=Math.round(dmg*__weak); if(!(e.comboCd>0)){ e.comboCd=1.2; floats.push({dx:(Math.random()*10-5),dy:(Math.random()*4-2),x:e.x,y:e.y-(e.r||0.45)-1.6,txt:'약점 강타!',t:0.75,col:'#7fe6ff',big:false}); } }
+  if(fromTeam==='blue'&&e&&!e.isTower&&Math.random()<0.12){ dmg=Math.round(dmg*2); floats.push({dx:(Math.random()*14-7),dy:(Math.random()*6-3),x:e.x,y:e.y-(e.r||0.45)-1.9,txt:'치명타!',t:0.9,col:'#ffd54f',big:true}); sfx('crown'); }   /* v208: 크리티컬 12% ×2 — 아군 공격 한정 */
   if(__st>=2&&!(e.comboCd>0)){
     e.comboCd=1.2;
     floats.push({dx:(Math.random()*14-7),dy:(Math.random()*6-3),x:e.x,y:e.y-(e.r||0.45)-1.1,txt:__st>=3?'3원소 콤보 ×2!':'2원소 콤보 +40%',t:0.8,col:__st>=3?'#ff9d3c':'#ffe95e',big:true});
@@ -1851,6 +1888,7 @@ function buildHandUI(){
   syncHand();
 }
 function syncHand(){
+  try{ __raZoneHL(dragFrom>=0||P.sel!=null); }catch(e){}   /* v208 P13: 카드 드래그·선택 중 배치 구역 하이라이트 */
   try{ if(TUT.on&&(TUT.step===1||TUT.step===4)) setTimeout(tutShow,0); }catch(e){}   /* v147: 핸드 재구성 후 링·디밍 재적용(buildHandUI가 카드 DOM을 재생성하는 결함 수복) */
   for(let i=0;i<4;i++){
     const d=cardEls[i]; if(!d) continue;
