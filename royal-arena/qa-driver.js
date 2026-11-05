@@ -106,7 +106,7 @@ function runBattle(cb){
   },500); }
   if(mode==='deck'){ setTimeout(function(){ try{ var out=[];   /* v250: 덱슬롯 지오메트리 실측 */
     [].slice.call(document.querySelectorAll('#deck-edit button[data-slot]')).forEach(function(b,i){ out.push('s'+i+':h'+b.offsetHeight+'/sh'+b.scrollHeight+'/w'+b.clientWidth+'/sw'+b.scrollWidth); });
-    var de=document.getElementById('deck-edit'); if(de){ out.push('de:sw'+de.scrollWidth+'/cw'+de.clientWidth+'/pb'+getComputedStyle(de).paddingBottom); }
+    var de=document.getElementById('deck-edit'); if(de){ out.push('de:sh'+de.scrollHeight+'/ch'+de.clientHeight+'/pb'+getComputedStyle(de).paddingBottom); var __lp=[].slice.call(de.querySelectorAll('[data-add]')).pop(); if(__lp){ var __dr=de.getBoundingClientRect(),__lr=__lp.getBoundingClientRect(); out.push('lastpool/b'+Math.round(__lr.bottom)+'/deob'+Math.round(__dr.bottom)+((__lr.bottom>__dr.bottom+0.5)?'/!CUT':'/vis')); } }
     set('SLOTGEO:'+out.join(' | '));   /* v253: 지연 후 출력 */
   }catch(e){ set('SLOTGEO:err'); } },1500); }
   if(mode==='deck'){ setTimeout(function(){ try{ var de=document.getElementById('deck-edit'); if(!de){ set('BORDCHK:no-de'); return; }   /* v262: 버튼 경계 상자 숫자 실측 — AI 판독 대신 클립 포함 여부를 숫자로 판정 */
