@@ -16,24 +16,17 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json({ limit: '60mb' }));
 app.use(express.urlencoded({ extended: true, limit: '60mb' }));
 
-// Serve ui-patch.js explicitly from project root
-app.get('/ui-patch.js', (_req, res) => {
-  const patchPath = path.resolve(__dirname, 'ui-patch.js');
   if (fs.existsSync(patchPath)) {
     res.setHeader('Content-Type', 'application/javascript');
     res.sendFile(patchPath);
   } else {
-    res.status(404).send('// ui-patch.js not found');
   }
 });
 
-// Intercept /game-view/index.html to inject ui-patch.js script dynamically
 app.get('/game-view/index.html', (_req, res) => {
   const htmlPath = path.join(REPO_DIR, 'index.html');
   if (fs.existsSync(htmlPath)) {
     let content = fs.readFileSync(htmlPath, 'utf-8');
-    if (!content.includes('ui-patch.js')) {
-      content = content.replace('</head>', '<script src="/ui-patch.js"></script>\n</head>');
     }
     res.setHeader('Content-Type', 'text/html');
     res.setHeader('Cache-Control', 'no-cache');
