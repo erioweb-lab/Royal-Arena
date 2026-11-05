@@ -94,6 +94,15 @@ function runBattle(cb){
       else if(tries<10){ setTimeout(go,400); } else { set('SCREEN-codex:FAIL'); } }
     setTimeout(go,400);
   })(); }
+  if(mode==='walk'){ setTimeout(function(){   /* v239: 배틀 시작 버튼 런타임 실측 덤프 */
+    try{ var bs=document.getElementById('btn-start');
+      if(!bs){ set('STARTSTYLE:no-btn'); return; }
+      var cs=getComputedStyle(bs);
+      var bi=(cs.backgroundImage||'');
+      var bg=bi!==''?('img:'+bi.slice(0,150)):('clr:'+cs.backgroundColor);
+      set('STARTSTYLE:'+bg+' | color:'+cs.color+' | cls='+bs.className+' | inline='+String(bs.getAttribute('style')||'none').slice(0,120));
+    }catch(e){ set('STARTSTYLE:err'); }
+  },500); }
   if(mode==='deck'){ setTimeout(function(){
     var db=document.getElementById('btn-deck-edit')||[].slice.call(document.querySelectorAll('#screen-title button')).filter(function(b){return /덱 편성/.test(b.textContent||'')})[0];
     if(!db){ set(mode+' DECK:FAIL(no-btn)'); return; }
