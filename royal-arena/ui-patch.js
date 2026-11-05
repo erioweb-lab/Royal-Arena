@@ -1024,7 +1024,7 @@
     const deckEdit = document.getElementById('deck-edit');
     if (deckEdit) {
       if (deckEdit.parentElement !== document.body) document.body.appendChild(deckEdit);
-      setImp(deckEdit, 'padding-bottom', '64px');
+      setImp(deckEdit, 'padding-bottom', '132px');   /* v223: sticky 액션바가 마지막 행 가리지 않도록 */
 
       deckEdit.querySelectorAll('span, div, b, p, button').forEach(el => {
         if (el.__raP) return; el.__raP = 1;
