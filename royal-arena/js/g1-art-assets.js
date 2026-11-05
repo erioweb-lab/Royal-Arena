@@ -33,9 +33,12 @@ const CARDS={
   boar:     {name:'돌격 멧돼지', emoji:'🐗', cost:4, count:1, hp:2300, dmg:160, hs:1.5, range:0.9, spd:2.0, flying:false, hitsAir:false, targets:'buildings', r:0.55, charge:true, desc:'건물만 빠른 돌진'},
   icem:     {name:'서리 마법사', emoji:'❄️', cost:4, count:1, hp:840,  dmg:90,  hs:1.5, range:5.0, spd:1.1, flying:false, hitsAir:true, targets:'any', r:0.45, splash:1.4, slow:1.5, desc:'적중 시 둔화 · 광역'},
   meteor:   {name:'유성우',     emoji:'☄️', cost:5, kind:'spell', dmg:420, towerDmg:150, radius:2.0, desc:'낙하 유성 · 착탄 화상 3초'},
-  blizzard: {name:'눈보라',     emoji:'🌨️', cost:4, kind:'spell', dmg:180, towerDmg:60, radius:2.4, slow:3, desc:'광역 둔화 3초 주문'}
+  blizzard: {name:'눈보라',     emoji:'🌨️', cost:4, kind:'spell', dmg:180, towerDmg:60, radius:2.4, slow:3, desc:'광역 둔화 3초 주문'},
+  greed:    {name:'탐욕 정령',   emoji:'😈', cost:2, count:1, hp:520,  dmg:230, hs:1.3, range:0.9, spd:2.2, flying:false, hitsAir:false, targets:'any', r:0.42, charge:true, desc:'트레이드오프 — 초고속 고화력·최소 체력'},
+  glass:    {name:'유리 대포',   emoji:'🎇', cost:4, kind:'building', count:1, hp:520, dmg:230, hs:1.6, range:6.0, hitsAir:true, targets:'any', r:0.68, life:15, splash:1.2, desc:'트레이드오프 — 강력 포격·수명 15초'},
+  fort:     {name:'최전방 요새', emoji:'🏰', cost:5, kind:'building', count:1, hp:2600, dmg:45, hs:1.8, range:4.5, hitsAir:true, targets:'any', r:0.75, life:40, desc:'트레이드오프 — 견고한 방벽·약한 화력'}
 };
-const DECK=['knight','archers','giant','minions','musketeer','fireball','skarmy','cannon','wizard','sniper','prince','zap','valk','bomber','babyd','cleric','boar','icem','meteor','blizzard'];   /* v208: 20종 — 유성우·눈보라 확장 */
+const DECK=['knight','archers','giant','minions','musketeer','fireball','skarmy','cannon','wizard','sniper','prince','zap','valk','bomber','babyd','cleric','boar','icem','meteor','blizzard','greed','glass','fort'];   /* v209: 23종 — 트레이드오프 카드 확장 */
 const __ch2=document.getElementById('cards-h2'); if(__ch2) __ch2.textContent='🃏 카드 도감 ('+DECK.length+'종)';
 const __cs=document.getElementById('cards-sub'); if(__cs) __cs.textContent=DECK.length+'종 카드로 승부하는 실시간 아레나 배틀';
 /* ---------- 아레나 테마 (레퍼런스: 클래시 로얄 스토어 스크린샷) ---------- */
@@ -360,9 +363,9 @@ try{ (function(){
   var DN=['보통','악몽','지옥'], DC=['#67d98a','#e0a13c','#e05c6e'];
   var iv=setInterval(function(){ var ta=document.getElementById('title-actions'); if(!ta) return; clearInterval(iv);
     var b=document.createElement('button'); b.id='btn-diff';
-    var d=Math.max(0,Math.min(2,parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0));
-    b.textContent='⚔ 난이도: '+DN[d]; b.style.marginTop='12px'; b.style.color=DC[d];
-    b.onclick=function(){ d=(d+1)%3; localStorage.setItem('ra_diff_v1',String(d)); b.textContent='⚔ 난이도: '+DN[d]; b.style.color=DC[d]; sfx('tap'); toast('난이도: '+DN[d]+' — 적 체력×'+[1,1.25,1.55][d]+' 공격×'+[1,1.15,1.35][d]); };
+    var __cl0=parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)+1; var d=Math.max(0,Math.min(2,Math.min(parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0,__cl0)));   /* v209: 미해금 난이도 저장값 클램프 */
+    b.textContent='⚔ 난이도: '+DN[d]; b.style.marginTop='12px'; b.style.color=DC[d]; b.title='토벌 단계당 아군 성벽 HP +6%·처치 시 엘릭서 +4%×단계';
+    b.onclick=function(){ var __cl=parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)+1; var __nd=(d+1)%3; if(__nd>__cl){ toast('잠금 — 이전 난이도 토벌(왕 타워 파괴) 후 해금'); sfx('tap'); return; } d=__nd; localStorage.setItem('ra_diff_v1',String(d)); b.textContent='⚔ 난이도: '+DN[d]; b.style.color=DC[d]; sfx('tap'); toast('난이도: '+DN[d]+' — 적 체력×'+[1,1.25,1.55][d]+' 공격×'+[1,1.15,1.35][d]); };   /* v209: 토벌 해금 게이트 */
     ta.appendChild(b); },300);
   window.__raZoneHL=function(on){ try{
     var w=document.getElementById('arena-wrap'); if(!w) return;
@@ -375,6 +378,7 @@ try{ (function(){
 /* ---------- 타워 생성 (REA 설계도 §2) ---------- */
 function mkTower(team,kind,x,y){
   const st= kind==='king' ? {hp:2600,dmg:60,hs:1.0,range:7.0,r:1.6} : {hp:1400,dmg:55,hs:0.8,range:7.5,r:1.3};
+  if(team==='blue'){ try{ var __cl2=parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)+1; if(__cl2>0) st.hp=Math.round(st.hp*(1+0.06*__cl2)); }catch(__e){} }   /* v209: 영구 강화 — 성벽 HP(토벌 단계당 +6%, castleHpBonus 프레임) */
   return {isTower:true, kind, team, x, y, hp:st.hp, maxHp:st.hp, dmg:st.dmg, hs:st.hs, range:st.range, r:st.r, cd:0, dead:false, active:kind!=='king'};
 }
 function spawnBossNow(){ if(S.bossSpawned||S.over) return; S.bossSpawned=true;
@@ -417,13 +421,15 @@ function spawnCard(key,team,x,y){ try{ tutOnSpawn(key,team); }catch(e){}   /* v1
   var __m=1+0.04*(__cL-1);
   const cc=(__m>1)?Object.assign({},c,{hp:Math.round(c.hp*__m),dmg:Math.round((c.dmg||0)*__m)}):c;   /* CARDS 원본 보존 — 유닛별 클론 */
   var __dm=(team==='red')?__raDiffHp():1;   /* v208: 난이도 배율 — 적 스폰 HP */
+  var __sh=0,__hl=false,__sp=false; if(team==='red'&&!c.kind&&key!=='boss'){ var __tq=Math.random(); if(__tq<0.08){ __sh=Math.round(cc.hp*0.3); } else if(__tq<0.15){ __hl=true; } else if(__tq<0.22){ __sp=true; } }   /* v209: 적 특성 패턴 — 실드·힐러·분열 */
   for(const o of formation(c.count||1)){
     let ux=clamp(x+o[0],0.7,COLS-0.7), uy=clamp(y+o[1],0.7,ROWS-0.7);
     if(!c.flying && uy>RIVER_Y0-0.2 && uy<RIVER_Y1+0.2) uy = team==='blue'? RIVER_Y1+0.25 : RIVER_Y0-0.25;
     units.push({id:uid++, key, team, c:cc, r:cc.r, x:ux, y:uy, hp:Math.round(cc.hp*__dm), maxHp:Math.round(cc.hp*__dm), cd:0.35, swing:0, bob:Math.random()*6.28,
                 target:null, spawnFx:0.45, building:c.kind==='building', life:c.life||0, dead:false,
-                stun:0, slowT:0, frozenT:0, chargeT:0, charging:false, dir:team==='blue'?-Math.PI/2:Math.PI/2});
+                stun:0, slowT:0, frozenT:0, chargeT:0, charging:false, shield:__sh, healer:__hl, split:__sp, dir:team==='blue'?-Math.PI/2:Math.PI/2});
   }
+  if(__sh) floats.push({dx:0,dy:0,x,y:y-0.6,txt:'실드!',t:0.8,col:'#7fe6ff',big:false}); else if(__hl) floats.push({dx:0,dy:0,x,y:y-0.6,txt:'힐러',t:0.8,col:'#8fe6a8',big:false}); else if(__sp) floats.push({dx:0,dy:0,x,y:y-0.6,txt:'분열체',t:0.8,col:'#e0a1ff',big:false});   /* v209: 특성 알림 */
   fx.push({x,y,t:0,dur:0.45,kind:'pillar',col:team==='blue'?'#9cc4ff':'#ff9d9d'});
   fx.push({x,y,t:0,dur:0.5,kind:'ring',col:team==='blue'?'#7fb0ff':'#ff9d9d'});
   addParts(x,y,8,team==='blue'?'#9cc4ff':'#ff9d9d',2.4,0.4,-30);
@@ -564,6 +570,7 @@ function updateUnit(u,dt){
       floats.push({dx:(Math.random()*14-7),dy:(Math.random()*6-3),x:u.x+(Math.random()-0.5)*0.5,y:u.y-0.9,txt:__bd,t:0.55,col:'#ff9d3c',big:false});
       if(u.hp<=0){ u.hp=0; u.dead=true; killUnit(u,false); return; } } }
   if(u.slowT>0) u.slowT-=dt;
+  if(u.healer&&!u.dead&&u.hp<u.maxHp) u.hp=Math.min(u.maxHp,u.hp+10*dt);   /* v209: 힐러 특성 — 자가 재생 10/s */
   if(u.stun>0){ u.stun-=dt; u.swing=0; return; }
   if(u.frozenT>0){ u.frozenT-=dt; u.swing=0; if(Math.random()<0.15) addParts(u.x,u.y-0.3,1,'#b4ebff',1.0,0.5,-15);   /* v195: 빙결 파편 */ return; }   /* v138: 빙결 — 이동·공격 불가, 콤보 원소 1로 계수 */
   if(u.building){ // 캐논(건물): 고정, 수명 있음
@@ -730,6 +737,9 @@ function dealDamage(e,dmg,fromTeam,fromSpell){
   if(e.hp<=0){ e.hp=0; e.dead=true;
     if(fromTeam&&S.kills&&!e.isTower) S.kills[fromTeam]++;
     if(!e.isTower&&S.deaths&&e.team) S.deaths[e.team]=(S.deaths[e.team]||0)+1;   // v99 P8: 데스 집계
+  if(e.isTower&&e.kind==='king'&&fromTeam==='blue'){ try{ var __cd0=parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)||-1; var __dc0=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; if(__dc0>__cd0) localStorage.setItem('ra_diff_clear_v1',String(__dc0)); }catch(__e){} }   /* v209: 난이도 토벌 기록 — 다음 난이도 해금 */
+  if(fromTeam==='blue'&&!e.isTower){ try{ var __kg=parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)+1; if(typeof P!=='undefined'&&P&&typeof P.elixir==='number') P.elixir=Math.min(10,P.elixir+0.04*(1+Math.max(0,__kg))); }catch(__e){} }   /* v209: 처치 보상 — 킬 엘릭서(토벌 단계 계수, killGoldBonus 프레임) */
+  if(!e.isTower&&e.split&&e.team==='red'){ setTimeout(function(){ try{ if(S.over) return; var __sc=Object.assign({},CARDS.minions,{hp:70,dmg:22,name:'분열체',count:1}); for(var __si=0;__si<2;__si++){ units.push({id:uid++, key:'minions', team:'red', c:__sc, r:0.32, x:clamp(e.x+(__si?0.35:-0.35),0.7,COLS-0.7), y:clamp(e.y+0.3,0.7,ROWS-0.7), hp:70, maxHp:70, cd:0.4, swing:0, bob:Math.random()*6.28, target:null, spawnFx:0.45, building:false, life:0, dead:false, stun:0, slowT:0, frozenT:0, chargeT:0, charging:false, dir:Math.PI/2}); } }catch(__e){} },60); }   /* v209: 분열 특성 — 사망 시 소형 2체 */
     if(e.isTower) destroyTower(e,fromTeam); else killUnit(e,false); }
 }
 function killUnit(u,expire){
@@ -1082,6 +1092,14 @@ function drawStatic(){
   
     g.fillStyle='rgba(0,0,0,.055)';
     for(let r=0;r<ROWS;r++)for(let c2=0;c2<COLS;c2++) if((r+c2)%2) g.fillRect(c2*TILE,r*TILE,TILE,TILE); }
+  try{ var __RK=[[1.1,7.5,0.55],[COLS-1.2,5.2,0.42],[1.4,ROWS-7,0.5],[COLS-1.5,ROWS-9,0.62],[2.2,ROWS/2-4,0.36],[COLS-2.1,ROWS/2+3,0.4]];   /* v209: 바위 장식 — 절차적 드로잉 */
+  for(var __ri=0;__ri<__RK.length;__ri++){ var __rk=__RK[__ri], __rx=__rk[0]*TILE, __ry=__rk[1]*TILE, __rr=__rk[2]*TILE;
+    g.save(); g.translate(__rx,__ry);
+    g.fillStyle='rgba(0,0,0,.18)'; g.beginPath(); g.ellipse(2,4,__rr,__rr*0.55,0,0,6.29); g.fill();
+    g.fillStyle='#6b7280'; g.beginPath(); g.moveTo(-__rr,0); g.lineTo(-__rr*0.55,-__rr*0.8); g.lineTo(__rr*0.4,-__rr*0.9); g.lineTo(__rr,__rr*0.05); g.lineTo(__rr*0.45,__rr*0.55); g.lineTo(-__rr*0.5,__rr*0.5); g.closePath(); g.fill();
+    g.fillStyle='#9aa2ad'; g.beginPath(); g.moveTo(-__rr*0.55,-__rr*0.8); g.lineTo(__rr*0.4,-__rr*0.9); g.lineTo(__rr*0.2,-__rr*0.2); g.lineTo(-__rr*0.3,-__rr*0.15); g.closePath(); g.fill();
+    g.restore(); }
+  }catch(__e){}
   let seed=7;
   const rnd=()=>{ seed=(seed*16807)%2147483647; return seed/2147483647; };
   g.fillStyle=T.speck;
