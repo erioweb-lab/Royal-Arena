@@ -365,7 +365,7 @@ try{ (function(){
   var iv=setInterval(function(){ var ta=document.getElementById('title-actions'); if(!ta) return; clearInterval(iv);
     var b=document.createElement('button'); b.id='btn-diff';
     var __cl0=parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)+1; var d=Math.max(0,Math.min(2,Math.min(parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0,__cl0)));   /* v209: 미해금 난이도 저장값 클램프 */
-    b.textContent='⚔ 난이도: '+DN[d]; b.style.marginTop='12px'; b.style.color=DC[d]; b.title='토벌 단계당 아군 성벽 HP +6%·처치 시 엘릭서 +4%×단계';
+    b.textContent='⚔ 난이도: '+DN[d]; b.style.marginTop='12px'; b.style.color=DC[d]; b.title='토벌 단계당 아군 성벽 HP +6%·처치 시 엘릭서 +4%×단계'; if(__cl0>0) b.textContent+=' 🏆'+__cl0;   /* v211: 토벌 단계 표시 */
     b.onclick=function(){ var __cl=parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)+1; var __nd=(d+1)%3; if(__nd>__cl){ toast('잠금 — 이전 난이도 토벌(왕 타워 파괴) 후 해금'); sfx('tap'); return; } d=__nd; localStorage.setItem('ra_diff_v1',String(d)); b.textContent='⚔ 난이도: '+DN[d]; b.style.color=DC[d]; sfx('tap'); toast('난이도: '+DN[d]+' — 적 체력×'+__raDIFF.hp[d]+' 공격×'+__raDIFF.dmg[d]); };   /* v209: 토벌 해금 게이트 */
     ta.appendChild(b); },300);
   window.__raZoneHL=function(on){ try{
@@ -718,7 +718,7 @@ function dealDamage(e,dmg,fromTeam,fromSpell){
   if(e.dead) return;
   if(fromTeam==='red'&&e&&!e.isTower) dmg=Math.round(dmg*__raDiffDmg());   /* v208: 난이도 — 적 공격력 배율 */
   var __st=((e.burnT>0)?1:0)+((e.slowT>0)?1:0)+((e.stun>0)?1:0)+((e.frozenT>0)?1:0);
-  var __mult=__st>=3?2:(__st===2?1.4:1);
+  var __mult=__st>=4?2.5:(__st>=3?2:(__st===2?1.4:1));   /* v211: 4원소 궁극 quad_arcane ×2.5 */
   dmg=Math.round(dmg*__mult);
   var __weak=(e.slowT>0||e.stun>0||e.frozenT>0)?1.25:1;   /* v208: 약점 강타 — 상태이상 노출 대상 +25% */
   if(__weak>1){ dmg=Math.round(dmg*__weak); if(!(e.comboCd>0)){ e.comboCd=1.2; floats.push({dx:(Math.random()*10-5),dy:(Math.random()*4-2),x:e.x,y:e.y-(e.r||0.45)-1.6,txt:'약점 강타!',t:0.75,col:'#7fe6ff',big:false}); } }
@@ -727,7 +727,8 @@ function dealDamage(e,dmg,fromTeam,fromSpell){
     e.comboCd=1.2;
     var __ck=(e.burnT>0?'b':'')+(e.slowT>0?'s':'')+(e.stun>0?'t':'')+(e.frozenT>0?'f':'');
     var __cn=__st>=3?'3원소 대콤보 ×2!':((({bs:'증기 폭발',bt:'용암 감전',bf:'서리 화염',st:'감전 빙결',sf:'혹한 서리',tf:'파쇄 얼음'})[__ck]||'2원소 콤보')+' +40%');   /* v210: 명명된 2원소 콤보 6종 */
-    floats.push({dx:(Math.random()*14-7),dy:(Math.random()*6-3),x:e.x,y:e.y-(e.r||0.45)-1.1,txt:__cn,t:0.8,col:__st>=3?'#ff9d3c':'#ffe95e',big:true});
+    floats.push({dx:(Math.random()*14-7),dy:(Math.random()*6-3),x:e.x,y:e.y-(e.r||0.45)-1.1,txt:(__st>=4?'4원소 붕괴 ×2.5!':__cn),t:0.9,col:__st>=4?'#c77dff':(__st>=3?'#ff9d3c':'#ffe95e'),big:true});
+    if(__st>=3) addParts(e.x,e.y,__st>=4?20:12,__st>=4?'#c77dff':'#ff9d3c',3,0.5,60); if(__st>=3) addParts(e.x,e.y,__st>=4?14:8,'#7fe6ff',2.6,0.45,45);   /* v211: 2색 파티클 — 3원소 대콤보·4원소 궁극 */
     fx.push({x:e.x,y:e.y,t:0,dur:0.35,kind:'ring',col:__st>=3?'rgba(255,157,60,.9)':'rgba(255,233,94,.9)'});
   }
   if((e.shield||0)>0){ const ab=Math.min(e.shield,dmg); e.shield-=ab; dmg-=ab; }
