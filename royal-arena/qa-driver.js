@@ -18,6 +18,7 @@ document.addEventListener('ra-crash',function(e){e.stopImmediatePropagation();er
 var ov=document.createElement('div');
 ov.style.cssText='position:fixed;top:46px;left:4px;z-index:99999;background:rgba(0,0,0,.88);color:#8dff8d;font:700 12px monospace;padding:8px 12px;border-radius:10px;max-width:94vw;white-space:pre-wrap;pointer-events:none;border:2px solid #2aff2a';
 document.documentElement.appendChild(ov);
+if(q.get('qahide')==='1'){ ov.style.display='none'; }   /* v256: 증거 캡처용 — QA 오버레이만 숨김(드라이버 로직 유지) */
 function set(t){ov.textContent='QA '+t;}
 set(mode+' BOOT');
 function vis(el){var r=el.getBoundingClientRect();return r.width>0&&r.height>0&&!el.disabled;}
