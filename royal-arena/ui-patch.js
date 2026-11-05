@@ -950,7 +950,8 @@
 
     // 1. 메인 화면 '배틀 시작' 버튼 (번짐 없는 선명한 텍스트)
     const startBtn = document.getElementById('btn-start');
-    if (startBtn) {
+    if (startBtn && !startBtn.__raP) {
+      startBtn.__raP = 1;
       cleanFont(startBtn, '800');
       setImp(startBtn, 'background', 'linear-gradient(180deg, #ffca28 0%, #ff8f00 100%)');
       setImp(startBtn, 'border', '1.5px solid #ffe082');
@@ -965,6 +966,9 @@
     const deckPick = document.getElementById('deck-pick');
     if (deckPick) {
       Array.from(deckPick.children).forEach(card => {
+        const __sel = (card.textContent || '').trim().includes('선택됨') || card.classList.contains('on') || card.classList.contains('active');
+        if (card.__raP && card.__raSel === __sel) return;
+        card.__raP = 1; card.__raSel = __sel;
         const txt = (card.textContent || '').trim();
         const isSelected = txt.includes('선택됨') || card.classList.contains('on') || card.classList.contains('active');
         setImp(card, 'width', '100%');
@@ -988,6 +992,7 @@
 
     // 3. 메인 하단 메뉴 버튼 컬러 & 정렬
     document.querySelectorAll('#title-actions > *, .t-links button, #btn-info').forEach(btn => {
+      if (btn.__raP) return; btn.__raP = 1;
       const t = (btn.textContent || '').trim();
       cleanFont(btn, '700');
       setImp(btn, 'width', '100%');
@@ -1022,6 +1027,7 @@
       setImp(deckEdit, 'padding-bottom', '64px');
 
       deckEdit.querySelectorAll('span, div, b, p, button').forEach(el => {
+        if (el.__raP) return; el.__raP = 1;
         if (el.children.length === 0 && el.textContent) {
           if (el.textContent.includes('NaN')) {
             el.textContent = el.textContent.replace(/NaN/g, '0.0');
@@ -1084,8 +1090,8 @@
         });
       };
 
-      if (curGrid) {
-        setImp(curGrid, 'flex', '0 0 auto');
+      if (curGrid && !curGrid.__raP) {
+        curGrid.__raP = 1;
         setImp(curGrid, 'display', 'grid');
         setImp(curGrid, 'grid-template-columns', 'repeat(4, 1fr)');
         setImp(curGrid, 'grid-template-rows', 'repeat(2, 54px)');
@@ -1115,8 +1121,8 @@
         }
       }
 
-      if (poolGrid) {
-        setImp(poolGrid, 'flex', '1 1 0%');
+      if (poolGrid && !poolGrid.__raP) {
+        poolGrid.__raP = 1;
         setImp(poolGrid, 'display', 'grid');
         setImp(poolGrid, 'grid-template-columns', 'repeat(5, 1fr)');
         setImp(poolGrid, 'grid-template-rows', 'auto');
@@ -1137,7 +1143,8 @@
       const saveBtn = realBtns.find(b => (b.textContent || '').includes('저장'));
       let closeBtn = realBtns.find(b => (b.textContent || '').includes('닫기') || b.id === 'deck-close' || b.id === 'ra-deck-close-btn');
 
-      if (saveBtn && saveBtn.parentElement && saveBtn.parentElement !== deckEdit) {
+      if (saveBtn && saveBtn.parentElement && saveBtn.parentElement !== deckEdit && !saveBtn.__raP) {
+        saveBtn.__raP = 1;
         const actionRow = saveBtn.parentElement;
         setImp(actionRow, 'flex', '0 0 auto');
         setImp(actionRow, 'display', 'grid');
@@ -1234,6 +1241,7 @@
       }
 
       modal.querySelectorAll('button').forEach(b => {
+        if (b.__raP) return; b.__raP = 1;
         cleanFont(b, '700');
         if (b.closest('.sk-item')) return;
         const txt = (b.textContent || '').trim();
@@ -1271,7 +1279,7 @@
     // 6. 엔딩 모달 버튼 글자 번짐 제거
     const ovRes = document.getElementById('overlay-result');
     if (ovRes) {
-      ovRes.querySelectorAll('button').forEach(b => cleanFont(b, '700'));
+      ovRes.querySelectorAll('button').forEach(b => { if (!b.__raP) { b.__raP = 1; cleanFont(b, '700'); } });
     }
   }
 
