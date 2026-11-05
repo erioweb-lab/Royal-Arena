@@ -220,7 +220,7 @@ h1,h2{font-family:'Jua','Noto Sans KR',sans-serif;font-weight:400}
   .cx{min-height:48px;padding:4px 2px 6px}.cx .s{display:none}.cx .art{width:20px;height:20px}
   .t-cta{padding:11px;font-size:20px}
 }
-@media (max-height:570px){
+@media (max-height:640px){
   #screen-title{gap:6px}
   .t-crown{display:none}.t-hero h1{font-size:22px}
   .cx{min-height:44px}.cx .n{font-size:9px}.cx .art{width:18px;height:18px}
@@ -1054,8 +1054,8 @@ html,body{overflow:hidden !important;height:100%}
 </style>
 <style id="ui-v228">
 /* v228: 세로 600px 이내 무스크롤 — 주소창 포함 화면에서도 전 버튼 완전 노출 */
-html body #screen-title{height:min(calc(100svh - 12px),500px) !important;max-height:500px !important}
-@media (max-height:570px){
+html body #screen-title{height:min(calc(100svh - 12px),600px) !important;max-height:600px !important}
+@media (max-height:640px){
 html body #screen-title{padding:8px 10px 6px !important;gap:4px !important}
 html body #screen-title .t-hero img{max-height:52px !important}
 html body #screen-title .t-hero h1{font-size:17px !important;line-height:1.15 !important}
@@ -1071,10 +1071,10 @@ html body #screen-title .t-links *{font-size:10px !important}
 }
 </style>
 <style id="ui-v229">
-/* v229: 전 화면 세로 500px 캡 — 주소창 포함 소형 뷰포트에서 전 요소 노출 */
-html body #screen-battle{height:min(calc(100svh - 12px),500px) !important;max-height:500px !important}
+/* v229: 전 화면 세로 600px 캡 — 주소창 포함 소형 뷰포트에서 전 요소 노출 */
+html body #screen-battle{height:min(calc(100svh - 12px),600px) !important;max-height:600px !important}
 @media (max-height:620px){html body #screen-battle{border-radius:12px !important;margin:4px auto !important}}
-html body #overlay-hof>*,html body #overlay-profile>*,html body #overlay-relic>*,html body #overlay-skill>*,html body #overlay-info>*,html body #overlay-result>*,html body #deck-edit>*{max-height:min(calc(100svh - 20px),500px) !important;overflow-y:auto !important;overscroll-behavior:contain !important}
+html body #overlay-hof>*,html body #overlay-profile>*,html body #overlay-relic>*,html body #overlay-skill>*,html body #overlay-info>*,html body #overlay-result>*,html body #deck-edit>*{max-height:min(calc(100svh - 20px),600px) !important;overflow-y:auto !important;overscroll-behavior:contain !important}
 html body #overlay-hof>div:last-child,html body #overlay-profile>div:last-child,html body #overlay-relic>div:last-child,html body #overlay-skill>div:last-child,html body #overlay-info>div:last-child{flex-shrink:0 !important}
 </style>
 <style id="ui-v231">
@@ -1092,11 +1092,11 @@ html body #screen-title .theme-row{display:grid !important;grid-template-columns
 html body #screen-title .theme-row .t-btn, html body #screen-title .theme-row button{height:38px !important;border-radius:10px !important}
 html body #screen-title #title-actions{display:grid !important;grid-template-columns:repeat(2,1fr) !important;gap:7px !important;width:100% !important;margin:0 !important}
 html body #screen-title .t-links{width:100% !important;margin:0 !important}
-html body #screen-battle:not(.hidden){width:100% !important;max-width:440px !important;height:min(calc(100svh - 12px),500px) !important;max-height:500px !important;margin:0 auto !important;padding:0 !important;display:flex !important;flex-direction:column !important;justify-content:space-between !important;background:#08101f !important;overflow:hidden !important;position:relative !important}
+html body #screen-battle:not(.hidden){width:100% !important;max-width:440px !important;height:min(calc(100svh - 12px),600px) !important;max-height:600px !important;margin:0 auto !important;padding:0 !important;display:flex !important;flex-direction:column !important;justify-content:space-between !important;background:#08101f !important;overflow:hidden !important;position:relative !important}
 </style>
 <style id="ui-v233">
-/* v233: 메인 최종 정돈 — 500px 무스크롤 수납·덱1/덱2 같은 행·선택 덱 설명 하단 표시(참조 캡처 2번 기준) */
-html body #screen-title{height:min(calc(100svh - 12px),500px) !important;max-height:500px !important;padding:8px 10px 6px !important;gap:4px !important;overflow:hidden !important}
+/* v233: 메인 최종 정돈 — 600px 무스크롤 수납·덱1/덱2 같은 행·선택 덱 설명 하단 표시(참조 캡처 2번 기준) */
+html body #screen-title{height:min(calc(100svh - 12px),600px) !important;max-height:600px !important;padding:8px 10px 6px !important;gap:4px !important;overflow:hidden !important}
 html body #screen-title .t-hero img{max-height:44px !important}
 html body #screen-title .t-hero h1{font-size:16px !important;line-height:1.1 !important}
 html body #screen-title .theme-row{gap:4px !important;padding:4px !important}
@@ -1123,13 +1123,18 @@ html body #screen-title #title-actions button{min-height:34px !important;display
 html body #screen-title #title-actions button *{line-height:1.2 !important}
 </style>
 <style id="ui-v235">
-/* v235: info 오버레이 푸터 핀 고정 — r-box를 플렉스 컬럼으로, 확인 버튼을 500px 캡 안에 항상 노출(노트 본문만 스크롤) */
+/* v235: info 오버레이 푸터 핀 고정 — r-box를 플렉스 컬럼으로, 확인 버튼을 600px 캡 안에 항상 노출(노트 본문만 스크롤) */
 html body #overlay-info>div{display:flex !important;flex-direction:column !important;overflow:hidden !important}
 html body #overlay-info .info-title{flex-shrink:0 !important}
 html body #overlay-info .t-how, html body #overlay-info .t-note{flex:1 1 0 !important;min-height:0 !important;overflow-y:auto !important;overscroll-behavior:contain !important}   /* v236: 요약 목록(t-how)도 길면 스크롤 — 확인 버튼 보장 */
 html body #overlay-info #btn-info-close{flex-shrink:0 !important;margin-top:8px !important}
 </style>
-<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v236</div><div id="app">
+<style id="ui-v237">
+/* v237: 배틀 시작 버튼 골드 표준(사용자 참조 2번 파일) — 레드 규칙 제압 + 전 화면 600px 캡 */
+html body #btn-start, html body .dk-act{background:linear-gradient(180deg,#ffcc00 0%,#ff9d00 100%) !important;border:1px solid #ffe082 !important;color:#111111 !important;font-weight:800 !important;text-shadow:none !important}
+html body #btn-start *{color:#111111 !important;text-shadow:none !important}
+</style>
+<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v237</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
