@@ -1019,7 +1019,7 @@
     const deckEdit = document.getElementById('deck-edit');
     if (deckEdit) {
       if (deckEdit.parentElement !== document.body) document.body.appendChild(deckEdit);
-      setImp(deckEdit, 'padding-bottom', '80px');
+      setImp(deckEdit, 'padding-bottom', '64px');
 
       deckEdit.querySelectorAll('span, div, b, p, button').forEach(el => {
         if (el.children.length === 0 && el.textContent) {
@@ -1118,7 +1118,7 @@
       if (poolGrid) {
         setImp(poolGrid, 'flex', '1 1 0%');
         setImp(poolGrid, 'display', 'grid');
-        setImp(poolGrid, 'grid-template-columns', 'repeat(6, 1fr)');
+        setImp(poolGrid, 'grid-template-columns', 'repeat(5, 1fr)');
         setImp(poolGrid, 'grid-template-rows', 'auto');
         setImp(poolGrid, 'gap', '4px');
         setImp(poolGrid, 'width', '100%');
@@ -1153,13 +1153,22 @@
         }
 
         cleanFont(saveBtn, '900');
+        setImp(saveBtn, 'white-space', 'nowrap');
+        setImp(saveBtn, 'overflow', 'visible');
+        setImp(saveBtn, 'text-overflow', 'clip');
+        setImp(saveBtn, 'display', 'flex');
+        setImp(saveBtn, 'align-items', 'center');
+        setImp(saveBtn, 'justify-content', 'center');
+        setImp(saveBtn, 'gap', '4px');
         setImp(saveBtn, 'width', '100%');
         setImp(saveBtn, 'height', '42px');
         setImp(saveBtn, 'border-radius', '12px');
         setImp(saveBtn, 'background', 'linear-gradient(180deg, #ffca28 0%, #ff8f00 100%)');
         setImp(saveBtn, 'color', '#000000');
         setImp(saveBtn, 'border', '1.5px solid #ffe082');
-        setImp(saveBtn, 'font-size', '16.5px');
+        const rndBtn = realBtns.find(b => (b.textContent || '').includes('랜덤'));
+        [rndBtn, closeBtn].forEach(rb => { if (rb) { setImp(rb, 'white-space', 'nowrap'); setImp(rb, 'overflow', 'visible'); setImp(rb, 'text-overflow', 'clip'); setImp(rb, 'display', 'flex'); setImp(rb, 'align-items', 'center'); setImp(rb, 'justify-content', 'center'); setImp(rb, 'font-size', '15.5px'); } });
+        setImp(saveBtn, 'font-size', '15.5px');
         setImp(saveBtn, 'text-shadow', '0 1px 1px rgba(255,255,255,.7)');
         setImp(saveBtn, 'letter-spacing', '-0.2px');
 

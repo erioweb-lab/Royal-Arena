@@ -315,7 +315,7 @@ function openDeckEditor(){
      '<div style="font-family:Jua,sans-serif;color:#dfe8ff;font-size:14px;margin-top:8px">전투 덱 '+deck.length+'/8 — 카드를 누르면 빠짐</div>'+
      '<div style="display:flex;flex-wrap:wrap;justify-content:center;max-width:560px">'+deck.map(k=>
        '<div class="dk" data-rm="'+k+'"><div class="dke">'+(ART[k]?'<img class="art" style="width:34px" src="'+ART[k]+'">':CARDS[k].emoji)+'</div><div class="dkn">'+CARDS[k].name+'</div><div class="dkc">'+CARDS[k].cost+'</div></div>').join('')+'</div>'+
-     '<div style="font-family:Jua,sans-serif;color:#9fb3dd;font-size:13px;margin-top:10px;word-break:keep-all;line-height:1.45;text-align:center">보유 카드 풀 — 카드를 누르면 추가<br><span style="font-size:11.5px;color:#7e93c4">(8장이면 마지막 카드와 교체)</span></div>'+
+     '<div style="font-family:Jua,sans-serif;color:#9fb3dd;font-size:13px;margin-top:10px;word-break:keep-all;line-height:1.45;text-align:center">보유 카드 풀 — 카드를 누르면 추가<br><span style="font-size:11.5px;color:#a9bce6">(8장이면 마지막 카드와 교체)</span></div>'+
      '<div style="display:flex;flex-wrap:wrap;justify-content:center;max-width:560px">'+Object.keys(CARDS).filter(k=>!deck.includes(k)).map(k=>
        '<div class="dk" data-add="'+k+'"><div class="dke">'+(ART[k]?'<img class="art" style="width:34px" src="'+ART[k]+'">':CARDS[k].emoji)+'</div><div class="dkn">'+CARDS[k].name+'</div><div class="dkc">'+CARDS[k].cost+'</div></div>').join('')+'</div>'+
      '<div style="margin:14px;display:flex;gap:10px">'+
