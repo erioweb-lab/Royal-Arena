@@ -103,6 +103,11 @@ function runBattle(cb){
       set('STARTSTYLE:'+bg+' | color:'+cs.color+' | cls='+bs.className+' | inline='+String(bs.getAttribute('style')||'none').slice(0,120));
     }catch(e){ set('STARTSTYLE:err'); }
   },500); }
+  if(mode==='deck'){ setTimeout(function(){ try{ var out=[];   /* v250: 덱슬롯 지오메트리 실측 */
+    [].slice.call(document.querySelectorAll('#deck-edit button[data-slot]')).forEach(function(b,i){ out.push('s'+i+':h'+b.offsetHeight+'/sh'+b.scrollHeight+'/w'+b.clientWidth+'/sw'+b.scrollWidth); });
+    var de=document.getElementById('deck-edit'); if(de){ out.push('de:sw'+de.scrollWidth+'/cw'+de.clientWidth+'/pb'+getComputedStyle(de).paddingBottom); }
+    set('SLOTGEO:'+out.join(' | '));
+  }catch(e){ set('SLOTGEO:err'); } },1500); }
   if(mode==='deck'){ setTimeout(function(){
     var db=document.getElementById('btn-deck-edit')||[].slice.call(document.querySelectorAll('#screen-title button')).filter(function(b){return /덱 편성/.test(b.textContent||'')})[0];
     if(!db){ set(mode+' DECK:FAIL(no-btn)'); return; }
@@ -117,11 +122,6 @@ function runBattle(cb){
       if(q.get('hold')==='1'){}else setTimeout(function(){ var c=[].slice.call(document.querySelectorAll('#deck-edit button')).filter(function(b){return vis(b)&&/닫기/.test(b.textContent||'')})[0]; if(c)clickEl(c); },250);
     },900);
   },600); return; }
-  if(mode==='deck'){ setTimeout(function(){ try{ var out=[];   /* v250: 덱슬롯 지오메트리 실측 */
-    [].slice.call(document.querySelectorAll('#deck-edit button[data-slot]')).forEach(function(b,i){ out.push('s'+i+':h'+b.offsetHeight+'/sh'+b.scrollHeight+'/w'+b.clientWidth+'/sw'+b.scrollWidth); });
-    var de=document.getElementById('deck-edit'); if(de){ out.push('de:sw'+de.scrollWidth+'/cw'+de.clientWidth+'/pb'+getComputedStyle(de).paddingBottom); }
-    set('SLOTGEO:'+out.join(' | '));
-  }catch(e){ set('SLOTGEO:err'); } },1500); }
   if(q.get('screen')==='profile'){ setTimeout(function(){ try{   /* v250: .rsub 지오메트리 실측 */
     var rp=document.querySelector('#overlay-profile .rpanel'), rs=document.querySelector('#overlay-profile .rsub');
     if(!rp||!rs){ set('RSUBGEO:no-el'); return; }
