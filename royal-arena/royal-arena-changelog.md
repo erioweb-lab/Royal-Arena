@@ -1,3 +1,4 @@
+- v264(판정 도구): SCROLL 초컴팩트 토큰 — 무스크롤 여부(FIT/SCROLLS)·sh/ch·마지막 풀 카드 위치를 박스 클립 없이 단독 출력(v263 BORDCHK 확장분이 디버그 박스 폭에 잘려 판독 불가 → 우회). 게임 로직 변경 없음. 칩·sw v264
 - v263(무스크롤 수복): 실기기 확정 결함 — 보유 풀 마지막 행 잘림. 근본 원인=v248 하단 여백 200px가 내용 증가 후 스크롤 강제 → safe 12px 회수, 행 간격·덱/풀 카드(art 24px·padding 3px) 축소. BORDCHK 확장: de sh/ch(스크롤 여부)+lastpool !CUT 판정. 칩·sw v263
 - v262(복사 제거+테두리 근본 수복): 슬롯2 복사 기능 완전 삭제(버튼·__cp 핸들러·잔여 CSS)·DECK_SLOTS 2개 확정. 테두리 잘림 근본 원인=v240 포괄 규칙(#deck-edit>* overflow-y:auto)의 행 클립 → 상단 4행 overflow:visible 예외. BORDCHK 토큰 신설: 버튼 rect 숫자 실측 — row1~4 ov visible·btn 전부 /in·!OUT 0건. 칩·sw v262
 - v261(2슬롯 단순화): 실기기 증거 수복 — 슬롯3 제거(전투 activeSlot()이 1·2만 읽는 유령 슬롯), 복사 버튼 슬롯 행 통합(실기기에서 복사행이 슬롯 하단 테두리를 가림), 빈 div 제거, 간격 정리. 메인페이지 선택기는 기존부터 덱1/2만 렌더링. 칩·sw v261
