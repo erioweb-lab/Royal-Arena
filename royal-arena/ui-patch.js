@@ -82,8 +82,8 @@
       #screen-title:not(.hidden) {
         width: 100% !important;
         max-width: 420px !important;
-        height: calc(100dvh - 16px) !important;
-        max-height: calc(100dvh - 16px) !important;
+        height: calc(100svh - 16px) !important;
+        max-height: calc(100svh - 16px) !important;
         margin: 8px auto !important;
         padding: 16px 16px 14px !important;
         display: flex !important;
@@ -459,9 +459,9 @@
         position: fixed !important;
         inset: 0 !important;
         width: min(420px, 95vw) !important;
-        height: calc(100dvh - 16px) !important;
+        height: calc(100svh - 16px) !important;
         max-width: 420px !important;
-        max-height: calc(100dvh - 16px) !important;
+        max-height: calc(100svh - 16px) !important;
         margin: auto !important;
         padding: 12px 14px !important;
         border-radius: 20px !important;

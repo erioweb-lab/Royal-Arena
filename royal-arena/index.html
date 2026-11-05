@@ -32,7 +32,7 @@ body{
   background:radial-gradient(1200px 800px at 50% -10%, #1d3a63 0%, var(--navy) 60%);
   color:var(--text); overflow:hidden; user-select:none; -webkit-user-select:none;
 }
-#app{height:100vh;height:100dvh;display:flex;flex-direction:column;align-items:center}
+#app{height:100vh;height:100dvh;height:100svh;display:flex;flex-direction:column;align-items:center}
 .hidden{display:none!important}
 button{font-family:inherit;cursor:pointer;border:none}
 button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
@@ -637,7 +637,7 @@ html body #screen-title .t-hero h1{background:none !important;-webkit-background
 </style><style id="ui-v127">
 /* v127: 무스크롤 1화면 로비(CR 메인 구성 참고) — 화면 높이에 맞춘 flex 세로 배치, 도감 6×3 셀 자동 확대 */
 #screen-title.hidden{display:none !important}
-#screen-title{box-sizing:border-box !important;height:calc(100dvh - 12px) !important;max-height:calc(100dvh - 12px) !important;overflow:hidden !important;display:flex !important;flex-direction:column !important;justify-content:space-between !important;gap:8px !important;padding:10px 10px 8px !important}
+#screen-title{box-sizing:border-box !important;height:calc(100svh - 12px) !important;max-height:calc(100svh - 12px) !important;overflow:hidden !important;display:flex !important;flex-direction:column !important;justify-content:space-between !important;gap:8px !important;padding:10px 10px 8px !important}
 #screen-title>*{margin-top:0 !important;margin-bottom:0 !important;flex:0 0 auto}
 #screen-title .t-foot{display:none !important}
 .t-hero h1::after{margin-top:4px !important}
@@ -652,7 +652,7 @@ html body #screen-title .t-hero h1{background:none !important;-webkit-background
 .t-link{margin:0 auto !important}
 @supports not (height:100dvh){#screen-title{height:calc(100vh - 12px) !important;max-height:calc(100vh - 12px) !important}}
 @media (max-width:520px){
-  #screen-title{height:calc(100dvh - 8px) !important;max-height:calc(100dvh - 8px) !important;gap:6px !important;padding:8px 7px 6px !important}
+  #screen-title{height:calc(100svh - 8px) !important;max-height:calc(100svh - 8px) !important;gap:6px !important;padding:8px 7px 6px !important}
   .t-emblem{width:46px !important;height:46px !important}
   .t-hero h1{font-size:21px !important;letter-spacing:3px !important}
   .t-sub{font-size:10.5px !important;margin-top:2px !important}
@@ -814,7 +814,7 @@ button,.t-btn,.cx,#trophy-chip{touch-action:manipulation}
 </style><style id="ui-v141">
 /* v141: 스크린 최적화 — 로비·결과 모달 무스크롤 압축(스킬 game-hud-layout 적용) */
 #screen-title{gap:3px !important;padding:5px 7px 3px !important}
-#screen-title{height:100dvh !important;max-height:100dvh !important;margin:0 auto !important}
+#screen-title{height:calc(100svh - 12px) !important;max-height:calc(100svh - 12px) !important;margin:0 auto !important}
 .t-panel{min-height:0 !important;padding:4px !important}
 #screen-title h1{font-size:16px !important;margin:0 !important}
 #screen-title .t-head img{max-height:38px !important}
@@ -1045,7 +1045,14 @@ html,body{overflow:hidden !important;height:100%}
 #screen-battle #cards .cost{background:rgba(10,18,34,.85)!important;border:2px solid rgba(255,255,255,.85)!important}
 </style></head>
 <body>
-<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v224</div><div id="app">
+
+<style id="ui-v225">
+/* v225: 타이틀 뷰포트 단일화 — dvh 동적 재계산(주소창 상태 변동)으로 space-between 행이 숨쉬듯 진동하는 문제 수복. svh=주소창 표시 기준 고정 높이 → 무스크롤 고정 fit */
+@supports not (height:100svh){#screen-title{height:calc(100dvh - 12px) !important;max-height:calc(100dvh - 12px) !important}}
+#screen-title{padding-bottom:calc(6px + env(safe-area-inset-bottom,0px)) !important}
+#screen-title #deck-pick, #screen-title #deck-pick *{animation:none !important;transition:none !important}
+</style><style id="ra-hud-x">
+<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v225</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
