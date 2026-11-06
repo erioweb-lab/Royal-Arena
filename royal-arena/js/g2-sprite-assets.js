@@ -122,8 +122,8 @@ window.__navUp=function(){ try{
     b.style.setProperty('background','linear-gradient(180deg,#1c2333,#141824)','important');
     b.style.setProperty('border','1.5px solid #2a3550','important');
     b.style.setProperty('color','#fbbf24','important');
-    var __pt=(b.textContent||''),__pm={'덱 편성':['#8b2fd6','#7326b8','#d8b4fe','#f6ecff'],'유물':['#c2691a','#a04f08','#fcd34d','#fff8e7'],'명예의 전당':['#d1254c','#a80e35','#fda4af','#fff1f2'],'프로필':['#2563eb','#1d4ed8','#93c5fd','#eff6ff'],'전술 연구소':['#1b9a4b','#147a3a','#86efac','#f0fdf4']};
-    for(var __pk in __pm){ if(__pt.indexOf(__pk)>=0){ b.style.setProperty('background','linear-gradient(180deg,'+__pm[__pk][0]+','+__pm[__pk][1]+')','important'); b.style.setProperty('border','1.5px solid '+__pm[__pk][2],'important'); b.style.setProperty('color',__pm[__pk][3],'important'); break; } }
+    var __pt=(b.textContent||'');
+    if(/덱 편성|유물|명예의 전당|프로필|전술 연구소/.test(__pt)){ b.style.removeProperty('background'); b.style.removeProperty('border'); b.style.removeProperty('color'); b.classList.add(__pt.indexOf('덱 편성')>=0?'nav-deck':__pt.indexOf('유물')>=0?'nav-relic':__pt.indexOf('명예의 전당')>=0?'nav-hof':__pt.indexOf('프로필')>=0?'nav-profile':'nav-skill'); }
     b.style.setProperty('border-radius','14px','important');
     b.style.setProperty('min-height','48px','important');
     b.style.setProperty('font-weight','700','important');

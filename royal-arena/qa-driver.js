@@ -141,6 +141,7 @@ function runBattle(cb){
 setTimeout(function(){
   if(mode==='profile'){ setTimeout(function(){ try{ var b=document.getElementById('btn-profile'); if(!b){ set('PROF:no-btn'); return; } clickEl(b); set('PROF:clicked'); }catch(e){ set('PROF:err'); } },250); }
   if(mode==='skill'){ setTimeout(function(){ try{ var b=document.getElementById('btn-skill'); if(!b){ set('SKILL:no-btn'); return; } clickEl(b); set('SKILL:clicked'); }catch(e){ set('SKILL:err'); } },250); }
+  if(mode==='skill'){ setTimeout(function(){ try{ var its=document.querySelectorAll('#overlay-skill .sk-item'), mg=999, nn=0; for(var i2=0;i2<its.length;i2++){ var bs=its[i2].querySelectorAll('button'); if(bs.length>=2){ var r1=bs[0].getBoundingClientRect(), r2=bs[1].getBoundingClientRect(); var Lf=r1.right<r2.right?r1:r2, Rt=r1.right<r2.right?r2:r1; var gp=Math.round(Rt.left-Lf.right); if(gp<mg)mg=gp; nn++; } } set('SKG:'+mg+'g/'+nn+'it'); }catch(e){ set('SKG:err'); } },700); }
   if(mode==='battle'){runBattle(function(r){report(r);if(q.get('quit')==='1')quitBattle();});return;}
   if(q.get('screen')){return;}   /* v230: screen 모드 — 순회 금지 */
   var btns=walkButtons(),i=0,opened=0;
