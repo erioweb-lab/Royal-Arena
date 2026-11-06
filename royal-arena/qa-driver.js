@@ -118,7 +118,7 @@ function runBattle(cb){
   if(mode==='deck'){ setTimeout(function(){ try{ var de=document.getElementById('deck-edit'); if(!de){ set('SCROLL:no-de'); return; }   /* v264: 무스크롤 최종 판정 — 초컴팩트 출력(박스 클립 방지) */
     var lp=[].slice.call(de.querySelectorAll('[data-add]')).pop(); var db=de.getBoundingClientRect(); var lb=lp?lp.getBoundingClientRect():null;
     var fit=de.scrollHeight<=de.clientHeight+1;
-    set('SCROLL:'+(fit?'FIT':'SCROLLS')+'/sh'+de.scrollHeight+'/ch'+de.clientHeight+(lb?('/lpb'+Math.round(lb.bottom)+'/deob'+Math.round(db.bottom)+(lb.bottom>db.bottom+0.5?'!CUT':'vis')):'/nolp'));
+    set('SCROLL:'+(fit?'FIT':'SCROLLS')+'/sh'+de.scrollHeight+'/ch'+de.clientHeight+(lb?('/lpb'+Math.round(lb.bottom)+'/deob'+Math.round(db.bottom)+(lb.bottom>db.bottom+0.5?'!CUT':'vis')):'/nolp')); var __sf=[]; [].slice.call(de.querySelectorAll('button[data-slot]')).forEach(function(b,i){ __sf.push('s'+i+'w'+b.clientWidth+(b.scrollWidth>b.clientWidth+1?'!CLIP':'ok')); }); if(__sf.length) set('SCROLL:'+__sf.join('/')); else set('SCROLL:noslot');   /* v269: 슬롯 탭 텍스트 적합성 실측 */
   }catch(e){ set('SCROLL:err'); } },2400); }
   if(mode==='deck'){ setTimeout(function(){
     var db=document.getElementById('btn-deck-edit')||[].slice.call(document.querySelectorAll('#screen-title button')).filter(function(b){return /덱 편성/.test(b.textContent||'')})[0];
