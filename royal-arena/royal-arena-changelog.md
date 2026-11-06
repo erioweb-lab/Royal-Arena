@@ -1,3 +1,4 @@
+- v278(세로 간극 50%): 사용자 요청 — 메인 섹션 간 세로 여백 절반 축소(title-actions 12→6·t-panel·h2·t-links·theme-row·btn-start 여백 절반). TG에 cut(화면 아래로 밀린 버튼 수) 실측 추가 — 캡처 잘림 여부 숫자 판정. 칩·sw v278
 - v277(색상 최종): 원인 확정 — JS 주입 버튼의 인라인 !important(background)가 CSS !important를 이김(TG cls로 클래스 적용은 확인). 옵저버에서 element.style.setProperty(important)로 인라인 직접 덮기로 해결. 캠프 정규식 확대. 칩·sw v277
 - v276(색상 선명화): 그룹 팔레트를 선명 중간명도로 상향(틸 #0d9488·퍼플 #7e22ce·오커 #b45309·로즈 #be123c·블루 #1d4ed8·그린 #15803d)+TG에 cls(클래스 부여 개수) 실측 추가. 칩·sw v276
 - v275(색상 확정): v274 캡처에서 그룹 색상 미반영(리스타일러 타이밍) — 클래스 부여를 MutationObserver 기반 스크립트로 이중화(초기 1회+변경 시 자동). 칩·sw v275
