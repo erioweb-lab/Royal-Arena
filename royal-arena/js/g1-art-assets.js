@@ -77,7 +77,7 @@ const ART_SPR={knight:"assets/img_030.png",archers:"assets/img_031.png",giant:"a
 
 'use strict';
 const ART_TOW={t_princess_b:"assets/img_040.png",t_princess_r:"assets/img_041.png",t_king_b:"assets/img_042.png",t_king_r:"assets/img_043.png",t_rubble:"assets/img_044.png"};
-const ART_NEW={valk:"assets/img_045.jpg",bomber:"assets/img_046.jpg",babyd:"assets/img_047.jpg",cleric:"assets/img_048.jpg",boar:"assets/img_049.jpg",icem:"assets/img_050.jpg",lordknight:"assets/ra_card_lordknight.jpg",scarecrow:"assets/ra_card_scarecrow.jpg"};   /* v300: 이모지 카드 아트 + 무프레임 재생성 */
+const ART_NEW={valk:"assets/img_045.jpg",bomber:"assets/img_046.jpg",babyd:"assets/img_047.jpg",cleric:"assets/img_048.jpg",boar:"assets/img_049.jpg",icem:"assets/img_050.jpg",lordknight:"assets/ra_card_lordknight.jpg",scarecrow:"assets/ra_card_scarecrow.jpg",meteor:"assets/ra_card_meteor.jpg",blizzard:"assets/ra_card_blizzard.jpg",greed:"assets/ra_card_greed.jpg",glass:"assets/ra_card_glass.jpg",fort:"assets/ra_card_fort.jpg",xbow:"assets/ra_card_xbow.jpg",healwind:"assets/ra_card_healwind.jpg",flamer:"assets/ra_card_flamer.jpg",golem:"assets/ra_card_golem.jpg"};   /* v300: 이모지 카드 아트 + 무프레임 재생성 */
 
 
 'use strict';
