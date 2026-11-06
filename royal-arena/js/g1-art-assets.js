@@ -118,7 +118,7 @@ const ART_CORE={archers:"assets/img_135.png",babyd:"assets/img_136.png",boar:"as
 
 
 'use strict';
-const ART_FRAMES={knight_idle:"assets/img_151.png",knight_atk:"assets/img_152.png",prince_idle:"assets/img_153.png",prince_atk:"assets/img_154.png",valk_idle:"assets/img_155.png",valk_atk:"assets/img_156.png",skarmy_idle:"assets/img_157.png",skarmy_atk:"assets/img_158.png",archers_idle:"assets/img_159.png",archers_atk:"assets/img_160.png",musketeer_idle:"assets/img_161.png",musketeer_atk:"assets/img_162.png",sniper_idle:"assets/img_163.png",sniper_atk:"assets/img_164.png",wizard_idle:"assets/img_165.png",wizard_atk:"assets/img_166.png",cleric_idle:"assets/img_167.png",cleric_atk:"assets/img_168.png",icem_idle:"assets/img_169.png",icem_atk:"assets/img_170.png",bomber_idle:"assets/img_171.png",bomber_atk:"assets/img_172.png",giant_idle:"assets/img_173.png",giant_atk:"assets/img_174.png",boar_idle:"assets/img_175.png",boar_atk:"assets/img_176.png",minions_idle:"assets/img_177.png",minions_atk:"assets/img_178.png",babyd_idle:"assets/img_179.png",babyd_atk:"assets/img_180.png",boss_idle:"assets/img_181.png",boss_atk:"assets/ra_frame_boss_atk.png"};   /* v299: 보스 공격 프레임 */
+const ART_FRAMES={knight_idle:"assets/img_151.png",knight_atk:"assets/img_152.png",prince_idle:"assets/img_153.png",prince_atk:"assets/img_154.png",valk_idle:"assets/img_155.png",valk_atk:"assets/img_156.png",skarmy_idle:"assets/img_157.png",skarmy_atk:"assets/img_158.png",archers_idle:"assets/img_159.png",archers_atk:"assets/img_160.png",musketeer_idle:"assets/img_161.png",musketeer_atk:"assets/img_162.png",sniper_idle:"assets/img_163.png",sniper_atk:"assets/img_164.png",wizard_idle:"assets/img_165.png",wizard_atk:"assets/img_166.png",cleric_idle:"assets/img_167.png",cleric_atk:"assets/img_168.png",icem_idle:"assets/img_169.png",icem_atk:"assets/img_170.png",bomber_idle:"assets/img_171.png",bomber_atk:"assets/img_172.png",giant_idle:"assets/img_173.png",giant_atk:"assets/img_174.png",boar_idle:"assets/img_175.png",boar_atk:"assets/img_176.png",minions_idle:"assets/img_177.png",minions_atk:"assets/img_178.png",babyd_idle:"assets/img_179.png",babyd_atk:"assets/img_180.png",boss_idle:"assets/img_181.png",boss_atk:"assets/ra_frame_boss_atk.png",cleric_atk2:"assets/ra_pose_cleric_1.png",cleric_atk3:"assets/ra_pose_cleric_2.png",icem_atk2:"assets/ra_pose_icem_1.png",icem_atk3:"assets/ra_pose_icem_2.png",babyd_atk2:"assets/ra_pose_babyd_1.png",babyd_atk3:"assets/ra_pose_babyd_2.png"};   /* v302: 공격 3단 포즈(경년·타격·마무리) */   /* v302: 공격 시퀀스 포즈 */   /* v299: 보스 공격 프레임 */
 
 
 'use strict';
@@ -1457,7 +1457,7 @@ function drawUnit(u){try{
       ctx.lineTo(cx0+Math.cos(a3)*(r+15),cy0+Math.sin(a3)*(r+15)); ctx.stroke(); }
     if(Math.random()<0.4) addParts(px,py+3,1,'#e8d9a0',1.8,0.35,-20); }
   const __sp=(typeof SPR!=='undefined')?SPR[u.key]:null;const sprOK=__sp&&__sp.complete&&__sp.naturalWidth>0&&__sp.__valid!==false;
-   const __fI=(typeof FRAMES!=='undefined')?FRAMES[u.key+'_idle']:null;const __fA=(typeof FRAMES!=='undefined')?FRAMES[u.key+'_atk']:null;const fOK=__fI&&__fI.complete&&__fI.naturalWidth>0&&__fI.__valid!==false;   /* v174: C안 전신 프레임 */var __ff=(u.swing>0)?((u.key==='boss'&&typeof ATK3!=='undefined'&&ATK3.boss&&ATK3.boss[1]&&ATK3.boss[1].complete&&ATK3.boss[1].naturalWidth>0)?ATK3.boss[1]:((__fA&&__fA.complete&&__fA.naturalWidth>0&&__fA.__valid!==false)?__fA:__fI)):__fI;
+   const __fI=(typeof FRAMES!=='undefined')?FRAMES[u.key+'_idle']:null;const __fA=(typeof FRAMES!=='undefined')?FRAMES[u.key+'_atk']:null;const fOK=__fI&&__fI.complete&&__fI.naturalWidth>0&&__fI.__valid!==false;   /* v174: C안 전신 프레임 */var __ff=(u.swing>0)?((u.key==='boss'&&typeof ATK3!=='undefined'&&ATK3.boss&&ATK3.boss[1]&&ATK3.boss[1].complete&&ATK3.boss[1].naturalWidth>0)?ATK3.boss[1]:((__fA&&__fA.complete&&__fA.naturalWidth>0&&__fA.__valid!==false)?__fA:__fI)):__fI; var __seqOn=false; try{ if(u.swing>0&&u.key!=='boss'){ var __s2=FRAMES[u.key+'_atk2'], __s3=FRAMES[u.key+'_atk3']; var __ok2=__s2&&__s2.complete&&__s2.naturalWidth>0&&__s2.__valid!==false, __ok3=__s3&&__s3.complete&&__s3.naturalWidth>0&&__s3.__valid!==false; if(__ok2||__ok3){ __seqOn=true; var __pS=1-u.swing/(u._swd||0.3); __ff=__pS<0.34?(__ok2?__s2:__fI):(__pS<0.67?((__fA&&__fA.complete&&__fA.naturalWidth>0&&__fA.__valid!==false)?__fA:__fI):(__ok3?__s3:__fI)); } } }catch(e){}
   ctx.save(); ctx.translate(cx0,cy0);
   var __face=u.team==='blue'?-Math.PI/2:Math.PI/2, __tw=0;
   if(u.target){ var __df=la-__face; __df=Math.atan2(Math.sin(__df),Math.cos(__df)); __tw=Math.max(-0.55,Math.min(0.55,__df)); }   // v71: Z축=타워 직립, 조준은 상체만
@@ -1500,7 +1500,7 @@ function drawUnit(u){try{
         else ctx.drawImage(__imU,-sh/2,-sh*0.32,sh,sh*0.66);
         ctx.globalCompositeOperation='source-over'; ctx.globalAlpha=1; }
     } else {
-      if(u.swing>0) ctx.rotate(Math.sin((1-u.swing/(u._swd||0.3))*Math.PI)*0.30);
+      if(u.swing>0) ctx.rotate(Math.sin((1-u.swing/(u._swd||0.3))*Math.PI)*(__seqOn?0.12:0.30));   /* v302: 포즈 시퀀스 시 회전 댐핑 */
       ctx.drawImage(fOK?raTint(__ff,u.team,u.key):raTint(SPR[u.key],u.team,u.key),-sh/2,-sh*0.82-hop,sh,sh);
       if(u.hurt>0){ ctx.globalCompositeOperation='lighter'; ctx.globalAlpha=Math.min(1,u.hurt/0.09)*0.75;
         ctx.drawImage(fOK?raTint(__ff,u.team,u.key):raTint(SPR[u.key],u.team,u.key),-sh/2,-sh*0.82-hop,sh,sh);
