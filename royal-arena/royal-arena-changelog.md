@@ -1,3 +1,4 @@
+- v292 확정: 팔레트는 g2 내장 리스타일러의 setProperty 지점에 통합(재경합 불가). 이전 라운드 node --check 실패는 repo package.json type:module 때문의 모듈 모드 파싱 오타 — g2 중복 함수 선언은 브라우저 sloppy 스크립트에서 합법(/tmp 복사본 스크립트 모드로 검증). 칩·sw v292
 - v292a(보완): g2 중복 함수 선언 정리(profActive 등 — 브라우저 sloppy 모드는 허용해 동작했으나 node --check 게이트 거부; 마지막 선언 유지로 last-wins 시맨틱 동일). v292 팔레트·기록 커밋은 이전 라운드 체인 이탈로 미반영 상태였어 이 커밋으로 코드 together 반영
 - v292(팔레트 최종 수복): 진짜 원인 — g2-sprite-assets.js 내장 리스타일러가 로드 후 버튼에 네이비 인라인 !important 재설정(CSS·선행 인라인 모두 무력화, jsdom으로 확인). 리스타일러 setProperty 지점과 같은 시점에 기능별 색상 통합(덱 퍼플·유물 오커·명예 로즈·프로필 블루·연구소 그린), trophy-chip(훈련 캠프 span) 틸 채색. 칩·sw v292
 - v291(팔레트 최후 층+QA 타이밍): ①load+300ms 1회 클래스러가 #screen-title 버튼에 기능별 색을 인라인 !important로 직접 설정 — :not() 연쇄 규칙(특이성 (2,0,1)) 등 모든 CSS보다 우위, 클래스+CSS는 보조로 유지 ②qa-driver skill/profile 클릭 900→250ms 단축+SKILL:clicked/PROF:clicked 토큰(클라우드 캡처가 900ms 이전에 찍혀 오버레이가 비어 보이던 문제). 칩·sw v291
