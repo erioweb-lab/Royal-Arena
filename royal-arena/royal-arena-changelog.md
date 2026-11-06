@@ -1,3 +1,4 @@
+- v301(이모지 카드 소진): 주문·건물·특수 유닛 카드 전수 아트화 — meteor·blizzard·greed·fort·xbow·healwind·flamer·golem 등 g1:33-45 확장 맵의 잔존 이모지 카드를 기존 카드 스타일 레퍼런스(img_017 기사·img_022 파이어볼·img_024 캐논·img_025 마법사) -i로 생성·ART_NEW 등록. v300+이번으로 도감·덱편성 이모지 카드 소진(가동 카드 전부 그림 아트). 칩·sw v301
 - v300(이모지 카드 전수 아트화+재생성): 사용자 실기기 캡처 판독(덱편성·전투) 기반 — CARDS−ART 차집합 카드(lordknight·scarecrow·유성우·눈보라·탐욕정령·요새·석궁병·회복바람·화염방사병·수정골렘·유리대포 등)를 기존 카드 아트(img_017/img_025)를 스타일 레퍼런스 -i로 생성해 전부 아트화, 성직자·얼음마법사는 프레임·영문배너 유입분으로 판정되어 무프레임 프롬프트로 재생성. full-bleed·no frame·no text 강제 문구 확정. 칩·sw v300
 - v299(그래픽 업그레이드+보스 공격동작): 신규 6종(valk·cleric·icem·bomber·boar·babyd) 도감 카드 아트 6장 신규 생성 — 기존 필드 대기 프레임을 -i 레퍼런스로 동일 캐릭터 보장, 스타일 토큰 고정, 512px JPEG 임베드. 보스 공격 프레임(boss_atk) 신규 생성(idle 레퍼런스+공격포즈+흰배경→rmbg→알파 검증 통과) — ART_FRAMES 등록으로 v174 C안 스왑 코드가 swing>0에서 자동 적용(15종+보스 완결). 칩·sw v299
 - v298(덱 A/B 승률): startMatch에서 activeSlot()을 ra_slot_used_v1에 기록, 종료 시 슬롯별 W/L 적립(ra_slot_stats_v1), 프로필 6분기 전부에 덱 A/B 승률%·(N전) 표시, 리셋 목록 반영. 칩·sw v298
