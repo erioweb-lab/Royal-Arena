@@ -139,8 +139,8 @@ function runBattle(cb){
     set('RSUBGEO:vw'+window.innerWidth+' panelW:'+Math.round(pr.width)+' panelSW:'+rp.scrollWidth+' rsubR:'+Math.round(rr.right)+' rsubSW:'+rs.scrollWidth+' rsubCW:'+rs.clientWidth);
   }catch(e){ set('RSUBGEO:err'); } },1600); }
 setTimeout(function(){
-  if(mode==='profile'){ setTimeout(function(){ try{ var b=document.getElementById('btn-profile'); if(!b){ set('PROF:no-btn'); return; } clickEl(b); }catch(e){ set('PROF:err'); } },900); }
-  if(mode==='skill'){ setTimeout(function(){ try{ var b=document.getElementById('btn-skill'); if(!b){ set('SKILL:no-btn'); return; } clickEl(b); }catch(e){ set('SKILL:err'); } },900); }
+  if(mode==='profile'){ setTimeout(function(){ try{ var b=document.getElementById('btn-profile'); if(!b){ set('PROF:no-btn'); return; } clickEl(b); set('PROF:clicked'); }catch(e){ set('PROF:err'); } },250); }
+  if(mode==='skill'){ setTimeout(function(){ try{ var b=document.getElementById('btn-skill'); if(!b){ set('SKILL:no-btn'); return; } clickEl(b); set('SKILL:clicked'); }catch(e){ set('SKILL:err'); } },250); }
   if(mode==='battle'){runBattle(function(r){report(r);if(q.get('quit')==='1')quitBattle();});return;}
   if(q.get('screen')){return;}   /* v230: screen 모드 — 순회 금지 */
   var btns=walkButtons(),i=0,opened=0;
