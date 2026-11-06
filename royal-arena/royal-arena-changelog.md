@@ -1,3 +1,4 @@
+- v309 정정·최종 검증: 이전 무결과는 하니스 CWD 오류(http.server를 repo 루트에서 기동해 랜딩 페이지 로드) — 게임 폴더 기동으로 정정. 결과: ETEST:Aok/B?ex7/Cok/sel — 로컬 ETEST 최종 통과 — 첫 탭(A)·소진 후 재충전 재탭(C) 모두 선택 등록 정상. 핫픽스 적용 코드에서 로컬 재현 불가 — 기기 실증 대기
 - v309(사(死) 인라인 제거+ETEST 최종): nav-clz-v291 제거 확정(브레이스 누락 선존 결함 — v291~v306 미실행·매 로드 SyntaxError, v293 이후 역할 대체로 부활 시 디자인 충돌). 칩·sw v309. 로컬 ETEST(canvas 2D 스텁 하니스): (none) — 토큰 판독 필요
 - v308 검증 보고: 로컬 ETEST(http origin fromURL 하니스 — file:// opaque origin localStorage SecurityError 회피) 결과 ETEST:err — startMatch 호출 자체 예외 — 예외 메시지 토큰화 필요. index.html에 인라인 스크립트 SyntaxError(}catch(e){}})();) 존재 — v306 이전 선존 결함(해당 기능 전 브라우저에서 사망, v309 후보: v288~v291 클래스러 잔재로 추정 — v292 g2 리스타일러 통합으로 대체됨).
 - v308(qa-driver 정리+ETEST 로컬 검증): v307에서 구 ETEST 블록 제거 정규식이 조용히 실패(re.sub 미매치 무에러)해 구·신 블록 공존 — 서로 탭·토큰 오염 위험. 구블록 제거·단일화(매치 수 단언). 칩·sw v308(기기 SW 갱신 강제, 게임 로직 변경 없음). 로컬 jsdom ETEST: ETEST:err — 토큰 판독 필요
