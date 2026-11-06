@@ -1153,7 +1153,7 @@ html body .theme-row .t-btn{height:34px !important;font-size:11px !important;lin
 html body .t-links button, html body #btn-deck-random, html body #btn-deck-edit{background:linear-gradient(180deg,rgba(14,34,61,.95),rgba(10,22,40,.95)) !important;border:1px solid #c89b3c !important;border-radius:14px !important;color:#f2f6ff !important;font-weight:700 !important;line-height:1.2 !important;text-shadow:none !important;min-height:34px !important;display:flex !important;align-items:center !important;justify-content:center !important;overflow:hidden !important;text-overflow:ellipsis !important;white-space:nowrap !important;padding:4px 8px !important}
 html body #deck-edit{padding-bottom:150px !important}
 </style>
-<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v281</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v282</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1703,7 +1703,9 @@ html body #screen-title button#btn-info{background:linear-gradient(180deg,#47556
     [].slice.call(ta.querySelectorAll("button")).forEach(function(b){ var t=b.textContent||"";
       var m=[[/훈련/,"nav-camp"],[/덱 편성/,"nav-deck"],[/유물/,"nav-relic"],[/명예의 전당/,"nav-hof"],[/프로필/,"nav-profile"],[/전술 연구소/,"nav-skill"]];
       m.forEach(function(p){ if(p[0].test(t)){ if(!b.classList.contains(p[1])) b.classList.add(p[1]); style(b,p[1]); } }); });
-    ["btn-diff","btn-info"].forEach(function(id){ var b=document.getElementById(id); if(!b) return; var v=id==="btn-diff"?["linear-gradient(180deg,#9f1239,#881337)","#fda4af","#fff1f2"]:["linear-gradient(180deg,#475569,#334155)","#cbd5e1","#f8fafc"]; try{ b.style.setProperty("background",v[0],"important"); b.style.setProperty("border","1px solid "+v[1],"important"); b.style.setProperty("color",v[2],"important"); }catch(e){} }); }
+    ["btn-diff","btn-info"].forEach(function(id){ var b=document.getElementById(id); if(!b) return; var v=id==="btn-diff"?["linear-gradient(180deg,#9f1239,#881337)","#fda4af","#fff1f2"]:["linear-gradient(180deg,#475569,#334155)","#cbd5e1","#f8fafc"]; try{ b.style.setProperty("background",v[0],"important"); b.style.setProperty("border","1px solid "+v[1],"important"); b.style.setProperty("color",v[2],"important"); }catch(e){} }); 
+      var bi2=document.getElementById("btn-info"), ta2=document.getElementById("title-actions");   /* v282: 게임 방법 버튼 메뉴 그리드 편입(풀폭) — 화면 밖 밀림 근본 제거 */
+      if(bi2&&ta2&&bi2.parentNode!==ta2){ try{ bi2.style.setProperty("grid-column","1/-1","important"); ta2.appendChild(bi2); }catch(e){} } }
   run();
   var ta=document.getElementById("title-actions");
   if(ta&&window.MutationObserver){ new MutationObserver(run).observe(ta,{childList:true,subtree:true,attributes:true,attributeFilter:["style","class"]}); }
