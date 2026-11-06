@@ -1,3 +1,4 @@
+- v293(선택형 색상+칩 높이+SKG): ①버튼 색상을 선택 시에만 변경 — g2 팔레트·클래스러의 항상-켜진 인라인 강조를 removeProperty로 걷어내고(기본=게임 컨셉 네이비+골드 고스트), 톤다운 판타지 팔레트(진보라·황동·장미·로열블루·에메랄드·틸)를 :hover/:active 규칙((2,2,1) 특이성)으로 적용 ②trophy-chip 48px — g2 인라인 min-height:48px 버튼들과 높이 통일 ③qa-driver skill 모드에 SKG 토큰(+/-버튼 최소 간격 실측, 음수=겹침) 추가. 칩·sw v293
 - v292 확정: 팔레트는 g2 내장 리스타일러의 setProperty 지점에 통합(재경합 불가). 이전 라운드 node --check 실패는 repo package.json type:module 때문의 모듈 모드 파싱 오타 — g2 중복 함수 선언은 브라우저 sloppy 스크립트에서 합법(/tmp 복사본 스크립트 모드로 검증). 칩·sw v292
 - v292a(보완): g2 중복 함수 선언 정리(profActive 등 — 브라우저 sloppy 모드는 허용해 동작했으나 node --check 게이트 거부; 마지막 선언 유지로 last-wins 시맨틱 동일). v292 팔레트·기록 커밋은 이전 라운드 체인 이탈로 미반영 상태였어 이 커밋으로 코드 together 반영
 - v292(팔레트 최종 수복): 진짜 원인 — g2-sprite-assets.js 내장 리스타일러가 로드 후 버튼에 네이비 인라인 !important 재설정(CSS·선행 인라인 모두 무력화, jsdom으로 확인). 리스타일러 setProperty 지점과 같은 시점에 기능별 색상 통합(덱 퍼플·유물 오커·명예 로즈·프로필 블루·연구소 그린), trophy-chip(훈련 캠프 span) 틸 채색. 칩·sw v292
