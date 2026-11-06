@@ -1153,7 +1153,7 @@ html body .theme-row .t-btn{height:34px !important;font-size:11px !important;lin
 html body .t-links button, html body #btn-deck-random, html body #btn-deck-edit{background:linear-gradient(180deg,rgba(14,34,61,.95),rgba(10,22,40,.95)) !important;border:1px solid #c89b3c !important;border-radius:14px !important;color:#f2f6ff !important;font-weight:700 !important;line-height:1.2 !important;text-shadow:none !important;min-height:34px !important;display:flex !important;align-items:center !important;justify-content:center !important;overflow:hidden !important;text-overflow:ellipsis !important;white-space:nowrap !important;padding:4px 8px !important}
 html body #deck-edit{padding-bottom:150px !important}
 </style>
-<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v284</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v285</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1680,6 +1680,16 @@ html body #deck-edit>div:last-of-type button#btn-deck-random,html body #deck-edi
 /* v273: 액션 3버튼 밑선 고정 — .dk-sub 잔여 max-height/overflow clamped·이모지 줄높이 차이로 랜덤 버튼이 낮아 보이는 것을 구조 차단(실기기 지적) */
 html body #deck-edit>div:last-of-type{align-items:stretch !important}
 html body #deck-edit>div:last-of-type button#dk-save,html body #deck-edit>div:last-of-type button#btn-deck-random,html body #deck-edit>div:last-of-type button#dk-close{margin:0 !important;align-self:stretch !important;height:38px !important;max-height:none !important;line-height:1.2 !important;vertical-align:top !important;overflow:hidden !important;padding:4px 8px !important}
+</style>
+<style id="ui-v285">
+/* v285: 프로필·전술 연구소 최적화(참조 디자인 기준, 순수 CSS) — .rpanel:has(#btn-prf-close)로 프로필 패널 타깃 */
+html body #overlay-skill .sk-item{margin:0 0 8px !important;border-radius:12px !important}
+html body #overlay-skill .sk-item button{width:32px !important;height:32px !important;font-size:18px !important;border-radius:10px !important}
+html body #overlay-skill .sk-col{gap:8px !important}
+html body #overlay-skill #sk-sp{text-align:center !important;margin:8px 0 !important}
+html body .rpanel:has(#btn-prf-close) input{min-height:40px !important;border-radius:10px !important;box-sizing:border-box !important}
+html body .rpanel:has(#btn-prf-close) button{min-height:38px !important;border-radius:12px !important;box-sizing:border-box !important}
+html body .rpanel:has(#btn-prf-close),html body #overlay-skill .rpanel{max-width:340px !important}
 </style>
 </body>
 </html>
