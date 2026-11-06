@@ -1,3 +1,4 @@
+- v288(기능별 팔레트): 메뉴 버튼 6종을 기능별 색상으로 구분 — 캠프 틸·덱 퍼플·유물 오커·명예 로즈·프로필 블루·연구소 그린. 순수 CSS !important(고정 ID: btn-deck/btn-relic/btn-hof/btn-profile/btn-skill — ID 없는 버튼은 g1 2322행 classList에 단일 토큰 클래스 추가, h[1] counting 로직 보존). JS 코드 삽입 없음. 칩·sw v288
 - v287(긴급 복구): v286 팔레트 코드가 g1 잘못된 위치(bd.className 배지부)에 삽입돼 문법 오류 발생 → g1 v285 정상본 복원. CSS(ui-v285·v286: 연구소 +/− 자연 배치·메인 하이라이트)는 유지. 그룹 팔레트는 다음 사이클에 리스타일러 본문 위치를 정확히 읽고 적용. 칩·sw v287
 - v286(하이라이트+연구소 +/− 배치): ①메인 버튼 하이라이트 기본화(::after 상단 그라데이션·hover brightness·active 눌림) ②연구소 +/− 버튼 같은 좌표(right:8px) 겹침 해소 — 우측 12/52px 분리·세로 중앙 32px ③그룹 팔레트를 g1 리스타일러 className 부여부에 인라인 통합(같은 시점 적용 — 옵저버 루프 없음). 칩·sw v286
 - v285(프로필·연구소 최적화): 참조 디자인 기준 순수 CSS — 연구소: 카드 간격 8px 균일·+버튼 32px 터치 / 프로필: 입력 40px·버튼 38px 필형·패널 폭 340px 제약(.rpanel:has(#btn-prf-close) 타깃). qa-driver profile·skill 모드 신설. 프리즈 재발 방지 위해 옵저버/루프 없음. 칩·sw v285
