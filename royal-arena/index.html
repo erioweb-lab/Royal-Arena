@@ -1153,7 +1153,7 @@ html body .theme-row .t-btn{height:34px !important;font-size:11px !important;lin
 html body .t-links button, html body #btn-deck-random, html body #btn-deck-edit{background:linear-gradient(180deg,rgba(14,34,61,.95),rgba(10,22,40,.95)) !important;border:1px solid #c89b3c !important;border-radius:14px !important;color:#f2f6ff !important;font-weight:700 !important;line-height:1.2 !important;text-shadow:none !important;min-height:34px !important;display:flex !important;align-items:center !important;justify-content:center !important;overflow:hidden !important;text-overflow:ellipsis !important;white-space:nowrap !important;padding:4px 8px !important}
 html body #deck-edit{padding-bottom:150px !important}
 </style>
-<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v273</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v274</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1680,6 +1680,19 @@ html body #deck-edit>div:last-of-type button#btn-deck-random,html body #deck-edi
 /* v273: 액션 3버튼 밑선 고정 — .dk-sub 잔여 max-height/overflow clamped·이모지 줄높이 차이로 랜덤 버튼이 낮아 보이는 것을 구조 차단(실기기 지적) */
 html body #deck-edit>div:last-of-type{align-items:stretch !important}
 html body #deck-edit>div:last-of-type button#dk-save,html body #deck-edit>div:last-of-type button#btn-deck-random,html body #deck-edit>div:last-of-type button#dk-close{margin:0 !important;align-self:stretch !important;height:38px !important;max-height:none !important;line-height:1.2 !important;vertical-align:top !important;overflow:hidden !important;padding:4px 8px !important}
+</style>
+<style id="ui-v274">
+/* v274: 메인 버튼 그룹별 색상 패밀리(기능별 깊은 톤+동계열 밝은 테두리+파스텔 텍스트 — 참조 스타일 반영)+행 높이 균등화 */
+html body #screen-title #title-actions{grid-auto-rows:1fr !important;align-items:stretch !important}
+html body #screen-title #title-actions>button{min-height:44px !important;display:flex !important;align-items:center !important;justify-content:center !important}
+html body #screen-title button.nav-camp{background:linear-gradient(180deg,#0f4c4c,#0b3a3a) !important;border:1px solid #2dd4bf !important;color:#ccfbf1 !important}
+html body #screen-title button.nav-deck{background:linear-gradient(180deg,#3b1d54,#2a1240) !important;border:1px solid #a855f7 !important;color:#e9d5ff !important}
+html body #screen-title button.nav-relic{background:linear-gradient(180deg,#3d2314,#2a1808) !important;border:1px solid #d97706 !important;color:#fde68a !important}
+html body #screen-title button.nav-hof{background:linear-gradient(180deg,#4a1525,#33101a) !important;border:1px solid #fb7185 !important;color:#ffe4e6 !important}
+html body #screen-title button.nav-profile{background:linear-gradient(180deg,#152238,#0f1a30) !important;border:1px solid #60a5fa !important;color:#dbeafe !important}
+html body #screen-title button.nav-skill{background:linear-gradient(180deg,#14532d,#0e3d22) !important;border:1px solid #4ade80 !important;color:#dcfce7 !important}
+html body #screen-title button#btn-diff{background:linear-gradient(180deg,#3b111e,#2a0c15) !important;border:1px solid #f87171 !important;color:#fecaca !important}
+html body #screen-title button#btn-info{background:linear-gradient(180deg,#1e293b,#172033) !important;border:1px solid #94a3b8 !important;color:#e2e8f0 !important}
 </style>
 </body>
 </html>

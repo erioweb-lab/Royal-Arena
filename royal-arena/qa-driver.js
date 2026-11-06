@@ -100,7 +100,7 @@ function runBattle(cb){
     var ks=Object.keys(rs).map(Number).sort(function(a,b){return a-b;}); var o=[],hg=[],vg=[];
     ks.forEach(function(k,i){ var row=rs[k].sort(function(a,b){return a.left-b.left;}); if(row.length<2) return; var mn=1e9,mx=0; for(var j=1;j<row.length;j++){ var g=Math.round(row[j].left-row[j-1].right); if(g<0)g=0; if(g<mn)mn=g; if(g>mx)mx=g; } if(mn<1e9){ hg.push(mn);hg.push(mx); o.push('r'+i+'n'+row.length+'g'+mn+'-'+mx); } });
     for(var i=1;i<ks.length;i++){ var pv=rs[ks[i-1]],cu=rs[ks[i]]; var pb=Math.max.apply(null,pv.map(function(r){return r.bottom;})); var ct=Math.min.apply(null,cu.map(function(r){return r.top;})); var v=Math.round(ct-pb); if(v>0&&v<200) vg.push(v); }
-    if(hg.length&&vg.length) o.push('h'+Math.min.apply(null,hg)+'-'+Math.max.apply(null,hg)+'/v'+Math.min.apply(null,vg)+'-'+Math.max.apply(null,vg));
+    var __ah=[]; ks.forEach(function(k){rs[k].forEach(function(r){__ah.push(Math.round(r.height));});}); if(__ah.length) o.push('bh'+Math.min.apply(null,__ah)+'-'+Math.max.apply(null,__ah)); if(hg.length&&vg.length) o.push('h'+Math.min.apply(null,hg)+'-'+Math.max.apply(null,hg)+'/v'+Math.min.apply(null,vg)+'-'+Math.max.apply(null,vg));
     set('TG:'+o.join('|'));
   }catch(e){ set('TG:err'); } },500); }
   if(mode==='deck'){ setTimeout(function(){ try{ var out=[];   /* v250: 덱슬롯 지오메트리 실측 */

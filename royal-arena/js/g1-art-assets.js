@@ -2314,7 +2314,7 @@ window.__uiUp=function(){ try{   /* v178: 메인·게임 내 UI 업그레이드 
   document.head.appendChild(st);
   var n=0; var __hits=[]; document.querySelectorAll('button,[class*=btn],[class*=nav],[class*=pill],[class*=skill],[class*=card],[class*=menu],[class*=link],[id^="btn-"],[onclick]').forEach(function(b){ var t=(b.textContent||'').trim(); var c=null;
     if(/배틀 시작/.test(t)){ c='ui-cta'; }
-    else if(/훈련 캠프|덱 편성|유물|명예의 전당|프로필|전술 연구소/.test(t)){ c='ui-nav'; }
+    else if(/훈련 캠프/.test(t)){ c='ui-nav nav-camp'; } else if(/덱 편성/.test(t)){ c='ui-nav nav-deck'; } else if(/유물/.test(t)){ c='ui-nav nav-relic'; } else if(/명예의 전당/.test(t)){ c='ui-nav nav-hof'; } else if(/프로필/.test(t)){ c='ui-nav nav-profile'; } else if(/전술 연구소/.test(t)){ c='ui-nav nav-skill'; }   /* v274: 기능별 색상 패밀리 */
     else if(/게임 방법/.test(t)){ c='ui-how'; }
     else if(/킹샷|수리/.test(t)){ c='ui-skill'; }
     if(c) __hits.push([b,c]);
