@@ -2002,8 +2002,8 @@ function buildHandUI(){
   for(let i=0;i<4;i++){
     const d=document.createElement('div'); d.className='card';
     d.innerHTML='<div class="cost"><span></span></div><div class="emoji"></div><div class="nm"></div>';
-    d.addEventListener('pointerdown',()=>{ ensureAudio(); if(S.over) return;
-      P.sel=i; dragFrom=i; syncHand(); try{ tutCardTap(i); }catch(e){} });   /* v147 */
+    d.addEventListener('pointerdown',()=>{ try{ ensureAudio(); if(S.over) return; }catch(e){}
+      try{ P.sel=i; dragFrom=i; syncHand(); try{ tutCardTap(i); }catch(e){} }catch(e2){ P.sel=i; dragFrom=i; } });   /* v307: 선택 등록 무조건 보장 — 오버레이/오디오 예외가 탭을 죽이지 않는다 */
     box.appendChild(d); cardEls.push(d);
   }
   setTimeout(function(){ try{ __raTierCards(); }catch(e){} },0);   /* v207: 등급 프레임 전투 손카드 확장 */

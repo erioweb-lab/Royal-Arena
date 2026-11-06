@@ -142,9 +142,56 @@ setTimeout(function(){
   if(mode==='profile'){ setTimeout(function(){ try{ var b=document.getElementById('btn-profile'); if(!b){ set('PROF:no-btn'); return; } clickEl(b); set('PROF:clicked'); }catch(e){ set('PROF:err'); } },250); }
   if(mode==='skill'){ setTimeout(function(){ try{ var b=document.getElementById('btn-skill'); if(!b){ set('SKILL:no-btn'); return; } clickEl(b); set('SKILL:clicked'); }catch(e){ set('SKILL:err'); } },250); }
   var __spq=q.get('spawn');
+  if(q.get('etest')){ setTimeout(function(){ try{
+    if(typeof P==='undefined'||!P){ set('ETEST:no-P'); return; }
+    var __g0=document.querySelectorAll('#cards .card'); if(!__g0.length){ set('ETEST:no-card'); return; }
+    P.elixir=10;
+    var __rA='A?';
+    try{ try{ __g0[0].dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,cancelable:true,view:window,pointerId:1})); }catch(e){ __g0[0].dispatchEvent(new MouseEvent('pointerdown',{bubbles:true,cancelable:true,view:window})); }
+      __rA=(P.sel===0)?'Aok':'Afail'+P.sel;
+    }catch(e){ __rA='Aerr:'+(e&&e.message||e).toString().slice(0,28); }
+    var __rB='B?', __ex='?';
+    try{ if(P.sel===0){ playCard(P,0,4.5,16); } }catch(e){ __rB='Perr:'+(e&&e.message||e).toString().slice(0,28); }
+    try{ __ex=Math.round((P.elixir||0)*10)/10; P.elixir=10; }catch(e){}
+    setTimeout(function(){ try{
+      var __g1=document.querySelectorAll('#cards .card');
+      var __rC='C?';
+      try{ try{ __g1[1].dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,cancelable:true,view:window,pointerId:2})); }catch(e){ __g1[1].dispatchEvent(new MouseEvent('pointerdown',{bubbles:true,cancelable:true,view:window})); }
+        __rC=(P.sel===1)?'Cok':'Cfail'+P.sel;
+      }catch(e){ __rC='Cerr:'+(e&&e.message||e).toString().slice(0,28); }
+      var __selc=document.querySelector('#cards .card.sel')?'selclass':'noselclass';
+      var __dim=[].slice.call(document.querySelectorAll('#cards .card')).filter(function(c){ return c.className.indexOf('dim')>=0; }).length;
+      set('ETEST:'+__rA+'/'+__rB+'ex'+__ex+'/'+__rC+'/'+__selc+'/dim'+__dim);
+    }catch(e){ set('ETEST:Cerr'); } },1300);
+  }catch(e){ set('ETEST:err'); } },3500); }
   if(q.get('cardtap')){ setTimeout(function(){ try{ if(typeof P==='undefined'||!P||!P.hand){ set('CTAP:no-hand'); return; } P.elixir=10; var c0=[].slice.call(document.querySelectorAll('#hand .card'))[0]; if(!c0){ set('CTAP:no-card'); return; } try{ c0.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,cancelable:true,view:window,pointerId:1})); }catch(e){ c0.dispatchEvent(new MouseEvent('pointerdown',{bubbles:true,cancelable:true,view:window})); }   /* v306b: 카드는 pointerdown 바인딩(g1:2006) — click 발사 무효 */ setTimeout(function(){ try{ set('CTAP:'+(typeof P.sel==='number'&&P.sel>=0?'sel'+P.sel:'nosel')+'/ex'+Math.round(P.elixir)); }catch(e){ set('CTAP:err'); } },400); }catch(e){ set('CTAP:err'); } },3500); } if(__spq){ setTimeout(function(){ try{ if(typeof spawnCard!=='function'){ set('SPAWN:no-fn'); return; } __spq.split(',').forEach(function(k,i2){ try{ spawnCard(k,'blue',4.5+(i2%3)*1.2,16.5+Math.floor(i2/3)*1.4); }catch(e){} }); set('SPAWN:ok'); }catch(e){ set('SPAWN:err'); } },1500); }
   if(mode==='skill'){ setTimeout(function(){ try{ var its=document.querySelectorAll('#overlay-skill .sk-item'), mg=999, nn=0, __fw=false; for(var i2=0;i2<its.length;i2++){ var bs=its[i2].querySelectorAll('button'); if(bs.length>=2){ var r1=bs[0].getBoundingClientRect(), r2=bs[1].getBoundingClientRect(); var Lf=r1.right<r2.right?r1:r2, Rt=r1.right<r2.right?r2:r1; var gp=Math.round(Rt.left-Lf.right); if(gp<mg)mg=gp; nn++; if(!__fw){__fw=true; set('SKGD:w'+Math.round(r1.width)+'x'+Math.round(r2.width)+'/r'+Math.round(r1.right)+','+Math.round(r2.right));} } } set('SKG:'+mg+'g/'+nn+'it'); }catch(e){ set('SKG:err'); } },700); }
-  if(mode==='battle'){runBattle(function(r){report(r);if(q.get('quit')==='1')quitBattle();});return;}
+  if(mode==='battle'){
+    if(q.get('etest')){
+      setTimeout(function(){ try{
+        if(typeof startMatch!=='function'){ set('ETEST:no-start'); return; } startMatch();
+        setTimeout(function(){ try{
+          if(typeof P==='undefined'||!P){ set('ETEST:no-P'); return; }
+          var __g0=document.querySelectorAll('#cards .card'); if(!__g0.length){ set('ETEST:no-card'); return; }
+          P.elixir=10; var __rA='A?';
+          try{ try{ __g0[0].dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,cancelable:true,view:window,pointerId:1})); }catch(e){ __g0[0].dispatchEvent(new MouseEvent('pointerdown',{bubbles:true,cancelable:true,view:window})); }
+            __rA=(P.sel===0)?'Aok':'Afail'+P.sel; }catch(e){ __rA='Aerr'; }
+          var __rB='B?', __ex='?';
+          try{ if(P.sel===0){ playCard(P,0,4.5,16); } }catch(e){ __rB='Perr'; }
+          try{ __ex=Math.round((P.elixir||0)*10)/10; P.elixir=10; }catch(e){}
+          setTimeout(function(){ try{
+            var __g1=document.querySelectorAll('#cards .card'); var __rC='C?';
+            try{ try{ __g1[1].dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,cancelable:true,view:window,pointerId:2})); }catch(e){ __g1[1].dispatchEvent(new MouseEvent('pointerdown',{bubbles:true,cancelable:true,view:window})); }
+              __rC=(P.sel===1)?'Cok':'Cfail'+P.sel; }catch(e){ __rC='Cerr'; }
+            var __sc=document.querySelector('#cards .card.sel')?'sel':'nosel';
+            set('ETEST:'+__rA+'/'+__rB+'ex'+__ex+'/'+__rC+'/'+__sc);
+          }catch(e){ set('ETEST:Cerr'); } },1300);
+        }catch(e){ set('ETEST:Berr'); } },1200);
+      }catch(e){ set('ETEST:err'); } },3000);
+      return;
+    }
+    runBattle(function(r){report(r);if(q.get('quit')==='1')quitBattle();});return;
+  }
   if(q.get('screen')){return;}   /* v230: screen 모드 — 순회 금지 */
   var btns=walkButtons(),i=0,opened=0;
   function step(){
