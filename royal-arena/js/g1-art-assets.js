@@ -177,7 +177,11 @@ try{ var ag=document.getElementById('btn-again'), hm=document.getElementById('bt
   document.head.appendChild(st);
   var panel=ov.querySelector('div');
   var tit=document.getElementById('r-title');
-  if(tit&&!document.getElementById('rf-badge')){ var bd=document.createElement('div'); bd.id='rf-badge'; bd.className='rbadge'; bd.textContent=tit.textContent;
+  if(tit&&!document.getElementById('rf-badge')){ var bd=document.createElement('div'); bd.id='rf-badge'; bd.className
+  /* v286: 그룹 팔레트 인라인 통합 — 리스타일러와 같은 시점 적용(경합·옵저버 루프 없음) */
+  if(!window.__raNAV){ window.__raNAV={ 'nav-camp':['linear-gradient(180deg,#0f9b8e,#0d7d72)','#5eead4','#ecfffd'], 'nav-deck':['linear-gradient(180deg,#8b2fd6,#7326b8)','#d8b4fe','#f6ecff'], 'nav-relic':['linear-gradient(180deg,#c2691a,#a04f08)','#fcd34d','#fff8e7'], 'nav-hof':['linear-gradient(180deg,#d1254c,#a80e35)','#fda4af','#fff1f2'], 'nav-profile':['linear-gradient(180deg,#2563eb,#1d4ed8)','#93c5fd','#eff6ff'], 'nav-skill':['linear-gradient(180deg,#1b9a4b,#147a3a)','#86efac','#f0fdf4'] }; }
+  if(bd.classList){ var __nc=Array.prototype.find.call(bd.classList,function(x){return !!(window.__raNAV&&window.__raNAV[x]);}); if(__nc){ var __pv=window.__raNAV[__nc]; try{ bd.style.setProperty('background',__pv[0],'important'); bd.style.setProperty('border','1px solid '+__pv[1],'important'); bd.style.setProperty('color',__pv[2],'important'); }catch(e){} } }
+='rbadge'; bd.textContent=tit.textContent;
     tit.style.display='none'; tit.parentNode.insertBefore(bd,tit); }
   var bd=document.getElementById('rf-badge'); if(bd) bd.textContent=(S.winner==='blue')?'승리!':(S.winner==='red')?'패배':'무승부';
   if(panel&&!document.getElementById('rf-snap')){ var sn=document.createElement('div'); sn.id='rf-snap'; sn.className='rsnap';
@@ -2314,7 +2318,7 @@ window.__uiUp=function(){ try{   /* v178: 메인·게임 내 UI 업그레이드 
   document.head.appendChild(st);
   var n=0; var __hits=[]; document.querySelectorAll('button,[class*=btn],[class*=nav],[class*=pill],[class*=skill],[class*=card],[class*=menu],[class*=link],[id^="btn-"],[onclick]').forEach(function(b){ var t=(b.textContent||'').trim(); var c=null;
     if(/배틀 시작/.test(t)){ c='ui-cta'; }
-    else if(/훈련 캠프|덱 편성|유물|명예의 전당|프로필|전술 연구소/.test(t)){ c='ui-nav'; }
+    else if(/훈련 캠프/.test(t)){ c='ui-nav nav-camp'; } else if(/덱 편성/.test(t)){ c='ui-nav nav-deck'; } else if(/유물/.test(t)){ c='ui-nav nav-relic'; } else if(/명예의 전당/.test(t)){ c='ui-nav nav-hof'; } else if(/프로필/.test(t)){ c='ui-nav nav-profile'; } else if(/전술 연구소/.test(t)){ c='ui-nav nav-skill'; }
     else if(/게임 방법/.test(t)){ c='ui-how'; }
     else if(/킹샷|수리/.test(t)){ c='ui-skill'; }
     if(c) __hits.push([b,c]);
