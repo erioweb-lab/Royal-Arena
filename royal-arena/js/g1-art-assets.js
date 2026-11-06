@@ -2319,7 +2319,7 @@ window.__uiUp=function(){ try{   /* v178: 메인·게임 내 UI 업그레이드 
     else if(/킹샷|수리/.test(t)){ c='ui-skill'; }
     if(c) __hits.push([b,c]);
   });
-  __hits.forEach(function(h){ var __inner=__hits.some(function(h2){ return h2[0]!==h[0]&&h[0].contains(h2[0]); }); if(!__inner){ h[0].classList.add(h[1]); if(h[1]==='ui-nav') n++; } });
+  __hits.forEach(function(h){ var __inner=__hits.some(function(h2){ return h2[0]!==h[0]&&h[0].contains(h2[0]); }); if(!__inner){ h[0].classList.add(h[1]); if(h[1]==='ui-nav'){ n++; var __t=(h[0].textContent||''); var __map=[['훈련 캠프','nav-camp'],['덱 편성','nav-deck'],['유물','nav-relic'],['명예의 전당','nav-hof'],['프로필','nav-profile'],['전술 연구소','nav-skill']],__i;for(__i=0;__i<__map.length;__i++){if(__t.indexOf(__map[__i][0])>=0){h[0].classList.add(__map[__i][1]);break;}} } } });
   ['ks-btn','repair-btn'].forEach(function(id){ var b=document.getElementById(id); if(b){ b.classList.add('ui-skill'); } });
 
 }catch(e){} };
