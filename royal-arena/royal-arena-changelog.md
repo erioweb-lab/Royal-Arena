@@ -1,3 +1,4 @@
+- v280(도감 flex 해제): TG v리스트 진단(6,19,6,32,16,20,32,12·cut1:📖게) — 카드 도감 패널이 flex:1로 남는 높이를 흡수해 게임 방법 버튼이 화면 밖으로 밀림 → t-panel·t-codex flex 해제+자연 높이. 칩·sw v280
 - v279(진단 강화): TG에 세로 간격 전체 목록(v 리스트)+cut 버튼 이름 출력. 캡처 CDN 스태일 의심 — cb 파라미터로 우회. 칩·sw v279
 - v278(세로 간극 50%): 사용자 요청 — 메인 섹션 간 세로 여백 절반 축소(title-actions 12→6·t-panel·h2·t-links·theme-row·btn-start 여백 절반). TG에 cut(화면 아래로 밀린 버튼 수) 실측 추가 — 캡처 잘림 여부 숫자 판정. 칩·sw v278
 - v277(색상 최종): 원인 확정 — JS 주입 버튼의 인라인 !important(background)가 CSS !important를 이김(TG cls로 클래스 적용은 확인). 옵저버에서 element.style.setProperty(important)로 인라인 직접 덮기로 해결. 캠프 정규식 확대. 칩·sw v277
