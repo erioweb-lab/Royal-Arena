@@ -95,49 +95,30 @@ function runBattle(cb){
       else if(tries<10){ setTimeout(go,400); } else { set('SCREEN-codex:FAIL'); } }
     setTimeout(go,400);
   })(); }
-  if(mode==='walk'){ setTimeout(function(){   /* v239: 배틀 시작 버튼 런타임 실측 덤프 */
-    try{ var bs=document.getElementById('btn-start');
-      if(!bs){ set('STARTSTYLE:no-btn'); return; }
-      var cs=getComputedStyle(bs);
-      var bi=(cs.backgroundImage||'');
-      var bg=bi!==''?('img:'+bi.slice(0,150)):('clr:'+cs.backgroundColor);
-      set('STARTSTYLE:'+bg+' | color:'+cs.color+' | cls='+bs.className+' | inline='+String(bs.getAttribute('style')||'none').slice(0,120));
-    }catch(e){ set('STARTSTYLE:err'); }
-  },500); }
+    if(mode==='walk'){ setTimeout(function(){ try{ var sc=document.getElementById('screen-title'); if(!sc){ set('TG:no-title'); return; }   /* v272: 메인 간극 숫자 실측 */
+    var rs={}; [].slice.call(sc.querySelectorAll('button')).forEach(function(b){ var r=b.getBoundingClientRect(); if(r.width<10||r.top<0) return; var k=Math.round(r.top/12); (rs[k]=rs[k]||[]).push(r); });
+    var ks=Object.keys(rs).map(Number).sort(function(a,b){return a-b;}); var o=[],hg=[],vg=[];
+    ks.forEach(function(k,i){ var row=rs[k].sort(function(a,b){return a.left-b.left;}); if(row.length<2) return; var mn=1e9,mx=0; for(var j=1;j<row.length;j++){ var g=Math.round(row[j].left-row[j-1].right); if(g<0)g=0; if(g<mn)mn=g; if(g>mx)mx=g; } if(mn<1e9){ hg.push(mn);hg.push(mx); o.push('r'+i+'n'+row.length+'g'+mn+'-'+mx); } });
+    for(var i=1;i<ks.length;i++){ var pv=rs[ks[i-1]],cu=rs[ks[i]]; var pb=Math.max.apply(null,pv.map(function(r){return r.bottom;})); var ct=Math.min.apply(null,cu.map(function(r){return r.top;})); var v=Math.round(ct-pb); if(v>0&&v<200) vg.push(v); }
+    if(hg.length&&vg.length) o.push('h'+Math.min.apply(null,hg)+'-'+Math.max.apply(null,hg)+'/v'+Math.min.apply(null,vg)+'-'+Math.max.apply(null,vg));
+    set('TG:'+o.join('|'));
+  }catch(e){ set('TG:err'); } },500); }
   if(mode==='deck'){ setTimeout(function(){ try{ var out=[];   /* v250: 덱슬롯 지오메트리 실측 */
     [].slice.call(document.querySelectorAll('#deck-edit button[data-slot]')).forEach(function(b,i){ out.push('s'+i+':h'+b.offsetHeight+'/sh'+b.scrollHeight+'/w'+b.clientWidth+'/sw'+b.scrollWidth); });
     var de=document.getElementById('deck-edit'); if(de){ out.push('de:sh'+de.scrollHeight+'/ch'+de.clientHeight+'/pb'+getComputedStyle(de).paddingBottom); var __lp=[].slice.call(de.querySelectorAll('[data-add]')).pop(); if(__lp){ var __dr=de.getBoundingClientRect(),__lr=__lp.getBoundingClientRect(); out.push('lastpool/b'+Math.round(__lr.bottom)+'/deob'+Math.round(__dr.bottom)+((__lr.bottom>__dr.bottom+0.5)?'/!CUT':'/vis')); } }
     set('SLOTGEO:'+out.join(' | '));   /* v253: 지연 후 출력 */
   }catch(e){ set('SLOTGEO:err'); } },1500); }
-  if(mode==='deck'){ setTimeout(function(){ try{ var de=document.getElementById('deck-edit'); if(!de){ set('BORDCHK:no-de'); return; }   /* v262: 버튼 경계 상자 숫자 실측 — AI 판독 대신 클립 포함 여부를 숫자로 판정 */
-    var dr=de.getBoundingClientRect(); var out=[];
-    [].slice.call(de.children).slice(0,4).forEach(function(rw,i){ var rc=rw.getBoundingClientRect(); out.push('row'+(i+1)+':ov'+getComputedStyle(rw).overflowY+'/t'+Math.round(rc.top)+'/b'+Math.round(rc.bottom)); });
-    [].slice.call(de.querySelectorAll('button[data-slot],button.dk-act,button.dk-sub,button#btn-deck-random')).forEach(function(b,i){ var r=b.getBoundingClientRect(); var miss=(r.top<dr.top-0.5||r.bottom>dr.bottom+0.5||r.left<dr.left-0.5||r.right>dr.right+0.5)?'!OUT':'in'; out.push('btn'+i+':'+(b.getAttribute('data-slot')!==null?('slot'+b.getAttribute('data-slot')):(b.id||b.className))+'/t'+Math.round(r.top)+'/b'+Math.round(r.bottom)+'/l'+Math.round(r.left)+'/r'+Math.round(r.right)+'/'+miss); });
-    set('BORDCHK:'+out.join(' | '));
-  }catch(e){ set('BORDCHK:err'); } },1800); }
-  if(mode==='deck'){ setTimeout(function(){ try{ var de=document.getElementById('deck-edit'); if(!de){ set('SCROLL:no-de'); return; }   /* v264: 무스크롤 최종 판정 — 초컴팩트 출력(박스 클립 방지) */
-    var lp=[].slice.call(de.querySelectorAll('[data-add]')).pop(); var db=de.getBoundingClientRect(); var lb=lp?lp.getBoundingClientRect():null;
-    var fit=de.scrollHeight<=de.clientHeight+1;
-    set('SCROLL:'+(fit?'FIT':'SCROLLS')+'/sh'+de.scrollHeight+'/ch'+de.clientHeight+(lb?('/lpb'+Math.round(lb.bottom)+'/deob'+Math.round(db.bottom)+(lb.bottom>db.bottom+0.5?'!CUT':'vis')):'/nolp')); var __sf=[]; [].slice.call(de.querySelectorAll('button[data-slot]')).forEach(function(b,i){ __sf.push('s'+i+'w'+b.clientWidth+(b.scrollWidth>b.clientWidth+1?'!CLIP':'ok')); }); if(__sf.length) set('SCROLL:'+__sf.join('/')); else set('SCROLL:noslot');   /* v269: 슬롯 탭 텍스트 적합성 실측 */
-  if(mode==='deck'){ setTimeout(function(){ try{ var de=document.getElementById('deck-edit'); if(!de){ set('GAPCHK:no-de'); return; }   /* v271: 버튼 간극 숫자 크로스체크 */
-    var dr=de.getBoundingClientRect(); var out=[];
+    if(mode==='deck'){ setTimeout(function(){ try{ var de=document.getElementById('deck-edit'); if(!de){ set('GAPCHK:no-de'); return; }   /* v272: 간극+수용 숫자 실측 */
+    var db=de.getBoundingClientRect(); var out=[];
     var sl=[].slice.call(de.querySelectorAll('button[data-slot]')).map(function(b){return b.getBoundingClientRect();}).sort(function(a,b){return a.left-b.left;});
     if(sl.length>1) out.push('sg'+Math.round(sl[1].left-sl[0].right));
     var ab=[].slice.call(de.querySelectorAll('#dk-save,#btn-deck-random,#dk-close')).map(function(b){return b.getBoundingClientRect();}).sort(function(a,b){return a.left-b.left;});
-    if(ab.length===3){ out.push('ag'+Math.round(ab[1].left-ab[0].right)+'/'+Math.round(ab[2].left-ab[1].right)); out.push('Lm'+Math.round(ab[0].left-dr.left)+'/Rm'+Math.round(dr.right-ab[2].right)); out.push('w'+Math.round(ab[0].width)+'/'+Math.round(ab[1].width)+'/'+Math.round(ab[2].width)); }
+    if(ab.length===3){ out.push('a'+Math.round(ab[1].left-ab[0].right)+'x'+Math.round(ab[2].left-ab[1].right)); out.push('m'+Math.round(ab[0].left-db.left)+'x'+Math.round(db.right-ab[2].right)); out.push('w'+Math.round(ab[0].width)+'x'+Math.round(ab[1].width)+'x'+Math.round(ab[2].width)); }
+    var lp=[].slice.call(de.querySelectorAll('[data-add]')).pop(); var lb2=lp?lp.getBoundingClientRect():null;
+    out.push('fit'+(de.scrollHeight<=de.clientHeight+1?'Y':'N')+(lb2?(lb2.bottom>db.bottom+0.5?'!CUT':'/vis'):''));
     set('GAPCHK:'+out.join('/'));
-  }catch(e){ set('GAPCHK:err'); } },3000); }
-  if(mode==='walk'){ setTimeout(function(){ try{ var sc=document.getElementById('screen-title'); if(!sc){ set('TG:no-title'); return; }   /* v271: 메인 버튼 간극 숫자 크로스체크 */
-    var rs={}; [].slice.call(sc.querySelectorAll('button')).forEach(function(b){ var r=b.getBoundingClientRect(); if(r.width<10||r.top<0||r.bottom>innerHeight+40) return; var k=Math.round(r.top/12); (rs[k]=rs[k]||[]).push(r); });
-    var ks=Object.keys(rs).map(Number).sort(function(a,b){return a-b;}); var out=[],hg=[],vg=[];
-    ks.forEach(function(k,i){ var row=rs[k].sort(function(a,b){return a.left-b.left;}); if(row.length<2) return; var mn=1e9,mx=0;
-      for(var j=1;j<row.length;j++){ var g=Math.round(row[j].left-row[j-1].right); if(g<0) g=0; if(g<mn)mn=g; if(g>mx)mx=g; }
-      if(mn<1e9){ hg.push(mn); hg.push(mx); out.push('r'+i+'n'+row.length+'/g'+mn+'-'+mx); } });
-    for(var i=1;i<ks.length;i++){ var prev=rs[ks[i-1]],cur=rs[ks[i]]; var pb=Math.max.apply(null,prev.map(function(r){return r.bottom;})); var ct=Math.min.apply(null,cur.map(function(r){return r.top;})); var v=Math.round(ct-pb); if(v>0&&v<200) vg.push(v); }
-    if(hg.length&&vg.length) out.push('h'+Math.min.apply(null,hg)+'-'+Math.max.apply(null,hg)+'/v'+Math.min.apply(null,vg)+'-'+Math.max.apply(null,vg));
-    set('TG:'+out.join(' | '));
-  }catch(e){ set('TG:err'); } },1500); }
-  }catch(e){ set('SCROLL:err'); } },2400); }
+  }catch(e){ set('GAPCHK:err'); } },2400); }
+  
   if(mode==='deck'){ setTimeout(function(){
     var db=document.getElementById('btn-deck-edit')||[].slice.call(document.querySelectorAll('#screen-title button')).filter(function(b){return /덱 편성/.test(b.textContent||'')})[0];
     if(!db){ set(mode+' DECK:FAIL(no-btn)'); return; }
