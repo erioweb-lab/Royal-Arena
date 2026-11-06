@@ -60,7 +60,9 @@ function applyTrophyDelta(w){
   const nv=Math.max(0,cur+d);
   try{ if(nv>cur&&typeof gradeOf==='function'&&typeof banner==='function'){ var __g0=gradeOf(cur), __g1=gradeOf(nv); if(__g1>__g0){ var __gn=(typeof GRADES!=='undefined'&&GRADES[__g1])?GRADES[__g1][0]:''; setTimeout(function(){ banner('👑 등급 상승! '+__gn,2400); try{ sfx('crown'); }catch(e){} },2600); } } }catch(e){}   /* v220: 등급 상승 배너 */
   try{ localStorage.setItem('ra_trophies_v1',String(nv)); }catch(e){}
-  try{ var __h=JSON.parse(localStorage.getItem('ra_hist_v1')||'[]'); if(!Array.isArray(__h))__h=[]; __h.push(w==='blue'?'W':(w==='red'?'L':'D')); while(__h.length>5)__h.shift(); localStorage.setItem('ra_hist_v1',JSON.stringify(__h)); }catch(e){}   /* v143: 승패 이력 5전 저장 */
+  try{ var __h=JSON.parse(localStorage.getItem('ra_hist_v1')||'[]'); if(!Array.isArray(__h))__h=[]; __h.push(w==='blue'?'W':(w==='red'?'L':'D')); while(__h.length>5)__h.shift(); localStorage.setItem('ra_hist_v1',JSON.stringify(__h)); }catch(e){}
+  try{ var __h30=JSON.parse(localStorage.getItem('ra_hist30_v1')||'[]'); if(!Array.isArray(__h30))__h30=[]; __h30.push(w==='blue'?'W':(w==='red'?'L':'D')); while(__h30.length>30)__h30.shift(); localStorage.setItem('ra_hist30_v1',JSON.stringify(__h30)); }catch(e){}   /* v296: 30전 이력 */
+  try{ var __dfi=Math.max(0,Math.min(2,parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0)); var __sd=JSON.parse(localStorage.getItem('ra_stats_diff_v1')||'[]'); if(!Array.isArray(__sd)||__sd.length<3)__sd=[{w:0,l:0,d:0},{w:0,l:0,d:0},{w:0,l:0,d:0}]; if(w==='blue')__sd[__dfi].w++; else if(w==='red')__sd[__dfi].l++; else __sd[__dfi].d++; localStorage.setItem('ra_stats_diff_v1',JSON.stringify(__sd)); }catch(e){}   /* v296: 난이도별 전적 */   /* v143: 승패 이력 5전 저장 */
   if(w==='blue'){ try{ var __wv=parseInt(localStorage.getItem('ra_wins_v1')||'0',10)||0; localStorage.setItem('ra_wins_v1',String(__wv+1)); }catch(e){} }   // v109: 승수 기록 — 유물 해금 try{ profSync(); }catch(e){}   // v120: 트로피 갱신 프로필 미러
   try{ syncTrophyChip(); syncGradeVisual(); }catch(e){}
   return nv-cur;
@@ -156,7 +158,7 @@ window.__navUp(); setInterval(function(){ try{ window.__navUp(); }catch(e){} },1
 
 /* v185: 카드 레벨 시스템 — XP 3당 Lv+1(최대 5), Lv당 hp/dmg +4%(아군 전용), 도감 3D 레벨 뱃지, safe-area, 팝업 배타성 */
 function __cXpMap(){ try{ return JSON.parse(localStorage.getItem('ra_cardxp_v1')||'{}'); }catch(e){ return {}; } }
-function __cLv(k){ var m=__cXpMap(); return Math.min(5,1+Math.floor((m[k]||0)/3)); }
+function __cLv(k){ var m=__cXpMap(); return Math.min(7,1+Math.floor((m[k]||0)/3)); }   /* v296: 상한 7 */
 window.__lvUp=function(){ try{
   if(!document.getElementById('ui-v185')){
     var st4=document.createElement('style'); st4.id='ui-v185';
@@ -308,7 +310,7 @@ function profNew(n){ var d=profDb(); n=String(n||'').trim().slice(0,12); if(!n||
   profSync(); d.list.push(n); d.active=n; profDbSave(d);
   try{ localStorage.setItem('ra_trophies_v1','0'); localStorage.setItem('ra_wins_v1','0');
     localStorage.setItem('ra_sp_v1','{"sp":0,"total":0}'); localStorage.setItem('ra_skills_v1','{}'); localStorage.removeItem('ra_relic_v1');
-    S.relic=''; applyRelics(); S._sk={}; syncTrophyChip(); syncGradeVisual(); ['ra_wins_v1','ra_losses_v1','ra_streak_v1','ra_streak_best_v1','ra_daily_v1','ra_lvup_v1','ra_xp_gain_v1'].forEach(function(k2){ try{ localStorage.removeItem(k2); }catch(e2){} }); }catch(e){} return true; }   // v120: 신규 지휘관 — 기본 상태 시작
+    S.relic=''; applyRelics(); S._sk={}; syncTrophyChip(); syncGradeVisual(); ['ra_wins_v1','ra_losses_v1','ra_streak_v1','ra_streak_best_v1','ra_daily_v1','ra_lvup_v1','ra_xp_gain_v1','ra_hist30_v1','ra_stats_diff_v1','ra_sp_gain_v1'].forEach(function(k2){ try{ localStorage.removeItem(k2); }catch(e2){} }); }catch(e){} return true; }   // v120: 신규 지휘관 — 기본 상태 시작
 function profRename(n){ var d=profDb(); n=String(n||'').trim().slice(0,12); if(!n||d.list.indexOf(n)>=0||n===d.active) return false;
   var old=d.active; profStore(n, profLoad(old)); try{ localStorage.removeItem(profKey(old)); }catch(e){}
   d.list=d.list.map(function(x){ return x===old?n:x; }); d.active=n; profDbSave(d); return true; }
@@ -317,7 +319,7 @@ function profDelete(n){ var d=profDb(); if(d.list.indexOf(n)<0||n===d.active||d.
 function resetProgression(){ try{ localStorage.setItem('ra_prof_backup_v1', JSON.stringify({n:profActive(),s:profSnapshot()}));
     localStorage.setItem('ra_trophies_v1','0'); localStorage.setItem('ra_wins_v1','0');
     localStorage.setItem('ra_sp_v1','{"sp":0,"total":0}'); localStorage.setItem('ra_skills_v1','{}'); localStorage.removeItem('ra_relic_v1');
-    S.relic=''; applyRelics(); S._sk={}; syncTrophyChip(); syncGradeVisual(); ['ra_wins_v1','ra_losses_v1','ra_streak_v1','ra_streak_best_v1','ra_daily_v1','ra_lvup_v1','ra_xp_gain_v1'].forEach(function(k2){ try{ localStorage.removeItem(k2); }catch(e2){} }); }catch(e){} return true; }   // v120: 진행도 리셋 — 직전 상태 자동 백업
+    S.relic=''; applyRelics(); S._sk={}; syncTrophyChip(); syncGradeVisual(); ['ra_wins_v1','ra_losses_v1','ra_streak_v1','ra_streak_best_v1','ra_daily_v1','ra_lvup_v1','ra_xp_gain_v1','ra_hist30_v1','ra_stats_diff_v1','ra_sp_gain_v1'].forEach(function(k2){ try{ localStorage.removeItem(k2); }catch(e2){} }); }catch(e){} return true; }   // v120: 진행도 리셋 — 직전 상태 자동 백업
 function undoProgression(){ try{ var b=JSON.parse(localStorage.getItem('ra_prof_backup_v1')||'null'); if(!b) return false;
     profStore(b.n, b.s); if(b.n===profActive()) profApply(b.n); localStorage.removeItem('ra_prof_backup_v1'); }catch(e){ return false; } return true; }   // v120: 복원 — 리셋 직전 진행도 1회 복구
 function ensureProfileUI(){
@@ -353,7 +355,7 @@ function renderProfileList(){
   var d=profDb(); var s=profSnapshot();
   var gname=(typeof GRADES!=='undefined'&&GRADES[gradeOf(s.tro)])?GRADES[gradeOf(s.tro)][0]:'—';
   var stEl=document.getElementById('prf-stats');
-  if(stEl) stEl.innerHTML='현재: <b>'+d.active+'</b> · 등급 <b>'+gname+'</b><br>트로피 <b>'+s.tro+'</b> · 승리 <b>'+s.wins+'</b> · SP <b>'+((s.sp&&s.sp.sp)||0)+'</b>';
+  if(stEl){ var __L=(function(){try{return parseInt(localStorage.getItem('ra_losses_v1')||'0',10)||0}catch(e){return 0}})(), __W=s.wins||0, __tot=__W+__L, __rate=__tot>0?Math.round(__W*100/__tot):0, __sk=(function(){try{return parseInt(localStorage.getItem('ra_streak_v1')||'0',10)||0}catch(e){return 0}})(), __sb=Math.max(__sk,(function(){try{return parseInt(localStorage.getItem('ra_streak_best_v1')||'0',10)||0}catch(e){return 0}})()), __h30=(function(){try{return JSON.parse(localStorage.getItem('ra_hist30_v1')||'[]')}catch(e){return []}})(), __sd=(function(){try{var x=JSON.parse(localStorage.getItem('ra_stats_diff_v1')||'[]');return (Array.isArray(x)&&x.length>=3)?x:[{w:0,l:0,d:0},{w:0,l:0,d:0},{w:0,l:0,d:0}]}catch(e){return [{w:0,l:0,d:0},{w:0,l:0,d:0},{w:0,l:0,d:0}]}})(), __dn=['쉬움','보통','어려움'], __dd=''; for(var _i=0;_i<3;_i++)__dd+='<span class="ps-d">'+__dn[_i]+' '+__sd[_i].w+'승 '+__sd[_i].l+'패</span>'; stEl.innerHTML='현재: <b>'+d.active+'</b> · 등급 <b>'+gname+'</b><br>트로피 <b>'+s.tro+'</b> · 승리 <b>'+__W+'</b> · SP <b>'+((s.sp&&s.sp.sp)||0)+'</b><div class="ps-grid"><span>승률 <b>'+__rate+'%</b> ('+__tot+'전)</span><span>연승 <b>'+__sk+'</b> · 최고 <b>'+__sb+'</b></span><span class="ps-h">최근 30전</span><span class="ps-hist">'+(__h30.length?__h30.join(' '):'기록 없음')+'</span>'+__dd+'</div>'; }
   var nm=document.getElementById('prf-name'); if(nm) nm.placeholder=d.active;
   box.innerHTML='';
   d.list.forEach(function(n){
@@ -552,7 +554,7 @@ function profNew(n){ var d=profDb(); n=String(n||'').trim().slice(0,12); if(!n||
   profSync(); d.list.push(n); d.active=n; profDbSave(d);
   try{ localStorage.setItem('ra_trophies_v1','0'); localStorage.setItem('ra_wins_v1','0');
     localStorage.setItem('ra_sp_v1','{"sp":0,"total":0}'); localStorage.setItem('ra_skills_v1','{}'); localStorage.removeItem('ra_relic_v1');
-    S.relic=''; applyRelics(); S._sk={}; syncTrophyChip(); syncGradeVisual(); ['ra_wins_v1','ra_losses_v1','ra_streak_v1','ra_streak_best_v1','ra_daily_v1','ra_lvup_v1','ra_xp_gain_v1'].forEach(function(k2){ try{ localStorage.removeItem(k2); }catch(e2){} }); }catch(e){} return true; }   // v120: 신규 지휘관 — 기본 상태 시작
+    S.relic=''; applyRelics(); S._sk={}; syncTrophyChip(); syncGradeVisual(); ['ra_wins_v1','ra_losses_v1','ra_streak_v1','ra_streak_best_v1','ra_daily_v1','ra_lvup_v1','ra_xp_gain_v1','ra_hist30_v1','ra_stats_diff_v1','ra_sp_gain_v1'].forEach(function(k2){ try{ localStorage.removeItem(k2); }catch(e2){} }); }catch(e){} return true; }   // v120: 신규 지휘관 — 기본 상태 시작
 function profRename(n){ var d=profDb(); n=String(n||'').trim().slice(0,12); if(!n||d.list.indexOf(n)>=0||n===d.active) return false;
   var old=d.active; profStore(n, profLoad(old)); try{ localStorage.removeItem(profKey(old)); }catch(e){}
   d.list=d.list.map(function(x){ return x===old?n:x; }); d.active=n; profDbSave(d); return true; }
@@ -561,7 +563,7 @@ function profDelete(n){ var d=profDb(); if(d.list.indexOf(n)<0||n===d.active||d.
 function resetProgression(){ try{ localStorage.setItem('ra_prof_backup_v1', JSON.stringify({n:profActive(),s:profSnapshot()}));
     localStorage.setItem('ra_trophies_v1','0'); localStorage.setItem('ra_wins_v1','0');
     localStorage.setItem('ra_sp_v1','{"sp":0,"total":0}'); localStorage.setItem('ra_skills_v1','{}'); localStorage.removeItem('ra_relic_v1');
-    S.relic=''; applyRelics(); S._sk={}; syncTrophyChip(); syncGradeVisual(); ['ra_wins_v1','ra_losses_v1','ra_streak_v1','ra_streak_best_v1','ra_daily_v1','ra_lvup_v1','ra_xp_gain_v1'].forEach(function(k2){ try{ localStorage.removeItem(k2); }catch(e2){} }); }catch(e){} return true; }   // v120: 진행도 리셋 — 직전 상태 자동 백업
+    S.relic=''; applyRelics(); S._sk={}; syncTrophyChip(); syncGradeVisual(); ['ra_wins_v1','ra_losses_v1','ra_streak_v1','ra_streak_best_v1','ra_daily_v1','ra_lvup_v1','ra_xp_gain_v1','ra_hist30_v1','ra_stats_diff_v1','ra_sp_gain_v1'].forEach(function(k2){ try{ localStorage.removeItem(k2); }catch(e2){} }); }catch(e){} return true; }   // v120: 진행도 리셋 — 직전 상태 자동 백업
 function undoProgression(){ try{ var b=JSON.parse(localStorage.getItem('ra_prof_backup_v1')||'null'); if(!b) return false;
     profStore(b.n, b.s); if(b.n===profActive()) profApply(b.n); localStorage.removeItem('ra_prof_backup_v1'); }catch(e){ return false; } return true; }   // v120: 복원 — 리셋 직전 진행도 1회 복구
 function ensureProfileUI(){
@@ -597,7 +599,7 @@ function renderProfileList(){
   var d=profDb(); var s=profSnapshot();
   var gname=(typeof GRADES!=='undefined'&&GRADES[gradeOf(s.tro)])?GRADES[gradeOf(s.tro)][0]:'—';
   var stEl=document.getElementById('prf-stats');
-  if(stEl) stEl.innerHTML='현재: <b>'+d.active+'</b> · 등급 <b>'+gname+'</b><br>트로피 <b>'+s.tro+'</b> · 승리 <b>'+s.wins+'</b> · SP <b>'+((s.sp&&s.sp.sp)||0)+'</b>';
+  if(stEl){ var __L=(function(){try{return parseInt(localStorage.getItem('ra_losses_v1')||'0',10)||0}catch(e){return 0}})(), __W=s.wins||0, __tot=__W+__L, __rate=__tot>0?Math.round(__W*100/__tot):0, __sk=(function(){try{return parseInt(localStorage.getItem('ra_streak_v1')||'0',10)||0}catch(e){return 0}})(), __sb=Math.max(__sk,(function(){try{return parseInt(localStorage.getItem('ra_streak_best_v1')||'0',10)||0}catch(e){return 0}})()), __h30=(function(){try{return JSON.parse(localStorage.getItem('ra_hist30_v1')||'[]')}catch(e){return []}})(), __sd=(function(){try{var x=JSON.parse(localStorage.getItem('ra_stats_diff_v1')||'[]');return (Array.isArray(x)&&x.length>=3)?x:[{w:0,l:0,d:0},{w:0,l:0,d:0},{w:0,l:0,d:0}]}catch(e){return [{w:0,l:0,d:0},{w:0,l:0,d:0},{w:0,l:0,d:0}]}})(), __dn=['쉬움','보통','어려움'], __dd=''; for(var _i=0;_i<3;_i++)__dd+='<span class="ps-d">'+__dn[_i]+' '+__sd[_i].w+'승 '+__sd[_i].l+'패</span>'; stEl.innerHTML='현재: <b>'+d.active+'</b> · 등급 <b>'+gname+'</b><br>트로피 <b>'+s.tro+'</b> · 승리 <b>'+__W+'</b> · SP <b>'+((s.sp&&s.sp.sp)||0)+'</b><div class="ps-grid"><span>승률 <b>'+__rate+'%</b> ('+__tot+'전)</span><span>연승 <b>'+__sk+'</b> · 최고 <b>'+__sb+'</b></span><span class="ps-h">최근 30전</span><span class="ps-hist">'+(__h30.length?__h30.join(' '):'기록 없음')+'</span>'+__dd+'</div>'; }
   var nm=document.getElementById('prf-name'); if(nm) nm.placeholder=d.active;
   box.innerHTML='';
   d.list.forEach(function(n){
@@ -781,7 +783,7 @@ try{ relayoutHud(); }catch(e){}
 function resetProgression(){ try{ localStorage.setItem('ra_prof_backup_v1', JSON.stringify({n:profActive(),s:profSnapshot()}));
     localStorage.setItem('ra_trophies_v1','0'); localStorage.setItem('ra_wins_v1','0');
     localStorage.setItem('ra_sp_v1','{"sp":0,"total":0}'); localStorage.setItem('ra_skills_v1','{}'); localStorage.removeItem('ra_relic_v1');
-    S.relic=''; applyRelics(); S._sk={}; syncTrophyChip(); syncGradeVisual(); ['ra_wins_v1','ra_losses_v1','ra_streak_v1','ra_streak_best_v1','ra_daily_v1','ra_lvup_v1','ra_xp_gain_v1'].forEach(function(k2){ try{ localStorage.removeItem(k2); }catch(e2){} }); }catch(e){} return true; }   // v120: 진행도 리셋 — 직전 상태 자동 백업
+    S.relic=''; applyRelics(); S._sk={}; syncTrophyChip(); syncGradeVisual(); ['ra_wins_v1','ra_losses_v1','ra_streak_v1','ra_streak_best_v1','ra_daily_v1','ra_lvup_v1','ra_xp_gain_v1','ra_hist30_v1','ra_stats_diff_v1','ra_sp_gain_v1'].forEach(function(k2){ try{ localStorage.removeItem(k2); }catch(e2){} }); }catch(e){} return true; }   // v120: 진행도 리셋 — 직전 상태 자동 백업
 function undoProgression(){ try{ var b=JSON.parse(localStorage.getItem('ra_prof_backup_v1')||'null'); if(!b) return false;
     profStore(b.n, b.s); if(b.n===profActive()) profApply(b.n); localStorage.removeItem('ra_prof_backup_v1'); }catch(e){ return false; } return true; }   // v120: 복원 — 리셋 직전 진행도 1회 복구
 function ensureProfileUI(){
@@ -817,7 +819,7 @@ function renderProfileList(){
   var d=profDb(); var s=profSnapshot();
   var gname=(typeof GRADES!=='undefined'&&GRADES[gradeOf(s.tro)])?GRADES[gradeOf(s.tro)][0]:'—';
   var stEl=document.getElementById('prf-stats');
-  if(stEl) stEl.innerHTML='현재: <b>'+d.active+'</b> · 등급 <b>'+gname+'</b><br>트로피 <b>'+s.tro+'</b> · 승리 <b>'+s.wins+'</b> · SP <b>'+((s.sp&&s.sp.sp)||0)+'</b>';
+  if(stEl){ var __L=(function(){try{return parseInt(localStorage.getItem('ra_losses_v1')||'0',10)||0}catch(e){return 0}})(), __W=s.wins||0, __tot=__W+__L, __rate=__tot>0?Math.round(__W*100/__tot):0, __sk=(function(){try{return parseInt(localStorage.getItem('ra_streak_v1')||'0',10)||0}catch(e){return 0}})(), __sb=Math.max(__sk,(function(){try{return parseInt(localStorage.getItem('ra_streak_best_v1')||'0',10)||0}catch(e){return 0}})()), __h30=(function(){try{return JSON.parse(localStorage.getItem('ra_hist30_v1')||'[]')}catch(e){return []}})(), __sd=(function(){try{var x=JSON.parse(localStorage.getItem('ra_stats_diff_v1')||'[]');return (Array.isArray(x)&&x.length>=3)?x:[{w:0,l:0,d:0},{w:0,l:0,d:0},{w:0,l:0,d:0}]}catch(e){return [{w:0,l:0,d:0},{w:0,l:0,d:0},{w:0,l:0,d:0}]}})(), __dn=['쉬움','보통','어려움'], __dd=''; for(var _i=0;_i<3;_i++)__dd+='<span class="ps-d">'+__dn[_i]+' '+__sd[_i].w+'승 '+__sd[_i].l+'패</span>'; stEl.innerHTML='현재: <b>'+d.active+'</b> · 등급 <b>'+gname+'</b><br>트로피 <b>'+s.tro+'</b> · 승리 <b>'+__W+'</b> · SP <b>'+((s.sp&&s.sp.sp)||0)+'</b><div class="ps-grid"><span>승률 <b>'+__rate+'%</b> ('+__tot+'전)</span><span>연승 <b>'+__sk+'</b> · 최고 <b>'+__sb+'</b></span><span class="ps-h">최근 30전</span><span class="ps-hist">'+(__h30.length?__h30.join(' '):'기록 없음')+'</span>'+__dd+'</div>'; }
   var nm=document.getElementById('prf-name'); if(nm) nm.placeholder=d.active;
   box.innerHTML='';
   d.list.forEach(function(n){
@@ -1001,7 +1003,7 @@ try{ relayoutHud(); }catch(e){}
 function resetProgression(){ try{ localStorage.setItem('ra_prof_backup_v1', JSON.stringify({n:profActive(),s:profSnapshot()}));
     localStorage.setItem('ra_trophies_v1','0'); localStorage.setItem('ra_wins_v1','0');
     localStorage.setItem('ra_sp_v1','{"sp":0,"total":0}'); localStorage.setItem('ra_skills_v1','{}'); localStorage.removeItem('ra_relic_v1');
-    S.relic=''; applyRelics(); S._sk={}; syncTrophyChip(); syncGradeVisual(); ['ra_wins_v1','ra_losses_v1','ra_streak_v1','ra_streak_best_v1','ra_daily_v1','ra_lvup_v1','ra_xp_gain_v1'].forEach(function(k2){ try{ localStorage.removeItem(k2); }catch(e2){} }); }catch(e){} return true; }   // v120: 진행도 리셋 — 직전 상태 자동 백업
+    S.relic=''; applyRelics(); S._sk={}; syncTrophyChip(); syncGradeVisual(); ['ra_wins_v1','ra_losses_v1','ra_streak_v1','ra_streak_best_v1','ra_daily_v1','ra_lvup_v1','ra_xp_gain_v1','ra_hist30_v1','ra_stats_diff_v1','ra_sp_gain_v1'].forEach(function(k2){ try{ localStorage.removeItem(k2); }catch(e2){} }); }catch(e){} return true; }   // v120: 진행도 리셋 — 직전 상태 자동 백업
 function undoProgression(){ try{ var b=JSON.parse(localStorage.getItem('ra_prof_backup_v1')||'null'); if(!b) return false;
     profStore(b.n, b.s); if(b.n===profActive()) profApply(b.n); localStorage.removeItem('ra_prof_backup_v1'); }catch(e){ return false; } return true; }   // v120: 복원 — 리셋 직전 진행도 1회 복구
 function ensureProfileUI(){
@@ -1037,7 +1039,7 @@ function renderProfileList(){
   var d=profDb(); var s=profSnapshot();
   var gname=(typeof GRADES!=='undefined'&&GRADES[gradeOf(s.tro)])?GRADES[gradeOf(s.tro)][0]:'—';
   var stEl=document.getElementById('prf-stats');
-  if(stEl) stEl.innerHTML='현재: <b>'+d.active+'</b> · 등급 <b>'+gname+'</b><br>트로피 <b>'+s.tro+'</b> · 승리 <b>'+s.wins+'</b> · SP <b>'+((s.sp&&s.sp.sp)||0)+'</b>';
+  if(stEl){ var __L=(function(){try{return parseInt(localStorage.getItem('ra_losses_v1')||'0',10)||0}catch(e){return 0}})(), __W=s.wins||0, __tot=__W+__L, __rate=__tot>0?Math.round(__W*100/__tot):0, __sk=(function(){try{return parseInt(localStorage.getItem('ra_streak_v1')||'0',10)||0}catch(e){return 0}})(), __sb=Math.max(__sk,(function(){try{return parseInt(localStorage.getItem('ra_streak_best_v1')||'0',10)||0}catch(e){return 0}})()), __h30=(function(){try{return JSON.parse(localStorage.getItem('ra_hist30_v1')||'[]')}catch(e){return []}})(), __sd=(function(){try{var x=JSON.parse(localStorage.getItem('ra_stats_diff_v1')||'[]');return (Array.isArray(x)&&x.length>=3)?x:[{w:0,l:0,d:0},{w:0,l:0,d:0},{w:0,l:0,d:0}]}catch(e){return [{w:0,l:0,d:0},{w:0,l:0,d:0},{w:0,l:0,d:0}]}})(), __dn=['쉬움','보통','어려움'], __dd=''; for(var _i=0;_i<3;_i++)__dd+='<span class="ps-d">'+__dn[_i]+' '+__sd[_i].w+'승 '+__sd[_i].l+'패</span>'; stEl.innerHTML='현재: <b>'+d.active+'</b> · 등급 <b>'+gname+'</b><br>트로피 <b>'+s.tro+'</b> · 승리 <b>'+__W+'</b> · SP <b>'+((s.sp&&s.sp.sp)||0)+'</b><div class="ps-grid"><span>승률 <b>'+__rate+'%</b> ('+__tot+'전)</span><span>연승 <b>'+__sk+'</b> · 최고 <b>'+__sb+'</b></span><span class="ps-h">최근 30전</span><span class="ps-hist">'+(__h30.length?__h30.join(' '):'기록 없음')+'</span>'+__dd+'</div>'; }
   var nm=document.getElementById('prf-name'); if(nm) nm.placeholder=d.active;
   box.innerHTML='';
   d.list.forEach(function(n){
@@ -1251,7 +1253,7 @@ function renderProfileList(){
   var d=profDb(); var s=profSnapshot();
   var gname=(typeof GRADES!=='undefined'&&GRADES[gradeOf(s.tro)])?GRADES[gradeOf(s.tro)][0]:'—';
   var stEl=document.getElementById('prf-stats');
-  if(stEl) stEl.innerHTML='현재: <b>'+d.active+'</b> · 등급 <b>'+gname+'</b><br>트로피 <b>'+s.tro+'</b> · 승리 <b>'+s.wins+'</b> · SP <b>'+((s.sp&&s.sp.sp)||0)+'</b>';
+  if(stEl){ var __L=(function(){try{return parseInt(localStorage.getItem('ra_losses_v1')||'0',10)||0}catch(e){return 0}})(), __W=s.wins||0, __tot=__W+__L, __rate=__tot>0?Math.round(__W*100/__tot):0, __sk=(function(){try{return parseInt(localStorage.getItem('ra_streak_v1')||'0',10)||0}catch(e){return 0}})(), __sb=Math.max(__sk,(function(){try{return parseInt(localStorage.getItem('ra_streak_best_v1')||'0',10)||0}catch(e){return 0}})()), __h30=(function(){try{return JSON.parse(localStorage.getItem('ra_hist30_v1')||'[]')}catch(e){return []}})(), __sd=(function(){try{var x=JSON.parse(localStorage.getItem('ra_stats_diff_v1')||'[]');return (Array.isArray(x)&&x.length>=3)?x:[{w:0,l:0,d:0},{w:0,l:0,d:0},{w:0,l:0,d:0}]}catch(e){return [{w:0,l:0,d:0},{w:0,l:0,d:0},{w:0,l:0,d:0}]}})(), __dn=['쉬움','보통','어려움'], __dd=''; for(var _i=0;_i<3;_i++)__dd+='<span class="ps-d">'+__dn[_i]+' '+__sd[_i].w+'승 '+__sd[_i].l+'패</span>'; stEl.innerHTML='현재: <b>'+d.active+'</b> · 등급 <b>'+gname+'</b><br>트로피 <b>'+s.tro+'</b> · 승리 <b>'+__W+'</b> · SP <b>'+((s.sp&&s.sp.sp)||0)+'</b><div class="ps-grid"><span>승률 <b>'+__rate+'%</b> ('+__tot+'전)</span><span>연승 <b>'+__sk+'</b> · 최고 <b>'+__sb+'</b></span><span class="ps-h">최근 30전</span><span class="ps-hist">'+(__h30.length?__h30.join(' '):'기록 없음')+'</span>'+__dd+'</div>'; }
   var nm=document.getElementById('prf-name'); if(nm) nm.placeholder=d.active;
   box.innerHTML='';
   d.list.forEach(function(n){
@@ -1465,7 +1467,7 @@ function renderProfileList(){
   var d=profDb(); var s=profSnapshot();
   var gname=(typeof GRADES!=='undefined'&&GRADES[gradeOf(s.tro)])?GRADES[gradeOf(s.tro)][0]:'—';
   var stEl=document.getElementById('prf-stats');
-  if(stEl) stEl.innerHTML='현재: <b>'+d.active+'</b> · 등급 <b>'+gname+'</b><br>트로피 <b>'+s.tro+'</b> · 승리 <b>'+s.wins+'</b> · SP <b>'+((s.sp&&s.sp.sp)||0)+'</b>';
+  if(stEl){ var __L=(function(){try{return parseInt(localStorage.getItem('ra_losses_v1')||'0',10)||0}catch(e){return 0}})(), __W=s.wins||0, __tot=__W+__L, __rate=__tot>0?Math.round(__W*100/__tot):0, __sk=(function(){try{return parseInt(localStorage.getItem('ra_streak_v1')||'0',10)||0}catch(e){return 0}})(), __sb=Math.max(__sk,(function(){try{return parseInt(localStorage.getItem('ra_streak_best_v1')||'0',10)||0}catch(e){return 0}})()), __h30=(function(){try{return JSON.parse(localStorage.getItem('ra_hist30_v1')||'[]')}catch(e){return []}})(), __sd=(function(){try{var x=JSON.parse(localStorage.getItem('ra_stats_diff_v1')||'[]');return (Array.isArray(x)&&x.length>=3)?x:[{w:0,l:0,d:0},{w:0,l:0,d:0},{w:0,l:0,d:0}]}catch(e){return [{w:0,l:0,d:0},{w:0,l:0,d:0},{w:0,l:0,d:0}]}})(), __dn=['쉬움','보통','어려움'], __dd=''; for(var _i=0;_i<3;_i++)__dd+='<span class="ps-d">'+__dn[_i]+' '+__sd[_i].w+'승 '+__sd[_i].l+'패</span>'; stEl.innerHTML='현재: <b>'+d.active+'</b> · 등급 <b>'+gname+'</b><br>트로피 <b>'+s.tro+'</b> · 승리 <b>'+__W+'</b> · SP <b>'+((s.sp&&s.sp.sp)||0)+'</b><div class="ps-grid"><span>승률 <b>'+__rate+'%</b> ('+__tot+'전)</span><span>연승 <b>'+__sk+'</b> · 최고 <b>'+__sb+'</b></span><span class="ps-h">최근 30전</span><span class="ps-hist">'+(__h30.length?__h30.join(' '):'기록 없음')+'</span>'+__dd+'</div>'; }
   var nm=document.getElementById('prf-name'); if(nm) nm.placeholder=d.active;
   box.innerHTML='';
   d.list.forEach(function(n){
