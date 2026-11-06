@@ -114,8 +114,7 @@ function runBattle(cb){
     if(sl.length>1) out.push('sg'+Math.round(sl[1].left-sl[0].right));
     var ab=[].slice.call(de.querySelectorAll('#dk-save,#btn-deck-random,#dk-close')).map(function(b){return b.getBoundingClientRect();}).sort(function(a,b){return a.left-b.left;});
     if(ab.length===3){ out.push('a'+Math.round(ab[1].left-ab[0].right)+'x'+Math.round(ab[2].left-ab[1].right)); out.push('m'+Math.round(ab[0].left-db.left)+'x'+Math.round(db.right-ab[2].right)); out.push('w'+Math.round(ab[0].width)+'x'+Math.round(ab[1].width)+'x'+Math.round(ab[2].width)); }
-    var lp=[].slice.call(de.querySelectorAll('[data-add]')).pop(); var lb2=lp?lp.getBoundingClientRect():null;
-    out.push('fit'+(de.scrollHeight<=de.clientHeight+1?'Y':'N')+(lb2?(lb2.bottom>db.bottom+0.5?'!CUT':'/vis'):''));
+    var pb=ab.map(function(r){return Math.round(r.top)+'x'+Math.round(r.bottom);}).join('/'); out.push('p'+pb);
     set('GAPCHK:'+out.join('/'));
   }catch(e){ set('GAPCHK:err'); } },2400); }
   
