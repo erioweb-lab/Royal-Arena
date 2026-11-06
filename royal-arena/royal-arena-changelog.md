@@ -1,3 +1,4 @@
+- v292(팔레트 최종 수복): 진짜 원인 — g2-sprite-assets.js 내장 리스타일러가 로드 후 버튼에 네이비 인라인 !important 재설정(CSS·선행 인라인 모두 무력화, jsdom으로 확인). 리스타일러 setProperty 지점과 같은 시점에 기능별 색상 통합(덱 퍼플·유물 오커·명예 로즈·프로필 블루·연구소 그린), trophy-chip(훈련 캠프 span) 틸 채색. 칩·sw v292
 - v291(팔레트 최후 층+QA 타이밍): ①load+300ms 1회 클래스러가 #screen-title 버튼에 기능별 색을 인라인 !important로 직접 설정 — :not() 연쇄 규칙(특이성 (2,0,1)) 등 모든 CSS보다 우위, 클래스+CSS는 보조로 유지 ②qa-driver skill/profile 클릭 900→250ms 단축+SKILL:clicked/PROF:clicked 토큰(클라우드 캡처가 900ms 이전에 찍혀 오버레이가 비어 보이던 문제). 칩·sw v291
 - v290(팔레트 근본 수복): v288/v289 미적용 근본 원인 확정 — __uiUp 클래스 워크는 ui-v178 가드로 부팅 1회만 실행되는데 g8-boot가 전술 연구소·유물·프로필 버튼을 그 이후 동적 생성 → 워크 시점에 버튼 부재로 nav-* 클래스 영구 누락. 해결: load 시점 1회성 클래스러(nav-clz-v290 — 무루프·무옵저버·data-nav 멱등) + 동일 클래스 집합 CSS(집합 일치 단언). 칩·sw v290
 - v289(셀렉터 교정): v288 팔레트 미적용 원인 = CSS 셀렉터를 라벨에서 자동 생성하며 한국어 클래스(.nav-훈련캠프) 생성 → g1이 부여하는 영문 클래스(nav-camp/nav-deck/nav-relic/nav-hof/nav-profile/nav-skill)와 불일치. 영문 클래스로 교정 + CSS-클래스 일치 단언 추가. 칩·sw v289
