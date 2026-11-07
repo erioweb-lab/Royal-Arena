@@ -595,7 +595,7 @@ function moveUnit(u,dt){
 
 /* ---------- v53: 유닛별 투사체 그래픽·사운드 ---------- */
 const UMOT={_def:{},babyd:{flut:1},minions:{flut:1},cleric:{halo:1},boar:{dust:1},giant:{dust:1},valk:{dust:1},knight:{dust:1},skarmy:{dust:1}};
-const TRAIL={kingshot:'rgba(255,215,94,.9)',arrow:'rgba(232,226,200,.9)',bullet:'#ffe9a8',bomb:'#ffcf7a',wizfb:'#ffb14d',dragon:'#ff9d3c',ice:'#9cdcff',cannon:'#cfd6e0'};
+const TRAIL={kingshot:'rgba(255,215,94,.9)',arrow:'rgba(232,226,200,.9)',bullet:'#ffe9a8',bomb:'#ffcf7a',wizfb:'#ffb14d',dragon:'#ff9d3c',ice:'#9cdcff',cannon:'#cfd6e0',bolt:'#e8f0fa'};   /* v332: 볼트 꼬리 추가 */
 const PROJ_SFX_LAUNCH={arrow:'bow',bullet:'musket',bolt:'xbow',wizfb:'firel',dragon:'firel',bomb:'toss',ice:'icel',cannon:'cannon'};   /* v321 */
 /* v324: 프린세스 타워 테마 스킨 게터 — 현재 테마 전용 아트(TSPR 자동 로딩) */
 function __towSkinImg(theme){ try{ if(!theme) return null; var s=TSPR['t_princess_'+theme]; return (s&&s.complete&&s.naturalWidth>0&&s.__valid!==false)?s:null; }catch(e){ return null; } }
@@ -1855,10 +1855,12 @@ function drawProj(p){
     var __gr=ctx.createLinearGradient(__sx,__sy,px,py2); __gr.addColorStop(0,'rgba(255,233,168,0)'); __gr.addColorStop(1,'rgba(255,233,168,.95)');
     ctx.strokeStyle=__gr; ctx.lineWidth=2.6; ctx.beginPath(); ctx.moveTo(__sx,__sy); ctx.lineTo(px,py2); ctx.stroke();
     ctx.fillStyle='#fff6d8'; ctx.beginPath(); ctx.arc(px,py2,3.4,0,7); ctx.fill(); }
-  else if(p.kind==='bolt'){ var __b2=Math.atan2(p.ty-p.y,p.tx-p.x); ctx.save(); ctx.translate(px,py2); ctx.rotate(__b2);   /* v321: 석궁병 볼트 — 회전 다트(몸통+촉+깃) */
-    ctx.strokeStyle='#c9d4e6'; ctx.lineWidth=2.4; ctx.beginPath(); ctx.moveTo(-9,0); ctx.lineTo(5,0); ctx.stroke();
-    ctx.fillStyle='#e8eef7'; ctx.beginPath(); ctx.moveTo(8,0); ctx.lineTo(2,-2.6); ctx.lineTo(2,2.6); ctx.closePath(); ctx.fill();
-    ctx.strokeStyle='#8fa6bd'; ctx.lineWidth=1.6; ctx.beginPath(); ctx.moveTo(-9,-2.4); ctx.lineTo(-5,0); ctx.lineTo(-9,2.4); ctx.stroke(); ctx.restore(); }
+  else if(p.kind==='bolt'){ var __b2=Math.atan2(p.ty-p.y,p.tx-p.x); ctx.save(); ctx.translate(px,py2); ctx.rotate(__b2);   /* v332: 석궁병 볼트 — 가시성 강화(발광 촉·밝은 강철 몸통·확대) */
+    ctx.shadowColor='rgba(214,232,255,.95)'; ctx.shadowBlur=6;
+    ctx.strokeStyle='#e8f0fa'; ctx.lineWidth=3.2; ctx.beginPath(); ctx.moveTo(-11,0); ctx.lineTo(6,0); ctx.stroke();
+    ctx.fillStyle='#ffffff'; ctx.beginPath(); ctx.moveTo(10,0); ctx.lineTo(2,-3.2); ctx.lineTo(2,3.2); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle='#9fb4d4'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(-11,-3); ctx.lineTo(-6,0); ctx.lineTo(-11,3); ctx.stroke();
+    ctx.shadowBlur=0; ctx.restore(); }
   else { ctx.strokeStyle='#f4e9c8'; ctx.lineWidth=2.5; ctx.beginPath();
     ctx.moveTo(px-Math.cos(va)*8,py2-Math.sin(va)*8); ctx.lineTo(px+Math.cos(va)*5,py2+Math.sin(va)*5); ctx.stroke(); }
 }
