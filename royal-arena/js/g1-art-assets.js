@@ -804,12 +804,12 @@ function castHealWind(team,x,y){ const c=CARDS.healwind;
 /* v208: 유성우 — 즉시 착탄 광역+화상 3초 */
 function castMeteor(team,x,y){ const c=CARDS.meteor, et=enemyOf(team);
   fx.push({x,y,t:0,dur:0.55,kind:'warnring'}); fx.push({x,y,t:0,dur:0.5,kind:'boom'}); fx.push({x,y,t:0,dur:0.35,kind:'flash'}); S.shake=0.6; S.spellQuiet=2.2; sfx('boom');
-  addParts(x,y,26,'#ff9d3c',3.6,0.6,70); fx.push({x,y,t:0,dur:8,kind:'crater',r:1.9}); fx.push({x,y,t:0,dur:4.5,kind:'burnzone',r:1.9,team:team});   /* v326: 화염 분화구 8초+잔열 지역 4.5초(반경 내 화염 지속) */
+  addParts(x,y,26,'#ff9d3c',3.6,0.6,70); fx.push({x,y,t:0,dur:8,kind:'crater',r:c.radius}); fx.push({x,y,t:0,dur:4.5,kind:'burnzone',r:c.radius,team:team});   /* v326: 화염 분화구 8초+잔열 지역 4.5초(반경 내 화염 지속) */
   for(const u of units){ if(u.dead||u.team!==et) continue; if(Math.hypot(u.x-x,u.y-y)<=c.radius){ u.burnT=Math.max(u.burnT||0,3); u.burnDps=24; u.burnAcc=0; floats.push({dx:(Math.random()*10-5),dy:0,x:u.x,y:u.y-1.2,txt:'🔥 화상',t:0.7,col:'#ff9d3c',big:false}); dealDamage(u,spellDmg(c.dmg),team,true); } }
   for(const t of towers){ if(t.dead||t.team!==et) continue; if(Math.hypot(t.x-x,t.y-y)<=c.radius+0.5) dealDamage(t,spellDmg(c.towerDmg),team); } }
 /* v208: 눈보라 — 광역 둔화 3초 */
 function castBlizzard(team,x,y){ const c=CARDS.blizzard, et=enemyOf(team);
-  fx.push({x,y,t:0,dur:0.6,kind:'zap'}); fx.push({x,y,t:0,dur:0.5,kind:'ring',col:'rgba(160,220,255,.9)'}); addParts(x,y,16,'#bfe4ff',2.8,0.55,40); addParts(x,y,10,'#ffffff',2.2,0.7,-55); sfx('cast'); S.spellQuiet=1.6; fx.push({x,y,t:0,dur:6,kind:'snowzone',r:2.3,team:team});   /* v326: 지속 눈 지역 — 6초간 반경 내 적 둔화 유지 */
+  fx.push({x,y,t:0,dur:0.6,kind:'zap'}); fx.push({x,y,t:0,dur:0.5,kind:'ring',col:'rgba(160,220,255,.9)'}); addParts(x,y,16,'#bfe4ff',2.8,0.55,40); addParts(x,y,10,'#ffffff',2.2,0.7,-55); sfx('cast'); S.spellQuiet=1.6; fx.push({x,y,t:0,dur:6,kind:'snowzone',r:c.radius,team:team});   /* v326: 지속 눈 지역 — 6초간 반경 내 적 둔화 유지 */
   for(const u of units){ if(u.dead||u.team!==et) continue; if(Math.hypot(u.x-x,u.y-y)<=c.radius){ u.slowT=Math.max(u.slowT||0,c.slow); dealDamage(u,spellDmg(c.dmg),team,true); } }
   for(const t of towers){ if(t.dead||t.team!==et) continue; if(Math.hypot(t.x-x,t.y-y)<=c.radius+0.4) dealDamage(t,spellDmg(c.towerDmg),team); } }
 function castZap(team,x,y){
@@ -835,7 +835,7 @@ function castFireball(team,x,y){
 }
 function explodeFireball(p){
   const c=CARDS.fireball, et=enemyOf(p.team);
-  fx.push({x:p.x1,y:p.y1,t:0,dur:0.7,kind:'boom'}); S.shake=0.5; sfx('boom');
+  fx.push({x:p.x1,y:p.y1,t:0,dur:0.7,kind:'boom'}); S.shake=0.5; sfx('boom'); fx.push({x:p.x1,y:p.y1,t:0,dur:5,kind:'crater',r:1.4});
   addParts(p.x1,p.y1,22,'#ffb14d',3.4,0.6,60); addParts(p.x1,p.y1,9,'#ffd27a',2.8,0.75,-85);
   fx.push({x:p.x1,y:p.y1,t:0,dur:0.3,kind:'flash'});
   fx.push({x:p.x1,y:p.y1,t:0,dur:0.5,kind:'ring',col:'rgba(255,177,77,.9)'});
@@ -856,7 +856,7 @@ function castPlasma(team,x,y){ const c=CARDS.plasma, et=enemyOf(team);
   for(const t of towers){ if(t.dead||t.team!==et) continue; if(Math.hypot(t.x-x,t.y-y)<=c.radius+0.5) dealDamage(t,spellDmg(c.towerDmg),team); } }
 /* v324: 맹독 안개 — 광역 중독 틱 6초 */
 function castVenom(team,x,y){ const c=CARDS.venom, et=enemyOf(team);
-  fx.push({x,y,t:0,dur:0.7,kind:'ring',col:'rgba(165,232,92,.85)'}); fx.push({x,y,t:0.15,dur:0.9,kind:'ring',col:'rgba(165,232,92,.5)'}); fx.push({x,y,t:0,dur:6,kind:'venomzone'}); addParts(x,y,16,'#a5e85c',2.8,0.6,25); sfx('cast'); S.spellQuiet=1.6;
+  fx.push({x,y,t:0,dur:0.7,kind:'ring',col:'rgba(165,232,92,.85)'}); fx.push({x,y,t:0.15,dur:0.9,kind:'ring',col:'rgba(165,232,92,.5)'}); fx.push({x,y,t:0,dur:6,kind:'venomzone',r:c.radius}); addParts(x,y,16,'#a5e85c',2.8,0.6,25); sfx('cast'); S.spellQuiet=1.6;
   for(const u of units){ if(u.dead||u.team!==et) continue; if(Math.hypot(u.x-x,u.y-y)<=c.radius){ u.venT=Math.max(u.venT||0,6); u.venDps=30; u.venAcc=0; floats.push({dx:(Math.random()*10-5),dy:0,x:u.x,y:u.y-1.2,txt:'☠ 중독',t:0.7,col:'#a5e85c',big:false}); dealDamage(u,spellDmg(c.dmg),team,true); } }
   for(const t of towers){ if(t.dead||t.team!==et) continue; if(Math.hypot(t.x-x,t.y-y)<=c.radius+0.4) dealDamage(t,spellDmg(c.towerDmg),team); } }
 /* v324: 충격파 — 광역 기절 0.5초 */
@@ -1953,7 +1953,7 @@ function drawFx(f){
   else if(f.kind==='venomzone'){   /* v329: 맹독 안개 스프라이트(시전 지역 6초) */
     var __vf=window.__FXIMG&&window.__FXIMG.venomfog;
     var _px3=f.x*TILE,_py3=f.y*TILE,_a0=Math.min(1,f.t*1.5)*Math.min(1,(f.dur-f.t)*1.5);
-    if(__vf&&__vf.complete&&__vf.naturalWidth>0&&__vf.__valid!==false){ ctx.save(); ctx.globalAlpha=(0.8+0.12*Math.sin(now*3+f.x))*_a0; var _sc3=TILE*4.4; ctx.drawImage(__vf,_px3-_sc3/2,_py3-_sc3*0.55,_sc3,_sc3); ctx.restore(); }
+    if(__vf&&__vf.complete&&__vf.naturalWidth>0&&__vf.__valid!==false){ ctx.save(); ctx.globalAlpha=(0.8+0.12*Math.sin(now*3+f.x))*_a0; var _sc3=TILE*(f.r||2.2)*2; ctx.drawImage(__vf,_px3-_sc3/2,_py3-_sc3*0.55,_sc3,_sc3); ctx.restore(); }
   }
   else if(f.kind==='warnring'){
     const rr=CARDS.fireball.radius*TILE*(0.9+0.1*Math.sin(now*10));
