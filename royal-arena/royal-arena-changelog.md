@@ -1,1 +1,2 @@
+- v319 마무리: sw v319 bump+qa 토큰 ex-off 3곳 교정 전파 확인 — 재구현 최종 확정(로컬 poor=0·noelx=0·ex-off@ex0=4→@ex10=0·ACDIE:Aok/Cok/stale0·AUDIOERR=0, 라이브 렌더 판독 활성 카드 밝은 골드 상태).
 - v319(활성화 로직 삭제·재구현): 사용자 요청 클린 슬레이트 — 삭제: poor 토글(syncHand·syncHUD)·ra-noelx(v213)·.card.poor CSS·스타일 레이어 v315~v318 4블록. 재구현: 단일 window.__exSync — ex-off 클래스 하나만 토글, 테두리 색·아트 투명도는 CSS가 전 상태 상시 선언(강제 다크 재처리 개입 여지 제거), color-scheme only light 교정(SI는 light 무시). 풀아트 유지. qa 토큰 poor→ex-off 3곳. 로컬: 구클래스 잔존 poor=0·noelx=0·ex-off@ex0=4→@ex10=0·ACDIE=QA ACDIE:Aok/B?ex7/Cok/stale0 — 재구현 확정. 칩·sw v319
