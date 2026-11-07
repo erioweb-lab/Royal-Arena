@@ -177,6 +177,30 @@ setTimeout(function(){
         }catch(e){ set('ELX:err'); } },3000);
         return;
       }
+      if(__ev.indexOf('acdie')>=0){   /* v314: AC 종결 재현 — 배경 복귀 후 사망한 오디오로도 탭·소진·밝기 갱신이 살아있는지 */
+        setTimeout(function(){ try{
+          if(typeof startMatch!=='function'){ set('ACDIE:no-start'); return; } startMatch();
+          setTimeout(function(){ try{
+            if(typeof P==='undefined'||!P){ set('ACDIE:no-P'); return; }
+            var __g0=document.querySelectorAll('#cards .card'); if(!__g0.length){ set('ACDIE:no-card'); return; }
+            try{ __g0[0].dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,cancelable:true,view:window,pointerId:1})); }catch(e){ __g0[0].dispatchEvent(new MouseEvent('pointerdown',{bubbles:true,cancelable:true,view:window})); }
+            var __rA=(P.sel===0)?'Aok':'Afail'+P.sel;
+            try{ if(typeof window.__qaAcDie==='function'){ window.__qaAcDie(); } }catch(e){}
+            P.elixir=10;
+            setTimeout(function(){ try{
+              var __g1=document.querySelectorAll('#cards .card');
+              try{ __g1[1].dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,cancelable:true,view:window,pointerId:2})); }catch(e){ __g1[1].dispatchEvent(new MouseEvent('pointerdown',{bubbles:true,cancelable:true,view:window})); }
+              var __rC=(P.sel===1)?'Cok':'Cfail'+P.sel;
+              var __rB='B?';
+              try{ if(P.sel===1){ playCard(P,1,4.5,16); } }catch(e){ __rB='Perr'; }
+              var __ex='?'; try{ __ex=Math.round((P.elixir||0)*10)/10; }catch(e){}
+              var __bad=0; try{ var __cs=document.querySelectorAll('#cards .card'); for(var __i=0;__i<__cs.length;__i++){ var __k=P.hand[__i], __c=__k?CARDS[__k]:null; if(__c&&__c.cost<=P.elixir&&__cs[__i].className.indexOf('poor')>=0) __bad++; } }catch(e){}
+              set('ACDIE:'+__rA+'/'+__rB+'ex'+__ex+'/'+__rC+'/stale'+__bad);
+            }catch(e){ set('ACDIE:Cerr'); } },1200);
+          }catch(e){ set('ACDIE:Berr'); } },1200);
+        }catch(e){ set('ACDIE:err'); } },3000);
+        return;
+      }
       var __cy=0, __fl=0;
       var __etCycle=function(){
         __cy++;

@@ -221,28 +221,29 @@ const AUTO=false; // 테스트용 자동 시작 플래그 (?auto=1로도 활성�
 
 /* ---------- 사운드 (WebAudio 합성) ---------- */
 let AC=null;
-function ensureAudio(){
-  if(AC && AC.state==='suspended') AC.resume();
-}
+function ensureAudio(){ try{ if(!AC) return; if(AC.state==='closed'){ AC=null; } else if(AC.state==='suspended'){ AC.resume(); } }catch(e){ try{ AC=null; }catch(e2){} } }   /* v314: 배경 복귀 후 종결된 AC 정리 — 사망한 오디오가 입력·렌더를 죽이지 않는다 */
+window.__qaAcDie=window.__qaAcDie||function(){ try{ if(AC&&AC.close){ AC.close(); } }catch(e){} };   /* v314: QA — 실기기 AC 종결 상태 재현 훅 */
 function tone(f,d,type,v,slide){
-  if(!AC||S.muted) return;
+  if(!AC||S.muted||AC.state!=='running') return;   /* v314: 종결·비가동 AC는 무음 스킵 — 렌더·입력 루프로 예외 전파 차단 */
+  try{
   const o=AC.createOscillator(), g=AC.createGain();
   o.type=type||'sine'; o.frequency.value=f;
   if(slide) o.frequency.linearRampToValueAtTime(Math.max(30,f+slide), AC.currentTime+d);
   g.gain.value=v||0.08; g.gain.exponentialRampToValueAtTime(0.0001, AC.currentTime+d);
   o.connect(g); g.connect(window.__COMP||AC.destination); o.start(); o.stop(AC.currentTime+d);
+  }catch(e){}   /* v314 */
 }
 function noiseBurst(d,v){
-  if(!AC||S.muted) return;
+  if(!AC||S.muted||(AC.state&&AC.state!=='running')) return;   /* v314 */
   const n=AC.sampleRate*d, buf=AC.createBuffer(1,n,AC.sampleRate), ch=buf.getChannelData(0);
   for(let i=0;i<n;i++) ch[i]=(Math.random()*2-1)*(1-i/n);
   const src=AC.createBufferSource(), g=AC.createGain(); src.buffer=buf; g.gain.value=v;
   src.connect(g); g.connect(window.__COMP||AC.destination); src.start();
 }
-function sfxBP(d,v,f0,f1){ if(!AC||S.muted) return; const n=AC.sampleRate*d, buf=AC.createBuffer(1,n,AC.sampleRate), ch=buf.getChannelData(0); for(let i=0;i<n;i++) ch[i]=(Math.random()*2-1)*(1-i/n); const src=AC.createBufferSource(); src.buffer=buf; const bp=AC.createBiquadFilter(); bp.type='bandpass'; bp.Q.value=1.1; bp.frequency.setValueAtTime(f0,AC.currentTime); bp.frequency.linearRampToValueAtTime(f1,AC.currentTime+d); const g=AC.createGain(); g.gain.value=v; src.connect(bp); bp.connect(g); g.connect(window.__COMP||AC.destination); src.start(); }   /* v164: 화염 밴드패스 스윕 — game-audio-synth-system 스킬 */
+function sfxBP(d,v,f0,f1){ if(!AC||S.muted||(AC.state&&AC.state!=='running')) return;   /* v314 */ const n=AC.sampleRate*d, buf=AC.createBuffer(1,n,AC.sampleRate), ch=buf.getChannelData(0); for(let i=0;i<n;i++) ch[i]=(Math.random()*2-1)*(1-i/n); const src=AC.createBufferSource(); src.buffer=buf; const bp=AC.createBiquadFilter(); bp.type='bandpass'; bp.Q.value=1.1; bp.frequency.setValueAtTime(f0,AC.currentTime); bp.frequency.linearRampToValueAtTime(f1,AC.currentTime+d); const g=AC.createGain(); g.gain.value=v; src.connect(bp); bp.connect(g); g.connect(window.__COMP||AC.destination); src.start(); }   /* v164: 화염 밴드패스 스윕 — game-audio-synth-system 스킬 */
 function sfx(k){
   var __n=(performance.now()); if(window.__sfxT&&window.__sfxT[k]&&__n-window.__sfxT[k]<25) return; (window.__sfxT=window.__sfxT||{})[k]=__n;   /* v194: 동일 효과음 25ms 스로틀 */
-  if(!AC||S.muted) return;
+  if(!AC||S.muted||(AC.state&&AC.state!=='running')) return;   /* v314 */
   try{ const __n=performance.now(); if(!sfx._t) sfx._t={}; if((k==='hit'||k==='shoot'||k==='thud'||k==='spark'||k==='bow'||k==='musket')&&__n-(sfx._t[k]||0)<30) return; sfx._t[k]=__n; }catch(e){}   /* v163: 임팩트 스로틀 30ms */
   if(k==='deploy'){ tone(500,.12,'triangle',.10,140); }
   else if(k==='shoot'){ tone(900,.06,'square',.03); }
@@ -273,7 +274,7 @@ function bgmStart(){
   if(!AC||S.muted||bgmTimer) return;
   bgmStep=0;
   bgmTimer=setInterval(function(){
-    if(!AC||S.muted) return;
+    if(!AC||S.muted||(AC.state&&AC.state!=='running')) return;   /* v314 */
     try{
       bgmStep++;
       const line=[110,0,131,0,110,0,147,165];
@@ -2050,7 +2051,7 @@ function syncHUD(){
   $('#elixir-fill').classList.toggle('full',__full);
   $('#elixir-track').classList.toggle('full',__full);
   $('#elixir-num').classList.toggle('full',__full);
-  if(__full&&!P._full){ tone(620,.09,'sine',.05); setTimeout(function(){ tone(930,.14,'sine',.05); },90); }
+  try{ if(__full&&!P._full){ tone(620,.09,'sine',.05); setTimeout(function(){ tone(930,.14,'sine',.05); },90); } }catch(e){}   /* v314: 만땅 톤 예외가 syncHUD를 죽이지 않는다 */
   P._full=__full;
   const ksBtn=document.getElementById('ks-btn');
   if(ksBtn){ const bo=!!(S.boss&&!S.boss.dead);
