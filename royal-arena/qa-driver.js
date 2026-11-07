@@ -147,6 +147,36 @@ setTimeout(function(){
   if(mode==='battle'){
     if(q.get('etest')){
       var __ev=String(q.get('etest')), __fs=__ev.indexOf('fast')>=0?0.1:1, __nm=__ev.match(/c(\d+)/), __nc=__nm?parseInt(__nm[1],10):1;   /* v312: c<N>=N사이클 연속 재현(테스트 시간 확장), fast=1/10 속도 — 캡처 창 대응 */
+      if(__ev.indexOf('rg')>=0){   /* v313: 자연 재충전 테스트 — 엘릭서 강제 주입 없이 실전 소진→게임 자체 회복→카드 재활성화 추적 */
+        setTimeout(function(){ try{
+          if(typeof startMatch!=='function'){ set('ELX:no-start'); return; } startMatch();
+          setTimeout(function(){ try{
+            if(typeof P==='undefined'||!P){ set('ELX:no-P'); return; }
+            var __g0=document.querySelectorAll('#cards .card'); if(!__g0.length){ set('ELX:no-card'); return; }
+            var __mn=99; for(var __mi=0;__mi<4;__mi++){ var __mk=P.hand[__mi]; if(__mk&&CARDS[__mk]&&CARDS[__mk].cost<__mn) __mn=CARDS[__mk].cost; }
+            var __tr=0; while(P.elixir>=__mn&&__tr<8){ try{ playCard(P,0,4.5,16); }catch(e){ break; } __tr++; }
+            var __ex0=Math.round((P.elixir||0)*10)/10;
+            var __cs0=document.querySelectorAll('#cards .card'), __p0=0;
+            for(var __pi=0;__pi<__cs0.length;__pi++){ if(__cs0[__pi].className.indexOf('poor')>=0) __p0++; }
+            if(__ex0>2.5){ set('ELX:drain-fail ex'+__ex0+' tr'+__tr); return; }
+            var __t0=Date.now(), __hist=[__ex0+':'+__p0];
+            var __poll=setInterval(function(){ try{
+              var __ex=Math.round((P.elixir||0)*10)/10;
+              var __cs=document.querySelectorAll('#cards .card'), __bad=0;
+              for(var __j=0;__j<__cs.length;__j++){ var __ck=P.hand[__j], __cc=__ck?CARDS[__ck]:null; if(__cc&&__cc.cost<=__ex&&__cs[__j].className.indexOf('poor')>=0) __bad++; }
+              var __last=__hist[__hist.length-1]||'';
+              if(__ex+':'+__bad!==__last) __hist.push(__ex+':'+__bad);
+              if(__bad===0||Date.now()-__t0>12000){
+                clearInterval(__poll);
+                var __dt=Math.round((Date.now()-__t0)/100)/10;
+                var __frozen=(__hist.length<2);
+                set('ELX:drainEx'+__ex0+'p'+__p0+'/'+__dt+'s/'+(__frozen?'REGEN-DEAD/':'hist:'+__hist.slice(-4).join(',')+'/')+(__bad===0?'OK':'FAIL-poor'+__bad));
+              }
+            }catch(e){ clearInterval(__poll); set('ELX:perr'); } },400);
+          }catch(e){ set('ELX:Berr'); } },1500);
+        }catch(e){ set('ELX:err'); } },3000);
+        return;
+      }
       var __cy=0, __fl=0;
       var __etCycle=function(){
         __cy++;
