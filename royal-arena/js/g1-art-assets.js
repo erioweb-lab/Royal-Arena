@@ -592,13 +592,14 @@ function moveUnit(u,dt){
 /* ---------- v53: 유닛별 투사체 그래픽·사운드 ---------- */
 const UMOT={_def:{},babyd:{flut:1},minions:{flut:1},cleric:{halo:1},boar:{dust:1},giant:{dust:1},valk:{dust:1},knight:{dust:1},skarmy:{dust:1}};
 const TRAIL={kingshot:'rgba(255,215,94,.9)',arrow:'rgba(232,226,200,.9)',bullet:'#ffe9a8',bomb:'#ffcf7a',wizfb:'#ffb14d',dragon:'#ff9d3c',ice:'#9cdcff',cannon:'#cfd6e0'};
-const PROJ_SFX_LAUNCH={arrow:'bow',bullet:'musket',wizfb:'firel',dragon:'firel',bomb:'toss',ice:'icel',cannon:'cannon'};
+const PROJ_SFX_LAUNCH={arrow:'bow',bullet:'musket',bolt:'xbow',wizfb:'firel',dragon:'firel',bomb:'toss',ice:'icel',cannon:'cannon'};   /* v321 */
 function impactProj(p,tgt){
   if(p.kind==='kingshot'){ fx.push({x:p.tx,y:p.ty,t:0,dur:0.35,kind:'flash'}); fx.push({x:p.tx,y:p.ty,t:0,dur:0.5,kind:'ring',col:'rgba(255,215,94,.95)'}); addParts(p.tx,p.ty,14,'#ffe08a',3,0.5,40); sfx('boomL');
     const bs=S.boss;
     if(bs&&!bs.dead&&Math.hypot(bs.x-p.tx,bs.y-p.ty)<=1.3){ bs.doom=0; bs.stun=3; bs.shield=(bs.shield||0)*0.4; dealDamage(bs,250,'blue'); banner('🎯 킹샷 명중! 파멸기 캔슬 · 그로기 3s',1700); }
     return; }
   if(p.kind==='bullet'){ fx.push({x:p.tx,y:p.ty,t:0,dur:0.16,kind:'hit'}); addParts(p.tx,p.ty,3,'#ffe9a8',2.2,0.25,0); sfx('spark'); }
+  else if(p.kind==='bolt'){ fx.push({x:p.tx,y:p.ty,t:0,dur:0.16,kind:'hit'}); addParts(p.tx,p.ty,2,'#d7e3f4',1.8,0.25,0); sfx('thud'); }   /* v321 */
   else if(p.kind==='arrow'){ fx.push({x:p.tx,y:p.ty,t:0,dur:0.16,kind:'hit'}); sfx('thud'); }
   else if(p.kind==='bomb'){ fx.push({x:p.tx,y:p.ty,t:0,dur:0.4,kind:'boom'}); addParts(p.tx,p.ty,10,'#ffcf7a',2.8,0.5,50); S.shake=Math.max(S.shake||0,0.18); sfx('boom'); }
   else if(p.kind==='wizfb'||p.kind==='dragon'){ fx.push({x:p.tx,y:p.ty,t:0,dur:0.18,kind:'flash'}); addParts(p.tx,p.ty,7,'#ffb14d',2.4,0.4,30); sfx('fwhit');
@@ -610,7 +611,7 @@ function impactProj(p,tgt){
 function shoot(src,tgt,dmg,kind,splash){
   kind=kind||'arrow';
   const d0=Math.hypot(tgt.x-src.x,tgt.y-src.y);
-  const v=kind==='bullet'?2.75:(kind==='bomb'?1.45:2.25);
+  const v=kind==='bullet'?2.75:(kind==='bolt'?3.0:(kind==='bomb'?1.45:2.25));   /* v321: 볼트 최속 */
   try{ fx.push({x:src.x+(tgt.x-src.x)*0.3,y:src.y+(tgt.y-src.y)*0.3,t:0,dur:0.16,kind:'star',col:'#ffd754',n:5}); }catch(e){ }   /* v195: 포구 방향 오프셋 */
   projs.push({x:src.x, y:src.y-(src.isTower?0.8:0.3), target:tgt, tx:tgt.x, ty:tgt.y,
               spd:v, dmg, team:src.team, kind, splash:splash||0, slow:src.c?src.c.slow:0, fromTower:!!src.isTower,
@@ -644,7 +645,7 @@ function unitAtkFx(u,t){   // v135: 유닛별 컨셉 공격 이펙트(디펜스�
 }
 function hitTarget(u,t,dm){ try{ if(u&&u.team==='blue'&&u.key) DPSW.acc[u.key]=(DPSW.acc[u.key]||0)+dm; }catch(e){}   /* v148: 피해 귀속 */
   dm=dm||u.c.dmg; unitAtkFx(u,t);
-  if(u.c.range>1.6){ const __pk=(u.key==='musketeer'||u.key==='sniper')?'bullet':(u.key==='wizard'?'wizfb':(u.key==='bomber'?'bomb':(u.key==='babyd'?'dragon':(u.key==='icem'?'ice':'arrow')))); shoot(u,t,dm,__pk,u.c.splash); }
+  if(u.c.range>1.6){ const __pk=(u.key==='musketeer'||u.key==='sniper')?'bullet':(u.key==='xbow'?'bolt':(u.key==='wizard'?'wizfb':(u.key==='bomber'?'bomb':(u.key==='babyd'?'dragon':(u.key==='icem'?'ice':'arrow'))))); shoot(u,t,dm,__pk,u.c.splash); }   /* v321: 석궁병 볼트 컨셉 탄환 */
   else { dealDamage(t,dm,u.team); fx.push({x:t.x,y:t.y,t:0,dur:0.18,kind:'hit'}); fx.push({x:t.x,y:t.y,t:0,dur:0.16,kind:'slash',a:Math.atan2(t.y-u.y,t.x-u.x),col:u.team==='blue'?'rgba(159,201,255,.95)':'rgba(255,150,150,.95)'}); addParts(t.x,t.y,3,'#fff2c8',2.0,0.25,0); sfx('hit');
     if(u.c.splash){ for(const s2 of units){ if(s2.dead||s2.team===u.team||s2===t) continue;
       if(Math.hypot(s2.x-t.x,s2.y-t.y)<=u.c.splash) dealDamage(s2,Math.round(dm*0.6),u.team); } } }
@@ -1782,7 +1783,14 @@ function drawProj(p){
   bake16();
   const fr=PROJ16[p.kind];
   if(fr){ const fi=((Math.round(va/(Math.PI/8))%16)+16)%16; ctx.drawImage(fr[fi],px-SZ/2,py2-SZ/2,SZ,SZ); }
-  else if(p.kind==='bullet'){ ctx.fillStyle='#ffe9a8'; ctx.beginPath(); ctx.arc(px,py2,3.2,0,7); ctx.fill(); }
+  else if(p.kind==='bullet'){ var __ba=Math.atan2(p.ty-p.y,p.tx-p.x), __sx=px-Math.cos(__ba)*15, __sy=py2-Math.sin(__ba)*15;   /* v321: 머스키타이어 추적 탄환 — 꼬리 스트릭+발광탄두 */
+    var __gr=ctx.createLinearGradient(__sx,__sy,px,py2); __gr.addColorStop(0,'rgba(255,233,168,0)'); __gr.addColorStop(1,'rgba(255,233,168,.95)');
+    ctx.strokeStyle=__gr; ctx.lineWidth=2.6; ctx.beginPath(); ctx.moveTo(__sx,__sy); ctx.lineTo(px,py2); ctx.stroke();
+    ctx.fillStyle='#fff6d8'; ctx.beginPath(); ctx.arc(px,py2,3.4,0,7); ctx.fill(); }
+  else if(p.kind==='bolt'){ var __b2=Math.atan2(p.ty-p.y,p.tx-p.x); ctx.save(); ctx.translate(px,py2); ctx.rotate(__b2);   /* v321: 석궁병 볼트 — 회전 다트(몸통+촉+깃) */
+    ctx.strokeStyle='#c9d4e6'; ctx.lineWidth=2.4; ctx.beginPath(); ctx.moveTo(-9,0); ctx.lineTo(5,0); ctx.stroke();
+    ctx.fillStyle='#e8eef7'; ctx.beginPath(); ctx.moveTo(8,0); ctx.lineTo(2,-2.6); ctx.lineTo(2,2.6); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle='#8fa6bd'; ctx.lineWidth=1.6; ctx.beginPath(); ctx.moveTo(-9,-2.4); ctx.lineTo(-5,0); ctx.lineTo(-9,2.4); ctx.stroke(); ctx.restore(); }
   else { ctx.strokeStyle='#f4e9c8'; ctx.lineWidth=2.5; ctx.beginPath();
     ctx.moveTo(px-Math.cos(va)*8,py2-Math.sin(va)*8); ctx.lineTo(px+Math.cos(va)*5,py2+Math.sin(va)*5); ctx.stroke(); }
 }
