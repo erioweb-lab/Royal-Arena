@@ -2024,7 +2024,6 @@ function buildHandUI(){
 function syncHand(){
   try{ __raZoneHL(dragFrom>=0||P.sel!=null||(TUT.on&&TUT.step===2)); }catch(e){}   /* v208 P13 + v212: 튜토리얼 배치 단계 상시 */
   try{ var __px2=(typeof P!=='undefined'&&P)?P.elixir:0, __tr=document.getElementById('elixir-track'); if(__tr){ var __full=__px2>=9.9; __tr.classList.toggle('ra-full',__full); if(__full&&!S.__elxFull){ S.__elxFull=1; toast('엘릭서 만원 — 카드를 배치하세요'); } if(!__full) S.__elxFull=0; } }catch(e){}   /* v214: 엘릭서 만원 UX(게이지 펄스+1회 토스트) */
-  try{ var __px=(typeof P!=='undefined'&&P)?P.elixir:10; for(var __ci=0;__ci<4;__ci++){ var __ce=(typeof cardEls!=='undefined')?cardEls[__ci]:null; if(!__ce) continue; var __nk=P&&P.hand?P.hand[__ci]:null, __cc=__nk?CARDS[__nk]:null; __ce.classList.toggle('ra-noelx',!!(__cc&&__cc.cost>__px)); } }catch(e){}   /* v213: 엘릭서 부족 카드 흐림 */
   try{ if(TUT.on&&(TUT.step===1||TUT.step===4)) setTimeout(tutShow,0); }catch(e){}   /* v147: 핸드 재구성 후 링·디밍 재적용(buildHandUI가 카드 DOM을 재생성하는 결함 수복) */
   for(let i=0;i<4;i++){
     const d=cardEls[i]; if(!d) continue;
@@ -2037,8 +2036,8 @@ function syncHand(){
       const rr=RARC[RKEY[k]||'c'];
       d.style.setProperty('--c-top',rr[0]); d.style.setProperty('--c-mid',rr[1]); d.style.setProperty('--c-bot',rr[2]); }
     d.classList.toggle('sel',P.sel===i);
-    d.classList.toggle('poor',P.elixir<c.cost);
   }
+  try{ window.__exSync(); }catch(e){}   /* v319 */
   const nk=P.queue[0];
   $('#next-card').innerHTML= nk?`<span class="emoji">${ART[nk]?`<img class="art" src="${ART[nk]}" alt="">`:CARDS[nk].emoji}</span><span class="nm">${CARDS[nk].name}</span>`:'';
 }
@@ -2066,13 +2065,16 @@ function syncHUD(){
   tEl.classList.toggle('urgent',S.t<=60);
   $('#crowns-blue').textContent=S.crowns.blue;
   $('#crowns-red').textContent=S.crowns.red;
-  if(S.scene==='battle') for(let i=0;i<4;i++){
-    const d=cardEls[i]; if(!d) continue;
-    const __k=P.hand[i], __c=__k?CARDS[__k]:null; if(!__c) continue;   /* v310: 공백 슬롯 가드 — 매 틱 예외로 poor/sel 갱신이 얼던 근원 차단 */
-    d.classList.toggle('poor',P.elixir<__c.cost);
-    d.classList.toggle('sel',P.sel===i);
-  }
+  if(S.scene==='battle') try{ window.__exSync(); }catch(e){}   /* v319: 단일 활성화 갱신 함수 */
 }
+window.__exSync=function(){ try{   /* v319: 재구현 — ex-off 클래스 하나만 토글(테두리·투명도는 CSS 상시 선언), 슬롯 가드 포함 */
+  if(typeof P==='undefined'||!P||!P.hand) return;
+  var __cs=document.querySelectorAll('#cards .card');
+  for(var __i=0;__i<__cs.length;__i++){
+    var __k=P.hand[__i], __c=__k?CARDS[__k]:null;
+    __cs[__i].classList.toggle('ex-off',!( __c&&__c.cost<=P.elixir ));
+  }
+}catch(e){} };
 try{ (function(){   /* v310: 핸드 공백 슬롯 자동 치유 — 사이클 불량이 손 전체 동결로 가지 않는다 */
   setInterval(function(){ try{
     if(typeof S==='undefined'||!S||S.scene!=='battle'||typeof P==='undefined'||!P||!P.hand) return;
