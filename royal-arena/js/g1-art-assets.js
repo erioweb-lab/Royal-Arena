@@ -109,7 +109,7 @@ const BANB_IM=new Image();BANB_IM.src="assets/img_068.png";
 const HPFR_IM=new Image();HPFR_IM.src="assets/img_069.png";
 const WALL_IM=new Image();WALL_IM.onload=()=>{try{drawStatic()}catch(e){}};WALL_IM.src="assets/img_070.jpg";
 const GRASS_IM=new Image();GRASS_IM.onload=()=>{try{drawStatic()}catch(e){}};GRASS_IM.src=GRASS_B64;
-const ART_PROJ={fireball:"assets/img_071.png",zap:"assets/img_072.png","arrow":"assets/img_073.png","bullet":"assets/img_074.png","bomb":"assets/img_075.png","wizfb":"assets/img_076.png","dragon":"assets/img_077.png","ice":"assets/img_078.png","cannon":"assets/img_079.png"};
+const ART_PROJ={fireball:"assets/img_071.png",zap:"assets/img_072.png","arrow":"assets/img_073.png","bullet":"assets/img_074.png","bomb":"assets/img_075.png","wizfb":"assets/img_076.png","dragon":"assets/img_077.png","ice":"assets/img_078.png","cannon":"assets/img_079.png",bolt:"assets/ra_proj_bolt.png",kingshot:"assets/ra_proj_kingshot.png"};   /* v334: 석궁 볼트·킹샷 스프라이트 — 캔버스 폴백 해소(화풍 통일) */
 
 
 'use strict';
@@ -1778,7 +1778,7 @@ function drawBody(u,r,la){
   }
 }
 const FIREARC={kingshot:30,arrow:10,bullet:3,wizfb:18,dragon:14,ice:16,bomb:34,cannon:46};
-const PROJ_BASE={arrow:2.3562,bomb:0,bullet:0,cannon:3.1416,dragon:1.5708,fireball:0,ice:1.5708,kingshot:3.1416,wizfb:2.3562,zap:0};
+const PROJ_BASE={arrow:2.3562,bomb:0,bullet:0,cannon:3.1416,dragon:1.5708,fireball:0,ice:1.5708,kingshot:0,wizfb:2.3562,zap:0};
 const PROJ16={};
 function cv16(fn){ const c=document.createElement('canvas'); c.width=64; c.height=64; fn(c.getContext('2d')); return c; }
 function pArrow(g){
