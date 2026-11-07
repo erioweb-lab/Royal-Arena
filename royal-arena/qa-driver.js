@@ -146,27 +146,34 @@ setTimeout(function(){
   if(mode==='skill'){ setTimeout(function(){ try{ var its=document.querySelectorAll('#overlay-skill .sk-item'), mg=999, nn=0, __fw=false; for(var i2=0;i2<its.length;i2++){ var bs=its[i2].querySelectorAll('button'); if(bs.length>=2){ var r1=bs[0].getBoundingClientRect(), r2=bs[1].getBoundingClientRect(); var Lf=r1.right<r2.right?r1:r2, Rt=r1.right<r2.right?r2:r1; var gp=Math.round(Rt.left-Lf.right); if(gp<mg)mg=gp; nn++; if(!__fw){__fw=true; set('SKGD:w'+Math.round(r1.width)+'x'+Math.round(r2.width)+'/r'+Math.round(r1.right)+','+Math.round(r2.right));} } } set('SKG:'+mg+'g/'+nn+'it'); }catch(e){ set('SKG:err'); } },700); }
   if(mode==='battle'){
     if(q.get('etest')){
-      var __fs=(q.get('etest')==='fast')?0.1:1;   /* v311: fast 모드 — 타이밍 1/10 압축(클라우드 캡처 창 안에 토큰 도달), 토큰 동일 */
-      setTimeout(function(){ try{
-        if(typeof startMatch!=='function'){ set('ETEST:no-start'); return; } startMatch();
+      var __ev=String(q.get('etest')), __fs=__ev.indexOf('fast')>=0?0.1:1, __nm=__ev.match(/c(\d+)/), __nc=__nm?parseInt(__nm[1],10):1;   /* v312: c<N>=N사이클 연속 재현(테스트 시간 확장), fast=1/10 속도 — 캡처 창 대응 */
+      var __cy=0, __fl=0;
+      var __etCycle=function(){
+        __cy++;
         setTimeout(function(){ try{
-          if(typeof P==='undefined'||!P){ set('ETEST:no-P'); return; }
-          var __g0=document.querySelectorAll('#cards .card'); if(!__g0.length){ set('ETEST:no-card'); return; }
-          P.elixir=10; var __rA='A?';
-          try{ try{ __g0[0].dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,cancelable:true,view:window,pointerId:1})); }catch(e){ __g0[0].dispatchEvent(new MouseEvent('pointerdown',{bubbles:true,cancelable:true,view:window})); }
-            __rA=(P.sel===0)?'Aok':'Afail'+P.sel; }catch(e){ __rA='Aerr'; }
-          var __rB='B?', __ex='?';
-          try{ if(P.sel===0){ playCard(P,0,4.5,16); } }catch(e){ __rB='Perr'; }
-          try{ __ex=Math.round((P.elixir||0)*10)/10; P.elixir=10; }catch(e){}
+          if(typeof startMatch!=='function'){ set('ETEST:no-start'); return; } if(__cy===1) startMatch();
           setTimeout(function(){ try{
-            var __g1=document.querySelectorAll('#cards .card'); var __rC='C?';
-            try{ try{ __g1[1].dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,cancelable:true,view:window,pointerId:2})); }catch(e){ __g1[1].dispatchEvent(new MouseEvent('pointerdown',{bubbles:true,cancelable:true,view:window})); }
-              __rC=(P.sel===1)?'Cok':'Cfail'+P.sel; }catch(e){ __rC='Cerr'; }
-            var __sc=document.querySelector('#cards .card.sel')?'sel':'nosel';
-            set('ETEST:'+__rA+'/'+__rB+'ex'+__ex+'/'+__rC+'/'+__sc);
-          }catch(e){ set('ETEST:Cerr'); } },1300*__fs);
-        }catch(e){ set('ETEST:Berr'); } },1200*__fs);
-      }catch(e){ set('ETEST:err'); } },3000*__fs);
+            if(typeof P==='undefined'||!P){ set('ETEST:no-P'); return; }
+            var __g0=document.querySelectorAll('#cards .card'); if(!__g0.length){ set('ETEST:no-card'); return; }
+            P.elixir=10; var __rA='A?';
+            try{ try{ __g0[0].dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,cancelable:true,view:window,pointerId:1})); }catch(e){ __g0[0].dispatchEvent(new MouseEvent('pointerdown',{bubbles:true,cancelable:true,view:window})); }
+              __rA=(P.sel===0)?'Aok':'Afail'+P.sel; }catch(e){ __rA='Aerr'; }
+            var __rB='B?', __ex='?';
+            try{ if(P.sel===0){ playCard(P,0,4.5,16); } }catch(e){ __rB='Perr'; }
+            try{ __ex=Math.round((P.elixir||0)*10)/10; P.elixir=10; }catch(e){}
+            setTimeout(function(){ try{
+              var __g1=document.querySelectorAll('#cards .card'); var __rC='C?';
+              try{ try{ __g1[1].dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,cancelable:true,view:window,pointerId:2})); }catch(e){ __g1[1].dispatchEvent(new MouseEvent('pointerdown',{bubbles:true,cancelable:true,view:window})); }
+                __rC=(P.sel===1)?'Cok':'Cfail'+P.sel; }catch(e){ __rC='Cerr'; }
+              if(__rA!=='Aok'||__rC!=='Cok') __fl++;   /* v312: 실패 누적 — 이후 사이클이 덮어쓰지 않음 */
+              var __sc=document.querySelector('#cards .card.sel')?'sel':'nosel';
+              if(__cy<__nc){ set('ETEST:cy'+__cy+'/'+__nc+' F'+__fl+':'+__rA+'/'+__rB+'ex'+__ex+'/'+__rC+'/'+__sc); __etCycle(); }   /* v312: 사이클별 누적 토큰 — 중간 상태 배너 관측·캡처 동시검증 */
+              else set('ETEST:DONE cy'+__nc+' F'+__fl+':'+__rA+'/'+__rB+'ex'+__ex+'/'+__rC+'/'+__sc);
+            }catch(e){ set('ETEST:Cerr'); } },1300*__fs);
+          }catch(e){ set('ETEST:Berr'); } },1200*__fs);
+        }catch(e){ set('ETEST:err'); } },3000*__fs);
+      };
+      __etCycle();
       return;
     }
     runBattle(function(r){report(r);if(q.get('quit')==='1')quitBattle();});return;
