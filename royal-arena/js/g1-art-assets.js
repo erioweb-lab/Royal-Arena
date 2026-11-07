@@ -42,9 +42,12 @@ const CARDS={
   healwind: {name:'회복의 바람', emoji:'🍃', cost:3, kind:'spell', heal:220, radius:2.5, desc:'아군 광역 회복 주문'},
   flamer:   {name:'화염방사병', emoji:'🔥', cost:4, count:1, hp:960,  dmg:85,  hs:0.8, range:1.2, spd:1.1, flying:false, hitsAir:false, targets:'any', r:0.45, splash:1.0, desc:'근접 속사 광역 화염'},
   golem:    {name:'수정 골렘',  emoji:'💎', cost:6, count:1, hp:5200, dmg:140, hs:1.8, range:1.0, spd:0.7, flying:false, hitsAir:false, targets:'buildings', r:0.70, desc:'초대형 건물 탱커'},
-  scarecrow:{name:'허수아비',   emoji:'🎭', cost:1, count:1, hp:950,  dmg:6,   hs:1.0, range:0.5, spd:1.4, flying:false, hitsAir:false, targets:'any', r:0.40, desc:'미끼 — 값싼 어그로 방벽'}
+  scarecrow:{name:'허수아비',   emoji:'🎭', cost:1, count:1, hp:950,  dmg:6,   hs:1.0, range:0.5, spd:1.4, flying:false, hitsAir:false, targets:'any', r:0.40, desc:'미끼 — 값싼 어그로 방벽'},
+  plasma:{name:'플라즈마',    emoji:'🌀', cost:4, kind:'spell', dmg:280, towerDmg:110, radius:1.4, desc:'단일 즉발 — 강한 피해+화상 3초'},
+  venom:{name:'맹독 안개',    emoji:'☠️', cost:4, kind:'spell', dmg:70,  towerDmg:45,  radius:2.2, desc:'광역 맹독 — 중독 틱 6초'},
+  shock:{name:'충격파',      emoji:'💫', cost:5, kind:'spell', dmg:130, towerDmg:60,  radius:2.6, stun:0.5, desc:'광역 기절 0.5초'}
 };
-const DECK=['knight','archers','giant','minions','musketeer','fireball','skarmy','cannon','wizard','sniper','prince','zap','valk','bomber','babyd','cleric','boar','icem','meteor','blizzard','greed','glass','fort','lordknight','xbow','healwind','flamer','golem','scarecrow'];   /* v214: 29종 — 화염방사병·수정 골렘·허수아비 */
+const DECK=['knight','archers','giant','minions','musketeer','fireball','skarmy','cannon','wizard','sniper','prince','zap','valk','bomber','babyd','cleric','boar','icem','meteor','blizzard','greed','glass','fort','lordknight','xbow','healwind','flamer','golem','scarecrow','plasma','venom','shock'];   /* v214: 29종 — 화염방사병·수정 골렘·허수아비 */   /* v324: 주문 3종 추가 — 32종 */
 const __ch2=document.getElementById('cards-h2'); if(__ch2) __ch2.textContent='🃏 카드 도감 ('+DECK.length+'종)';
 const __cs=document.getElementById('cards-sub'); if(__cs) __cs.textContent=DECK.length+'종 카드로 승부하는 실시간 아레나 배틀';
 /* ---------- 아레나 테마 (레퍼런스: 클래시 로얄 스토어 스크린샷) ---------- */
@@ -76,8 +79,8 @@ const ART_SPR={knight:"assets/img_030.png",archers:"assets/img_031.png",giant:"a
 
 
 'use strict';
-const ART_TOW={t_princess_b:"assets/img_040.png",t_princess_r:"assets/img_041.png",t_king_b:"assets/img_042.png",t_king_r:"assets/img_043.png",t_rubble:"assets/img_044.png"};
-const ART_NEW={valk:"assets/img_045.jpg",bomber:"assets/img_046.jpg",babyd:"assets/img_047.jpg",cleric:"assets/img_048.jpg",boar:"assets/img_049.jpg",icem:"assets/img_050.jpg",lordknight:"assets/ra_card_lordknight.jpg",scarecrow:"assets/ra_card_scarecrow.jpg",meteor:"assets/ra_card_meteor.jpg",blizzard:"assets/ra_card_blizzard.jpg",greed:"assets/ra_card_greed.jpg",glass:"assets/ra_card_glass.jpg",fort:"assets/ra_card_fort.jpg",xbow:"assets/ra_card_xbow.jpg",healwind:"assets/ra_card_healwind.jpg",flamer:"assets/ra_card_flamer.jpg",golem:"assets/ra_card_golem.jpg"};   /* v300: 이모지 카드 아트 + 무프레임 재생성 */
+const ART_TOW={t_princess_b:"assets/img_040.png",t_princess_r:"assets/img_041.png",t_king_b:"assets/img_042.png",t_king_r:"assets/img_043.png",t_rubble:"assets/img_044.png",t_princess_lava:"assets/ra_tow_princess_lava.png",t_princess_ice:"assets/ra_tow_princess_ice.png",t_princess_wasteland:"assets/ra_tow_princess_wasteland.png",t_princess_abyss:"assets/ra_tow_princess_abyss.png"};   /* v324: 프린세스 타워 테마 스킨 */
+const ART_NEW={valk:"assets/img_045.jpg",bomber:"assets/img_046.jpg",babyd:"assets/img_047.jpg",cleric:"assets/img_048.jpg",boar:"assets/img_049.jpg",icem:"assets/img_050.jpg",lordknight:"assets/ra_card_lordknight.jpg",scarecrow:"assets/ra_card_scarecrow.jpg",meteor:"assets/ra_card_meteor.jpg",blizzard:"assets/ra_card_blizzard.jpg",greed:"assets/ra_card_greed.jpg",glass:"assets/ra_card_glass.jpg",fort:"assets/ra_card_fort.jpg",xbow:"assets/ra_card_xbow.jpg",healwind:"assets/ra_card_healwind.jpg",flamer:"assets/ra_card_flamer.jpg",golem:"assets/ra_card_golem.jpg",plasma:"assets/ra_card_plasma.jpg",venom:"assets/ra_card_venom.jpg",shock:"assets/ra_card_shock.jpg"};   /* v300: 이모지 카드 아트 + 무프레임 재생성 */
 
 
 'use strict';
@@ -593,7 +596,32 @@ function moveUnit(u,dt){
 const UMOT={_def:{},babyd:{flut:1},minions:{flut:1},cleric:{halo:1},boar:{dust:1},giant:{dust:1},valk:{dust:1},knight:{dust:1},skarmy:{dust:1}};
 const TRAIL={kingshot:'rgba(255,215,94,.9)',arrow:'rgba(232,226,200,.9)',bullet:'#ffe9a8',bomb:'#ffcf7a',wizfb:'#ffb14d',dragon:'#ff9d3c',ice:'#9cdcff',cannon:'#cfd6e0'};
 const PROJ_SFX_LAUNCH={arrow:'bow',bullet:'musket',bolt:'xbow',wizfb:'firel',dragon:'firel',bomb:'toss',ice:'icel',cannon:'cannon'};   /* v321 */
+/* v324: 프린세스 타워 테마 스킨 게터 — 현재 테마 전용 아트(TSPR 자동 로딩) */
+function __towSkinImg(theme){ try{ if(!theme) return null; var s=TSPR['t_princess_'+theme]; return (s&&s.complete&&s.naturalWidth>0&&s.__valid!==false)?s:null; }catch(e){ return null; } }
+/* v324: 원소 콤보 엔진 — 4초 내 이종 원소 재적중 보너스 */
+const ELEM_OF={wizard:'fire',babyd:'fire',flamer:'fire',bomber:'fire',prince:'fire',boar:'fire',boss:'fire',icem:'ice',golem:'ice',giant:'ice',musketeer:'thunder',sniper:'thunder',xbow:'thunder',minions:'thunder',lordknight:'thunder',greed:'poison',scarecrow:'poison',skarmy:'poison'};
+const RA_COMBOS={'fire|ice':['증발',0.25,'#ffd9a8','#ffb14d'],'ice|fire':['증발',0.25,'#ffd9a8','#ffb14d'],'fire|poison':['폭발',0.20,'#ffb14d','#ff8a3c'],'poison|fire':['폭발',0.20,'#ffb14d','#ff8a3c'],'thunder|ice':['감전',0.20,'#ffe95e','#fff2a8'],'ice|thunder':['감전',0.20,'#ffe95e','#fff2a8'],'ice|poison':['부식',0.10,'#a5e85c','#c8f09a'],'poison|ice':['부식',0.10,'#a5e85c','#c8f09a'],'thunder|poison':['격발',0.10,'#cf9dff','#ffe95e'],'poison|thunder':['격발',0.10,'#cf9dff','#ffe95e'],'thunder|fire':['융합',0.10,'#ffcf7a','#ffe08a'],'fire|thunder':['융합',0.10,'#ffcf7a','#ffe08a']};
+window.__raCombo=function(el,tgt,dmg,team){
+  try{
+    if(!el||!tgt||tgt.dead||!tgt.key||tgt.isTower) return;
+    var nowS=performance.now()/1000, prev=tgt.__lastEl;
+    if(prev&&prev.el!==el&&(nowS-prev.t)<4&&(tgt.comboCd||0)<=0){
+      var cb=RA_COMBOS[prev.el+'|'+el];
+      if(cb){ tgt.comboCd=1.0; tgt.__lastEl=null;
+        var bd=Math.max(1,Math.round((dmg||40)*cb[1]));
+        dealDamage(tgt,bd,team,true);
+        floats.push({dx:(Math.random()*10-5),dy:0,x:tgt.x,y:tgt.y-1.6,txt:cb[0]+' 콤보! +'+bd,t:1.0,col:cb[2],big:true});
+        fx.push({x:tgt.x,y:tgt.y,t:0,dur:0.45,kind:'ring',col:cb[2]}); addParts(tgt.x,tgt.y,8,cb[3],2.6,0.5,45); sfx('spark');
+        if(cb[0]==='감전') tgt.stun=Math.max(tgt.stun||0,0.4);
+        if(cb[0]==='부식') tgt.slowT=Math.max(tgt.slowT||0,2);
+      }
+    }
+    tgt.__lastEl={el:el,t:nowS};
+  }catch(__ec){}
+};
+window.__ROCKS=[1,2].map(function(n){ var im=new Image(); im.src='assets/ra_rock_'+n+'.png'; im.onload=function(){ im.__valid=true; }; im.onerror=function(){ im.__valid=false; }; return im; });   /* v324: 바위 이미지 로더 */
 function impactProj(p,tgt){
+  try{ if(p.elem&&tgt&&!tgt.dead&&tgt.key&&!tgt.isTower) window.__raCombo(p.elem,tgt,p.dmg,p.team); }catch(__ec){}   /* v324: 원거리 원소 콤보 */
   if(p.kind==='kingshot'){ fx.push({x:p.tx,y:p.ty,t:0,dur:0.35,kind:'flash'}); fx.push({x:p.tx,y:p.ty,t:0,dur:0.5,kind:'ring',col:'rgba(255,215,94,.95)'}); addParts(p.tx,p.ty,14,'#ffe08a',3,0.5,40); sfx('boomL');
     const bs=S.boss;
     if(bs&&!bs.dead&&Math.hypot(bs.x-p.tx,bs.y-p.ty)<=1.3){ bs.doom=0; bs.stun=3; bs.shield=(bs.shield||0)*0.4; dealDamage(bs,250,'blue'); banner('🎯 킹샷 명중! 파멸기 캔슬 · 그로기 3s',1700); }
@@ -614,7 +642,7 @@ function shoot(src,tgt,dmg,kind,splash){
   const v=kind==='bullet'?2.75:(kind==='bolt'?3.0:(kind==='bomb'?1.45:2.25));   /* v321: 볼트 최속 */
   try{ fx.push({x:src.x+(tgt.x-src.x)*0.3,y:src.y+(tgt.y-src.y)*0.3,t:0,dur:0.16,kind:'star',col:'#ffd754',n:5}); }catch(e){ }   /* v195: 포구 방향 오프셋 */
   projs.push({x:src.x, y:src.y-(src.isTower?0.8:0.3), target:tgt, tx:tgt.x, ty:tgt.y,
-              spd:v, dmg, team:src.team, kind, splash:splash||0, slow:src.c?src.c.slow:0, fromTower:!!src.isTower,
+              spd:v, dmg, team:src.team, kind, splash:splash||0, slow:src.c?src.c.slow:0, fromTower:!!src.isTower, elem:ELEM_OF[src.key]||null,
               arc:(kind==='bomb'||kind==='cannon'), t:0, dur:Math.max(0.12,d0/v)});
   if(!src.isTower){
     var __ma=Math.atan2(tgt.y-src.y,tgt.x-src.x); 
@@ -626,6 +654,7 @@ function shoot(src,tgt,dmg,kind,splash){
   sfx(PROJ_SFX_LAUNCH[kind]||'shoot');
 }
 function unitAtkFx(u,t){   // v135: 유닛별 컨셉 공격 이펙트(디펜스히어로즈식 타격 VFX) — 근접 강화·원거리 발동 액센트
+  try{ if(u&&t&&u.key&&u.c&&u.c.range<=1.6&&t.key&&!t.isTower&&!t.dead) window.__raCombo(ELEM_OF[u.key]||null,t,u.c.dmg,u.team); }catch(__ec){}   /* v324: 근접 원소 콤보 */
   try{
     const k=u.key, tx=t.x, ty=t.y, melee=u.c.range<=1.6;
     if(k==='knight'&&melee){ fx.push({x:tx,y:ty,t:0,dur:0.24,kind:'ring',col:'rgba(223,232,255,.8)'}); addParts(tx,ty,4,'#dfe8ff',2.2,0.3,30); }
@@ -665,6 +694,12 @@ function updateUnit(u,dt){
     if(u.burnAcc>=0.5){ const __bd=Math.round(u.burnDps*u.burnAcc); u.burnAcc=0; u.hp-=__bd; u.hurt=0.06; addParts(u.x,u.y-0.4,2,'#ff9d3c',1.4,0.4,-30);   /* v195: 화염 연출 */
       floats.push({dx:(Math.random()*14-7),dy:(Math.random()*6-3),x:u.x+(Math.random()-0.5)*0.5,y:u.y-0.9,txt:__bd,t:0.55,col:'#ff9d3c',big:false});
       if(u.hp<=0){ u.hp=0; u.dead=true; killUnit(u,false); return; } } }
+  if(u.venT>0){ u.venT-=dt; u.venAcc+=dt;   /* v324: 맹독 중독 틱 — 화상과 병렬 */
+    if(Math.random()<0.25) addParts(u.x,u.y-0.3,1,'#a5e85c',0.8,0.3,-30);
+    if(u.venAcc>=0.5){ const __vd=Math.round((u.venDps||0)*u.venAcc); u.venAcc=0;
+      if(__vd>0){ u.hp-=__vd; u.hurt=0.06; addParts(u.x,u.y-0.4,2,'#a5e85c',1.4,0.4,-30);
+        floats.push({dx:(Math.random()*14-7),dy:(Math.random()*6-3),x:u.x+(Math.random()-0.5)*0.5,y:u.y-0.9,txt:__vd,t:0.55,col:'#a5e85c',big:false});
+        if(u.hp<=0){ u.hp=0; u.dead=true; killUnit(u,false); return; } } } }
   if(u.slowT>0) u.slowT-=dt;
   if(u.healer&&!u.dead&&u.hp<u.maxHp) u.hp=Math.min(u.maxHp,u.hp+10*dt);   /* v209: 힐러 특성 — 자가 재생 10/s */
   if(u.team==='blue'&&S.__rin==='relic_mend'&&!u.dead&&u.hp<u.maxHp) u.hp=Math.min(u.maxHp,u.hp+2*(S.__rinMul||1)*dt);   /* v218 증폭 */   /* v212: 재생의 인장 */
@@ -757,7 +792,7 @@ function updateProjs(dt){
   projs=projs.filter(p=>!p.done);
 }
 function castSpellBase(key,team,x,y){ if(S.spells) S.spells[team]=(S.spells[team]||0)+1;   // v99 P8: 주문 사용 집계
-  if(key==='healwind') castHealWind(team,x,y); else if(key==='meteor') castMeteor(team,x,y); else if(key==='blizzard') castBlizzard(team,x,y); else if(key==='zap') castZap(team,x,y); else castFireball(team,x,y);
+  if(key==='healwind') castHealWind(team,x,y); else if(key==='meteor') castMeteor(team,x,y); else if(key==='blizzard') castBlizzard(team,x,y); else if(key==='zap') castZap(team,x,y); else if(key==='plasma') castPlasma(team,x,y); else if(key==='venom') castVenom(team,x,y); else if(key==='shock') castShock(team,x,y); else castFireball(team,x,y);
 }
 /* v213: 회복의 바람 — 아군 광역 회복 */
 function castHealWind(team,x,y){ const c=CARDS.healwind;
@@ -808,6 +843,24 @@ function explodeFireball(p){
   for(const t of towers){ if(t.dead||t.team!==et) continue;
     if(Math.hypot(t.x-p.x1,t.y-p.y1)<=c.radius+0.5) dealDamage(t,spellDmg(c.towerDmg),p.team); }
 }
+
+/* v324: 플라즈마 — 단일 즉발 280+화상 3초 */
+function castPlasma(team,x,y){ const c=CARDS.plasma, et=enemyOf(team);
+  fx.push({x,y,t:0,dur:0.35,kind:'flash'}); fx.push({x,y,t:0,dur:0.5,kind:'ring',col:'rgba(207,157,255,.9)'}); addParts(x,y,12,'#cf9dff',3.0,0.5,45); S.shake=0.35; S.spellQuiet=2.0; sfx('zap');
+  var __bt=null,__bd=1e9;
+  for(const u of units){ if(u.dead||u.team!==et||u.isTower) continue; var __d3=Math.hypot(u.x-x,u.y-y); if(__d3<=c.radius&&__d3<__bd){ __bd=__d3; __bt=u; } }
+  if(__bt){ __bt.burnT=Math.max(__bt.burnT||0,3); __bt.burnDps=20; __bt.burnAcc=0; dealDamage(__bt,spellDmg(c.dmg),team,true); floats.push({dx:(Math.random()*10-5),dy:0,x:__bt.x,y:__bt.y-1.4,txt:'🌀 '+Math.round(spellDmg(c.dmg)),t:0.8,col:'#cf9dff',big:true}); fx.push({x:__bt.x,y:__bt.y,t:0,dur:0.4,kind:'ring',col:'rgba(230,210,255,.95)'}); addParts(__bt.x,__bt.y,10,'#e6d2ff',2.6,0.5,35); }
+  for(const t of towers){ if(t.dead||t.team!==et) continue; if(Math.hypot(t.x-x,t.y-y)<=c.radius+0.5) dealDamage(t,spellDmg(c.towerDmg),team); } }
+/* v324: 맹독 안개 — 광역 중독 틱 6초 */
+function castVenom(team,x,y){ const c=CARDS.venom, et=enemyOf(team);
+  fx.push({x,y,t:0,dur:0.7,kind:'ring',col:'rgba(165,232,92,.85)'}); fx.push({x,y,t:0.15,dur:0.9,kind:'ring',col:'rgba(165,232,92,.5)'}); addParts(x,y,16,'#a5e85c',2.8,0.6,25); sfx('cast'); S.spellQuiet=1.6;
+  for(const u of units){ if(u.dead||u.team!==et) continue; if(Math.hypot(u.x-x,u.y-y)<=c.radius){ u.venT=Math.max(u.venT||0,6); u.venDps=26; u.venAcc=0; floats.push({dx:(Math.random()*10-5),dy:0,x:u.x,y:u.y-1.2,txt:'☠ 중독',t:0.7,col:'#a5e85c',big:false}); dealDamage(u,spellDmg(c.dmg),team,true); } }
+  for(const t of towers){ if(t.dead||t.team!==et) continue; if(Math.hypot(t.x-x,t.y-y)<=c.radius+0.4) dealDamage(t,spellDmg(c.towerDmg),team); } }
+/* v324: 충격파 — 광역 기절 0.5초 */
+function castShock(team,x,y){ const c=CARDS.shock, et=enemyOf(team);
+  fx.push({x,y,t:0,dur:0.45,kind:'zapx'}); fx.push({x,y,t:0,dur:0.55,kind:'ring',col:'rgba(255,233,94,.9)'}); addParts(x,y,18,'#ffe95e',3.2,0.55,55); S.shake=0.5; S.spellQuiet=2.4; sfx('boomL');
+  for(const u of units){ if(u.dead||u.team!==et) continue; if(Math.hypot(u.x-x,u.y-y)<=c.radius){ u.stun=Math.max(u.stun||0,c.stun); floats.push({dx:(Math.random()*10-5),dy:0,x:u.x,y:u.y-1.2,txt:'💫 기절',t:0.7,col:'#ffe95e',big:false}); dealDamage(u,spellDmg(c.dmg),team,true); } }
+  for(const t of towers){ if(t.dead||t.team!==et) continue; if(Math.hypot(t.x-x,t.y-y)<=c.radius+0.4) dealDamage(t,spellDmg(c.towerDmg),team); } }
 
 /* ---------- 피해 / 파괴 / 승패 (REA 설계도 §2·§6) ---------- */
 function dealDamage(e,dmg,fromTeam,fromSpell){
@@ -1208,6 +1261,7 @@ function drawStatic(){
     g.fillStyle='rgba(0,0,0,.18)'; g.beginPath(); g.ellipse(2,4,__rr,__rr*0.55,0,0,6.29); g.fill();
     g.fillStyle='#6b7280'; g.beginPath(); g.moveTo(-__rr,0); g.lineTo(-__rr*0.55,-__rr*0.8); g.lineTo(__rr*0.4,-__rr*0.9); g.lineTo(__rr,__rr*0.05); g.lineTo(__rr*0.45,__rr*0.55); g.lineTo(-__rr*0.5,__rr*0.5); g.closePath(); g.fill();
     g.fillStyle='#9aa2ad'; g.beginPath(); g.moveTo(-__rr*0.55,-__rr*0.8); g.lineTo(__rr*0.4,-__rr*0.9); g.lineTo(__rr*0.2,-__rr*0.2); g.lineTo(-__rr*0.3,-__rr*0.15); g.closePath(); g.fill();
+    var __rimg=(window.__ROCKS&&window.__ROCKS.length)?window.__ROCKS[__ri%2]:null; if(__rimg&&__rimg.complete&&__rimg.naturalWidth>0&&__rimg.__valid!==false){ var __rw=__rr*2.6; g.drawImage(__rimg,-__rw/2,-__rw*0.6,__rw,__rw); }   /* v324: 바위 이미지 데코 */
     g.restore(); }
   }catch(__e){}
   let seed=7;
@@ -1322,6 +1376,7 @@ function towSkin(k,im){   /* v144: 타워 테마 스킨 — 용암/서리 틴트
 function drawTower(t){try{
       var __tc=(t.kind==='king'?'t_king':'t_princess')+(t.team==='blue'?'_b':'_r');
       var __im=(typeof TSPR!=='undefined')?TSPR[__tc]:null; if(__im) __im=towSkin(__tc,__im);   /* v144: 테마 스킨 적용 */
+      var __tsk=(t.kind!=='king')?__towSkinImg(S.theme):null; if(__tsk) __im=__tsk;   /* v324: 프린세스 타워 테마 스킨 */
       if(!(__im&&((__im.getContext)||(__im.complete&&__im.naturalWidth>0&&__im.__valid!==false)))){   /* v144: 틴트 캔버스 허용 */
         var x=t.x*TILE,y=t.y*TILE,king=t.kind==='king';
         var hs=king?128:100,ytop=Math.max(y+14-hs,6);
@@ -1349,7 +1404,7 @@ function drawTower(t){try{
     const hr=t.hp/t.maxHp, hs=king?128:100, ytop=Math.max(y+14-hs,6), by0=Math.max(ytop-18,10);
     ctx.fillStyle='rgba(0,0,0,.22)'; ctx.beginPath();
     ctx.ellipse(x,Math.min(y+10,ytop+hs-6),hs*0.42,hs*0.16,0,0,7); ctx.fill();
-    ctx.drawImage(TSPR[tc],x-hs/2,ytop,hs,hs);
+    var __tsk2=(king?null:__towSkinImg(S.theme)); if(__tsk2) ctx.drawImage(__tsk2,x-hs/2,ytop,hs,hs); else ctx.drawImage(TSPR[tc],x-hs/2,ytop,hs,hs);   /* v324: 프린세스 타워 테마 스킨 */
     if(hr<0.55){ ctx.strokeStyle='rgba(25,30,42,.7)'; ctx.lineWidth=2;
       ctx.beginPath(); ctx.moveTo(x-hs*0.2,ytop+hs*0.45); ctx.lineTo(x-hs*0.1,ytop+hs*0.62); ctx.lineTo(x-hs*0.17,ytop+hs*0.8); ctx.stroke(); }
     if(hr<0.25){ for(let i=0;i<3;i++){ const sy=((now*22+i*26)%50);
