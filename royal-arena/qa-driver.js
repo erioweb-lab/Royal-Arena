@@ -146,6 +146,7 @@ setTimeout(function(){
   if(mode==='skill'){ setTimeout(function(){ try{ var its=document.querySelectorAll('#overlay-skill .sk-item'), mg=999, nn=0, __fw=false; for(var i2=0;i2<its.length;i2++){ var bs=its[i2].querySelectorAll('button'); if(bs.length>=2){ var r1=bs[0].getBoundingClientRect(), r2=bs[1].getBoundingClientRect(); var Lf=r1.right<r2.right?r1:r2, Rt=r1.right<r2.right?r2:r1; var gp=Math.round(Rt.left-Lf.right); if(gp<mg)mg=gp; nn++; if(!__fw){__fw=true; set('SKGD:w'+Math.round(r1.width)+'x'+Math.round(r2.width)+'/r'+Math.round(r1.right)+','+Math.round(r2.right));} } } set('SKG:'+mg+'g/'+nn+'it'); }catch(e){ set('SKG:err'); } },700); }
   if(mode==='battle'){
     if(q.get('etest')){
+      var __fs=(q.get('etest')==='fast')?0.1:1;   /* v311: fast 모드 — 타이밍 1/10 압축(클라우드 캡처 창 안에 토큰 도달), 토큰 동일 */
       setTimeout(function(){ try{
         if(typeof startMatch!=='function'){ set('ETEST:no-start'); return; } startMatch();
         setTimeout(function(){ try{
@@ -163,9 +164,9 @@ setTimeout(function(){
               __rC=(P.sel===1)?'Cok':'Cfail'+P.sel; }catch(e){ __rC='Cerr'; }
             var __sc=document.querySelector('#cards .card.sel')?'sel':'nosel';
             set('ETEST:'+__rA+'/'+__rB+'ex'+__ex+'/'+__rC+'/'+__sc);
-          }catch(e){ set('ETEST:Cerr'); } },1300);
-        }catch(e){ set('ETEST:Berr'); } },1200);
-      }catch(e){ set('ETEST:err'); } },3000);
+          }catch(e){ set('ETEST:Cerr'); } },1300*__fs);
+        }catch(e){ set('ETEST:Berr'); } },1200*__fs);
+      }catch(e){ set('ETEST:err'); } },3000*__fs);
       return;
     }
     runBattle(function(r){report(r);if(q.get('quit')==='1')quitBattle();});return;
