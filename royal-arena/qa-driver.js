@@ -157,13 +157,13 @@ setTimeout(function(){
             var __tr=0; while(P.elixir>=__mn&&__tr<8){ try{ playCard(P,0,4.5,16); }catch(e){ break; } __tr++; }
             var __ex0=Math.round((P.elixir||0)*10)/10;
             var __cs0=document.querySelectorAll('#cards .card'), __p0=0;
-            for(var __pi=0;__pi<__cs0.length;__pi++){ if(__cs0[__pi].className.indexOf('poor')>=0) __p0++; }
+            for(var __pi=0;__pi<__cs0.length;__pi++){ if(__cs0[__pi].className.indexOf('ex-off')>=0) __p0++; }
             if(__ex0>2.5){ set('ELX:drain-fail ex'+__ex0+' tr'+__tr); return; }
             var __t0=Date.now(), __hist=[__ex0+':'+__p0];
             var __poll=setInterval(function(){ try{
               var __ex=Math.round((P.elixir||0)*10)/10;
               var __cs=document.querySelectorAll('#cards .card'), __bad=0;
-              for(var __j=0;__j<__cs.length;__j++){ var __ck=P.hand[__j], __cc=__ck?CARDS[__ck]:null; if(__cc&&__cc.cost<=__ex&&__cs[__j].className.indexOf('poor')>=0) __bad++; }
+              for(var __j=0;__j<__cs.length;__j++){ var __ck=P.hand[__j], __cc=__ck?CARDS[__ck]:null; if(__cc&&__cc.cost<=__ex&&__cs[__j].className.indexOf('ex-off')>=0) __bad++; }
               var __last=__hist[__hist.length-1]||'';
               if(__ex+':'+__bad!==__last) __hist.push(__ex+':'+__bad);
               if(__bad===0||Date.now()-__t0>12000){
@@ -194,7 +194,7 @@ setTimeout(function(){
               var __rB='B?';
               try{ if(P.sel===1){ playCard(P,1,4.5,16); } }catch(e){ __rB='Perr'; }
               var __ex='?'; try{ __ex=Math.round((P.elixir||0)*10)/10; }catch(e){}
-              var __bad=0; try{ var __cs=document.querySelectorAll('#cards .card'); for(var __i=0;__i<__cs.length;__i++){ var __k=P.hand[__i], __c=__k?CARDS[__k]:null; if(__c&&__c.cost<=P.elixir&&__cs[__i].className.indexOf('poor')>=0) __bad++; } }catch(e){}
+              var __bad=0; try{ var __cs=document.querySelectorAll('#cards .card'); for(var __i=0;__i<__cs.length;__i++){ var __k=P.hand[__i], __c=__k?CARDS[__k]:null; if(__c&&__c.cost<=P.elixir&&__cs[__i].className.indexOf('ex-off')>=0) __bad++; } }catch(e){}
               set('ACDIE:'+__rA+'/'+__rB+'ex'+__ex+'/'+__rC+'/stale'+__bad);
             }catch(e){ set('ACDIE:Cerr'); } },1200);
           }catch(e){ set('ACDIE:Berr'); } },1200);
