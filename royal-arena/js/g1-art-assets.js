@@ -1892,11 +1892,11 @@ function drawFx(f){
   else if(f.kind==='snowzone'){   /* v326: 눈보라 지속 지역 — 하얀 틴트+낙하 눈송이 */
     const _px=f.x*TILE, _py=f.y*TILE, _rr=f.r*TILE, _a0=Math.min(1,f.t*2)*Math.min(1,(f.dur-f.t)*2);
     ctx.save();
-    ctx.globalAlpha=0.20*_a0; ctx.fillStyle='#dff1ff';
+    ctx.globalAlpha=0.32*_a0; ctx.fillStyle='#dff1ff';
     ctx.beginPath(); ctx.ellipse(_px,_py,_rr,_rr*0.52,0,0,7); ctx.fill();
     ctx.globalAlpha=0.92*_a0; ctx.fillStyle='#ffffff';
-    for(let i=0;i<16;i++){ const _sx=(Math.sin(i*37.7+f.x*9)+1)/2, _sy=((i*0.61+f.t*0.5+i*i*0.13)%1);
-      ctx.beginPath(); ctx.arc(_px+(_sx-0.5)*2*_rr, _py-_rr*0.5+_sy*_rr*1.35, 1.5+(i%3)*0.5, 0, 7); ctx.fill(); }
+    for(let i=0;i<22;i++){ const _sx=(Math.sin(i*37.7+f.x*9)+1)/2, _sy=((i*0.61+f.t*0.5+i*i*0.13)%1);
+      ctx.beginPath(); ctx.arc(_px+(_sx-0.5)*2*_rr, _py-_rr*0.5+_sy*_rr*1.35, 2.3+(i%4)*0.7, 0, 7); ctx.fill(); }
     ctx.restore();
   }
   else if(f.kind==='crater'){   /* v326: 메테오 분화구 — 어두운 움푹함+균열+잔불 */
