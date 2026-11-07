@@ -1152,7 +1152,7 @@ html body .theme-row .t-btn{height:34px !important;font-size:11px !important;lin
 html body .t-links button, html body #btn-deck-random, html body #btn-deck-edit{background:linear-gradient(180deg,rgba(14,34,61,.95),rgba(10,22,40,.95)) !important;border:1px solid #c89b3c !important;border-radius:14px !important;color:#f2f6ff !important;font-weight:700 !important;line-height:1.2 !important;text-shadow:none !important;min-height:34px !important;display:flex !important;align-items:center !important;justify-content:center !important;overflow:hidden !important;text-overflow:ellipsis !important;white-space:nowrap !important;padding:4px 8px !important}
 html body #deck-edit{padding-bottom:150px !important}
 </style>
-<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v335</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v336</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1268,7 +1268,8 @@ html body #deck-edit{padding-bottom:150px !important}
 
 <style id="ui-v325">/* v325: 결과 모달 360px 수복 — 실화면 검증(스킬 self-check 항목 13) 발견 즉시 수복. 2열 grid 압축 잘림 + ui-v179 %폭 버튼 행 오버플로우 해소 */
 @media (max-width:420px){
-html body #overlay-result{display:flex !important;flex-direction:column !important;justify-content:center !important;align-items:center !important}
+html body #overlay-result:not(.hidden){display:flex !important;flex-direction:column !important;justify-content:center !important;align-items:center !important}
+html body #overlay-result.hidden{display:none !important}   /* v336: .hidden 우선 복원 — 딤 오버레이 영구 잔존 결함 수복 */
 html body #overlay-result .r-box{width:min(92vw,340px) !important;min-width:min(92vw,340px) !important;max-width:min(92vw,340px) !important;padding:12px !important;margin:0 auto !important;position:relative;left:auto;right:auto;transform:none}
 #overlay-result .r-box{width:min(92vw,340px) !important;max-width:340px !important;padding:12px !important}
 #rpane-score{grid-template-columns:1fr !important;gap:2px 0 !important}
