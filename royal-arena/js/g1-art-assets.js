@@ -635,6 +635,11 @@ function unitAtkFx(u,t){   // v135: 유닛별 컨셉 공격 이펙트(디펜스�
     else if(k==='prince'&&melee){ fx.push({x:tx,y:ty,t:0,dur:0.3,kind:'ring',col:'rgba(255,213,79,.9)'}); addParts(tx,ty,6,'#ffd54f',2.8,0.45,40); if(u.charging) S.shake=Math.max(S.shake||0,0.08); }
     else if(k==='valk'&&melee){ fx.push({x:tx,y:ty,t:0,dur:0.3,kind:'ring',col:'rgba(255,183,77,.85)'}); fx.push({x:tx,y:ty,t:0.08,dur:0.3,kind:'ring',col:'rgba(255,224,138,.7)'}); addParts(tx,ty,5,'#ffb74d',2.4,0.4,40); }
     else if(k==='boar'&&melee){ addParts(tx,ty,6,'#e0c9a6',2.4,0.4,50); S.shake=Math.max(S.shake||0,0.05); }
+    else if(k==='flamer'){ fx.push({x:tx,y:ty,t:0,dur:0.38,kind:'flamegrow'}); addParts(tx,ty,4,'#ff9d3c',2.2,0.35,-60); addParts(tx,ty,2,'#ffd54f',1.6,0.3,-90); sfx('firel'); }   /* v322: 화염방사병 — 커지는 화염(속사라 경량) */
+    else if(k==='lordknight'&&melee){ fx.push({x:tx,y:ty,t:0,dur:0.32,kind:'ring',col:'rgba(255,213,79,.9)'}); fx.push({x:tx,y:ty,t:0.06,dur:0.32,kind:'ring',col:'rgba(207,109,245,.75)'}); addParts(tx,ty,7,'#ffd54f',2.8,0.45,50); S.shake=Math.max(S.shake||0,0.12); sfx('slash'); }   /* v322: 기사단장 — 에픽 광역 일격 */
+    else if(k==='greed'&&melee){ fx.push({x:tx,y:ty,t:0,dur:0.22,kind:'slash',col:'rgba(207,109,245,.85)',a:Math.atan2(ty-u.y,tx-u.x)}); addParts(tx,ty,4,'#cf6df5',2.0,0.32,30); sfx('slash'); }   /* v322: 탐욕 정령 — 보라 잔상 베기 */
+    else if(k==='golem'&&melee){ S.shake=Math.max(S.shake||0,0.20); fx.push({x:tx,y:ty,t:0,dur:0.4,kind:'ring',col:'rgba(140,220,255,.8)'}); addParts(tx,ty,9,'#8cdcff',3.0,0.55,70); sfx('boomL'); }   /* v322: 수정 골렘 — 수정 파편 강타 */
+    else if(k==='scarecrow'&&melee){ addParts(tx,ty,3,'#d9c46b',1.8,0.35,60); sfx('thud'); }   /* v322: 허수아비 — 짚 파편 */
     else if(k==='musketeer'&&!melee){ addParts(u.x,u.y-0.3,2,'#ffe9a8',1.6,0.2,-10); }
     else if(k==='sniper'&&!melee){ fx.push({x:u.x,y:u.y-0.3,t:0,dur:0.12,kind:'flash'}); addParts(u.x,u.y-0.3,3,'#9cdcff',1.8,0.25,0); }
     else if(k==='wizard'&&!melee){ fx.push({x:u.x,y:u.y-0.3,t:0,dur:0.15,kind:'ring',col:'rgba(255,177,77,.8)'}); }
@@ -1817,6 +1822,12 @@ function drawFx(f){
   else if(f.kind==='star'){ const p=f.t/f.dur, r1=4+k*9, r0=r1*0.45; ctx.save(); ctx.translate(px,py); ctx.rotate(p*1.1); ctx.globalAlpha=1-p; ctx.fillStyle=f.col; ctx.beginPath(); for(let i=0;i<10;i++){ const rr=(i%2)?r0:r1, an=i*Math.PI/5; ctx.lineTo(Math.cos(an)*rr,Math.sin(an)*rr); } ctx.closePath(); ctx.fill(); ctx.restore(); }   /* v195: 픽셀 좌표·소형 수복 */
   else if(f.kind==='ring'){ ctx.strokeStyle=f.col; ctx.lineWidth=3; ctx.beginPath();
     ctx.ellipse(px,py,8+k*26,(8+k*26)*0.5,0,0,7); ctx.stroke(); }
+  else if(f.kind==='flamegrow'){ var __p2=f.t/f.dur, __r=TILE*(0.18+__p2*0.62), __fl=0.75+Math.random()*0.25;   /* v322: 커지는 화염 — 3층 확산+플리커 */
+    ctx.globalAlpha=Math.max(0,(1-__p2)*0.9);
+    ctx.fillStyle='rgba(255,110,40,'+(0.75*__fl).toFixed(3)+')'; ctx.beginPath(); ctx.ellipse(px,py-__r*0.15,__r,__r*0.72,0,0,7); ctx.fill();
+    ctx.fillStyle='rgba(255,170,60,'+(0.8*__fl).toFixed(3)+')'; ctx.beginPath(); ctx.ellipse(px,py-__r*0.1,__r*0.66,__r*0.5,0,0,7); ctx.fill();
+    ctx.fillStyle='rgba(255,235,150,'+(0.9*__fl).toFixed(3)+')'; ctx.beginPath(); ctx.ellipse(px,py,__r*0.36,__r*0.28,0,0,7); ctx.fill();
+    ctx.globalAlpha=Math.max(0,1-k); }
   else if(f.kind==='warnring'){
     const rr=CARDS.fireball.radius*TILE*(0.9+0.1*Math.sin(now*10));
     ctx.globalAlpha=0.55+0.25*Math.sin(now*10);
