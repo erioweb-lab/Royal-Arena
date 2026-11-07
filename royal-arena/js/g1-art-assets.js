@@ -1999,6 +1999,17 @@ window.__raTierCards=function(){ try{
 }catch(e){} };
 function buildHandUI(){
   const box=$('#cards'); box.innerHTML=''; cardEls=[];
+  try{ if(box&&!box.dataset.dlg310){ box.dataset.dlg310='1'; box.addEventListener('pointerdown',function(ev){   /* v310: 이벤트 위임 — 카드 DOM 재생성과 무관하게 탭 보장 */
+    try{ var __t=ev.target&&ev.target.closest?ev.target.closest('.card'):null; if(!__t) return;
+      var __list=box.querySelectorAll('.card'), __idx=-1; for(var __i2=0;__i2<__list.length;__i2++){ if(__list[__i2]===__t){ __idx=__i2; break; } }
+      if(__idx<0||__idx>3) return;
+      try{ ensureAudio(); }catch(e1){}
+      if(S.over) return;
+      P.sel=__idx; dragFrom=__idx;
+      try{ syncHand(); }catch(e2){ try{ P.sel=__idx; }catch(e3){} }
+      try{ tutCardTap(__idx); }catch(e4){}
+    }catch(e){}
+  }); } }catch(e){}
   for(let i=0;i<4;i++){
     const d=document.createElement('div'); d.className='card';
     d.innerHTML='<div class="cost"><span></span></div><div class="emoji"></div><div class="nm"></div>';
@@ -2016,7 +2027,7 @@ function syncHand(){
   try{ if(TUT.on&&(TUT.step===1||TUT.step===4)) setTimeout(tutShow,0); }catch(e){}   /* v147: 핸드 재구성 후 링·디밍 재적용(buildHandUI가 카드 DOM을 재생성하는 결함 수복) */
   for(let i=0;i<4;i++){
     const d=cardEls[i]; if(!d) continue;
-    const k=P.hand[i], c=CARDS[k];
+    const k=P.hand[i], c=CARDS[k]; if(!c){ continue; }   /* v310: 공백 슬롯 가드 */
     d.classList.remove('rar-c','rar-r','rar-e'); d.classList.add('rar-'+((k&&RAR[k])||'c'));
     if(d.dataset.k!==k){ d.dataset.k=k;
       d.querySelector('.emoji').innerHTML=ART[k]?`<img class="art" src="${ART[k]}" alt="">`:c.emoji;
@@ -2056,10 +2067,17 @@ function syncHUD(){
   $('#crowns-red').textContent=S.crowns.red;
   if(S.scene==='battle') for(let i=0;i<4;i++){
     const d=cardEls[i]; if(!d) continue;
-    d.classList.toggle('poor',P.elixir<CARDS[P.hand[i]].cost);
+    const __k=P.hand[i], __c=__k?CARDS[__k]:null; if(!__c) continue;   /* v310: 공백 슬롯 가드 — 매 틱 예외로 poor/sel 갱신이 얼던 근원 차단 */
+    d.classList.toggle('poor',P.elixir<__c.cost);
     d.classList.toggle('sel',P.sel===i);
   }
 }
+try{ (function(){   /* v310: 핸드 공백 슬롯 자동 치유 — 사이클 불량이 손 전체 동결로 가지 않는다 */
+  setInterval(function(){ try{
+    if(typeof S==='undefined'||!S||S.scene!=='battle'||typeof P==='undefined'||!P||!P.hand) return;
+    for(var __hi=0;__hi<4;__hi++){ if(!P.hand[__hi]||!CARDS[P.hand[__hi]]){ P.hand[__hi]=(P.queue&&P.queue.length)?P.queue.shift():Object.keys(CARDS)[Math.floor(Math.random()*Object.keys(CARDS).length)]; try{ syncHand(); }catch(e2){} } }
+  }catch(e){} },800);
+})(); }catch(e){}
 
 /* ---------- 화면 전환 & 시작 ---------- */
 function show(scene){
