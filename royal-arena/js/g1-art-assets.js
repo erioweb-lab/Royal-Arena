@@ -622,9 +622,10 @@ window.__raCombo=function(el,tgt,dmg,team){
 };
 window.__ROCKS=[1,2].map(function(n){ var im=new Image(); im.src='assets/ra_rock_'+n+'.png'; im.onload=function(){ im.__valid=true; }; im.onerror=function(){ im.__valid=false; }; return im; });   /* v324: 바위 이미지 로더 */
 window.__FXIMG={frost:(function(){var im=new Image(); im.src='assets/ra_fx_frost.png'; im.onload=function(){ im.__valid=true; }; im.onerror=function(){ im.__valid=false; }; return im; })(), crater:(function(){var im=new Image(); im.src='assets/ra_fx_crater.png'; im.onload=function(){ im.__valid=true; }; im.onerror=function(){ im.__valid=false; }; return im; })()};   /* v328: 주문 지역 프리렌더 스프라이트 */
+Object.assign(window.__FXIMG,{hitburst:(function(){var im=new Image(); im.src='assets/ra_fx_hit.png'; im.onload=function(){ im.__valid=true; }; im.onerror=function(){ im.__valid=false; }; return im; })(),boom:(function(){var im=new Image(); im.src='assets/ra_fx_boom.png'; im.onload=function(){ im.__valid=true; }; im.onerror=function(){ im.__valid=false; }; return im; })(),slash:(function(){var im=new Image(); im.src='assets/ra_fx_slash.png'; im.onload=function(){ im.__valid=true; }; im.onerror=function(){ im.__valid=false; }; return im; })(),shockring:(function(){var im=new Image(); im.src='assets/ra_fx_shock.png'; im.onload=function(){ im.__valid=true; }; im.onerror=function(){ im.__valid=false; }; return im; })(),heal:(function(){var im=new Image(); im.src='assets/ra_fx_heal.png'; im.onload=function(){ im.__valid=true; }; im.onerror=function(){ im.__valid=false; }; return im; })(),venomfog:(function(){var im=new Image(); im.src='assets/ra_fx_venom.png'; im.onload=function(){ im.__valid=true; }; im.onerror=function(){ im.__valid=false; }; return im; })()});   /* v329: 공격·광역 이펙트 스프라이트 */
 function impactProj(p,tgt){
   try{ if(p.elem&&tgt&&!tgt.dead&&tgt.key&&!tgt.isTower) window.__raCombo(p.elem,tgt,p.dmg,p.team); }catch(__ec){}   /* v324: 원거리 원소 콤보 */
-  if(p.kind==='kingshot'){ fx.push({x:p.tx,y:p.ty,t:0,dur:0.35,kind:'flash'}); fx.push({x:p.tx,y:p.ty,t:0,dur:0.5,kind:'ring',col:'rgba(255,215,94,.95)'}); addParts(p.tx,p.ty,14,'#ffe08a',3,0.5,40); sfx('boomL');
+  if(p.kind==='kingshot'){ fx.push({x:p.tx,y:p.ty,t:0,dur:0.35,kind:'flash'}); fx.push({x:p.tx,y:p.ty,t:0,dur:0.5,kind:'ring',col:'rgba(255,215,94,.95)'}); fx.push({x:p.tx,y:p.ty,t:0,dur:0.45,kind:'boom'}); addParts(p.tx,p.ty,14,'#ffe08a',3,0.5,40); sfx('boomL');
     const bs=S.boss;
     if(bs&&!bs.dead&&Math.hypot(bs.x-p.tx,bs.y-p.ty)<=1.3){ bs.doom=0; bs.stun=3; bs.shield=(bs.shield||0)*0.4; dealDamage(bs,250,'blue'); banner('🎯 킹샷 명중! 파멸기 캔슬 · 그로기 3s',1700); }
     return; }
@@ -798,7 +799,7 @@ function castSpellBase(key,team,x,y){ if(S.spells) S.spells[team]=(S.spells[team
 }
 /* v213: 회복의 바람 — 아군 광역 회복 */
 function castHealWind(team,x,y){ const c=CARDS.healwind;
-  fx.push({x,y,t:0,dur:0.6,kind:'ring',col:'rgba(143,230,168,.9)'}); addParts(x,y,12,'#8fe6a8',2.6,0.5,35); sfx('cast'); S.spellQuiet=1.2;
+  fx.push({x,y,t:0,dur:0.6,kind:'ring',col:'rgba(143,230,168,.9)'}); fx.push({x,y,t:0,dur:1.0,kind:'healzone'}); addParts(x,y,12,'#8fe6a8',2.6,0.5,35); sfx('cast'); S.spellQuiet=1.2;
   for(const u of units){ if(u.dead||u.team!==team||u.isTower) continue; if(Math.hypot(u.x-x,u.y-y)<=c.radius&&u.hp<u.maxHp){ var __hv=Math.min(c.heal,u.maxHp-u.hp); u.hp+=__hv; floats.push({dx:(Math.random()*10-5),dy:0,x:u.x,y:u.y-1.1,txt:'+'+Math.round(__hv),t:0.8,col:'#8fe6a8',big:false}); } } }
 /* v208: 유성우 — 즉시 착탄 광역+화상 3초 */
 function castMeteor(team,x,y){ const c=CARDS.meteor, et=enemyOf(team);
@@ -813,7 +814,7 @@ function castBlizzard(team,x,y){ const c=CARDS.blizzard, et=enemyOf(team);
   for(const t of towers){ if(t.dead||t.team!==et) continue; if(Math.hypot(t.x-x,t.y-y)<=c.radius+0.4) dealDamage(t,spellDmg(c.towerDmg),team); } }
 function castZap(team,x,y){
   const c=CARDS.zap, et=enemyOf(team);
-  fx.push({x,y,t:0,dur:0.4,kind:'zap'}); fx.push({x,y,t:0,dur:0.4,kind:'zapx'}); S.shake=0.3; S.spellQuiet=2.6; sfx('zap');   // v118: 자패 진정 기간
+  fx.push({x,y,t:0,dur:0.4,kind:'zap'}); fx.push({x,y,t:0,dur:0.4,kind:'zapx'}); fx.push({x,y,t:0,dur:0.5,kind:'shockring'}); S.shake=0.3; S.spellQuiet=2.6; sfx('zap');   // v118: 자패 진정 기간
   fx.push({x,y,t:0,dur:0.3,kind:'flash'});
   addParts(x,y,14,'#ffe95e',3.6,0.45,50);
   for(const u of units){ if(u.dead||u.team!==et) continue;
@@ -848,19 +849,19 @@ function explodeFireball(p){
 
 /* v324: 플라즈마 — 단일 즉발 280+화상 3초 */
 function castPlasma(team,x,y){ const c=CARDS.plasma, et=enemyOf(team);
-  fx.push({x,y,t:0,dur:0.35,kind:'flash'}); fx.push({x,y,t:0,dur:0.5,kind:'ring',col:'rgba(207,157,255,.9)'}); addParts(x,y,12,'#cf9dff',3.0,0.5,45); S.shake=0.35; S.spellQuiet=2.0; sfx('zap');
+  fx.push({x,y,t:0,dur:0.35,kind:'flash'}); fx.push({x,y,t:0,dur:0.5,kind:'ring',col:'rgba(207,157,255,.9)'}); fx.push({x,y,t:0,dur:0.55,kind:'shockring'}); addParts(x,y,12,'#cf9dff',3.0,0.5,45); S.shake=0.35; S.spellQuiet=2.0; sfx('zap');
   var __bt=null,__bd=1e9;
   for(const u of units){ if(u.dead||u.team!==et||u.isTower) continue; var __d3=Math.hypot(u.x-x,u.y-y); if(__d3<=c.radius&&__d3<__bd){ __bd=__d3; __bt=u; } }
   if(__bt){ __bt.burnT=Math.max(__bt.burnT||0,3); __bt.burnDps=20; __bt.burnAcc=0; dealDamage(__bt,spellDmg(c.dmg),team,true); floats.push({dx:(Math.random()*10-5),dy:0,x:__bt.x,y:__bt.y-1.4,txt:'🌀 '+Math.round(spellDmg(c.dmg)),t:0.8,col:'#cf9dff',big:true}); fx.push({x:__bt.x,y:__bt.y,t:0,dur:0.4,kind:'ring',col:'rgba(230,210,255,.95)'}); addParts(__bt.x,__bt.y,10,'#e6d2ff',2.6,0.5,35); }
   for(const t of towers){ if(t.dead||t.team!==et) continue; if(Math.hypot(t.x-x,t.y-y)<=c.radius+0.5) dealDamage(t,spellDmg(c.towerDmg),team); } }
 /* v324: 맹독 안개 — 광역 중독 틱 6초 */
 function castVenom(team,x,y){ const c=CARDS.venom, et=enemyOf(team);
-  fx.push({x,y,t:0,dur:0.7,kind:'ring',col:'rgba(165,232,92,.85)'}); fx.push({x,y,t:0.15,dur:0.9,kind:'ring',col:'rgba(165,232,92,.5)'}); addParts(x,y,16,'#a5e85c',2.8,0.6,25); sfx('cast'); S.spellQuiet=1.6;
+  fx.push({x,y,t:0,dur:0.7,kind:'ring',col:'rgba(165,232,92,.85)'}); fx.push({x,y,t:0.15,dur:0.9,kind:'ring',col:'rgba(165,232,92,.5)'}); fx.push({x,y,t:0,dur:6,kind:'venomzone'}); addParts(x,y,16,'#a5e85c',2.8,0.6,25); sfx('cast'); S.spellQuiet=1.6;
   for(const u of units){ if(u.dead||u.team!==et) continue; if(Math.hypot(u.x-x,u.y-y)<=c.radius){ u.venT=Math.max(u.venT||0,6); u.venDps=30; u.venAcc=0; floats.push({dx:(Math.random()*10-5),dy:0,x:u.x,y:u.y-1.2,txt:'☠ 중독',t:0.7,col:'#a5e85c',big:false}); dealDamage(u,spellDmg(c.dmg),team,true); } }
   for(const t of towers){ if(t.dead||t.team!==et) continue; if(Math.hypot(t.x-x,t.y-y)<=c.radius+0.4) dealDamage(t,spellDmg(c.towerDmg),team); } }
 /* v324: 충격파 — 광역 기절 0.5초 */
 function castShock(team,x,y){ const c=CARDS.shock, et=enemyOf(team);
-  fx.push({x,y,t:0,dur:0.45,kind:'zapx'}); fx.push({x,y,t:0,dur:0.55,kind:'ring',col:'rgba(255,233,94,.9)'}); addParts(x,y,18,'#ffe95e',3.2,0.55,55); S.shake=0.5; S.spellQuiet=2.4; sfx('boomL');
+  fx.push({x,y,t:0,dur:0.45,kind:'zapx'}); fx.push({x,y,t:0,dur:0.55,kind:'ring',col:'rgba(255,233,94,.9)'}); fx.push({x,y,t:0,dur:0.6,kind:'shockring'}); addParts(x,y,18,'#ffe95e',3.2,0.55,55); S.shake=0.5; S.spellQuiet=2.4; sfx('boomL');
   for(const u of units){ if(u.dead||u.team!==et) continue; if(Math.hypot(u.x-x,u.y-y)<=c.radius){ u.stun=Math.max(u.stun||0,c.stun); floats.push({dx:(Math.random()*10-5),dy:0,x:u.x,y:u.y-1.2,txt:'💫 기절',t:0.7,col:'#ffe95e',big:false}); dealDamage(u,spellDmg(c.dmg),team,true); } }
   for(const t of towers){ if(t.dead||t.team!==et) continue; if(Math.hypot(t.x-x,t.y-y)<=c.radius+0.4) dealDamage(t,spellDmg(c.towerDmg),team); } }
 
@@ -1864,10 +1865,11 @@ function drawProj(p){
 function drawFx(f){
   const k=f.t/f.dur, px=f.x*TILE, py=f.y*TILE;
   ctx.globalAlpha=Math.max(0,1-k);
-  if(f.kind==='hit'){ ctx.fillStyle='#fff';
+  if(f.kind==='hit'){ var __hb=window.__FXIMG&&window.__FXIMG.hitburst; if(__hb&&__hb.complete&&__hb.naturalWidth>0&&__hb.__valid!==false){ var _hx=f.x*TILE,_hy=f.y*TILE,_hw=TILE*1.25; ctx.save(); ctx.globalAlpha=0.92; ctx.drawImage(__hb,_hx-_hw/2,_hy-_hw*0.6,_hw,_hw); ctx.restore(); }   /* v329: 타격 버스트 스프라이트(타워 화살 포함) */
+   ctx.fillStyle='#fff';
     for(let i=0;i<4;i++){ const a=i*1.57+0.6;
       ctx.fillRect(px+Math.cos(a)*6*(1+k*2)-1.5,py+Math.sin(a)*6*(1+k*2)-1.5,3,3); } }
-    else if(f.kind==='slash'){
+    else if(f.kind==='slash'){ var __sl=window.__FXIMG&&window.__FXIMG.slash; if(__sl&&__sl.complete&&__sl.naturalWidth>0&&__sl.__valid!==false){ ctx.save(); ctx.translate(f.x*TILE,f.y*TILE); ctx.rotate(f.a||0); var _sw2=TILE*1.5; ctx.globalAlpha=0.9; ctx.drawImage(__sl,-_sw2/2,-_sw2/2,_sw2,_sw2); ctx.restore(); }   /* v329: 근접 베기 스프라이트(보스 포함) */
     ctx.strokeStyle=f.col; ctx.lineWidth=3.5; ctx.beginPath();
     ctx.arc(px,py,TILE*0.42,(f.a||0)-0.9+(1-k)*0.4,(f.a||0)+0.9+(1-k)*0.4); ctx.stroke();
   }
@@ -1936,6 +1938,21 @@ function drawFx(f){
       ctx.beginPath(); ctx.arc(_px+Math.sin(i*2.2)*_rr*0.2, _py-_st*_rr*0.95-_rr*0.1, 4+_st*7, 0, 7); ctx.fill(); }
     ctx.restore();
   }
+  else if(f.kind==='shockring'){   /* v329: 전기 충격 링 스프라이트(플라즈마·충격파·자패) */
+    var __sk=window.__FXIMG&&window.__FXIMG.shockring;
+    var _px=f.x*TILE,_py=f.y*TILE,_sc=TILE*2.4*(0.55+0.5*k);
+    if(__sk&&__sk.complete&&__sk.naturalWidth>0&&__sk.__valid!==false){ ctx.save(); ctx.globalAlpha=0.95*(1-k*0.4); ctx.drawImage(__sk,_px-_sc/2,_py-_sc*0.55,_sc,_sc); ctx.restore(); }
+  }
+  else if(f.kind==='healzone'){   /* v329: 회복 오라 스프라이트(회복의 바람) */
+    var __hl=window.__FXIMG&&window.__FXIMG.heal;
+    var _px2=f.x*TILE,_py2=f.y*TILE,_sc2=TILE*2.2*(0.85+0.15*Math.sin(now*6));
+    if(__hl&&__hl.complete&&__hl.naturalWidth>0&&__hl.__valid!==false){ ctx.save(); ctx.globalAlpha=0.85*(1-k); ctx.drawImage(__hl,_px2-_sc2/2,_py2-_sc2*0.55,_sc2,_sc2); ctx.restore(); }
+  }
+  else if(f.kind==='venomzone'){   /* v329: 맹독 안개 스프라이트(시전 지역 6초) */
+    var __vf=window.__FXIMG&&window.__FXIMG.venomfog;
+    var _px3=f.x*TILE,_py3=f.y*TILE,_a0=Math.min(1,f.t*1.5)*Math.min(1,(f.dur-f.t)*1.5);
+    if(__vf&&__vf.complete&&__vf.naturalWidth>0&&__vf.__valid!==false){ ctx.save(); ctx.globalAlpha=(0.8+0.12*Math.sin(now*3+f.x))*_a0; var _sc3=TILE*4.4; ctx.drawImage(__vf,_px3-_sc3/2,_py3-_sc3*0.55,_sc3,_sc3); ctx.restore(); }
+  }
   else if(f.kind==='warnring'){
     const rr=CARDS.fireball.radius*TILE*(0.9+0.1*Math.sin(now*10));
     ctx.globalAlpha=0.55+0.25*Math.sin(now*10);
@@ -1980,7 +1997,7 @@ function drawFx(f){
     ctx.globalAlpha=1; ctx.font='26px sans-serif'; ctx.textAlign='center';
     ctx.fillText('👑',cx2,cy2);
   }
-  else if(f.kind==='boom'){
+  else if(f.kind==='boom'){ var __bm=window.__FXIMG&&window.__FXIMG.boom; if(__bm&&__bm.complete&&__bm.naturalWidth>0&&__bm.__valid!==false){ var _bw=TILE*1.9*(0.8+0.25*k); ctx.save(); ctx.globalAlpha=0.95*(1-k*0.55); ctx.drawImage(__bm,f.x*TILE-_bw/2,f.y*TILE-_bw*0.6,_bw,_bw); ctx.restore(); }   /* v329: 폭발 스프라이트(성장+페이드) */
     if(k<0.3){ ctx.globalAlpha=(0.3-k)*3.3; ctx.fillStyle='#fff';
       ctx.beginPath(); ctx.arc(px,py,16+k*90,0,7); ctx.fill(); ctx.globalAlpha=Math.max(0,1-k); }
     ctx.fillStyle=k<0.4?'#ffdd55':'#ff7b1c'; ctx.beginPath(); ctx.arc(px,py,10+k*44,0,7); ctx.fill();
