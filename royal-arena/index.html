@@ -1154,7 +1154,7 @@ html body .theme-row .t-btn{height:34px !important;font-size:11px !important;lin
 html body .t-links button, html body #btn-deck-random, html body #btn-deck-edit{background:linear-gradient(180deg,rgba(14,34,61,.95),rgba(10,22,40,.95)) !important;border:1px solid #c89b3c !important;border-radius:14px !important;color:#f2f6ff !important;font-weight:700 !important;line-height:1.2 !important;text-shadow:none !important;min-height:34px !important;display:flex !important;align-items:center !important;justify-content:center !important;overflow:hidden !important;text-overflow:ellipsis !important;white-space:nowrap !important;padding:4px 8px !important}
 html body #deck-edit{padding-bottom:150px !important}
 </style>
-<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v316</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v317</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1489,6 +1489,14 @@ html body #dpsw .dw-t,html body #dpsw .dw-b{background:rgba(10,18,34,.5)!importa
 #cards .card.poor{filter:grayscale(.85) brightness(.42)}
 #cards .card.poor .art{filter:grayscale(.9) brightness(.7)}
 #next-card,#next-slot{filter:brightness(1.08) saturate(1.1)}
+</style>
+<style id="ui-v317">
+/* v317: 활성 카드 일괄 밝은색 — 사용자 기준: 선택(sel) 상태처럼 골드 테두리+글로우를 활성 카드 전체에 적용, 미충족(poor)은 어둡게 유지해 상태 대비 확보 */
+#cards .card{filter:brightness(1.22) saturate(1.22);border:2px solid #ffd54f;box-shadow:0 0 12px rgba(255,213,79,.4),0 0 22px rgba(255,255,255,.15)}
+#cards .card .art{filter:brightness(1.1) saturate(1.12)}
+#cards .card .nm{color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.8)}
+#cards .card.poor{filter:grayscale(.85) brightness(.42);border-color:#39466a;box-shadow:none;opacity:.85}
+#cards .card.poor .art{filter:grayscale(.9) brightness(.7)}
 </style>
 <script id="ra-hud-enforce">(function(){function boot(){var st=document.getElementById("ra-hud-css");if(st&&st.parentNode!==document.head)document.head.appendChild(st);}(function(){try{boot()}catch(e){}})();})();</script><style id="ui-v238">
 /* v238: 배틀 시작 골드 최종 선언(문서 최말단 — 모든 선행 블록 제압) */
