@@ -19,7 +19,7 @@ function ensureSkillUI(){
     st2.textContent='#sk-grid{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;max-width:660px;margin:10px auto} .sk-col{flex:1;min-width:172px;display:flex;flex-direction:column;gap:8px} .sk-item{position:relative;background:rgba(18,24,43,.9);border:1px solid #3d4c73;border-radius:10px;padding:8px 44px 8px 10px;color:#dfe8ff;text-align:left;font-family:var(--fd,\'Pretendard Variable\',\'Noto Sans KR\',sans-serif);font-size:13.5px}   /* v121: 아이템 폰트 정합 */ .sk-item small{display:block;color:#9fb0d0;font-size:11px;margin:2px 0 6px} .sk-item button{font-family:var(--fd,\'Pretendard Variable\',\'Noto Sans KR\',sans-serif);position:absolute;right:8px;width:26px;height:26px;border-radius:8px;border:1px solid #FFB300;background:rgba(18,24,43,.9);color:#FFD54F;font-weight:800;cursor:pointer} .sk-item button:disabled{opacity:.35;cursor:default} .sk-item .sk-lv{color:#FFD54F;font-weight:700;font-size:12px} .sk-item.t2{border-color:#7f8fbb} .sk-item.t3{border-color:#c77dff} #sk-sp{text-align:center;color:#FFD54F;font-weight:700;margin:6px 0} #btn-skill-reset{display:block;margin:10px auto 0;width:130px;padding:8px 0;border-radius:10px;border:1.5px solid #e64545;background:rgba(18,24,43,.85);color:#ff9d9d;font-weight:700;cursor:pointer} #overlay-skill .rpanel{max-height:82vh;overflow-y:auto} #btn-skill,#btn-profile{font-family:\'Black Han Sans\',\'Jua\',sans-serif;font-size:19px;padding:12px 34px;border-radius:14px;border:2px solid #3d4c73;color:#dfe8ff;background:rgba(18,24,43,.85);box-shadow:0 5px 0 #1c2740,0 9px 18px rgba(0,0,0,.4);text-shadow:0 2px 0 rgba(0,0,0,.6);transition:transform .06s} #btn-skill:active,#btn-profile:active{transform:translateY(3px)} #btn-skill-close,#btn-prf-close{display:block;margin:14px auto 0;width:120px;padding:9px 0;border-radius:12px;border:1.5px solid #FFB300;background:rgba(18,24,43,.85);color:#FFD54F;font-weight:700;font-family:var(--fd,\'Pretendard Variable\',\'Noto Sans KR\',sans-serif);cursor:pointer} @media (max-width:420px){#btn-skill,#btn-profile{font-size:16px;padding:10px 22px}}';   // v121: 로비 버튼·닫기 — 유물 규격 통일
     document.head.appendChild(st2); }
   var ov=document.createElement('div'); ov.id='overlay-skill'; ov.className='overlay hidden';
-  ov.innerHTML='<div class="rpanel"><h2>🎓 전술 연구소</h2><p class="rsub">승리 보상 SP로 영구 강화 — 연쇄 환불·총 SP 보존</p><div id="sk-sp"></div><div id="sk-grid"></div><button id="btn-skill-reset">전체 초기화</button><button id="btn-skill-close">닫기</button></div>';
+  ov.innerHTML='<div class="rpanel"><h2>🎓 전술 연구소</h2><p class="rsub">SP로 영구 강화</p><div id="sk-sp"></div><div id="sk-grid"></div><button id="btn-skill-reset">전체 초기화</button><button id="btn-skill-close">닫기</button></div>';
   document.body.appendChild(ov);
   ov.addEventListener('click',function(ev){ if(ev.target===ov) ov.classList.add('hidden'); });
   var cl=document.getElementById('btn-skill-close'); if(cl) cl.onclick=function(){ ov.classList.add('hidden'); };
@@ -128,7 +128,7 @@ function renderRelicList(){
 function ensureRelicUI(){
   if(document.getElementById('overlay-relic')) return;
   var ov=document.createElement('div'); ov.id='overlay-relic'; ov.className='overlay hidden';
-  ov.innerHTML='<div class="rpanel"><h2>🏺 유물</h2><p class="rsub">승리로 해금 — 한 번에 하나만 착용</p><div id="relic-list"></div><button id="btn-relic-close">닫기</button></div>';
+  ov.innerHTML='<div class="rpanel"><h2>🏺 유물</h2><p class="rsub">승리로 해금</p><div id="relic-list"></div><button id="btn-relic-close">닫기</button></div>';
   document.body.appendChild(ov);
   ov.addEventListener('click',function(ev){ if(ev.target===ov) ov.classList.add('hidden'); });
   var cl=document.getElementById('btn-relic-close'); if(cl) cl.onclick=function(){ ov.classList.add('hidden'); };
@@ -168,7 +168,7 @@ function ensureSkillUI(){
     st2.textContent='#sk-grid{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;max-width:660px;margin:10px auto} .sk-col{flex:1;min-width:172px;display:flex;flex-direction:column;gap:8px} .sk-item{position:relative;background:rgba(18,24,43,.9);border:1px solid #3d4c73;border-radius:10px;padding:8px 44px 8px 10px;color:#dfe8ff;text-align:left;font-family:var(--fd,\'Pretendard Variable\',\'Noto Sans KR\',sans-serif);font-size:13.5px}   /* v121: 아이템 폰트 정합 */ .sk-item small{display:block;color:#9fb0d0;font-size:11px;margin:2px 0 6px} .sk-item button{font-family:var(--fd,\'Pretendard Variable\',\'Noto Sans KR\',sans-serif);position:absolute;right:8px;width:26px;height:26px;border-radius:8px;border:1px solid #FFB300;background:rgba(18,24,43,.9);color:#FFD54F;font-weight:800;cursor:pointer} .sk-item button:disabled{opacity:.35;cursor:default} .sk-item .sk-lv{color:#FFD54F;font-weight:700;font-size:12px} .sk-item.t2{border-color:#7f8fbb} .sk-item.t3{border-color:#c77dff} #sk-sp{text-align:center;color:#FFD54F;font-weight:700;margin:6px 0} #btn-skill-reset{display:block;margin:10px auto 0;width:130px;padding:8px 0;border-radius:10px;border:1.5px solid #e64545;background:rgba(18,24,43,.85);color:#ff9d9d;font-weight:700;cursor:pointer} #overlay-skill .rpanel{max-height:82vh;overflow-y:auto} #btn-skill,#btn-profile{font-family:\'Black Han Sans\',\'Jua\',sans-serif;font-size:19px;padding:12px 34px;border-radius:14px;border:2px solid #3d4c73;color:#dfe8ff;background:rgba(18,24,43,.85);box-shadow:0 5px 0 #1c2740,0 9px 18px rgba(0,0,0,.4);text-shadow:0 2px 0 rgba(0,0,0,.6);transition:transform .06s} #btn-skill:active,#btn-profile:active{transform:translateY(3px)} #btn-skill-close,#btn-prf-close{display:block;margin:14px auto 0;width:120px;padding:9px 0;border-radius:12px;border:1.5px solid #FFB300;background:rgba(18,24,43,.85);color:#FFD54F;font-weight:700;font-family:var(--fd,\'Pretendard Variable\',\'Noto Sans KR\',sans-serif);cursor:pointer} @media (max-width:420px){#btn-skill,#btn-profile{font-size:16px;padding:10px 22px}}';   // v121: 로비 버튼·닫기 — 유물 규격 통일
     document.head.appendChild(st2); }
   var ov=document.createElement('div'); ov.id='overlay-skill'; ov.className='overlay hidden';
-  ov.innerHTML='<div class="rpanel"><h2>🎓 전술 연구소</h2><p class="rsub">승리 보상 SP로 영구 강화 — 연쇄 환불·총 SP 보존</p><div id="sk-sp"></div><div id="sk-grid"></div><button id="btn-skill-reset">전체 초기화</button><button id="btn-skill-close">닫기</button></div>';
+  ov.innerHTML='<div class="rpanel"><h2>🎓 전술 연구소</h2><p class="rsub">SP로 영구 강화</p><div id="sk-sp"></div><div id="sk-grid"></div><button id="btn-skill-reset">전체 초기화</button><button id="btn-skill-close">닫기</button></div>';
   document.body.appendChild(ov);
   ov.addEventListener('click',function(ev){ if(ev.target===ov) ov.classList.add('hidden'); });
   var cl=document.getElementById('btn-skill-close'); if(cl) cl.onclick=function(){ ov.classList.add('hidden'); };
@@ -277,7 +277,7 @@ function renderRelicList(){
 function ensureRelicUI(){
   if(document.getElementById('overlay-relic')) return;
   var ov=document.createElement('div'); ov.id='overlay-relic'; ov.className='overlay hidden';
-  ov.innerHTML='<div class="rpanel"><h2>🏺 유물</h2><p class="rsub">승리로 해금 — 한 번에 하나만 착용</p><div id="relic-list"></div><button id="btn-relic-close">닫기</button></div>';
+  ov.innerHTML='<div class="rpanel"><h2>🏺 유물</h2><p class="rsub">승리로 해금</p><div id="relic-list"></div><button id="btn-relic-close">닫기</button></div>';
   document.body.appendChild(ov);
   ov.addEventListener('click',function(ev){ if(ev.target===ov) ov.classList.add('hidden'); });
   var cl=document.getElementById('btn-relic-close'); if(cl) cl.onclick=function(){ ov.classList.add('hidden'); };
@@ -305,7 +305,7 @@ function ensureSkillUI(){
     st2.textContent='#sk-grid{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;max-width:660px;margin:10px auto} .sk-col{flex:1;min-width:172px;display:flex;flex-direction:column;gap:8px} .sk-item{position:relative;background:rgba(18,24,43,.9);border:1px solid #3d4c73;border-radius:10px;padding:8px 44px 8px 10px;color:#dfe8ff;text-align:left;font-family:var(--fd,\'Pretendard Variable\',\'Noto Sans KR\',sans-serif);font-size:13.5px}   /* v121: 아이템 폰트 정합 */ .sk-item small{display:block;color:#9fb0d0;font-size:11px;margin:2px 0 6px} .sk-item button{font-family:var(--fd,\'Pretendard Variable\',\'Noto Sans KR\',sans-serif);position:absolute;right:8px;width:26px;height:26px;border-radius:8px;border:1px solid #FFB300;background:rgba(18,24,43,.9);color:#FFD54F;font-weight:800;cursor:pointer} .sk-item button:disabled{opacity:.35;cursor:default} .sk-item .sk-lv{color:#FFD54F;font-weight:700;font-size:12px} .sk-item.t2{border-color:#7f8fbb} .sk-item.t3{border-color:#c77dff} #sk-sp{text-align:center;color:#FFD54F;font-weight:700;margin:6px 0} #btn-skill-reset{display:block;margin:10px auto 0;width:130px;padding:8px 0;border-radius:10px;border:1.5px solid #e64545;background:rgba(18,24,43,.85);color:#ff9d9d;font-weight:700;cursor:pointer} #overlay-skill .rpanel{max-height:82vh;overflow-y:auto} #btn-skill,#btn-profile{font-family:\'Black Han Sans\',\'Jua\',sans-serif;font-size:19px;padding:12px 34px;border-radius:14px;border:2px solid #3d4c73;color:#dfe8ff;background:rgba(18,24,43,.85);box-shadow:0 5px 0 #1c2740,0 9px 18px rgba(0,0,0,.4);text-shadow:0 2px 0 rgba(0,0,0,.6);transition:transform .06s} #btn-skill:active,#btn-profile:active{transform:translateY(3px)} #btn-skill-close,#btn-prf-close{display:block;margin:14px auto 0;width:120px;padding:9px 0;border-radius:12px;border:1.5px solid #FFB300;background:rgba(18,24,43,.85);color:#FFD54F;font-weight:700;font-family:var(--fd,\'Pretendard Variable\',\'Noto Sans KR\',sans-serif);cursor:pointer} @media (max-width:420px){#btn-skill,#btn-profile{font-size:16px;padding:10px 22px}}';   // v121: 로비 버튼·닫기 — 유물 규격 통일
     document.head.appendChild(st2); }
   var ov=document.createElement('div'); ov.id='overlay-skill'; ov.className='overlay hidden';
-  ov.innerHTML='<div class="rpanel"><h2>🎓 전술 연구소</h2><p class="rsub">승리 보상 SP로 영구 강화 — 연쇄 환불·총 SP 보존</p><div id="sk-sp"></div><div id="sk-grid"></div><button id="btn-skill-reset">전체 초기화</button><button id="btn-skill-close">닫기</button></div>';
+  ov.innerHTML='<div class="rpanel"><h2>🎓 전술 연구소</h2><p class="rsub">SP로 영구 강화</p><div id="sk-sp"></div><div id="sk-grid"></div><button id="btn-skill-reset">전체 초기화</button><button id="btn-skill-close">닫기</button></div>';
   document.body.appendChild(ov);
   ov.addEventListener('click',function(ev){ if(ev.target===ov) ov.classList.add('hidden'); });
   var cl=document.getElementById('btn-skill-close'); if(cl) cl.onclick=function(){ ov.classList.add('hidden'); };
@@ -414,7 +414,7 @@ function renderRelicList(){
 function ensureRelicUI(){
   if(document.getElementById('overlay-relic')) return;
   var ov=document.createElement('div'); ov.id='overlay-relic'; ov.className='overlay hidden';
-  ov.innerHTML='<div class="rpanel"><h2>🏺 유물</h2><p class="rsub">승리로 해금 — 한 번에 하나만 착용</p><div id="relic-list"></div><button id="btn-relic-close">닫기</button></div>';
+  ov.innerHTML='<div class="rpanel"><h2>🏺 유물</h2><p class="rsub">승리로 해금</p><div id="relic-list"></div><button id="btn-relic-close">닫기</button></div>';
   document.body.appendChild(ov);
   ov.addEventListener('click',function(ev){ if(ev.target===ov) ov.classList.add('hidden'); });
   var cl=document.getElementById('btn-relic-close'); if(cl) cl.onclick=function(){ ov.classList.add('hidden'); };
@@ -441,7 +441,7 @@ function ensureSkillUI(){
     st2.textContent='#sk-grid{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;max-width:660px;margin:10px auto} .sk-col{flex:1;min-width:172px;display:flex;flex-direction:column;gap:8px} .sk-item{position:relative;background:rgba(18,24,43,.9);border:1px solid #3d4c73;border-radius:10px;padding:8px 44px 8px 10px;color:#dfe8ff;text-align:left;font-family:var(--fd,\'Pretendard Variable\',\'Noto Sans KR\',sans-serif);font-size:13.5px}   /* v121: 아이템 폰트 정합 */ .sk-item small{display:block;color:#9fb0d0;font-size:11px;margin:2px 0 6px} .sk-item button{font-family:var(--fd,\'Pretendard Variable\',\'Noto Sans KR\',sans-serif);position:absolute;right:8px;width:26px;height:26px;border-radius:8px;border:1px solid #FFB300;background:rgba(18,24,43,.9);color:#FFD54F;font-weight:800;cursor:pointer} .sk-item button:disabled{opacity:.35;cursor:default} .sk-item .sk-lv{color:#FFD54F;font-weight:700;font-size:12px} .sk-item.t2{border-color:#7f8fbb} .sk-item.t3{border-color:#c77dff} #sk-sp{text-align:center;color:#FFD54F;font-weight:700;margin:6px 0} #btn-skill-reset{display:block;margin:10px auto 0;width:130px;padding:8px 0;border-radius:10px;border:1.5px solid #e64545;background:rgba(18,24,43,.85);color:#ff9d9d;font-weight:700;cursor:pointer} #overlay-skill .rpanel{max-height:82vh;overflow-y:auto} #btn-skill,#btn-profile{font-family:\'Black Han Sans\',\'Jua\',sans-serif;font-size:19px;padding:12px 34px;border-radius:14px;border:2px solid #3d4c73;color:#dfe8ff;background:rgba(18,24,43,.85);box-shadow:0 5px 0 #1c2740,0 9px 18px rgba(0,0,0,.4);text-shadow:0 2px 0 rgba(0,0,0,.6);transition:transform .06s} #btn-skill:active,#btn-profile:active{transform:translateY(3px)} #btn-skill-close,#btn-prf-close{display:block;margin:14px auto 0;width:120px;padding:9px 0;border-radius:12px;border:1.5px solid #FFB300;background:rgba(18,24,43,.85);color:#FFD54F;font-weight:700;font-family:var(--fd,\'Pretendard Variable\',\'Noto Sans KR\',sans-serif);cursor:pointer} @media (max-width:420px){#btn-skill,#btn-profile{font-size:16px;padding:10px 22px}}';   // v121: 로비 버튼·닫기 — 유물 규격 통일
     document.head.appendChild(st2); }
   var ov=document.createElement('div'); ov.id='overlay-skill'; ov.className='overlay hidden';
-  ov.innerHTML='<div class="rpanel"><h2>🎓 전술 연구소</h2><p class="rsub">승리 보상 SP로 영구 강화 — 연쇄 환불·총 SP 보존</p><div id="sk-sp"></div><div id="sk-grid"></div><button id="btn-skill-reset">전체 초기화</button><button id="btn-skill-close">닫기</button></div>';
+  ov.innerHTML='<div class="rpanel"><h2>🎓 전술 연구소</h2><p class="rsub">SP로 영구 강화</p><div id="sk-sp"></div><div id="sk-grid"></div><button id="btn-skill-reset">전체 초기화</button><button id="btn-skill-close">닫기</button></div>';
   document.body.appendChild(ov);
   ov.addEventListener('click',function(ev){ if(ev.target===ov) ov.classList.add('hidden'); });
   var cl=document.getElementById('btn-skill-close'); if(cl) cl.onclick=function(){ ov.classList.add('hidden'); };
@@ -550,7 +550,7 @@ function renderRelicList(){
 function ensureRelicUI(){
   if(document.getElementById('overlay-relic')) return;
   var ov=document.createElement('div'); ov.id='overlay-relic'; ov.className='overlay hidden';
-  ov.innerHTML='<div class="rpanel"><h2>🏺 유물</h2><p class="rsub">승리로 해금 — 한 번에 하나만 착용</p><div id="relic-list"></div><button id="btn-relic-close">닫기</button></div>';
+  ov.innerHTML='<div class="rpanel"><h2>🏺 유물</h2><p class="rsub">승리로 해금</p><div id="relic-list"></div><button id="btn-relic-close">닫기</button></div>';
   document.body.appendChild(ov);
   ov.addEventListener('click',function(ev){ if(ev.target===ov) ov.classList.add('hidden'); });
   var cl=document.getElementById('btn-relic-close'); if(cl) cl.onclick=function(){ ov.classList.add('hidden'); };
@@ -577,7 +577,7 @@ function ensureSkillUI(){
     st2.textContent='#sk-grid{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;max-width:660px;margin:10px auto} .sk-col{flex:1;min-width:172px;display:flex;flex-direction:column;gap:8px} .sk-item{position:relative;background:rgba(18,24,43,.9);border:1px solid #3d4c73;border-radius:10px;padding:8px 44px 8px 10px;color:#dfe8ff;text-align:left;font-family:var(--fd,\'Pretendard Variable\',\'Noto Sans KR\',sans-serif);font-size:13.5px}   /* v121: 아이템 폰트 정합 */ .sk-item small{display:block;color:#9fb0d0;font-size:11px;margin:2px 0 6px} .sk-item button{font-family:var(--fd,\'Pretendard Variable\',\'Noto Sans KR\',sans-serif);position:absolute;right:8px;width:26px;height:26px;border-radius:8px;border:1px solid #FFB300;background:rgba(18,24,43,.9);color:#FFD54F;font-weight:800;cursor:pointer} .sk-item button:disabled{opacity:.35;cursor:default} .sk-item .sk-lv{color:#FFD54F;font-weight:700;font-size:12px} .sk-item.t2{border-color:#7f8fbb} .sk-item.t3{border-color:#c77dff} #sk-sp{text-align:center;color:#FFD54F;font-weight:700;margin:6px 0} #btn-skill-reset{display:block;margin:10px auto 0;width:130px;padding:8px 0;border-radius:10px;border:1.5px solid #e64545;background:rgba(18,24,43,.85);color:#ff9d9d;font-weight:700;cursor:pointer} #overlay-skill .rpanel{max-height:82vh;overflow-y:auto} #btn-skill,#btn-profile{font-family:\'Black Han Sans\',\'Jua\',sans-serif;font-size:19px;padding:12px 34px;border-radius:14px;border:2px solid #3d4c73;color:#dfe8ff;background:rgba(18,24,43,.85);box-shadow:0 5px 0 #1c2740,0 9px 18px rgba(0,0,0,.4);text-shadow:0 2px 0 rgba(0,0,0,.6);transition:transform .06s} #btn-skill:active,#btn-profile:active{transform:translateY(3px)} #btn-skill-close,#btn-prf-close{display:block;margin:14px auto 0;width:120px;padding:9px 0;border-radius:12px;border:1.5px solid #FFB300;background:rgba(18,24,43,.85);color:#FFD54F;font-weight:700;font-family:var(--fd,\'Pretendard Variable\',\'Noto Sans KR\',sans-serif);cursor:pointer} @media (max-width:420px){#btn-skill,#btn-profile{font-size:16px;padding:10px 22px}}';   // v121: 로비 버튼·닫기 — 유물 규격 통일
     document.head.appendChild(st2); }
   var ov=document.createElement('div'); ov.id='overlay-skill'; ov.className='overlay hidden';
-  ov.innerHTML='<div class="rpanel"><h2>🎓 전술 연구소</h2><p class="rsub">승리 보상 SP로 영구 강화 — 연쇄 환불·총 SP 보존</p><div id="sk-sp"></div><div id="sk-grid"></div><button id="btn-skill-reset">전체 초기화</button><button id="btn-skill-close">닫기</button></div>';
+  ov.innerHTML='<div class="rpanel"><h2>🎓 전술 연구소</h2><p class="rsub">SP로 영구 강화</p><div id="sk-sp"></div><div id="sk-grid"></div><button id="btn-skill-reset">전체 초기화</button><button id="btn-skill-close">닫기</button></div>';
   document.body.appendChild(ov);
   ov.addEventListener('click',function(ev){ if(ev.target===ov) ov.classList.add('hidden'); });
   var cl=document.getElementById('btn-skill-close'); if(cl) cl.onclick=function(){ ov.classList.add('hidden'); };
@@ -686,7 +686,7 @@ function renderRelicList(){
 function ensureRelicUI(){
   if(document.getElementById('overlay-relic')) return;
   var ov=document.createElement('div'); ov.id='overlay-relic'; ov.className='overlay hidden';
-  ov.innerHTML='<div class="rpanel"><h2>🏺 유물</h2><p class="rsub">승리로 해금 — 한 번에 하나만 착용</p><div id="relic-list"></div><button id="btn-relic-close">닫기</button></div>';
+  ov.innerHTML='<div class="rpanel"><h2>🏺 유물</h2><p class="rsub">승리로 해금</p><div id="relic-list"></div><button id="btn-relic-close">닫기</button></div>';
   document.body.appendChild(ov);
   ov.addEventListener('click',function(ev){ if(ev.target===ov) ov.classList.add('hidden'); });
   var cl=document.getElementById('btn-relic-close'); if(cl) cl.onclick=function(){ ov.classList.add('hidden'); };
@@ -713,7 +713,7 @@ function ensureSkillUI(){
     st2.textContent='#sk-grid{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;max-width:660px;margin:10px auto} .sk-col{flex:1;min-width:172px;display:flex;flex-direction:column;gap:8px} .sk-item{position:relative;background:rgba(18,24,43,.9);border:1px solid #3d4c73;border-radius:10px;padding:8px 44px 8px 10px;color:#dfe8ff;text-align:left} .sk-item small{display:block;color:#9fb0d0;font-size:11px;margin:2px 0 6px} .sk-item button{position:absolute;right:8px;width:26px;height:26px;border-radius:8px;border:1px solid #FFB300;background:rgba(18,24,43,.9);color:#FFD54F;font-weight:800;cursor:pointer} .sk-item button:disabled{opacity:.35;cursor:default} .sk-item .sk-lv{color:#FFD54F;font-weight:700;font-size:12px} .sk-item.t2{border-color:#7f8fbb} .sk-item.t3{border-color:#c77dff} #sk-sp{text-align:center;color:#FFD54F;font-weight:700;margin:6px 0} #btn-skill-reset{display:block;margin:10px auto 0;width:130px;padding:8px 0;border-radius:10px;border:1.5px solid #e64545;background:rgba(18,24,43,.85);color:#ff9d9d;font-weight:700;cursor:pointer} #overlay-skill .rpanel{max-height:82vh;overflow-y:auto}';
     document.head.appendChild(st2); }
   var ov=document.createElement('div'); ov.id='overlay-skill'; ov.className='overlay hidden';
-  ov.innerHTML='<div class="rpanel"><h2>🎓 전술 연구소</h2><p class="rsub">승리 보상 SP로 영구 강화 — 연쇄 환불·총 SP 보존</p><div id="sk-sp"></div><div id="sk-grid"></div><button id="btn-skill-reset">전체 초기화</button><button id="btn-skill-close">닫기</button></div>';
+  ov.innerHTML='<div class="rpanel"><h2>🎓 전술 연구소</h2><p class="rsub">SP로 영구 강화</p><div id="sk-sp"></div><div id="sk-grid"></div><button id="btn-skill-reset">전체 초기화</button><button id="btn-skill-close">닫기</button></div>';
   document.body.appendChild(ov);
   ov.addEventListener('click',function(ev){ if(ev.target===ov) ov.classList.add('hidden'); });
   var cl=document.getElementById('btn-skill-close'); if(cl) cl.onclick=function(){ ov.classList.add('hidden'); };
@@ -822,7 +822,7 @@ function renderRelicList(){
 function ensureRelicUI(){
   if(document.getElementById('overlay-relic')) return;
   var ov=document.createElement('div'); ov.id='overlay-relic'; ov.className='overlay hidden';
-  ov.innerHTML='<div class="rpanel"><h2>🏺 유물</h2><p class="rsub">승리로 해금 — 한 번에 하나만 착용</p><div id="relic-list"></div><button id="btn-relic-close">닫기</button></div>';
+  ov.innerHTML='<div class="rpanel"><h2>🏺 유물</h2><p class="rsub">승리로 해금</p><div id="relic-list"></div><button id="btn-relic-close">닫기</button></div>';
   document.body.appendChild(ov);
   ov.addEventListener('click',function(ev){ if(ev.target===ov) ov.classList.add('hidden'); });
   var cl=document.getElementById('btn-relic-close'); if(cl) cl.onclick=function(){ ov.classList.add('hidden'); };
@@ -849,7 +849,7 @@ function ensureSkillUI(){
     st2.textContent='#sk-grid{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;max-width:660px;margin:10px auto} .sk-col{flex:1;min-width:172px;display:flex;flex-direction:column;gap:8px} .sk-item{position:relative;background:rgba(18,24,43,.9);border:1px solid #3d4c73;border-radius:10px;padding:8px 44px 8px 10px;color:#dfe8ff;text-align:left} .sk-item small{display:block;color:#9fb0d0;font-size:11px;margin:2px 0 6px} .sk-item button{position:absolute;right:8px;width:26px;height:26px;border-radius:8px;border:1px solid #FFB300;background:rgba(18,24,43,.9);color:#FFD54F;font-weight:800;cursor:pointer} .sk-item button:disabled{opacity:.35;cursor:default} .sk-item .sk-lv{color:#FFD54F;font-weight:700;font-size:12px} .sk-item.t2{border-color:#7f8fbb} .sk-item.t3{border-color:#c77dff} #sk-sp{text-align:center;color:#FFD54F;font-weight:700;margin:6px 0} #btn-skill-reset{display:block;margin:10px auto 0;width:130px;padding:8px 0;border-radius:10px;border:1.5px solid #e64545;background:rgba(18,24,43,.85);color:#ff9d9d;font-weight:700;cursor:pointer} #overlay-skill .rpanel{max-height:82vh;overflow-y:auto}';
     document.head.appendChild(st2); }
   var ov=document.createElement('div'); ov.id='overlay-skill'; ov.className='overlay hidden';
-  ov.innerHTML='<div class="rpanel"><h2>🎓 전술 연구소</h2><p class="rsub">승리 보상 SP로 영구 강화 — 연쇄 환불·총 SP 보존</p><div id="sk-sp"></div><div id="sk-grid"></div><button id="btn-skill-reset">전체 초기화</button><button id="btn-skill-close">닫기</button></div>';
+  ov.innerHTML='<div class="rpanel"><h2>🎓 전술 연구소</h2><p class="rsub">SP로 영구 강화</p><div id="sk-sp"></div><div id="sk-grid"></div><button id="btn-skill-reset">전체 초기화</button><button id="btn-skill-close">닫기</button></div>';
   document.body.appendChild(ov);
   ov.addEventListener('click',function(ev){ if(ev.target===ov) ov.classList.add('hidden'); });
   var cl=document.getElementById('btn-skill-close'); if(cl) cl.onclick=function(){ ov.classList.add('hidden'); };
@@ -958,7 +958,7 @@ function renderRelicList(){
 function ensureRelicUI(){
   if(document.getElementById('overlay-relic')) return;
   var ov=document.createElement('div'); ov.id='overlay-relic'; ov.className='overlay hidden';
-  ov.innerHTML='<div class="rpanel"><h2>🏺 유물</h2><p class="rsub">승리로 해금 — 한 번에 하나만 착용</p><div id="relic-list"></div><button id="btn-relic-close">닫기</button></div>';
+  ov.innerHTML='<div class="rpanel"><h2>🏺 유물</h2><p class="rsub">승리로 해금</p><div id="relic-list"></div><button id="btn-relic-close">닫기</button></div>';
   document.body.appendChild(ov);
   ov.addEventListener('click',function(ev){ if(ev.target===ov) ov.classList.add('hidden'); });
   var cl=document.getElementById('btn-relic-close'); if(cl) cl.onclick=function(){ ov.classList.add('hidden'); };
@@ -985,7 +985,7 @@ function ensureSkillUI(){
     st2.textContent='#sk-grid{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;max-width:660px;margin:10px auto} .sk-col{flex:1;min-width:172px;display:flex;flex-direction:column;gap:8px} .sk-item{position:relative;background:rgba(18,24,43,.9);border:1px solid #3d4c73;border-radius:10px;padding:8px 44px 8px 10px;color:#dfe8ff;text-align:left} .sk-item small{display:block;color:#9fb0d0;font-size:11px;margin:2px 0 6px} .sk-item button{position:absolute;right:8px;width:26px;height:26px;border-radius:8px;border:1px solid #FFB300;background:rgba(18,24,43,.9);color:#FFD54F;font-weight:800;cursor:pointer} .sk-item button:disabled{opacity:.35;cursor:default} .sk-item .sk-lv{color:#FFD54F;font-weight:700;font-size:12px} .sk-item.t2{border-color:#7f8fbb} .sk-item.t3{border-color:#c77dff} #sk-sp{text-align:center;color:#FFD54F;font-weight:700;margin:6px 0} #btn-skill-reset{display:block;margin:10px auto 0;width:130px;padding:8px 0;border-radius:10px;border:1.5px solid #e64545;background:rgba(18,24,43,.85);color:#ff9d9d;font-weight:700;cursor:pointer} #overlay-skill .rpanel{max-height:82vh;overflow-y:auto}';
     document.head.appendChild(st2); }
   var ov=document.createElement('div'); ov.id='overlay-skill'; ov.className='overlay hidden';
-  ov.innerHTML='<div class="rpanel"><h2>🎓 전술 연구소</h2><p class="rsub">승리 보상 SP로 영구 강화 — 연쇄 환불·총 SP 보존</p><div id="sk-sp"></div><div id="sk-grid"></div><button id="btn-skill-reset">전체 초기화</button><button id="btn-skill-close">닫기</button></div>';
+  ov.innerHTML='<div class="rpanel"><h2>🎓 전술 연구소</h2><p class="rsub">SP로 영구 강화</p><div id="sk-sp"></div><div id="sk-grid"></div><button id="btn-skill-reset">전체 초기화</button><button id="btn-skill-close">닫기</button></div>';
   document.body.appendChild(ov);
   ov.addEventListener('click',function(ev){ if(ev.target===ov) ov.classList.add('hidden'); });
   var cl=document.getElementById('btn-skill-close'); if(cl) cl.onclick=function(){ ov.classList.add('hidden'); };
@@ -1094,7 +1094,7 @@ function renderRelicList(){
 function ensureRelicUI(){
   if(document.getElementById('overlay-relic')) return;
   var ov=document.createElement('div'); ov.id='overlay-relic'; ov.className='overlay hidden';
-  ov.innerHTML='<div class="rpanel"><h2>🏺 유물</h2><p class="rsub">승리로 해금 — 한 번에 하나만 착용</p><div id="relic-list"></div><button id="btn-relic-close">닫기</button></div>';
+  ov.innerHTML='<div class="rpanel"><h2>🏺 유물</h2><p class="rsub">승리로 해금</p><div id="relic-list"></div><button id="btn-relic-close">닫기</button></div>';
   document.body.appendChild(ov);
   ov.addEventListener('click',function(ev){ if(ev.target===ov) ov.classList.add('hidden'); });
   var cl=document.getElementById('btn-relic-close'); if(cl) cl.onclick=function(){ ov.classList.add('hidden'); };
@@ -1121,7 +1121,7 @@ function ensureSkillUI(){
     st2.textContent='#sk-grid{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;max-width:660px;margin:10px auto} .sk-col{flex:1;min-width:172px;display:flex;flex-direction:column;gap:8px} .sk-item{position:relative;background:rgba(18,24,43,.9);border:1px solid #3d4c73;border-radius:10px;padding:8px 44px 8px 10px;color:#dfe8ff;text-align:left} .sk-item small{display:block;color:#9fb0d0;font-size:11px;margin:2px 0 6px} .sk-item button{position:absolute;right:8px;width:26px;height:26px;border-radius:8px;border:1px solid #FFB300;background:rgba(18,24,43,.9);color:#FFD54F;font-weight:800;cursor:pointer} .sk-item button:disabled{opacity:.35;cursor:default} .sk-item .sk-lv{color:#FFD54F;font-weight:700;font-size:12px} .sk-item.t2{border-color:#7f8fbb} .sk-item.t3{border-color:#c77dff} #sk-sp{text-align:center;color:#FFD54F;font-weight:700;margin:6px 0} #btn-skill-reset{display:block;margin:10px auto 0;width:130px;padding:8px 0;border-radius:10px;border:1.5px solid #e64545;background:rgba(18,24,43,.85);color:#ff9d9d;font-weight:700;cursor:pointer} #overlay-skill .rpanel{max-height:82vh;overflow-y:auto}';
     document.head.appendChild(st2); }
   var ov=document.createElement('div'); ov.id='overlay-skill'; ov.className='overlay hidden';
-  ov.innerHTML='<div class="rpanel"><h2>🎓 전술 연구소</h2><p class="rsub">승리 보상 SP로 영구 강화 — 연쇄 환불·총 SP 보존</p><div id="sk-sp"></div><div id="sk-grid"></div><button id="btn-skill-reset">전체 초기화</button><button id="btn-skill-close">닫기</button></div>';
+  ov.innerHTML='<div class="rpanel"><h2>🎓 전술 연구소</h2><p class="rsub">SP로 영구 강화</p><div id="sk-sp"></div><div id="sk-grid"></div><button id="btn-skill-reset">전체 초기화</button><button id="btn-skill-close">닫기</button></div>';
   document.body.appendChild(ov);
   ov.addEventListener('click',function(ev){ if(ev.target===ov) ov.classList.add('hidden'); });
   var cl=document.getElementById('btn-skill-close'); if(cl) cl.onclick=function(){ ov.classList.add('hidden'); };
@@ -1235,7 +1235,7 @@ function renderRelicList(){
 function ensureRelicUI(){
   if(document.getElementById('overlay-relic')) return;
   var ov=document.createElement('div'); ov.id='overlay-relic'; ov.className='overlay hidden';
-  ov.innerHTML='<div class="rpanel"><h2>🏺 유물</h2><p class="rsub">승리로 해금 — 한 번에 하나만 착용</p><div id="relic-list"></div><button id="btn-relic-close">닫기</button></div>';
+  ov.innerHTML='<div class="rpanel"><h2>🏺 유물</h2><p class="rsub">승리로 해금</p><div id="relic-list"></div><button id="btn-relic-close">닫기</button></div>';
   document.body.appendChild(ov);
   ov.addEventListener('click',function(ev){ if(ev.target===ov) ov.classList.add('hidden'); });
   var cl=document.getElementById('btn-relic-close'); if(cl) cl.onclick=function(){ ov.classList.add('hidden'); };
