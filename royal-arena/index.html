@@ -1152,7 +1152,7 @@ html body .theme-row .t-btn{height:34px !important;font-size:11px !important;lin
 html body .t-links button, html body #btn-deck-random, html body #btn-deck-edit{background:linear-gradient(180deg,rgba(14,34,61,.95),rgba(10,22,40,.95)) !important;border:1px solid #c89b3c !important;border-radius:14px !important;color:#f2f6ff !important;font-weight:700 !important;line-height:1.2 !important;text-shadow:none !important;min-height:34px !important;display:flex !important;align-items:center !important;justify-content:center !important;overflow:hidden !important;text-overflow:ellipsis !important;white-space:nowrap !important;padding:4px 8px !important}
 html body #deck-edit{padding-bottom:150px !important}
 </style>
-<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v353</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v354</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1370,6 +1370,9 @@ html body #overlay-profile>div{background:linear-gradient(rgba(6,10,22,.3),rgba(
 html body #overlay-profile>div>*{flex:1 1 auto !important;min-height:0 !important;overflow-y:auto !important;overscroll-behavior:contain !important}
 html body #overlay-profile button{background:url("assets/ra_btn_plaque.png") center/100% 100% no-repeat !important;color:#ffefc0 !important;font-weight:800 !important;text-shadow:0 1px 2px rgba(0,0,0,.85) !important;border:1px solid #8a5d13 !important;border-radius:10px !important;min-height:34px !important;box-shadow:inset 0 2px 0 rgba(255,236,170,.55),inset 0 -2px 4px rgba(60,35,5,.35),0 0 10px rgba(247,197,49,.35) !important;transition:filter .12s,box-shadow .12s !important}
 html body #overlay-profile button:active,html body #overlay-profile button:hover{filter:brightness(1.18) saturate(1.05) !important;outline:2px solid #ffd76a !important;outline-offset:0 !important;box-shadow:inset 0 2px 0 rgba(255,236,170,.7),0 0 16px rgba(247,197,49,.65) !important}
+</style>
+<style id="ui-v354">/* v354: 좌측 세로 열 삭제→타이틀 하단 중앙 가로 바로 재구현(사용자 지시) — 팝업(z1600)과 절대 겹치지 않게 z30, anywhere 줄바꿈으로 잘림 방지 */
+html body #ra-title-strip{position:fixed !important;left:50% !important;right:auto !important;top:auto !important;bottom:calc(8px + env(safe-area-inset-bottom,0px)) !important;transform:translateX(-50%) !important;width:max-content !important;max-width:92vw !important;margin:0 !important;text-align:center !important;background:rgba(10,18,34,.92) !important;border:1px solid #c89b3c !important;border-radius:12px !important;padding:6px 12px !important;font-size:11.5px !important;font-weight:700 !important;color:#ffd54f !important;line-height:1.5 !important;white-space:normal !important;overflow-wrap:anywhere !important;z-index:30 !important;box-shadow:0 4px 14px rgba(0,0,0,.5) !important}
 </style>
 <script src="qa-driver.js"></script>
 <script src="js/g1-art-assets.js"></script>

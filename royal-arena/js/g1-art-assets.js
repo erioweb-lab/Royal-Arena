@@ -414,7 +414,7 @@ try{ (function(){ var iv3=setInterval(function(){
   var __d=document.createElement('div'); __d.id='ra-pstats';
   __d.style.cssText='margin:8px auto;padding:6px 10px;border-radius:10px;background:rgba(18,24,43,.85);border:1px solid rgba(255,179,0,.4);font-size:12px;color:#ffd54f;font-weight:700;text-align:center;max-width:320px';
   var __hist=(function(){ try{ return (JSON.parse(localStorage.getItem('ra_hist_v1')||'[]')||[]).map(function(x){ return x==='W'?'승':(x==='L'?'패':'무'); }).join(' ')||'기록 없음'; }catch(e){ return '기록 없음'; } })();
-  __d.textContent='🏆 '+__w+'승 '+__l+'패('+((__w+__l)?Math.round(__w/(__w+__l)*100):0)+'%) · 🥇 최고 '+__sb+'연승 · 👑 '+__tp+'트로피';
+  __d.id='ra-title-strip';__d.textContent='🏆 '+__w+'승 '+__l+'패('+((__w+__l)?Math.round(__w/(__w+__l)*100):0)+'%) · 🥇 최고 '+__sb+'연승 · 👑 '+__tp+'트로피';
   var __d2=document.createElement('div'); __d2.style.cssText='font-size:11px;color:#c3d2f2;margin-top:2px'; __d2.textContent='최근 5전: '+__hist; __d.appendChild(__d2);   /* v222 */
   ov.insertBefore(__d, ov.firstChild);
  },700); })(); }catch(e){}
