@@ -2566,15 +2566,15 @@ const HOF_KEY='ra_hof_v1';
 function hofLoad(){ try{ const a=JSON.parse(localStorage.getItem(HOF_KEY)||'[]'); if(!Array.isArray(a)) return []; return a.filter(function(e){ return e&&typeof e.s==='number'&&isFinite(e.s); }).slice(0,5); }catch(e){ return []; } }
 function hofSave(a){ try{ localStorage.setItem(HOF_KEY,JSON.stringify(a)); }catch(e){} }
 function hofRecord(sc){ try{ if(typeof sc!=='number'||!isFinite(sc)||sc<=0) return; const a=hofLoad(); a.push({ n:__raProfName(), s:Math.round(sc), w:(S.winner==='blue')?1:0, d:new Date().toLocaleDateString('ko-KR'), t:Date.now() }); a.sort(function(x,y){ return y.s-x.s||x.t-y.t; }); hofSave(a.slice(0,5)); }catch(e){} }
-function fmtScore(n){ n=Math.round(n); if(n>=1e6) return parseFloat((n/1e6).toFixed(1))+'M'; if(n>=1e3) return parseFloat((n/1e3).toFixed(1))+'k'; return String(n); }
+function fmtScore(n){ n=Math.round(n); return n.toLocaleString('ko-KR'); }   /* v345: 점수 표기 통일(1.4k→1,400) — 포디엄·행 일관 */
 function renderHof(){ try{
   const a=hofLoad(), pod=document.getElementById('hof-pod'), rows=document.getElementById('hof-rows');
   if(!pod||!rows) return;
   const cell=function(ri){ const e=a[ri]; const rc=['','r1','r2','r3'][ri+1];
     if(!e) return '<div class="pod p'+(ri+1)+'"><div class="pod-rank '+rc+'">'+(ri+1)+'위</div><div class="pod-score">—</div><div class="pod-date">기록 없음</div></div>';
-    return '<div class="pod p'+(ri+1)+'"><div class="pod-rank '+rc+'">'+(ri+1)+'위</div><div class="pod-score">'+fmtScore(e.s)+'</div><div class="pod-date">'+e.d+(e.w?' 🏆':'')+'</div></div>'; };
+    return '<div class="pod p'+(ri+1)+'"><div class="pod-rank '+rc+'">'+(ri+1)+'위</div><div class="pod-name">'+(e.n||__raProfName())+'</div><div class="pod-score">'+fmtScore(e.s)+'</div><div class="pod-date">'+e.d+(e.w?' 🏆':'')+'</div></div>'; };
   pod.innerHTML=cell(1)+cell(0)+cell(2);
-  rows.innerHTML=a.slice(3).map(function(e,i){ return '<div class="hof-row"><span class="hr-rank">'+(i+4)+'위</span><span class="hr-name">'+(e.n||__raProfName())+'</span><span class="hr-score">'+((e.n?e.n+' · ':'')+fmtScore(e.s))+'</span><span class="hr-date">'+e.d+(e.w?' 🏆':'')+'</span></div>'; }).join('')||(a.length?'':'<div class="hof-empty">아직 기록이 없습니다 — 전투에서 최고 스코어를 남겨 보세요!</div>');
+  rows.innerHTML=a.slice(3).map(function(e,i){ return '<div class="hof-row"><span class="hr-rank">'+(i+4)+'위</span><span class="hr-name">'+(e.n||__raProfName())+'</span><span class="hr-score">'+fmtScore(e.s)+'</span><span class="hr-date">'+e.d+(e.w?' 🏆':'')+'</span></div>'; }).join('')||(a.length?'':'<div class="hof-empty">아직 기록이 없습니다 — 전투에서 최고 스코어를 남겨 보세요!</div>');
 }catch(e){} }
 (function hofInit(){ let n=0;
   const place=function(par,ref){ try{ const b=document.createElement('button'); b.id='btn-hof'; b.textContent='🏆 명예의 전당';
