@@ -248,10 +248,10 @@ function sfxBP(d,v,f0,f1){ if(!AC||S.muted||(AC.state&&AC.state!=='running')) re
 function sfx(k){
   var __n=(performance.now()); if(window.__sfxT&&window.__sfxT[k]&&__n-window.__sfxT[k]<25) return; (window.__sfxT=window.__sfxT||{})[k]=__n;   /* v194: 동일 효과음 25ms 스로틀 */
   if(!AC||S.muted||(AC.state&&AC.state!=='running')) return;   /* v314 */
-  try{ const __n=performance.now(); if(!sfx._t) sfx._t={}; if((k==='hit'||k==='shoot'||k==='thud'||k==='spark'||k==='bow'||k==='musket')&&__n-(sfx._t[k]||0)<30) return; sfx._t[k]=__n; }catch(e){}   /* v163: 임팩트 스로틀 30ms */
+  try{ const __n=performance.now(); if(!sfx._t) sfx._t={}; if((k==='hit'||k==='shoot'||k==='thud'||k==='spark'||k==='bow'||k==='musket'||k==='clank'||k==='heavy'||k==='tick'||k==='impact'||k==='thudL'||k==='xbow'||k==='cannon')&&__n-(sfx._t[k]||0)<30) return; sfx._t[k]=__n; }catch(e){}   /* v163: 임팩트 스로틀 30ms */
   if(k==='deploy'){ tone(500,.12,'triangle',.10,140); }
   else if(k==='shoot'){ tone(900,.06,'square',.03); }
-  else if(k==='hit'){ tone(210,.05,'square',.045); }
+  else if(k==='hit'){ const __d=1+(Math.random()*.16-.08); tone(210*__d,.05,'square',.05); }
   else if(k==='cast'){ tone(300,.3,'sawtooth',.06,260); }
   else if(k==='zap'){ tone(1500,.14,'square',.06,-1250); tone(2230,.12,'square',.045,-1900); noiseBurst(.07,.05); }
   else if(k==='boom'){ noiseBurst(.4,.18); tone(70,.45,'sine',.22,-40); tone(45,.5,'sine',.14,-15); }
@@ -264,11 +264,17 @@ function sfx(k){
   else if(k==='toss'){ tone(300,.12,'sine',.04,180); }
   else if(k==='icel'){ tone(1200,.08,'triangle',.04,380); }
   else if(k==='cannon'){ noiseBurst(.14,.13); tone(110,.2,'sine',.15,-50); }
-  else if(k==='thud'){ tone(180,.05,'square',.04,-60); }
+  else if(k==='thud'){ const __d=1+(Math.random()*.16-.08); tone(180*__d,.05,'square',.05,-60); }
   else if(k==='spark'){ tone(1400,.05,'sawtooth',.03,-900); }
   else if(k==='icehit'){ [1800,2400,3200].forEach((f,i)=>tone(f,.07,'sine',.03-i*0.006,120)); noiseBurst(.05,.04); }
   else if(k==='fwhit'){ sfxBP(.2,.05,300,1400); tone(120,.16,'sine',.07,-30); }
   else if(k==='boomL'){ noiseBurst(.26,.16); tone(95,.26,'sine',.14,-40); }
+  else if(k==='clank'){ const __d=1+(Math.random()*.16-.08); sfxBP(.09,.08,2200*__d,700*__d); tone(1318*__d,.06,'square',.055,-400); noiseBurst(.05,.045); }
+  else if(k==='heavy'){ const __d=1+(Math.random()*.16-.08); tone(110*__d,.09,'sine',.13,-30); noiseBurst(.05,.055); }
+  else if(k==='tick'){ const __d=1+(Math.random()*.2-.1); tone(1900*__d,.03,'square',.05,-500); }
+  else if(k==='impact'){ const __d=1+(Math.random()*.16-.08); tone(1500*__d,.045,'square',.07,-700); noiseBurst(.035,.05); }
+  else if(k==='thudL'){ const __d=1+(Math.random()*.16-.08); tone(150*__d,.07,'square',.075,-40); noiseBurst(.04,.05); }
+  else if(k==='xbow'){ const __d=1+(Math.random()*.16-.08); tone(700*__d,.05,'square',.055,-300); noiseBurst(.03,.035); }
 }
 
 /* ---------- v54: 전투 BGM (WebAudio 절차 루프) ---------- */
@@ -629,9 +635,9 @@ function impactProj(p,tgt){
     const bs=S.boss;
     if(bs&&!bs.dead&&Math.hypot(bs.x-p.tx,bs.y-p.ty)<=1.3){ bs.doom=0; bs.stun=3; bs.shield=(bs.shield||0)*0.4; dealDamage(bs,250,'blue'); banner('🎯 킹샷 명중! 파멸기 캔슬 · 그로기 3s',1700); }
     return; }
-  if(p.kind==='bullet'){ fx.push({x:p.tx,y:p.ty,t:0,dur:0.16,kind:'hit'}); addParts(p.tx,p.ty,3,'#ffe9a8',2.2,0.25,0); sfx('spark'); }
-  else if(p.kind==='bolt'){ fx.push({x:p.tx,y:p.ty,t:0,dur:0.16,kind:'hit'}); addParts(p.tx,p.ty,2,'#d7e3f4',1.8,0.25,0); sfx('thud'); }   /* v321 */
-  else if(p.kind==='arrow'){ fx.push({x:p.tx,y:p.ty,t:0,dur:0.16,kind:'hit'}); sfx('thud'); }
+  if(p.kind==='bullet'){ fx.push({x:p.tx,y:p.ty,t:0,dur:0.16,kind:'hit'}); addParts(p.tx,p.ty,3,'#ffe9a8',2.2,0.25,0); sfx('impact'); }
+  else if(p.kind==='bolt'){ fx.push({x:p.tx,y:p.ty,t:0,dur:0.16,kind:'hit'}); addParts(p.tx,p.ty,2,'#d7e3f4',1.8,0.25,0); sfx('thudL'); }   /* v321 */
+  else if(p.kind==='arrow'){ fx.push({x:p.tx,y:p.ty,t:0,dur:0.16,kind:'hit'}); sfx('thudL'); }
   else if(p.kind==='bomb'){ fx.push({x:p.tx,y:p.ty,t:0,dur:0.4,kind:'boom'}); addParts(p.tx,p.ty,10,'#ffcf7a',2.8,0.5,50); S.shake=Math.max(S.shake||0,0.18); sfx('boom'); }
   else if(p.kind==='wizfb'||p.kind==='dragon'){ fx.push({x:p.tx,y:p.ty,t:0,dur:0.18,kind:'flash'}); addParts(p.tx,p.ty,7,'#ffb14d',2.4,0.4,30); sfx('fwhit');
     if(tgt&&!tgt.dead&&!tgt.isTower){ tgt.burnT=3; tgt.burnDps=22; tgt.burnAcc=0; } }
@@ -660,13 +666,13 @@ function unitAtkFx(u,t){   // v135: 유닛별 컨셉 공격 이펙트(디펜스�
   try{ if(u&&t&&u.key&&u.c&&u.c.range<=1.6&&t.key&&!t.isTower&&!t.dead) window.__raCombo(ELEM_OF[u.key]||null,t,u.c.dmg,u.team); }catch(__ec){}   /* v324: 근접 원소 콤보 */
   try{
     const k=u.key, tx=t.x, ty=t.y, melee=u.c.range<=1.6;
-    if(k==='knight'&&melee){ fx.push({x:tx,y:ty,t:0,dur:0.24,kind:'ring',col:'rgba(223,232,255,.8)'}); addParts(tx,ty,4,'#dfe8ff',2.2,0.3,30); }
-    else if(k==='giant'&&melee){ S.shake=Math.max(S.shake||0,0.10); fx.push({x:tx,y:ty,t:0,dur:0.35,kind:'ring',col:'rgba(217,185,138,.75)'}); addParts(tx,ty,7,'#d9b98a',2.6,0.5,60); }
-    else if(k==='minions'&&melee){ addParts(tx,ty,4,'#b388ff',2.2,0.35,40); }
-    else if(k==='skarmy'&&melee){ addParts(tx,ty,3,'#eceff1',1.8,0.3,50); }
-    else if(k==='prince'&&melee){ fx.push({x:tx,y:ty,t:0,dur:0.3,kind:'ring',col:'rgba(255,213,79,.9)'}); addParts(tx,ty,6,'#ffd54f',2.8,0.45,40); if(u.charging) S.shake=Math.max(S.shake||0,0.08); }
-    else if(k==='valk'&&melee){ fx.push({x:tx,y:ty,t:0,dur:0.3,kind:'ring',col:'rgba(255,183,77,.85)'}); fx.push({x:tx,y:ty,t:0.08,dur:0.3,kind:'ring',col:'rgba(255,224,138,.7)'}); addParts(tx,ty,5,'#ffb74d',2.4,0.4,40); }
-    else if(k==='boar'&&melee){ addParts(tx,ty,6,'#e0c9a6',2.4,0.4,50); S.shake=Math.max(S.shake||0,0.05); }
+    if(k==='knight'&&melee){ fx.push({x:tx,y:ty,t:0,dur:0.24,kind:'ring',col:'rgba(223,232,255,.8)'}); addParts(tx,ty,4,'#dfe8ff',2.2,0.3,30); sfx('clank'); }
+    else if(k==='giant'&&melee){ S.shake=Math.max(S.shake||0,0.10); fx.push({x:tx,y:ty,t:0,dur:0.35,kind:'ring',col:'rgba(217,185,138,.75)'}); addParts(tx,ty,7,'#d9b98a',2.6,0.5,60); sfx('heavy'); }
+    else if(k==='minions'&&melee){ addParts(tx,ty,4,'#b388ff',2.2,0.35,40); sfx('tick'); }
+    else if(k==='skarmy'&&melee){ addParts(tx,ty,3,'#eceff1',1.8,0.3,50); sfx('tick'); }
+    else if(k==='prince'&&melee){ fx.push({x:tx,y:ty,t:0,dur:0.3,kind:'ring',col:'rgba(255,213,79,.9)'}); addParts(tx,ty,6,'#ffd54f',2.8,0.45,40); if(u.charging) S.shake=Math.max(S.shake||0,0.08); sfx('clank'); }
+    else if(k==='valk'&&melee){ fx.push({x:tx,y:ty,t:0,dur:0.3,kind:'ring',col:'rgba(255,183,77,.85)'}); fx.push({x:tx,y:ty,t:0.08,dur:0.3,kind:'ring',col:'rgba(255,224,138,.7)'}); addParts(tx,ty,5,'#ffb74d',2.4,0.4,40); sfx('heavy'); }
+    else if(k==='boar'&&melee){ addParts(tx,ty,6,'#e0c9a6',2.4,0.4,50); S.shake=Math.max(S.shake||0,0.05); sfx('heavy'); }
     else if(k==='flamer'){ fx.push({x:tx,y:ty,t:0,dur:0.38,kind:'flamegrow'}); addParts(tx,ty,4,'#ff9d3c',2.2,0.35,-60); addParts(tx,ty,2,'#ffd54f',1.6,0.3,-90); sfx('firel'); }   /* v322: 화염방사병 — 커지는 화염(속사라 경량) */
     else if(k==='lordknight'&&melee){ fx.push({x:tx,y:ty,t:0,dur:0.32,kind:'ring',col:'rgba(255,213,79,.9)'}); fx.push({x:tx,y:ty,t:0.06,dur:0.32,kind:'ring',col:'rgba(207,109,245,.75)'}); addParts(tx,ty,7,'#ffd54f',2.8,0.45,50); S.shake=Math.max(S.shake||0,0.12); sfx('slash'); }   /* v322: 기사단장 — 에픽 광역 일격 */
     else if(k==='greed'&&melee){ fx.push({x:tx,y:ty,t:0,dur:0.22,kind:'slash',col:'rgba(207,109,245,.85)',a:Math.atan2(ty-u.y,tx-u.x)}); addParts(tx,ty,4,'#cf6df5',2.0,0.32,30); sfx('slash'); }   /* v322: 탐욕 정령 — 보라 잔상 베기 */
