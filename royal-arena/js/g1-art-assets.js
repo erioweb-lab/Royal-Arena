@@ -234,8 +234,10 @@ const RA_AUDIO=(function(){
     comp.ratio.setValueAtTime(12,ctx.currentTime); comp.attack.setValueAtTime(0,ctx.currentTime); comp.release.setValueAtTime(0.25,ctx.currentTime);
     master.connect(comp); comp.connect(ctx.destination);
   }catch(e){ ctx=null; } }
-  function unlock(){ try{ if(!ctx) build(); if(ctx&&ctx.state==='suspended') ctx.resume(); }catch(e){} }
+  function unlock(){ try{ if(!ctx) build(); if(ctx&&ctx.state==='suspended'){ const __pr=ctx.resume(); if(__pr&&__pr.catch) __pr.catch(()=>{}); } }catch(e){} }
   window.addEventListener('pointerdown',unlock,true);
+  window.addEventListener('pointerup',unlock,true);
+  window.addEventListener('touchstart',unlock,true);
   window.addEventListener('touchend',unlock,true);
   document.addEventListener('visibilitychange',function(){ try{ if(!document.hidden&&ctx&&ctx.state==='suspended') ctx.resume(); }catch(e){} });
   return { unlock:unlock, getCtx:function(){return ctx;}, getMaster:function(){return master;}, state:function(){ return ctx?ctx.state:'null'; } };
@@ -2483,7 +2485,7 @@ window.__uiUp=function(){ try{   /* v178: 메인·게임 내 UI 업그레이드 
 (function(){ try{ var stHof=document.getElementById('ui-v182'); if(!stHof){ stHof=document.createElement('style'); stHof.id='ui-v182'; stHof.textContent='#overlay-hof{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column}#overlay-hof.hidden{display:none!important}#overlay-hof .hof-card{display:flex;flex-direction:column;position:relative;height:auto;min-height:340px;max-height:86vh;transform:none!important;animation:none!important}#overlay-hof .hof-card>*{flex:none;position:static!important;height:auto!important;transform:none!important;animation:none!important}#overlay-hof .hof-rows{min-height:0;overflow-y:auto}'; document.head.appendChild(stHof); } }catch(e){} })();
 window.__uiUp(); window.addEventListener('load',function(){ try{ window.__uiUp(); }catch(e){} }); setInterval(function(){ try{ window.__uiUp(); }catch(e){} },1000);
 $('#btn-home').addEventListener('click',()=>show('title'));
-$('#btn-sound').addEventListener('click',()=>{ S.muted=!S.muted; try{ localStorage.setItem('ra_muted',S.muted?'1':'0'); }catch(e){}; $('#btn-sound').textContent=S.muted?'🔇':'🔊'; });
+$('#btn-sound').addEventListener('click',()=>{ S.muted=!S.muted; try{ localStorage.setItem('ra_muted',S.muted?'1':'0'); }catch(e){}; $('#btn-sound').textContent=S.muted?'🔇':'🔊'; if(!S.muted){ try{ sfx('deploy'); }catch(e){} } });
 $('#btn-info').addEventListener('click',()=>$('#overlay-info').classList.remove('hidden'));
 $('#btn-info-close').addEventListener('click',()=>$('#overlay-info').classList.add('hidden'));
 (function(){
