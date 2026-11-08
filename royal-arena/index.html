@@ -1152,7 +1152,7 @@ html body .theme-row .t-btn{height:34px !important;font-size:11px !important;lin
 html body .t-links button, html body #btn-deck-random, html body #btn-deck-edit{background:linear-gradient(180deg,rgba(14,34,61,.95),rgba(10,22,40,.95)) !important;border:1px solid #c89b3c !important;border-radius:14px !important;color:#f2f6ff !important;font-weight:700 !important;line-height:1.2 !important;text-shadow:none !important;min-height:34px !important;display:flex !important;align-items:center !important;justify-content:center !important;overflow:hidden !important;text-overflow:ellipsis !important;white-space:nowrap !important;padding:4px 8px !important}
 html body #deck-edit{padding-bottom:150px !important}
 </style>
-<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v372</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v374</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1462,35 +1462,11 @@ html body #app .theme-row .t-btn[data-theme="abyss"]:not(.sel){background:linear
 html body #app #btn-start{background:linear-gradient(180deg,rgba(60,36,6,.14),rgba(43,26,4,.26)),url("assets/ra_cta_card.png") center/cover no-repeat !important;background-size:auto,100% 100% !important;border:2px solid #b8860b !important;color:#2b1c05 !important;font-weight:800 !important;text-shadow:0 1px 0 rgba(255,235,170,.55) !important}
 html body #app #btn-hof-close,html body #app #btn-relic-close,html body #app #btn-info-close,html body #app #btn-skill-close,html body #app #btn-prf-close,html body #app #btn-skill-reset,html body #app #rtab-score,html body #app #rtab-rank,html body #app #overlay-profile .rpanel button,html body #app #btn-main{background:linear-gradient(180deg,rgba(14,24,46,.30),rgba(8,14,28,.42)),url("assets/ra_btn_small.png") center/cover no-repeat !important;background-size:auto,100% 100% !important}
 </style>
-<script id="ui-v368-js">/* v368: 강제기 — 재렌더 레이스 대응, 카드화풍 에셋 인라인 재확정(.sel 보존) */
-setInterval(function(){try{
-var cta=document.getElementById('btn-start');
-if(cta){cta.style.setProperty('background','linear-gradient(180deg,rgba(60,36,6,.14),rgba(30,18,3,.26)),url("assets/ra_cta_card.png") center/cover no-repeat','important');cta.style.setProperty('background-size','auto,100% 100%','important');cta.style.setProperty('border','2px solid #b8860b','important');cta.style.setProperty('color','#2b1c05','important');}
-var CM={classic:'ra_chip_classic',lava:'ra_chip_lava',ice:'ra_chip_ice',wasteland:'ra_chip_wasteland',abyss:'ra_chip_abyss'};
-document.querySelectorAll('#title-actions button, .t-links button, .theme-row .t-btn').forEach(function(b){
-if(b.classList.contains('sel')||b.id==='btn-start')return;
-var dt=b.getAttribute('data-theme');var img=dt&&CM[dt]?'assets/'+CM[dt]+'.png':'assets/ra_btn_card.png';
-b.style.setProperty('background','linear-gradient(180deg,rgba(10,16,34,.18),rgba(8,13,28,.30)),url("'+img+'") center/cover no-repeat','important');
-b.style.setProperty('background-size','auto,100% 100%','important');});
-}catch(e){}},1500);
-</script>
 <style id="ui-v369">/* v369: 옛 강제기 제거에 따른 칩 문양 확정+CTA 흰색 텍스트/아이콘(사용자 지시)+전면 판타지 세리프 폰트(화풍 일치) */
 html body #app{font-family:'Song Myung','Noto Serif KR','Jua',serif !important}
 html body #screen-title h1,html body .rpanel h2,html body .r-title,html body .t-hero h1,html body #btn-start,html body #screen-title button,html body [id^="overlay-"] h2{font-family:'Hahmlet','Song Myung','Jua',serif !important}
 html body #btn-start{color:#fff !important;text-shadow:0 2px 6px rgba(0,0,0,.88),0 0 12px rgba(0,0,0,.6) !important}
 </style>
-<script id="ui-v369-js">/* v369: 강제기 갱신 — CTA 흰색 글자 반영 */
-setInterval(function(){try{
-var cta=document.getElementById('btn-start');
-if(cta){cta.style.setProperty('background','linear-gradient(180deg,rgba(60,36,6,.14),rgba(30,18,3,.26)),url("assets/ra_cta_card.png") center/cover no-repeat','important');cta.style.setProperty('background-size','auto,100% 100%','important');cta.style.setProperty('border','2px solid #b8860b','important');cta.style.setProperty('color','#ffffff','important');cta.style.setProperty('text-shadow','0 2px 6px rgba(0,0,0,.88)','important');}
-var CM={classic:'ra_chip_classic',lava:'ra_chip_lava',ice:'ra_chip_ice',wasteland:'ra_chip_wasteland',abyss:'ra_chip_abyss'};
-document.querySelectorAll('#title-actions button, .t-links button, .theme-row .t-btn').forEach(function(b){
-if(b.classList.contains('sel')||b.id==='btn-start')return;
-var dt=b.getAttribute('data-theme');var img=dt&&CM[dt]?'assets/'+CM[dt]+'.png':'assets/ra_btn_card.png';
-b.style.setProperty('background','linear-gradient(180deg,rgba(10,16,34,.18),rgba(8,13,28,.30)),url("'+img+'") center/cover no-repeat','important');
-b.style.setProperty('background-size','auto,100% 100%','important');});
-}catch(e){}},1500);
-</script>
 <style id="ui-v370">/* v370(개정): 전 버튼 전환효과 표준 — ID 우위 경로(v366 (2,1,3) 대비 (3,4,3))로 확정, 팝업 오염 없는 상태 규칙 */
 html body #app #screen-title button,html body #app #title-actions button,html body #app #screen-battle button,html body #app [id^="overlay-"] button,html body #app button{transition:transform 120ms ease,filter 120ms ease,box-shadow 120ms ease,border-color 120ms ease !important}
 html body #app #screen-title button:not(#btn-start):not(.sel):not(:disabled):not(:active):hover,html body #app #title-actions button:not(.sel):not(:disabled):not(:active):hover,html body #app [id^="overlay-"] button:not(:disabled):not(:active):hover,html body #app button:not(#btn-start):not(.sel):not(:disabled):not(:active):hover{filter:brightness(1.10) !important}
@@ -1498,6 +1474,30 @@ html body #app #screen-title button:not(.sel):not(:disabled):active,html body #a
 html body #app #screen-title button#btn-start:hover{filter:brightness(1.10) !important}
 html body #app #screen-title button#btn-start:active,html body #app button#btn-start.t-cta:active{transform:scale(.96) !important;filter:brightness(.88) !important}
 </style>
+<style id="ui-v373">/* v373: A+B(사용자 지시) — 로비 버튼 문양·광택·발광 제거(플랫 네이비 복원)+전 버튼 hover/눌림 전환효과 제거(v370 무효화). 맵 칩(.t-btn)·배틀 시작·팝업 버튼 스타일은 유지 */
+html body #app #screen-title button:not(#btn-start):not(.sel):not(.on):not(.t-btn):not(#ra-flat-exclude){background:linear-gradient(180deg,rgba(14,34,61,.95),rgba(10,22,40,.95)) !important;background-size:auto !important;border:1px solid #c89b3c !important;box-shadow:none !important;text-shadow:none !important}
+html body #app #screen-title #title-actions button:not(.t-btn):not(.sel):not(.on){background:linear-gradient(180deg,rgba(14,34,61,.95),rgba(10,22,40,.95)) !important;background-size:auto !important;box-shadow:none !important}
+html body #app button{transition:none !important}
+html body #app #screen-title button,html body #app #title-actions button,html body #app [id^="overlay-"] button{transition:none !important}
+html body #app #screen-title button:not(#btn-start):not(.sel):not(:disabled):not(:active):hover,html body #app #title-actions button:not(.sel):not(:disabled):not(:active):hover,html body #app [id^="overlay-"] button:not(.sel):not(:disabled):not(:active):hover,html body #app button:not(#btn-start):not(.sel):not(:disabled):not(:active):hover{filter:none !important;outline:none !important}
+html body #app #screen-title button:not(.sel):not(:disabled):active,html body #app #title-actions button:not(.sel):not(:disabled):active,html body #app [id^="overlay-"] button:not(:disabled):active,html body #app button:not(.sel):not(:disabled):active{transform:none !important;filter:none !important;outline:none !important}
+html body #app #screen-title button#btn-start:hover{filter:none !important;outline:none !important}
+html body #app #screen-title button#btn-start:active,html body #app button#btn-start.t-cta:active{transform:none !important;filter:none !important}
+</style>
+<script id="ui-v373-js">/* v373-js(v374 개정): 보존 대상 문양 통합 강제기 — 내장 리스타일러 덮어쓰기 대응(1.2s 재적용). 대상 축소: 배틀 시작+맵 칩+팝업 소형 버튼만 (로비 메뉴 버튼은 플랫 유지 — 재문양화 금지) */
+setInterval(function(){try{
+var cta=document.getElementById('btn-start');
+if(cta){cta.style.setProperty('background','linear-gradient(180deg,rgba(60,36,6,.14),rgba(30,18,3,.26)),url("assets/ra_cta_card.png") center/cover no-repeat','important');cta.style.setProperty('background-size','auto,100% 100%','important');cta.style.setProperty('border','2px solid #b8860b','important');cta.style.setProperty('color','#ffffff','important');cta.style.setProperty('text-shadow','0 2px 6px rgba(0,0,0,.88)','important');cta.style.setProperty('transition','none','important');}
+var CM={classic:'ra_chip_classic',lava:'ra_chip_lava',ice:'ra_chip_ice',wasteland:'ra_chip_wasteland',abyss:'ra_chip_abyss'};
+document.querySelectorAll('.t-btn[data-theme]').forEach(function(b){
+var dt=b.getAttribute('data-theme');var img=CM[dt];if(!img)return;
+b.style.setProperty('background','linear-gradient(180deg,rgba(10,16,34,.16),rgba(8,13,28,.28)),url("assets/'+img+'.png") center/cover no-repeat','important');
+b.style.setProperty('background-size','auto,100% 100%','important');b.style.setProperty('transition','none','important');});
+document.querySelectorAll('#btn-hof-close,#btn-relic-close,#btn-info-close,#btn-skill-close,#btn-prf-close,#btn-skill-reset,#rtab-score,#rtab-rank,#overlay-profile .rpanel button,#btn-main').forEach(function(b){
+b.style.setProperty('background','linear-gradient(180deg,rgba(14,24,46,.30),rgba(8,14,28,.42)),url("assets/ra_btn_small.png") center/cover no-repeat','important');
+b.style.setProperty('background-size','auto,100% 100%','important');b.style.setProperty('transition','none','important');});
+}catch(e){}},1200);
+</script>
 <script src="js/g1-art-assets.js"></script>
 
 
