@@ -122,7 +122,7 @@ window.__navUp=function(){ try{
   document.querySelectorAll('#title-actions button, .t-links button').forEach(function(b){
     var t=(b.textContent||'').trim(); if(!LAB.test(t)) return;
     b.style.setProperty('background','linear-gradient(180deg,#1c2333,#141824)','important');
-    b.style.setProperty('border','1.5px solid #2a3550','important');
+    b.style.setProperty('border','1.5px solid #c89b3c','important'); /* v359: 골드 테두리 표준 — 이 인라인 important가 모든 CSS를 이기므로 출처에서 금색 고정(주기 재도색도 금색 유지) */
     b.style.setProperty('color','#fbbf24','important');
     var __pt=(b.textContent||'');
     if(/덱 편성|유물|명예의 전당|프로필|전술 연구소/.test(__pt)){ b.style.removeProperty('background'); b.style.removeProperty('border'); b.style.removeProperty('color'); b.classList.add(__pt.indexOf('덱 편성')>=0?'nav-deck':__pt.indexOf('유물')>=0?'nav-relic':__pt.indexOf('명예의 전당')>=0?'nav-hof':__pt.indexOf('프로필')>=0?'nav-profile':'nav-skill'); }
