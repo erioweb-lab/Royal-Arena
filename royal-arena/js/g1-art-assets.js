@@ -277,9 +277,63 @@ function sfx(k){
   else if(k==='thudL'){ const __d=1+(Math.random()*.16-.08); tone(150*__d,.07,'square',.075,-40); noiseBurst(.04,.05); }
   else if(k==='xbow'){ const __d=1+(Math.random()*.16-.08); tone(700*__d,.05,'square',.055,-300); noiseBurst(.03,.035); }
 }
+/* ---------- v379: 타격음 신시사이저 (playHit — 속성별 절차 합성, 외부 파일 0) ---------- */
+function __raNoise(C,d,pink){ const n=Math.max(1,Math.floor(C.sampleRate*d)), buf=C.createBuffer(1,n,C.sampleRate), ch=buf.getChannelData(0); let b0=0; for(let i=0;i<n;i++){ const w=Math.random()*2-1; if(pink){ b0=b0*0.94+w*0.06; ch[i]=b0*2.2; } else ch[i]=w; } return buf; }
+function playHit(type,isCritical){
+  try{
+    type=type||'physical';
+    if(!window.__raHitT) window.__raHitT={}; const __n=performance.now();
+    if(__n-(window.__raHitT[type]||0)<25) return;   /* v379: 타격음 25ms 타입별 스로틀(버퍼 오버플로우 방지) */
+    window.__raHitT[type]=__n;
+    const C=RA_AUDIO.getCtx(); if(!C||S.muted) return; if(C.state==='suspended') RA_AUDIO.unlock();
+    const M=RA_AUDIO.getMaster(); const t=C.currentTime;
+    const ng=(d,pink)=>{ const src=C.createBufferSource(); src.buffer=__raNoise(C,d,pink); return src; };
+    const g=(v,d)=>{ const x=C.createGain(); x.gain.setValueAtTime(v,t); x.gain.exponentialRampToValueAtTime(0.001,t+(d||0.14)); x.connect(M); return x; };
+    if(type==='physical'){   /* 밴드패스 노이즈 팝+피치 드롭 트랜지언트 — 날카로운 관통음 */
+      const d1=Math.random()*.16-.08;
+      const nz=ng(0.07), bp=C.createBiquadFilter(); bp.type='bandpass'; bp.Q.value=1.4; bp.frequency.setValueAtTime(2400*(1+d1),t); bp.frequency.exponentialRampToValueAtTime(600,t+0.07);
+      const g1=g(0.10); nz.connect(bp); bp.connect(g1); nz.start();
+      const o=C.createOscillator(); o.type='triangle'; o.frequency.setValueAtTime(950*(1+d1),t); o.frequency.exponentialRampToValueAtTime(160,t+0.06);
+      const g2=g(0.075); o.connect(g2); o.start(); o.stop(t+0.07);
+    } else if(type==='flame'){   /* 노이즈+로우패스 스위프 — 불꽃 소각·파열음 */
+      const nz=ng(0.28), lp=C.createBiquadFilter(); lp.type='lowpass'; lp.frequency.setValueAtTime(2600,t); lp.frequency.exponentialRampToValueAtTime(180,t+0.26); lp.Q.value=0.8;
+      const g1=g(0.085); nz.connect(lp); lp.connect(g1); nz.start();
+      const o=C.createOscillator(); o.type='sawtooth'; o.frequency.setValueAtTime(190,t); o.frequency.exponentialRampToValueAtTime(70,t+0.24);
+      const g2=g(0.05,0.26); o.connect(g2); o.start(); o.stop(t+0.26);
+    } else if(type==='frost'){   /* 고주파 사인 클러스터+파쇄 노이즈 — 크리스탈 파쇄음 */
+      [2093,2637,3136].forEach((f,i)=>{ const o=C.createOscillator(); o.type='sine'; o.frequency.setValueAtTime(f*(1+(Math.random()*.04-.02)),t); const gg=g(0.045-i*0.008); o.connect(gg); o.start(t+i*0.012); o.stop(t+0.14); });
+      const nz=ng(0.06), hp=C.createBiquadFilter(); hp.type='highpass'; hp.frequency.setValueAtTime(3800,t);
+      const g1=g(0.055); nz.connect(hp); hp.connect(g1); nz.start();
+    } else if(type==='lightning'){   /* 사각파 FM 변조+급 디케이 — 전기 아크 방전음 */
+      const car=C.createOscillator(); car.type='square'; car.frequency.setValueAtTime(1600,t);
+      const mod=C.createOscillator(); mod.type='sine'; mod.frequency.setValueAtTime(140,t);
+      const mg=C.createGain(); mg.gain.setValueAtTime(900,t); mg.gain.exponentialRampToValueAtTime(60,t+0.12);
+      mod.connect(mg); mg.connect(car.frequency);
+      const g1=g(0.06); car.connect(g1); car.start(); mod.start(); car.stop(t+0.14); mod.stop(t+0.14);
+      const nz=ng(0.05); const g2=g(0.045); nz.connect(g2); nz.start();
+    } else if(type==='cannon'){   /* 서브베이스 럼블 드롭+핑크 노이즈 — 대지 분쇄 폭발음 */
+      const o=C.createOscillator(); o.type='sine'; o.frequency.setValueAtTime(78,t); o.frequency.exponentialRampToValueAtTime(38,t+0.34);
+      const g1=g(0.20,0.36); o.connect(g1); o.start(); o.stop(t+0.36);
+      const nz=ng(0.22,true); const lp=C.createBiquadFilter(); lp.type='lowpass'; lp.frequency.setValueAtTime(500,t); lp.frequency.exponentialRampToValueAtTime(120,t+0.2);
+      const g2=g(0.12); nz.connect(lp); lp.connect(g2); nz.start();
+    } else if(type==='boss'){   /* 서브 럼블+글로켄 옥타브 반짝임+앰비언트 공명 */
+      const o=C.createOscillator(); o.type='sine'; o.frequency.setValueAtTime(72,t); o.frequency.exponentialRampToValueAtTime(34,t+0.42);
+      const g1=g(0.22,0.45); o.connect(g1); o.start(); o.stop(t+0.45);
+      [1046,2093,4186].forEach((f,i)=>{ const o2=C.createOscillator(); o2.type='sine'; o2.frequency.setValueAtTime(f,t+i*0.055); const gg=g(0.075-i*0.018); o2.connect(gg); o2.start(t+i*0.055); o2.stop(t+i*0.055+0.3); });
+      const amb=C.createOscillator(); amb.type='sawtooth'; amb.frequency.setValueAtTime(55,t);
+      const af=C.createBiquadFilter(); af.type='lowpass'; af.frequency.setValueAtTime(240,t);
+      const g3=g(0.06,0.4); amb.connect(af); af.connect(g3); amb.start(); amb.stop(t+0.4);
+    } else { playHit('physical',isCritical); return; }
+    if(isCritical){   /* 크리티컬 레이어: 서브 펑치+금속 핑 */
+      const o=C.createOscillator(); o.type='sine'; o.frequency.setValueAtTime(95,t); o.frequency.exponentialRampToValueAtTime(40,t+0.16);
+      const g1=g(0.16); o.connect(g1); o.start(); o.stop(t+0.18);
+      const p=C.createOscillator(); p.type='sine'; p.frequency.setValueAtTime(2093,t); const g2=g(0.06); p.connect(g2); p.start(t+0.02); p.stop(t+0.2);
+    }
+  }catch(e){}
+}
 let bgmTimer=null;
-function bgmStart(){ try{ const C=RA_AUDIO.getCtx(); if(!C||S.muted||bgmTimer) return; RA_AUDIO.unlock(); let st=0; bgmTimer=setInterval(function(){ if(S.muted) return; const __line=[110,110,98,98,87,87,98,123], __arp=[262,330,392,523]; if(st%2===0) tone(__line[(st>>1)%8],0.25,'triangle',0.030); else tone(__arp[(st>>1)%4],0.18,'sine',0.020); st++; },330); window.__RA_BGM=true; }catch(e){} }
-function bgmStop(){ try{ if(bgmTimer){ clearInterval(bgmTimer); bgmTimer=null; window.__RA_BGM=false; } }catch(e){} }
+function bgmStart(){ }   /* v379: BGM 제거(사용자 지시) — 호출부 호환 no-op */
+function bgmStop(){ if(typeof window!=='undefined') window.__RA_BGM=false; }   /* v379 */
 /* ---------- 배너/토스트 ---------- */
 let bannerTO=null, toastTO=null;
 function banner(txt,ms){
@@ -649,18 +703,18 @@ function unitAtkFx(u,t){   // v135: 유닛별 컨셉 공격 이펙트(디펜스�
   try{ if(u&&t&&u.key&&u.c&&u.c.range<=1.6&&t.key&&!t.isTower&&!t.dead) window.__raCombo(ELEM_OF[u.key]||null,t,u.c.dmg,u.team); }catch(__ec){}   /* v324: 근접 원소 콤보 */
   try{
     const k=u.key, tx=t.x, ty=t.y, melee=u.c.range<=1.6;
-    if(k==='knight'&&melee){ fx.push({x:tx,y:ty,t:0,dur:0.24,kind:'ring',col:'rgba(223,232,255,.8)'}); addParts(tx,ty,4,'#dfe8ff',2.2,0.3,30); sfx('clank'); }
-    else if(k==='giant'&&melee){ S.shake=Math.max(S.shake||0,0.10); fx.push({x:tx,y:ty,t:0,dur:0.35,kind:'ring',col:'rgba(217,185,138,.75)'}); addParts(tx,ty,7,'#d9b98a',2.6,0.5,60); sfx('heavy'); }
-    else if(k==='minions'&&melee){ addParts(tx,ty,4,'#b388ff',2.2,0.35,40); sfx('tick'); }
-    else if(k==='skarmy'&&melee){ addParts(tx,ty,3,'#eceff1',1.8,0.3,50); sfx('tick'); }
-    else if(k==='prince'&&melee){ fx.push({x:tx,y:ty,t:0,dur:0.3,kind:'ring',col:'rgba(255,213,79,.9)'}); addParts(tx,ty,6,'#ffd54f',2.8,0.45,40); if(u.charging) S.shake=Math.max(S.shake||0,0.08); sfx('clank'); }
-    else if(k==='valk'&&melee){ fx.push({x:tx,y:ty,t:0,dur:0.3,kind:'ring',col:'rgba(255,183,77,.85)'}); fx.push({x:tx,y:ty,t:0.08,dur:0.3,kind:'ring',col:'rgba(255,224,138,.7)'}); addParts(tx,ty,5,'#ffb74d',2.4,0.4,40); sfx('heavy'); }
-    else if(k==='boar'&&melee){ addParts(tx,ty,6,'#e0c9a6',2.4,0.4,50); S.shake=Math.max(S.shake||0,0.05); sfx('heavy'); }
-    else if(k==='flamer'){ fx.push({x:tx,y:ty,t:0,dur:0.38,kind:'flamegrow'}); addParts(tx,ty,4,'#ff9d3c',2.2,0.35,-60); addParts(tx,ty,2,'#ffd54f',1.6,0.3,-90); sfx('firel'); }   /* v322: 화염방사병 — 커지는 화염(속사라 경량) */
-    else if(k==='lordknight'&&melee){ fx.push({x:tx,y:ty,t:0,dur:0.32,kind:'ring',col:'rgba(255,213,79,.9)'}); fx.push({x:tx,y:ty,t:0.06,dur:0.32,kind:'ring',col:'rgba(207,109,245,.75)'}); addParts(tx,ty,7,'#ffd54f',2.8,0.45,50); S.shake=Math.max(S.shake||0,0.12); sfx('slash'); }   /* v322: 기사단장 — 에픽 광역 일격 */
-    else if(k==='greed'&&melee){ fx.push({x:tx,y:ty,t:0,dur:0.22,kind:'slash',col:'rgba(207,109,245,.85)',a:Math.atan2(ty-u.y,tx-u.x)}); addParts(tx,ty,4,'#cf6df5',2.0,0.32,30); sfx('slash'); }   /* v322: 탐욕 정령 — 보라 잔상 베기 */
-    else if(k==='golem'&&melee){ S.shake=Math.max(S.shake||0,0.20); fx.push({x:tx,y:ty,t:0,dur:0.4,kind:'ring',col:'rgba(140,220,255,.8)'}); addParts(tx,ty,9,'#8cdcff',3.0,0.55,70); sfx('boomL'); }   /* v322: 수정 골렘 — 수정 파편 강타 */
-    else if(k==='scarecrow'&&melee){ addParts(tx,ty,3,'#d9c46b',1.8,0.35,60); sfx('thud'); }   /* v322: 허수아비 — 짚 파편 */
+    if(k==='knight'&&melee){ fx.push({x:tx,y:ty,t:0,dur:0.24,kind:'ring',col:'rgba(223,232,255,.8)'}); addParts(tx,ty,4,'#dfe8ff',2.2,0.3,30); playHit('physical'); }
+    else if(k==='giant'&&melee){ S.shake=Math.max(S.shake||0,0.10); fx.push({x:tx,y:ty,t:0,dur:0.35,kind:'ring',col:'rgba(217,185,138,.75)'}); addParts(tx,ty,7,'#d9b98a',2.6,0.5,60); playHit('cannon'); }
+    else if(k==='minions'&&melee){ addParts(tx,ty,4,'#b388ff',2.2,0.35,40); playHit('physical'); }
+    else if(k==='skarmy'&&melee){ addParts(tx,ty,3,'#eceff1',1.8,0.3,50); playHit('physical'); }
+    else if(k==='prince'&&melee){ fx.push({x:tx,y:ty,t:0,dur:0.3,kind:'ring',col:'rgba(255,213,79,.9)'}); addParts(tx,ty,6,'#ffd54f',2.8,0.45,40); if(u.charging) S.shake=Math.max(S.shake||0,0.08); playHit('physical'); }
+    else if(k==='valk'&&melee){ fx.push({x:tx,y:ty,t:0,dur:0.3,kind:'ring',col:'rgba(255,183,77,.85)'}); fx.push({x:tx,y:ty,t:0.08,dur:0.3,kind:'ring',col:'rgba(255,224,138,.7)'}); addParts(tx,ty,5,'#ffb74d',2.4,0.4,40); playHit('cannon'); }
+    else if(k==='boar'&&melee){ addParts(tx,ty,6,'#e0c9a6',2.4,0.4,50); S.shake=Math.max(S.shake||0,0.05); playHit('cannon'); }
+    else if(k==='flamer'){ fx.push({x:tx,y:ty,t:0,dur:0.38,kind:'flamegrow'}); addParts(tx,ty,4,'#ff9d3c',2.2,0.35,-60); addParts(tx,ty,2,'#ffd54f',1.6,0.3,-90); playHit('flame'); }   /* v322: 화염방사병 — 커지는 화염(속사라 경량) */
+    else if(k==='lordknight'&&melee){ fx.push({x:tx,y:ty,t:0,dur:0.32,kind:'ring',col:'rgba(255,213,79,.9)'}); fx.push({x:tx,y:ty,t:0.06,dur:0.32,kind:'ring',col:'rgba(207,109,245,.75)'}); addParts(tx,ty,7,'#ffd54f',2.8,0.45,50); S.shake=Math.max(S.shake||0,0.12); playHit('boss'); }   /* v322: 기사단장 — 에픽 광역 일격 */
+    else if(k==='greed'&&melee){ fx.push({x:tx,y:ty,t:0,dur:0.22,kind:'slash',col:'rgba(207,109,245,.85)',a:Math.atan2(ty-u.y,tx-u.x)}); addParts(tx,ty,4,'#cf6df5',2.0,0.32,30); playHit('physical'); }   /* v322: 탐욕 정령 — 보라 잔상 베기 */
+    else if(k==='golem'&&melee){ S.shake=Math.max(S.shake||0,0.20); fx.push({x:tx,y:ty,t:0,dur:0.4,kind:'ring',col:'rgba(140,220,255,.8)'}); addParts(tx,ty,9,'#8cdcff',3.0,0.55,70); playHit('cannon'); }   /* v322: 수정 골렘 — 수정 파편 강타 */
+    else if(k==='scarecrow'&&melee){ addParts(tx,ty,3,'#d9c46b',1.8,0.35,60); playHit('physical'); }   /* v322: 허수아비 — 짚 파편 */
     else if(k==='musketeer'&&!melee){ addParts(u.x,u.y-0.3,2,'#ffe9a8',1.6,0.2,-10); }
     else if(k==='sniper'&&!melee){ fx.push({x:u.x,y:u.y-0.3,t:0,dur:0.12,kind:'flash'}); addParts(u.x,u.y-0.3,3,'#9cdcff',1.8,0.25,0); }
     else if(k==='wizard'&&!melee){ fx.push({x:u.x,y:u.y-0.3,t:0,dur:0.15,kind:'ring',col:'rgba(255,177,77,.8)'}); }
@@ -672,7 +726,7 @@ function unitAtkFx(u,t){   // v135: 유닛별 컨셉 공격 이펙트(디펜스�
 function hitTarget(u,t,dm){ try{ if(u&&u.team==='blue'&&u.key) DPSW.acc[u.key]=(DPSW.acc[u.key]||0)+dm; }catch(e){}   /* v148: 피해 귀속 */
   dm=dm||u.c.dmg; unitAtkFx(u,t);
   if(u.c.range>1.6){ const __pk=(u.key==='musketeer'||u.key==='sniper')?'bullet':(u.key==='xbow'?'bolt':(u.key==='wizard'?'wizfb':(u.key==='bomber'?'bomb':(u.key==='babyd'?'dragon':(u.key==='icem'?'ice':'arrow'))))); shoot(u,t,dm,__pk,u.c.splash); }   /* v321: 석궁병 볼트 컨셉 탄환 */
-  else { dealDamage(t,dm,u.team); fx.push({x:t.x,y:t.y,t:0,dur:0.18,kind:'hit'}); fx.push({x:t.x,y:t.y,t:0,dur:0.16,kind:'slash',a:Math.atan2(t.y-u.y,t.x-u.x),col:u.team==='blue'?'rgba(159,201,255,.95)':'rgba(255,150,150,.95)'}); addParts(t.x,t.y,3,'#fff2c8',2.0,0.25,0); sfx('hit');
+  else { dealDamage(t,dm,u.team); fx.push({x:t.x,y:t.y,t:0,dur:0.18,kind:'hit'}); fx.push({x:t.x,y:t.y,t:0,dur:0.16,kind:'slash',a:Math.atan2(t.y-u.y,t.x-u.x),col:u.team==='blue'?'rgba(159,201,255,.95)':'rgba(255,150,150,.95)'}); addParts(t.x,t.y,3,'#fff2c8',2.0,0.25,0); playHit('physical');
     if(u.c.splash){ for(const s2 of units){ if(s2.dead||s2.team===u.team||s2===t) continue;
       if(Math.hypot(s2.x-t.x,s2.y-t.y)<=u.c.splash) dealDamage(s2,Math.round(dm*0.6),u.team); } } }
 }
