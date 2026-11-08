@@ -1152,7 +1152,7 @@ html body .theme-row .t-btn{height:34px !important;font-size:11px !important;lin
 html body .t-links button, html body #btn-deck-random, html body #btn-deck-edit{background:linear-gradient(180deg,rgba(14,34,61,.95),rgba(10,22,40,.95)) !important;border:1px solid #c89b3c !important;border-radius:14px !important;color:#f2f6ff !important;font-weight:700 !important;line-height:1.2 !important;text-shadow:none !important;min-height:34px !important;display:flex !important;align-items:center !important;justify-content:center !important;overflow:hidden !important;text-overflow:ellipsis !important;white-space:nowrap !important;padding:4px 8px !important}
 html body #deck-edit{padding-bottom:150px !important}
 </style>
-<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v345</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v346</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1338,6 +1338,14 @@ html body #overlay-hof #btn-hof-close{position:sticky !important;bottom:0 !impor
 html body #overlay-hof .hof-podium{margin:0 0 10px !important;gap:6px !important}
 html body #overlay-hof .pod{padding:7px 4px 6px !important}
 html body #overlay-hof .hof-rows{gap:5px !important;margin-bottom:0 !important}
+</style>
+<style id="ui-v346">/* v346: 전화면 텍스트 잘림 방지 정책(사용자 지시) — 정보 텍스트(이름·점수·날짜) nowrap+ellipsis 금지 → keep-all 줄바꿈 허용, 포디엄 고정 높이 → auto+min-height(줄바꿈 시 세로 잘림 방지) */
+html body #overlay-hof .pod-name,html body #overlay-hof .pod-date,html body #overlay-hof .hr-name,html body #overlay-hof .hr-score,html body #overlay-hof .hr-date{white-space:normal !important;overflow:visible !important;text-overflow:clip !important;word-break:keep-all !important;line-height:1.3 !important}
+html body #overlay-hof .pod.p1,html body #overlay-hof .pod.p2,html body #overlay-hof .pod.p3{height:auto !important}
+html body #overlay-hof .pod.p2{min-height:112px !important}
+html body #overlay-hof .pod.p1{min-height:140px !important}
+html body #overlay-hof .pod.p3{min-height:98px !important}
+html body #overlay-hof .pod-name{font-size:12px !important}
 </style>
 <script src="qa-driver.js"></script>
 <script src="js/g1-art-assets.js"></script>
