@@ -223,39 +223,38 @@ const A={elixir:5, hand:[], queue:[], timer:2.0};       // AI(빨강)
 let units=[], towers=[], projs=[], fx=[], floats=[], parts=[];
 const AUTO=false; // 테스트용 자동 시작 플래그 (?auto=1로도 활성화)
 
-/* ---------- 사운드 (WebAudio 합성) ---------- */
-let AC=null;
-function ensureAudio(){ try{ if(!AC) return; if(AC.state==='closed'){ AC=null; } else if(AC.state==='suspended'){ AC.resume(); } }catch(e){ try{ AC=null; }catch(e2){} } }   /* v314: 배경 복귀 후 종결된 AC 정리 — 사망한 오디오가 입력·렌더를 죽이지 않는다 */
-window.__qaAcDie=window.__qaAcDie||function(){ try{ if(AC&&AC.close){ AC.close(); } }catch(e){} };   /* v314: QA — 실기기 AC 종결 상태 재현 훅 */
-function tone(f,d,type,v,slide){
-  if(!AC||S.muted||AC.state!=='running') return;   /* v314: 종결·비가동 AC는 무음 스킵 — 렌더·입력 루프로 예외 전파 차단 */
-  try{
-  const o=AC.createOscillator(), g=AC.createGain();
-  o.type=type||'sine'; o.frequency.value=f;
-  if(slide) o.frequency.linearRampToValueAtTime(Math.max(30,f+slide), AC.currentTime+d);
-  g.gain.value=v||0.08; g.gain.exponentialRampToValueAtTime(0.0001, AC.currentTime+d);
-  o.connect(g); g.connect(window.__COMP||AC.destination); o.start(); o.stop(AC.currentTime+d);
-  }catch(e){}   /* v314 */
-}
-function noiseBurst(d,v){
-  if(!AC||S.muted||(AC.state&&AC.state!=='running')) return;   /* v314 */
-  const n=AC.sampleRate*d, buf=AC.createBuffer(1,n,AC.sampleRate), ch=buf.getChannelData(0);
-  for(let i=0;i<n;i++) ch[i]=(Math.random()*2-1)*(1-i/n);
-  const src=AC.createBufferSource(), g=AC.createGain(); src.buffer=buf; g.gain.value=v;
-  src.connect(g); g.connect(window.__COMP||AC.destination); src.start();
-}
-function sfxBP(d,v,f0,f1){ if(!AC||S.muted||(AC.state&&AC.state!=='running')) return;   /* v314 */ const n=AC.sampleRate*d, buf=AC.createBuffer(1,n,AC.sampleRate), ch=buf.getChannelData(0); for(let i=0;i<n;i++) ch[i]=(Math.random()*2-1)*(1-i/n); const src=AC.createBufferSource(); src.buffer=buf; const bp=AC.createBiquadFilter(); bp.type='bandpass'; bp.Q.value=1.1; bp.frequency.setValueAtTime(f0,AC.currentTime); bp.frequency.linearRampToValueAtTime(f1,AC.currentTime+d); const g=AC.createGain(); g.gain.value=v; src.connect(bp); bp.connect(g); g.connect(window.__COMP||AC.destination); src.start(); }   /* v164: 화염 밴드패스 스윕 — game-audio-synth-system 스킬 */
+/* ---------- 사운드 (WebAudio 합성 — v376 전면 재구축: game-audio-synth-system 아키텍처, 제스처 지연 생성+복수 복구 경로) ---------- */
+const RA_AUDIO=(function(){
+  let ctx=null, master=null;
+  function build(){ try{
+    ctx=new (window.AudioContext||window.webkitAudioContext)();
+    master=ctx.createGain(); master.gain.value=1.0;
+    const comp=ctx.createDynamicsCompressor();
+    comp.threshold.setValueAtTime(-20,ctx.currentTime); comp.knee.setValueAtTime(40,ctx.currentTime);
+    comp.ratio.setValueAtTime(12,ctx.currentTime); comp.attack.setValueAtTime(0,ctx.currentTime); comp.release.setValueAtTime(0.25,ctx.currentTime);
+    master.connect(comp); comp.connect(ctx.destination);
+  }catch(e){ ctx=null; } }
+  function unlock(){ try{ if(!ctx) build(); if(ctx&&ctx.state==='suspended') ctx.resume(); }catch(e){} }
+  window.addEventListener('pointerdown',unlock,true);
+  window.addEventListener('touchend',unlock,true);
+  document.addEventListener('visibilitychange',function(){ try{ if(!document.hidden&&ctx&&ctx.state==='suspended') ctx.resume(); }catch(e){} });
+  return { unlock:unlock, getCtx:function(){return ctx;}, getMaster:function(){return master;}, state:function(){ return ctx?ctx.state:'null'; } };
+})();
+window.__RA_AUDIO=RA_AUDIO;
+function ensureAudio(){ RA_AUDIO.unlock(); }
+function tone(f,d,type,v,slide){ try{ const C=RA_AUDIO.getCtx(); if(!C||S.muted) return; if(C.state==='suspended') RA_AUDIO.unlock(); const o=C.createOscillator(), g=C.createGain(); o.type=type||'sine'; o.frequency.setValueAtTime(f,C.currentTime); if(slide) o.frequency.exponentialRampToValueAtTime(Math.max(20,f+slide),C.currentTime+d); g.gain.setValueAtTime(v,C.currentTime); g.gain.exponentialRampToValueAtTime(0.001,C.currentTime+d); o.connect(g); g.connect(RA_AUDIO.getMaster()); o.start(); o.stop(C.currentTime+d); }catch(e){} }
+function noiseBurst(d,v){ try{ const C=RA_AUDIO.getCtx(); if(!C||S.muted) return; if(C.state==='suspended') RA_AUDIO.unlock(); const n=C.sampleRate*d, buf=C.createBuffer(1,n,C.sampleRate), ch=buf.getChannelData(0); for(let i=0;i<n;i++) ch[i]=(Math.random()*2-1)*(1-i/n); const src=C.createBufferSource(); src.buffer=buf; const g=C.createGain(); g.gain.value=v; src.connect(g); g.connect(RA_AUDIO.getMaster()); src.start(); }catch(e){} }
+function sfxBP(d,v,f0,f1){ try{ const C=RA_AUDIO.getCtx(); if(!C||S.muted) return; if(C.state==='suspended') RA_AUDIO.unlock(); const n=C.sampleRate*d, buf=C.createBuffer(1,n,C.sampleRate), ch=buf.getChannelData(0); for(let i=0;i<n;i++) ch[i]=(Math.random()*2-1)*(1-i/n); const src=C.createBufferSource(); src.buffer=buf; const bp=C.createBiquadFilter(); bp.type='bandpass'; bp.Q.value=1.1; bp.frequency.setValueAtTime(f0,C.currentTime); bp.frequency.linearRampToValueAtTime(f1,C.currentTime+d); const g=C.createGain(); g.gain.value=v; src.connect(bp); bp.connect(g); g.connect(RA_AUDIO.getMaster()); src.start(); }catch(e){} }
 function sfx(k){
-  var __n=(performance.now()); if(window.__sfxT&&window.__sfxT[k]&&__n-window.__sfxT[k]<25) return; (window.__sfxT=window.__sfxT||{})[k]=__n;   /* v194: 동일 효과음 25ms 스로틀 */
-  if(!AC||S.muted||(AC.state&&AC.state!=='running')) return;   /* v314 */
-  try{ const __n=performance.now(); if(!sfx._t) sfx._t={}; if((k==='hit'||k==='shoot'||k==='thud'||k==='spark'||k==='bow'||k==='musket'||k==='clank'||k==='heavy'||k==='tick'||k==='impact'||k==='thudL'||k==='xbow'||k==='cannon')&&__n-(sfx._t[k]||0)<30) return; sfx._t[k]=__n; }catch(e){}   /* v163: 임팩트 스로틀 30ms */
+  try{ const __n=performance.now(); if(!window.__sfxT) window.__sfxT={}; if(__n-(window.__sfxT[k]||0)<25) return; window.__sfxT[k]=__n; }catch(e){}   /* v194: 25ms 전역 스로틀 */
+  try{ if(!sfx._t) sfx._t={}; const __n2=performance.now(); if((k==='hit'||k==='shoot'||k==='thud'||k==='spark'||k==='bow'||k==='musket'||k==='clank'||k==='heavy'||k==='tick'||k==='impact'||k==='thudL'||k==='xbow'||k==='cannon')&&__n2-(sfx._t[k]||0)<30) return; sfx._t[k]=__n2; }catch(e){}   /* v163+ */
   if(k==='deploy'){ tone(500,.12,'triangle',.10,140); }
   else if(k==='shoot'){ tone(900,.06,'square',.03); }
   else if(k==='hit'){ const __d=1+(Math.random()*.16-.08); tone(210*__d,.05,'square',.05); }
   else if(k==='cast'){ tone(300,.3,'sawtooth',.06,260); }
   else if(k==='zap'){ tone(1500,.14,'square',.06,-1250); tone(2230,.12,'square',.045,-1900); noiseBurst(.07,.05); }
   else if(k==='boom'){ noiseBurst(.4,.18); tone(70,.45,'sine',.22,-40); tone(45,.5,'sine',.14,-15); }
-  else if(k==='crown'){ tone(1100,.05,'square',.07,-200); [262,330,392,523].forEach((f,i)=>setTimeout(()=>tone(f,.22,'triangle',.10),90+i*120));   /* v165: 앤빌 클랭+승차 아르페지오 */ }
+  else if(k==='crown'){ tone(1100,.05,'square',.07,-200); [262,330,392,523].forEach((f,i)=>setTimeout(()=>tone(f,.22,'triangle',.10),90+i*120)); }
   else if(k==='win'){ [523,659,784,1046].forEach((f,i)=>setTimeout(()=>tone(f,.24,'triangle',.13),i*170)); }
   else if(k==='lose'){ [392,311,262].forEach((f,i)=>setTimeout(()=>tone(f,.3,'sawtooth',.07),i*210)); }
   else if(k==='bow'){ tone(420,.06,'triangle',.045,-140); noiseBurst(.04,.015); }
@@ -276,27 +275,9 @@ function sfx(k){
   else if(k==='thudL'){ const __d=1+(Math.random()*.16-.08); tone(150*__d,.07,'square',.075,-40); noiseBurst(.04,.05); }
   else if(k==='xbow'){ const __d=1+(Math.random()*.16-.08); tone(700*__d,.05,'square',.055,-300); noiseBurst(.03,.035); }
 }
-
-/* ---------- v54: 전투 BGM (WebAudio 절차 루프) ---------- */
-let bgmTimer=null, bgmStep=0;
-function bgmStart(){
-  ensureAudio();
-  if(!AC||S.muted||bgmTimer) return;
-  bgmStep=0;
-  bgmTimer=setInterval(function(){
-    if(!AC||S.muted||(AC.state&&AC.state!=='running')) return;   /* v314 */
-    try{
-      bgmStep++;
-      const line=[110,0,131,0,110,0,147,165];
-      if(bgmStep%2===1){ const f=line[(bgmStep>>1)%8]; if(f) tone(f,0.22,'triangle',0.020); }
-      if(bgmStep%4===1) noiseBurst(0.025,0.010);
-      if(bgmStep%8===0) tone(55,0.30,'sine',0.038);
-      if(bgmStep%8===4) tone(82,0.18,'sine',0.026);
-    }catch(e){}
-  },250);
-}
-function bgmStop(){ if(bgmTimer){ clearInterval(bgmTimer); bgmTimer=null; } }
-
+let bgmTimer=null;
+function bgmStart(){ try{ const C=RA_AUDIO.getCtx(); if(!C||S.muted||bgmTimer) return; RA_AUDIO.unlock(); let st=0; bgmTimer=setInterval(function(){ if(S.muted) return; const __line=[110,110,98,98,87,87,98,123], __arp=[262,330,392,523]; if(st%2===0) tone(__line[(st>>1)%8],0.25,'triangle',0.030); else tone(__arp[(st>>1)%4],0.18,'sine',0.020); st++; },330); window.__RA_BGM=true; }catch(e){} }
+function bgmStop(){ try{ if(bgmTimer){ clearInterval(bgmTimer); bgmTimer=null; window.__RA_BGM=false; } }catch(e){} }
 /* ---------- 배너/토스트 ---------- */
 let bannerTO=null, toastTO=null;
 function banner(txt,ms){
