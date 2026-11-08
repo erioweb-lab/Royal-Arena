@@ -125,6 +125,7 @@ window.__navUp=function(){ try{
     b.style.setProperty('border','1.5px solid #c89b3c','important'); /* v359: 골드 테두리 표준 — 이 인라인 important가 모든 CSS를 이기므로 출처에서 금색 고정(주기 재도색도 금색 유지) */
     b.style.setProperty('color','#fbbf24','important');
     var __pt=(b.textContent||'');
+    if(/게임 방법/.test(__pt)){ b.style.removeProperty('background'); b.style.removeProperty('border'); } /* v361: 게임 방법 버튼도 인라인 남색 배경 제거 — CSS 문양 배경 적용 허용 */
     if(/덱 편성|유물|명예의 전당|프로필|전술 연구소/.test(__pt)){ b.style.removeProperty('background'); b.style.removeProperty('border'); b.style.removeProperty('color'); b.classList.add(__pt.indexOf('덱 편성')>=0?'nav-deck':__pt.indexOf('유물')>=0?'nav-relic':__pt.indexOf('명예의 전당')>=0?'nav-hof':__pt.indexOf('프로필')>=0?'nav-profile':'nav-skill'); }
     b.style.setProperty('border-radius','14px','important');
     b.style.setProperty('min-height','48px','important');
