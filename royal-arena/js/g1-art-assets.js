@@ -972,6 +972,11 @@ function showResult(){
   $('#rt-spell').textContent=((S.spells&&S.spells.blue)||0)+'회';
   $('#rt-hp').textContent=tPct*2;
   $('#rt-time').textContent=timeLeft;
+  try{ var __e1=document.getElementById('rt-sbest'); if(__e1) __e1.textContent=(localStorage.getItem('ra_streak_best_v1')||'0')+'연승'; }catch(e){}
+  try{ var __td2=new Date().toISOString().slice(0,10); var __e2=document.getElementById('rt-first'); if(__e2) __e2.textContent=localStorage.getItem('ra_daily_v1')===__td2?'소진':'대기'; }catch(e){}
+  try{ var __e3=document.getElementById('rt-xp'); var __xg3=localStorage.getItem('ra_xp_gain_v1'); if(__e3) __e3.textContent=__xg3?('+'+__xg3):'-'; }catch(e){}
+  try{ var __e4=document.getElementById('rt-sp'); var __sg3=localStorage.getItem('ra_sp_gain_v1'); if(__e4) __e4.textContent=__sg3?('+'+__sg3):'-'; }catch(e){}
+  try{ var __mirT=setInterval(function(){ try{ var __bar2=document.getElementById('ra-stats'); var __mir=document.getElementById('rt-mirror'); if(!__mir){ clearInterval(__mirT); return; } if(__bar2&&__bar2.textContent){ var __bt=__bar2.textContent.replace(/ · /g,'\n'); if(__bt&&__bt!==__mir.textContent) __mir.textContent=__bt; if(__bt) clearInterval(__mirT); } }catch(e){ try{ clearInterval(__mirT); }catch(e2){} } },200); setTimeout(function(){ try{ clearInterval(__mirT); }catch(e){} },8000); }catch(e){}
   $('#rt-sum').textContent=score;
   try{ hofRecord(score); }catch(e){}
   if(!S._tp){ S._tp=1; try{ var __d=applyTrophyDelta(S.winner); var __te=document.getElementById('rt-trophy'); if(__te){ __te.textContent=(__d>=0?'+':'')+__d; __te.style.color=__d>=0?'#ffe08a':'#ff8f8f'; } }catch(e){} }   // v105 #11: 트로피 증감
