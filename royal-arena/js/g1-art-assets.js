@@ -43,7 +43,7 @@ const CARDS={
   flamer:   {name:'화염방사병', emoji:'🔥', cost:4, count:1, hp:960,  dmg:85,  hs:0.8, range:1.2, spd:1.1, flying:false, hitsAir:false, targets:'any', r:0.45, splash:1.0, desc:'근접 속사 광역 화염'},
   golem:    {name:'수정 골렘',  emoji:'💎', cost:6, count:1, hp:5200, dmg:140, hs:1.8, range:1.0, spd:0.7, flying:false, hitsAir:false, targets:'buildings', r:0.70, desc:'초대형 건물 탱커'},
   scarecrow:{name:'허수아비',   emoji:'🎭', cost:1, count:1, hp:950,  dmg:6,   hs:1.0, range:0.5, spd:1.4, flying:false, hitsAir:false, targets:'any', r:0.40, desc:'미끼 — 값싼 어그로 방벽'},
-  plasma:{name:'플라즈마',    emoji:'🌀', cost:4, kind:'spell', dmg:280, towerDmg:110, radius:1.4, desc:'단일 즉발 — 강한 피해+화상 3초'},
+  plasma:{name:'플라즈마',    emoji:'🌀', cost:4, kind:'spell', dmg:280, towerDmg:110, radius:1.4, desc:'플라즈마탄 발사 — 피해+화상 3초+잔류 존'},
   venom:{name:'맹독 안개',    emoji:'☠️', cost:4, kind:'spell', dmg:85,  towerDmg:50,  radius:2.2, desc:'광역 맹독 — 중독 틱 6초'},
   shock:{name:'충격파',      emoji:'💫', cost:5, kind:'spell', dmg:160, towerDmg:70,  radius:2.6, stun:0.5, desc:'광역 기절 0.5초'}
 };
@@ -513,7 +513,7 @@ try{ (function(){
 
 /* ---------- 타워 생성 (REA 설계도 §2) ---------- */
 function mkTower(team,kind,x,y){
-  const st= kind==='king' ? {hp:2600,dmg:66,hs:1.0,range:7.0,r:1.6} : {hp:1400,dmg:62,hs:0.8,range:7.5,r:1.3};
+  const st= kind==='king' ? {hp:2900,dmg:84,hs:1.0,range:7.0,r:1.6} : {hp:1600,dmg:78,hs:0.8,range:7.5,r:1.3};   /* v380: 유닛 파워크리프(에픽 hp3200~5200·dps100~169) 대비 타워 기준선 재정가 — dmg+hp 미세 상향(승패 페이스 +12% 이내) */
   if(team==='blue'){ try{ var __cl2=parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)+1; if(__cl2>0) st.hp=Math.round(st.hp*(1+0.06*__cl2)); if(S&&S.__rin==='relic_bulwark') st.hp=Math.round(st.hp*1.3*(S.__rinMul||1));   /* v218 증폭 */ if(S&&S.__rin==='relic_frenzy') st.hp=Math.round(st.hp*0.9); }catch(__e){} }   /* v209 영구 강화 + v212 인런 방벽·공세 */
   return {isTower:true, kind, team, x, y, hp:st.hp, maxHp:st.hp, dmg:st.dmg, hs:st.hs, range:st.range, r:st.r, cd:0, dead:false, active:kind!=='king'};
 }
@@ -812,6 +812,8 @@ function muzzleStar(t,tg){   // v136 P14: 타워 포구 스타 버스트 머즐 
 }
 function updateProjs(dt){
   for(const p of projs){
+    if(p.kind==='meteorbit'){ if(p.delay>0){ p.delay-=dt; continue; } p.t+=dt/p.T; const _k2=Math.min(1,Math.max(0,p.t)); p.x=lerp(p.x0,p.x1,_k2); p.y=lerp(p.y0,p.y1,_k2); if(Math.random()<0.7) addParts(p.x,p.y,1,'#ff9d3c',0.8,0.3,0); if(_k2>=1){ p.done=true; explodeMeteorBit(p); } continue; }   /* v380: 파편 유성 비행 */
+    if(p.kind==='plasmabolt'){ p.t+=dt/p.T; const _k3=Math.min(1,Math.max(0,p.t)); p.x=lerp(p.x0,p.x1,_k3); p.y=lerp(p.y0,p.y1,_k3); if(Math.random()<0.8) addParts(p.x,p.y,1,'#cf9dff',0.9,0.3,0); if(_k3>=1){ p.done=true; explodePlasma(p); } continue; }   /* v380: 플라즈마탄 비행 */
     if(p.kind==='fireball'){
       p.t+=dt/p.T; const k=Math.min(1,p.t);
       p.x=lerp(p.x0,p.x1,k); p.y=lerp(p.y0,p.y1,k);
@@ -848,6 +850,10 @@ function castHealWind(team,x,y){ const c=CARDS.healwind;
 function castMeteor(team,x,y){ const c=CARDS.meteor, et=enemyOf(team);
   fx.push({x,y,t:0,dur:0.55,kind:'warnring'}); fx.push({x,y,t:0,dur:0.5,kind:'boom'}); fx.push({x,y,t:0,dur:0.35,kind:'flash'}); S.shake=0.6; S.spellQuiet=2.2; sfx('boom');
   addParts(x,y,26,'#ff9d3c',3.6,0.6,70); fx.push({x,y,t:0,dur:8,kind:'crater',r:c.radius}); fx.push({x,y,t:0,dur:4.5,kind:'burnzone',r:c.radius,team:team});   /* v326: 화염 분화구 8초+잔열 지역 4.5초(반경 내 화염 지속) */
+  { const _kt2=towers.find(t=>t.team===team&&t.kind==='king'&&!t.dead)||{x:9,y:team==='blue'?29:3};   /* v380: 유성우 다발 — 본 낙하+유도 파편 유성 4발(파이어볼 계통 발사) */
+    for(let _i=0;_i<4;_i++){ const _ma=Math.random()*6.2832, _mr=Math.sqrt(Math.random())*c.radius*0.85;
+      const _mx=clamp(x+Math.cos(_ma)*_mr,0.4,COLS-0.4), _my=clamp(y+Math.sin(_ma)*_mr*0.55,0.4,ROWS-0.4);
+      projs.push({kind:'meteorbit',team,x0:_kt2.x,y0:_kt2.y,x1:_mx,y1:_my,x:_kt2.x,y:_kt2.y,t:0,T:0.62+Math.random()*0.3,delay:_i*0.07,dmg:Math.round(spellDmg(c.dmg)*0.32)}); } }
   for(const u of units){ if(u.dead||u.team!==et) continue; if(Math.hypot(u.x-x,u.y-y)<=c.radius){ u.burnT=Math.max(u.burnT||0,3); u.burnDps=24; u.burnAcc=0; floats.push({dx:(Math.random()*10-5),dy:0,x:u.x,y:u.y-1.2,txt:'🔥 화상',t:0.7,col:'#ff9d3c',big:false}); dealDamage(u,spellDmg(c.dmg),team,true); } }
   for(const t of towers){ if(t.dead||t.team!==et) continue; if(Math.hypot(t.x-x,t.y-y)<=c.radius+0.5) dealDamage(t,spellDmg(c.towerDmg),team); } }
 /* v208: 눈보라 — 광역 둔화 3초 */
@@ -890,9 +896,22 @@ function explodeFireball(p){
     if(Math.hypot(t.x-p.x1,t.y-p.y1)<=c.radius+0.5) dealDamage(t,spellDmg(c.towerDmg),p.team); }
 }
 
-/* v324: 플라즈마 — 단일 즉발 280+화상 3초 */
-function castPlasma(team,x,y){ const c=CARDS.plasma, et=enemyOf(team);
-  fx.push({x,y,t:0,dur:0.35,kind:'flash'}); fx.push({x,y,t:0,dur:0.5,kind:'ring',col:'rgba(207,157,255,.9)'}); fx.push({x,y,t:0,dur:0.55,kind:'shockring'}); addParts(x,y,12,'#cf9dff',3.0,0.5,45); S.shake=0.35; S.spellQuiet=2.0; sfx('zap');
+/* v380: 파편 유성 착탄 — 소형 폭발+부분 피해(화상은 본 낙하 전담, 중복 부여 없음) */
+function explodeMeteorBit(p){
+  fx.push({x:p.x1,y:p.y1,t:0,dur:0.4,kind:'boom'}); fx.push({x:p.x1,y:p.y1,t:0,dur:0.25,kind:'flash'}); fx.push({x:p.x1,y:p.y1,t:0,dur:0.45,kind:'ring',col:'rgba(255,177,77,.85)'});
+  addParts(p.x1,p.y1,10,'#ffb14d',2.6,0.5,45);
+  const et=enemyOf(p.team);
+  for(const u of units){ if(u.dead||u.team===p.team) continue; if(Math.hypot(u.x-p.x1,u.y-p.y1)<=1.0) dealDamage(u,p.dmg,p.team,true); }
+}
+/* v324+380: 플라즈마 — 플라즈마탄 발사(착탄 단일 대상 280+화상 3초)+잔류 존 4.2초 */
+function castPlasma(team,x,y){ const c=CARDS.plasma;
+  const _kt=towers.find(t=>t.team===team&&t.kind==='king'&&!t.dead)||{x:9,y:team==='blue'?29:3};
+  const x1c=clamp(x,0.4,COLS-0.4), y1c=clamp(y,0.4,ROWS-0.4), _T0=Math.max(0.5,Math.hypot(x-_kt.x,y-_kt.y)/10);
+  projs.push({kind:'plasmabolt',team,x0:_kt.x,y0:_kt.y,x1:x1c,y1:y1c,x:_kt.x,y:_kt.y,t:0,T:_T0});
+  fx.push({x:x1c,y:y1c,t:0,dur:_T0+0.25,kind:'warnring'}); S.spellQuiet=_T0+2.0; sfx('cast'); }
+function explodePlasma(p){ const c=CARDS.plasma, et=enemyOf(p.team), x=p.x1, y=p.y1, team=p.team;
+  fx.push({x,y,t:0,dur:0.35,kind:'flash'}); fx.push({x,y,t:0,dur:0.5,kind:'ring',col:'rgba(207,157,255,.9)'}); fx.push({x,y,t:0,dur:0.55,kind:'shockring'}); addParts(x,y,12,'#cf9dff',3.0,0.5,45); S.shake=0.35; sfx('zap');
+  fx.push({x,y,t:0,dur:4.2,kind:'plasmazone',r:c.radius,team:team});   /* v380: 공격지역 지속 그래픽 존(시각 전용 — 밸런스 불변) */
   var __bt=null,__bd=1e9;
   for(const u of units){ if(u.dead||u.team!==et||u.isTower) continue; var __d3=Math.hypot(u.x-x,u.y-y); if(__d3<=c.radius&&__d3<__bd){ __bd=__d3; __bt=u; } }
   if(__bt){ __bt.burnT=Math.max(__bt.burnT||0,3); __bt.burnDps=20; __bt.burnAcc=0; dealDamage(__bt,spellDmg(c.dmg),team,true); floats.push({dx:(Math.random()*10-5),dy:0,x:__bt.x,y:__bt.y-1.4,txt:'🌀 '+Math.round(spellDmg(c.dmg)),t:0.8,col:'#cf9dff',big:true}); fx.push({x:__bt.x,y:__bt.y,t:0,dur:0.4,kind:'ring',col:'rgba(230,210,255,.95)'}); addParts(__bt.x,__bt.y,10,'#e6d2ff',2.6,0.5,35); }
@@ -1873,11 +1892,19 @@ function bake16(){
 function visAngle(p,px,py2){ let va; if(p._lx!=null&&(px!==p._lx||py2!==p._ly)) va=Math.atan2(py2-p._ly,px-p._lx); else va=Math.atan2(p.ty-p.y,p.tx-p.x); p._lx=px; p._ly=py2; return va; }
 function drawProj(p){
   const px=p.x*TILE, py=p.y*TILE;
-  if(p.kind==='fireball'){
-    const lift=Math.sin(Math.min(1,p.t)*Math.PI)*14, sz=54;
-    const gl=ctx.createRadialGradient(px,py-lift,2,px,py-lift,36);
+  if(p.kind==='plasmabolt'){ const _pl=Math.sin(Math.min(1,Math.max(0,p.t))*Math.PI)*12, _py3=py-_pl;   /* v380: 플라즈마탄 — 발광 코어+바이올렛 트레일 */
+    const _pa=Math.atan2(p.y1-p.y0,p.x1-p.x0), _tsx=px-Math.cos(_pa)*26, _tsy=_py3-Math.sin(_pa)*26;
+    const _tg=ctx.createLinearGradient(_tsx,_tsy,px,_py3); _tg.addColorStop(0,'rgba(207,157,255,0)'); _tg.addColorStop(1,'rgba(230,210,255,.95)');
+    ctx.strokeStyle=_tg; ctx.lineWidth=3.2; ctx.beginPath(); ctx.moveTo(_tsx,_tsy); ctx.lineTo(px,_py3); ctx.stroke();
+    const _pg=ctx.createRadialGradient(px,_py3,1,px,_py3,22); _pg.addColorStop(0,'rgba(230,210,255,.85)'); _pg.addColorStop(0.5,'rgba(175,120,255,.45)'); _pg.addColorStop(1,'rgba(175,120,255,0)');
+    ctx.fillStyle=_pg; ctx.beginPath(); ctx.arc(px,_py3,22,0,7); ctx.fill();
+    ctx.fillStyle='#f4ecff'; ctx.beginPath(); ctx.arc(px,_py3,4.6,0,7); ctx.fill();
+    return; }
+  if(p.kind==='fireball'||p.kind==='meteorbit'){
+    const lift=Math.sin(Math.min(1,Math.max(0,p.t))*Math.PI)*(p.kind==='meteorbit'?10:14), sz=p.kind==='meteorbit'?36:54, _gr2=p.kind==='meteorbit'?22:36;   /* v380: 파편 유성 — 소형 계열 */
+    const gl=ctx.createRadialGradient(px,py-lift,2,px,py-lift,_gr2);
     gl.addColorStop(0,'rgba(255,140,40,.5)'); gl.addColorStop(1,'rgba(255,140,40,0)');
-    ctx.fillStyle=gl; ctx.beginPath(); ctx.arc(px,py-lift,36,0,7); ctx.fill();
+    ctx.fillStyle=gl; ctx.beginPath(); ctx.arc(px,py-lift,_gr2,0,7); ctx.fill();
     const fim=(typeof PSPR!=='undefined')?PSPR.fireball:null;
     if(fim&&fim.complete){ ctx.save();
       bake16(); const ff=PROJ16.fireball; const va2=visAngle(p,px,py-lift);
@@ -1955,13 +1982,41 @@ function drawFx(f){
     ctx.globalAlpha=0.5*_a0; ctx.fillStyle='#ffffff';   /* 서리 반점 */
     for(let i=0;i<5;i++){ const _fx2=_px+Math.sin(i*2.4+f.x*7)*_rr*0.55, _fy2=_py+Math.cos(i*1.9+f.y*5)*_rr*0.22;
       ctx.beginPath(); ctx.ellipse(_fx2,_fy2,_rr*0.15,_rr*0.06,0,0,7); ctx.fill(); }
-    ctx.shadowColor='rgba(214,238,255,.95)'; ctx.shadowBlur=5; ctx.fillStyle='#ffffff';   /* 낙하 눈송이(위상·반짝임) */
-    for(let i=0;i<22;i++){ const _sx=(Math.sin(i*37.7+f.x*9)+1)/2, _sy=((i*0.61+f.t*(0.42+(i%3)*0.1)+i*i*0.13)%1);
-      const _tw=0.55+0.45*Math.sin(now*6+i*1.7);
+    ctx.shadowColor='rgba(214,238,255,.95)'; ctx.shadowBlur=5; ctx.fillStyle='#ffffff';   /* v380: 랜덤 낙설 — 원 균일분포(√r)·개별 낙속/드리프트/크기(시드 결정형, 무플리커) */
+    for(let i=0;i<20;i++){ const _s1=Math.sin(i*127.1+f.x*13.7+f.y*7.3)*43758.5453, _r1=_s1-Math.floor(_s1);
+      const _s2=Math.sin(i*311.7+f.y*5.1+1.7)*12543.21, _r2=_s2-Math.floor(_s2);
+      const _ang=_r1*6.2832, _rd=Math.sqrt(_r2)*0.92;
+      const _bx=_px+Math.cos(_ang)*_rd*_rr, _by=_py+Math.sin(_ang)*_rd*_rr*0.5;
+      const _sy=((f.t*(0.5+_r1*0.55)+_r2*9)%1);
+      const _cx=_bx+Math.sin(f.t*(1.1+_r1*1.4)+i)*_rr*0.05, _cy=_by-_rr*0.52+_sy*_rr*1.05;
+      const _tw=0.55+0.45*Math.sin(now*6+i*2.3);
       ctx.globalAlpha=(0.45+0.55*_tw)*_a0;
-      ctx.beginPath(); ctx.arc(_px+(_sx-0.5)*2*_rr+Math.sin(now*2+i)*2, _py-_rr*0.5+_sy*_rr*1.35, 2.1+(i%4)*0.8, 0, 7); ctx.fill(); }
+      ctx.beginPath(); ctx.arc(_cx,_cy,1.5+_r2*2.3,0,7); ctx.fill(); }
+    for(let i=0;i<6;i++){ const _s3=Math.sin(i*91.3+f.x*3.3+0.9)*999.77, _g3=_s3-Math.floor(_s3);   /* v380: 지면 반짝임 글린트 */
+      const _tw2=0.5+0.5*Math.sin(now*5+i*2.9+_g3*6);
+      ctx.globalAlpha=(0.25+0.55*_tw2)*_a0;
+      ctx.beginPath(); ctx.arc(_px+(Math.sin(i*2.7+f.x*11)*0.8)*_rr, _py+(Math.cos(i*1.9+f.y*7)*0.3)*_rr, 1.2+_g3*1.6, 0, 7); ctx.fill(); }
     ctx.shadowBlur=0;
     ctx.globalAlpha=0.4*_a0; ctx.strokeStyle='#eaf6ff'; ctx.lineWidth=1.5;   /* 차가운 림 */
+    ctx.beginPath(); ctx.ellipse(_px,_py,_rr,_rr*0.52,0,0,7); ctx.stroke();
+    ctx.restore();
+  }
+  else if(f.kind==='plasmazone'){   /* v380: 플라즈마 잔류 존 — 전기 아크+상승 스파크(시각 전용·페이드 인아웃) */
+    const _px=f.x*TILE, _py=f.y*TILE, _rr=f.r*TILE, _a0=Math.min(1,f.t*2.5)*Math.min(1,(f.dur-f.t)*2);
+    ctx.save();
+    const _pg=ctx.createRadialGradient(_px,_py,_rr*0.05,_px,_py,_rr);
+    _pg.addColorStop(0,'rgba(120,80,200,'+(0.30*_a0)+')'); _pg.addColorStop(0.6,'rgba(160,110,255,'+(0.20*_a0)+')'); _pg.addColorStop(1,'rgba(160,110,255,0)');
+    ctx.fillStyle=_pg; ctx.beginPath(); ctx.ellipse(_px,_py,_rr,_rr*0.52,0,0,7); ctx.fill();
+    ctx.strokeStyle='rgba(225,205,255,'+(0.85*_a0)+')'; ctx.lineWidth=1.8; ctx.shadowColor='rgba(190,150,255,.9)'; ctx.shadowBlur=6; ctx.globalAlpha=_a0;   /* 전기 아크 2선 — 0.12초마다 재생성(위상 시드) */
+    for(let i=0;i<2;i++){ const _seed=Math.floor(f.t*8)*3.7+i*11.3;
+      ctx.beginPath(); let _ax=_px+(Math.sin(_seed)*0.8)*_rr, _ay=_py+(Math.cos(_seed*1.7)*0.35)*_rr; ctx.moveTo(_ax,_ay);
+      for(let s2=1;s2<=4;s2++){ const _ss=_seed+s2*2.3; _ax=_px+(Math.sin(_ss)*0.85)*_rr; _ay=_py+(Math.cos(_ss*1.3)*0.42)*_rr; ctx.lineTo(_ax,_ay); }
+      ctx.stroke(); }
+    ctx.shadowBlur=0;
+    for(let i=0;i<8;i++){ const _sd=Math.sin(i*53.7+f.x*3.1)*777.7, _g=_sd-Math.floor(_sd); const _gp=((f.t*(0.7+_g*0.8)+_g)%1);   /* 상승 스파크 */
+      ctx.globalAlpha=(1-_gp)*0.8*_a0; ctx.fillStyle='#e6d2ff';
+      ctx.beginPath(); ctx.arc(_px+Math.sin(i*4.1+_g*9)*_rr*0.6, _py-_gp*_rr*0.6, 1.7, 0, 7); ctx.fill(); }
+    ctx.globalAlpha=0.5*_a0; ctx.strokeStyle='#d9c2ff'; ctx.lineWidth=1.4;
     ctx.beginPath(); ctx.ellipse(_px,_py,_rr,_rr*0.52,0,0,7); ctx.stroke();
     ctx.restore();
   }

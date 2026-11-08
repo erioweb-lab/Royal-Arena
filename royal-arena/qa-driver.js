@@ -95,7 +95,21 @@ function runBattle(cb){
       else if(tries<10){ setTimeout(go,400); } else { set('SCREEN-codex:FAIL'); } }
     setTimeout(go,400);
   })(); }
-    if(mode==='walk'){ setTimeout(function(){ try{ var sc=document.getElementById('screen-title'); if(!sc){ set('TG:no-title'); return; }   /* v272: 메인 간극 숫자 실측 */
+    if(mode==='fx'){ setTimeout(function(){ try{   /* v380: 주문 이펙트 실측 — 유성우 다발·플라즈마탄 발사·눈보라 존 */
+    var st2=document.querySelector('#btn-start'); if(!st2){ set('FX:no-btn'); return; } clickEl(st2);
+    setTimeout(function(){ try{
+      if(!window.castSpell){ set('FX:no-castSpell'); return; }
+      window.castSpell('meteor','blue',9,20); window.castSpell('blizzard','blue',6,22); window.castSpell('plasma','blue',12,18);
+      setTimeout(function(){ try{
+        var zk={},pk={};
+        for(var i=0;i<fx.length;i++){ var k2=fx[i].kind; if(k2==='crater'||k2==='snowzone'||k2==='plasmazone') zk[k2]=(zk[k2]||0)+1; }
+        for(var j=0;j<projs.length;j++){ var k3=projs[j].kind; if(k3==='meteorbit'||k3==='plasmabolt') pk[k3]=(pk[k3]||0)+1; }
+        var TOK='FXZONES:crater='+(zk.crater||0)+'/snowzone='+(zk.snowzone||0)+'/plasmazone='+(zk.plasmazone||0)+' PROJ:meteorbit='+(pk.meteorbit||0)+'/plasmabolt='+(pk.plasmabolt||0)+' ERR:'+errs.length;
+        set(TOK); setInterval(function(){ set(TOK); },400);   /* 캡처 타이밍 무관 유지 */
+      }catch(e){ set('FX:ERR2:'+e.message); } },420);
+    }catch(e){ set('FX:ERR1:'+e.message); } },1600);
+  }catch(e){ set('FX:ERR0'); } },600); }
+  if(mode==='walk'){ setTimeout(function(){ try{ var sc=document.getElementById('screen-title'); if(!sc){ set('TG:no-title'); return; }   /* v272: 메인 간극 숫자 실측 */
     var rs={}; [].slice.call(sc.querySelectorAll('button')).forEach(function(b){ var r=b.getBoundingClientRect(); if(r.width<10||r.top<0) return; var k=Math.round(r.top/12); (rs[k]=rs[k]||[]).push(r); });
     var ks=Object.keys(rs).map(Number).sort(function(a,b){return a-b;}); var o=[],hg=[],vg=[];
     ks.forEach(function(k,i){ var row=rs[k].sort(function(a,b){return a.left-b.left;}); if(row.length<2) return; var mn=1e9,mx=0; for(var j=1;j<row.length;j++){ var g=Math.round(row[j].left-row[j-1].right); if(g<0)g=0; if(g<mn)mn=g; if(g>mx)mx=g; } if(mn<1e9){ hg.push(mn);hg.push(mx); o.push('r'+i+'n'+row.length+'g'+mn+'-'+mx); } });
