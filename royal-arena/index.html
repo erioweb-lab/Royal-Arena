@@ -1152,7 +1152,7 @@ html body .theme-row .t-btn{height:34px !important;font-size:11px !important;lin
 html body .t-links button, html body #btn-deck-random, html body #btn-deck-edit{background:linear-gradient(180deg,rgba(14,34,61,.95),rgba(10,22,40,.95)) !important;border:1px solid #c89b3c !important;border-radius:14px !important;color:#f2f6ff !important;font-weight:700 !important;line-height:1.2 !important;text-shadow:none !important;min-height:34px !important;display:flex !important;align-items:center !important;justify-content:center !important;overflow:hidden !important;text-overflow:ellipsis !important;white-space:nowrap !important;padding:4px 8px !important}
 html body #deck-edit{padding-bottom:150px !important}
 </style>
-<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v350</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v351</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1352,6 +1352,15 @@ html body #overlay-hof .pod-score{font-size:15px !important;white-space:normal !
 html body #overlay-info .t-note{flex:none !important;min-height:auto !important;overflow:visible !important;height:auto !important}
 html body #overlay-info{position:relative !important;overflow:visible !important}
 html body #ra-inote{position:absolute !important;left:50% !important;bottom:calc(100% + 8px) !important;transform:translateX(-50%) !important;display:block !important;width:max-content !important;max-width:min(88vw,340px) !important;background:rgba(10,18,34,.96) !important;border:1px solid #c89b3c !important;border-radius:10px !important;padding:6px 10px !important;color:#ffd76a !important;font-size:11px !important;font-weight:700 !important;white-space:normal !important;overflow:visible !important;height:auto !important;word-break:keep-all !important;overflow-wrap:anywhere !important;line-height:1.35 !important;z-index:80 !important;text-align:center !important;box-shadow:0 4px 14px rgba(0,0,0,.55) !important;pointer-events:none !important}
+</style>
+<style id="ui-v351">/* v351: 게임방법·프로필 팝업 게임 화풍 개편(사용자 지시) — v345 HOF 톤 통일: 금테 판타지 카드+골드 좌변 정보 행+금속 확인 버튼+딤 강화(배경 비침 완화) */
+html body #overlay-info,html body #overlay-profile{background:rgba(4,8,18,.8) !important;backdrop-filter:blur(2px) !important}
+html body #overlay-info>div,html body #overlay-profile>div{background:linear-gradient(180deg,#182848 0%,#101a30 55%,#0b1322 100%) !important;border:2px solid #c89b3c !important;border-radius:18px !important;box-shadow:0 0 0 2px rgba(247,197,49,.25),0 0 26px rgba(247,197,49,.18),0 24px 70px rgba(0,0,0,.65) !important}
+html body #overlay-info .t-how,html body #overlay-info .t-note{background:rgba(14,34,61,.75) !important;border:1px solid rgba(200,155,60,.45) !important;border-left:3px solid #c89b3c !important;border-radius:10px !important;padding:9px 10px !important}
+html body #overlay-info .t-note{border-top:none !important;margin-top:10px !important}
+html body #overlay-info>div>:first-child{color:#ffd76a !important;text-shadow:0 2px 4px rgba(0,0,0,.7) !important}
+html body #overlay-info #btn-info-close{background:linear-gradient(180deg,#ffdf7e,#f7c531 45%,#c8922a) !important;color:#2b1c05 !important;border:1.5px solid #8a5d13 !important;text-shadow:none !important;font-weight:800 !important;box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 3px 0 #7a5210,0 6px 12px rgba(0,0,0,.4) !important;border-radius:12px !important}
+html body #overlay-profile button{background:linear-gradient(180deg,rgba(20,44,78,.95),rgba(12,26,46,.95)) !important;border:1px solid #c89b3c !important;border-radius:10px !important;box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 3px 0 #1c2740,0 6px 12px rgba(0,0,0,.35) !important}
 </style>
 <script src="qa-driver.js"></script>
 <script src="js/g1-art-assets.js"></script>
