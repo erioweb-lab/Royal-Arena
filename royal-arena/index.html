@@ -1152,7 +1152,7 @@ html body .theme-row .t-btn{height:34px !important;font-size:11px !important;lin
 html body .t-links button, html body #btn-deck-random, html body #btn-deck-edit{background:linear-gradient(180deg,rgba(14,34,61,.95),rgba(10,22,40,.95)) !important;border:1px solid #c89b3c !important;border-radius:14px !important;color:#f2f6ff !important;font-weight:700 !important;line-height:1.2 !important;text-shadow:none !important;min-height:34px !important;display:flex !important;align-items:center !important;justify-content:center !important;overflow:hidden !important;text-overflow:ellipsis !important;white-space:nowrap !important;padding:4px 8px !important}
 html body #deck-edit{padding-bottom:150px !important}
 </style>
-<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v361</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v362</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1421,6 +1421,26 @@ html body #screen-title button:not(#btn-start):not(.sel){background:linear-gradi
 html body #screen-title button:not(#btn-start):not(.sel):active,html body #screen-title button:not(#btn-start):not(.sel):hover{filter:brightness(1.18) !important;outline:2px solid #ffd76a !important;outline-offset:1px !important}
 html body #btn-start{background:linear-gradient(180deg,rgba(122,28,10,.42),rgba(74,12,4,.55)),url("assets/ra_cta_plaque.png") center/cover no-repeat !important;background-size:auto,100% 100% !important;box-shadow:inset 0 1px 0 rgba(255,224,130,.5),0 0 18px rgba(255,140,40,.45),0 4px 0 rgba(0,0,0,.5) !important}
 html body #btn-start:active{filter:brightness(1.18) !important;outline:2px solid #ffd76a !important;outline-offset:1px !important}
+</style>
+<style id="ui-v362">
+/* v362: 전 화면 그래픽 업그레이드 — 팝업 5종 생성형 배경(hof/info/skill/relic/result), 액션 버튼 오크 문양 확장,
+프로필 카드 버튼 가로 배치(덤프 실측: span>button 2개, block)+카드 여백 압축, 결과 버튼 가로 나란히 — 무스크롤·골드 표준 유지 */
+html body #overlay-hof .rpanel{background:linear-gradient(180deg,rgba(8,12,26,.60),rgba(8,12,26,.72)),url("assets/ra_hof_panel.png") center/cover no-repeat,#0a1224 !important}
+html body #overlay-info .rpanel{background:linear-gradient(180deg,rgba(8,12,26,.60),rgba(8,12,26,.72)),url("assets/ra_info_panel.png") center/cover no-repeat,#0a1224 !important}
+html body #overlay-skill .rpanel{background:linear-gradient(180deg,rgba(8,12,26,.60),rgba(8,12,26,.72)),url("assets/ra_skill_panel.png") center/cover no-repeat,#0a1224 !important}
+html body #overlay-relic .rpanel{background:linear-gradient(180deg,rgba(8,12,26,.60),rgba(8,12,26,.72)),url("assets/ra_relic_panel.png") center/cover no-repeat,#0a1224 !important}
+html body #overlay-result .r-box{background:linear-gradient(180deg,rgba(8,12,26,.60),rgba(8,12,26,.76)),url("assets/ra_result_panel.png") center/cover no-repeat,#0a1224 !important}
+html body #btn-hof-close,html body #btn-relic-close,html body #btn-info-close,html body #btn-skill-close,html body #btn-prf-close,html body #btn-skill-reset,html body #rtab-score,html body #rtab-rank,html body #overlay-profile .rpanel button,html body #btn-main{background:linear-gradient(180deg,rgba(14,24,46,.42),rgba(8,14,28,.55)),url("assets/ra_btn_plaque.png") center/cover no-repeat !important;background-size:auto,100% 100% !important}
+html body #overlay-result .r-box #btn-again,html body #overlay-result .r-box #btn-main{display:inline-flex !important;width:auto !important;min-width:120px !important;padding:0 24px !important;margin:6px 4px 0 !important;vertical-align:middle !important}
+html body #overlay-profile span:has(>button):not(:has(span)){display:block !important;text-align:center !important}
+html body #overlay-profile span:has(>button):not(:has(span))>button{display:inline-flex !important;width:auto !important;min-width:88px !important;padding:6px 12px !important;margin:2px 3px !important;vertical-align:middle !important}
+html body #overlay-profile .prf-item{padding:6px 8px !important;margin:4px 0 !important}
+html body #overlay-profile .prf-item .prf-row{margin:2px 0 !important;gap:6px !important}
+</style>
+<style id="ui-v362b">
+/* v362b: hof·info 패널 실제 클래스 적응 배경 적용(검증 MISS 수복) */
+html body #overlay-hof .hof-card{background:linear-gradient(180deg,rgba(8,12,26,.60),rgba(8,12,26,.72)),url("assets/ra_hof_panel.png") center/cover no-repeat,#0a1224 !important}
+html body #overlay-info .r-box{background:linear-gradient(180deg,rgba(8,12,26,.60),rgba(8,12,26,.72)),url("assets/ra_info_panel.png") center/cover no-repeat,#0a1224 !important}
 </style>
 <script src="qa-driver.js"></script>
 <script src="js/g1-art-assets.js"></script>
