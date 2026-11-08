@@ -1,4 +1,4 @@
-const CACHE = 'royal-arena-v352';
+const CACHE = 'royal-arena-v353';
 const CORE = ['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png', 'maskable-512.png', 'js/g1-art-assets.js', 'js/g2-sprite-assets.js', 'js/g3-frame-assets.js', 'js/g4-ux-data.js', 'js/g5-core.js', 'js/g6-battle.js', 'js/g7-ui-systems.js', 'js/g8-boot.js', 'qa-driver.js', ];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));
