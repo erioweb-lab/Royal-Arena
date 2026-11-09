@@ -4,8 +4,8 @@ function __fitWide(){
   try{
     const r=canvas.getBoundingClientRect(); if(r.width<10||r.height<10) return;
     const asp=r.width/r.height;
-    VW=Math.max(W,Math.min(H*2,Math.round(H*asp/TILE)*TILE));
-    VH=Math.max(H,Math.min(W*3,Math.round(W/asp/TILE)*TILE));
+    VW=Math.max(W,Math.min(H*2,Math.round(H*asp)));
+    VH=Math.max(H,Math.min(W*3,Math.round(VW/asp)));   /* v392: 타일 스냅 폐지 — 비트맵=박스 비율(레터박스 0) */
     BAND=(VW-W)/2; VBAND=(VH-H)/2;
   }catch(e){ return; }
   canvas.width=VW*BSCALE; canvas.height=VH*BSCALE; ctx.scale(BSCALE,BSCALE);
