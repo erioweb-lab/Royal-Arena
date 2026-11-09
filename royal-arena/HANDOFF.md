@@ -1,7 +1,7 @@
 # 로얄 아레나 인수인계 문서 (HANDOFF)
-> 최종 갱신: 2026-11-09 (v381 기준) — 이전 세션의 작업 결과·현재 상태·검증 절차를 담는다. 매 사이클 종료 시 갱신 의무(dev-pipeline G5).
+> 최종 갱신: 2026-11-09 (v382 기준) — 이전 세션의 작업 결과·현재 상태·검증 절차를 담는다. 매 사이클 종료 시 갱신 의무(dev-pipeline G5).
 
-## 1. 현재 버전·배포 상태 (v381, 라이브 검증 완료)
+## 1. 현재 버전·배포 상태 (v382, 코드 게이트 통과·라이브 검증 진행)
 - 라이브: https://erioweb-lab.github.io/Royal-Arena/royal-arena/ — 칩 v381·sw 캐시 v381 동기화 확인.
 - 저장소: github.com/erioweb-lab/Royal-Arena (main) — 푸시는 사용자 제공 토큰으로만 가능(샌드박스 미보유). 사용 후 즉시 삭제, 세션마다 재수령.
 
@@ -40,6 +40,12 @@
 - 신규 fx 종류: meteorbit·plasmabolt·plasmazone — 반경·시각은 CARDS.radius 추종(v342 표준 유지)
 - 캡처 서비스가 게임 페이지 로드 반복 실패 시 표준 폴백: jsdom 페이지 스코프 로직 스모크(v292 체계)+라이브 ?qa=fx 토큰으로 종결, 시각 미검증은 명시
 
-### v381 (2026-11-09 — 현재)
+### v381 (2026-11-09)
 - 라바 테마 엠버 제거(사용자 지시): 유닛 위로 떠오르는 붉은 점 = updateAmbient lava ember 장식 파티클 오인 → g1 lava 테마 amb만 null화(겨울 눈·황야 모래바람·심연 스파크 유지). 칩·sw v381.
 - 검증: vm 컴파일 VM:OK · 라이브 3중(칩 v381·sw v381·g1 sha256 로컬=라이브 일치) · 라이브 QA 토큰 미검증 — 캡처 서비스 장애 3회 + jsdom 폴백 무토큰(부팅 환경 한계). v381은 데이터 리터럴 1줄 제거로 로직 불변(vm VM:OK·라이브 sha256 일치 확인), 시각 확인은 기기 새로고침 후.
+
+### v382 (2026-11-09 — 현재)
+- 와이드 아레나: canvas 비트맵 폭을 #arena 박스 비율로 startMatch 시 산출(VW) — object-fit contain 레터박스(좌우 검은 여백) 제거. 플레이 좌표계 18×32 불변, 좌우 밴드는 렌더 확장(-BAND..VW): 강·외벽·배치선·비네트 포함. 카메라 중심/역변환/팬 클램프/비네트 캐시 모두 VW 기반 갱신.
+- 바닥 그래픽: 테마별 생성형 텍스처 5종(ground_classic/lava/ice/wasteland/abyss.png, seamless·top-down·no-shadow) 신규 적용 — 기존 FIELD/LAVA/ICE는 폴백.
+- 다리 1~3 랜덤: startMatch마다 재배치(1개=중앙, 2개=±d, 3개=중앙±d, d=4.2~5.3) — BRIDGES let화, drawStatic startMatch 호출로 도로·다리 데코 자동 반영, 경로/AI는 실행시점 참조라 무수정 추종.
+- 게이트: vm 컴파일·audit 실측 결과는 커밋 전 측정값으로 기입. 라이브 검증은 푸시 후 별도 보고.
