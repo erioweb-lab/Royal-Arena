@@ -20,7 +20,7 @@ function __wideCheck(){   /* v383: 레이아웃 안정 후 비율 어긋나면 �
     if(!S||S.scene!=='battle') return;
     const r=canvas.getBoundingClientRect(); if(r.width<10||r.height<10) return;
     const asp=r.width/r.height, cur=VW/H;
-    if(Math.abs(asp-cur)/cur>0.02){ __fitWide(); if(S.cam){ const vw=VW/S.cam.z; S.cam.x=Math.min(Math.max(S.cam.x,vw/2),VW-vw/2); } try{ relayoutHud(); }catch(e){} }
+    if(Math.abs(asp-cur)/cur>0.02){ __fitWide(); if(S.cam){ const vw=VW/S.cam.z; S.cam.x=(vw>=W)?W/2:Math.min(Math.max(S.cam.x,vw/2),W-vw/2);   /* v388 */ } try{ relayoutHud(); }catch(e){} }
   }catch(e){}
 }
 window.addEventListener('resize',__wideCheck);

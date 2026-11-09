@@ -1304,7 +1304,7 @@ function drawAmbient(){
 }
 let vig=null;
 function drawVignette(){
-  if(!vig){ vig=ctx.createRadialGradient(W/2,H/2,H*0.42,W/2,H/2,H*0.75);   /* v384: 월드 중심=W/2 */   /* v382 */
+  if(!vig){ vig=ctx.createRadialGradient(VW/2,H/2,H*0.42,VW/2,H/2,H*0.75)   /* v388 */;   /* v384: 월드 중심=W/2 */   /* v382 */
     vig.addColorStop(0,'rgba(0,0,0,0)'); vig.addColorStop(1,'rgba(8,14,26,.35)'); }
   ctx.fillStyle=vig; ctx.fillRect(-BAND,0,VW,H);   /* v382 */
 }
@@ -2120,10 +2120,10 @@ function render(){
   ctx.setTransform(BSCALE,0,0,BSCALE,0,0);   // v117: 프레임 시작마다 절대 기준 변환 고정 — 렌더 도중 예외로 save 잔여분이 스택에 누적돼 확대 배율이 프레임마다 쌓이던 것(칩 1.01x·화면 지속 줌인) 근본 차단
   ctx.save();
   if(S.shake>0){ ctx.translate((Math.random()-0.5)*S.shake*14,(Math.random()-0.5)*S.shake*14); S.shake=Math.max(0,S.shake-0.02); }
-  ctx.clearRect(-BAND-24,-24,VW+48,H+48);   /* v386 */
-  { const cam=S.cam||{x:VW/2,y:H/2,z:1};
+  ctx.clearRect(-24,-24,VW+48,H+48);   /* v386 */
+  { const cam=S.cam||{x:W/2,y:H/2,z:1}   /* v388 */;
     ctx.translate(VW/2,H/2); ctx.scale(cam.z,cam.z); ctx.translate(-cam.x,-cam.y); }   /* v382 */
-  ctx.drawImage(bgc,-BAND,0,VW,H); tilehlDraw(ctx);   /* v384 */   /* v149 */
+  ctx.drawImage(bgc,0,0,VW,H);   /* v388 */ tilehlDraw(ctx);   /* v384 */   /* v149 */
   const T=THEMES[S.theme];
   ctx.strokeStyle=T.spark; ctx.lineWidth=S.theme==='lava'?3:2;
   if(S.theme==='lava'){ ctx.save(); ctx.shadowColor='#ff8a2a'; ctx.shadowBlur=14; }
@@ -2195,9 +2195,8 @@ function render(){
 /* ---------- 입력 ---------- */
 function evtPos(e){
   const r=canvas.getBoundingClientRect();
-  const s=Math.min(r.width/W,r.height/H), ox=(r.width-W*s)/2, oy=(r.height-H*s)/2;
   let px=(e.clientX-r.left)*VW/Math.max(1,r.width), py=(e.clientY-r.top)*H/Math.max(1,r.height);
-  const cam=S.cam||{x:VW/2,y:H/2,z:1};
+  const cam=S.cam||{x:W/2,y:H/2,z:1}   /* v388 */;
   px=(px-VW/2)/cam.z+cam.x; py=(py-H/2)/cam.z+cam.y;   // 컴뱃 캠 역변환   /* v382 */
   return {x:px/TILE, y:py/TILE};
 }
@@ -2219,7 +2218,7 @@ window.addEventListener('pointermove',e=>{
   if(!S._pan.moved&&Math.hypot(dx,dy)>12&&S.cam&&S.cam.z>1.05) S._pan.moved=true;
   if(S._pan.moved&&S.scene==='battle'){
     const c=S.cam, vw=VW/c.z, vh=H/c.z;   /* v382 */
-    c.x=clamp(c.x-dx/c.z,vw/2,VW-vw/2); c.y=clamp(c.y-dy/c.z,vh/2,H-vh/2);
+    c.x=(vw>=W)?W/2:clamp(c.x-dx/c.z,vw/2,W-vw/2);   /* v388 */ c.y=clamp(c.y-dy/c.z,vh/2,H-vh/2);
     if(S.focus){ S.focus.x=c.x; S.focus.y=c.y; S.focus.v=null; }   // v111: 팬 전환 시 추적 해제(고정 클로즈업 유지)
     S._pan.x=e.clientX; S._pan.y=e.clientY;
   }
@@ -2550,7 +2549,7 @@ function startMatch(){ try{ localStorage.setItem('ra_slot_used_v1',String(active
   units=[];projs=[];fx=[];floats=[];parts=[];ambient=[];
   S.over=false;S.shown=false;S.winner=null;S.t=300;S.overtime=false;S.double=false;   /* v142: 경기 시간 5분 */
   try{ DPSW.acc={}; DPSW.cnt={}; DPSW.time=0; DPSW._c=0; dpswEnsure(); }catch(e){}  try{ heroPlxReset(); }catch(e){}   /* v150: 전투 진입 시 패럴럭스 리셋 */__rollWide();   /* v382 */
-  S.crowns={blue:0,red:0};   /* v148: 위젯 리셋 */ S.kills={blue:0,red:0}; S.deaths={blue:0,red:0}; S.spells={blue:0,red:0}; S.shake=0; S.clash=null; S.cam={x:VW/2,y:H/2,z:1}; S._home={x:VW/2,y:H/2,z:1};   /* v382 */ S.focus=null; S.slow=0; S.spellQuiet=0; S._sk={}; S.__rin=(function(){try{var r=localStorage.getItem('ra_relic_inrun_v1'); if(r) localStorage.removeItem('ra_relic_inrun_v1'); return r;}catch(e){return null;}})(); S.__rinRoll=(S.__rin==='relic_gamble')?(Math.random()<0.5?1.25:0.85):1; S.__rinMul=1+0.05*__raClearLv();   /* v212 소비 + v218: 토벌 단계 렐릭 증폭 */ try{ relayoutHud(); }catch(e){}   // v122: 경기 시작 기둥 배치   // v115: 초기 화면 상태 기억 — 강제 복귀 기준점 + v118: 주문 진정 기간 리셋   // v111: 구 추적 객체 2종 폐지(단일 S.focus만) S.boss=null; S.bossSpawned=false; S.ks=false; S.ksCd=0; S.focusGap=0; S.zHold=0; S._tp=0; S.repCd=0; S.__used={}; try{ syncGradeVisual(); }catch(e){} try{ S.relic=(function(){try{return localStorage.getItem('ra_relic_v1')||''}catch(e){return ''}})(); applyRelics(); applySkills(); }catch(e){}   // v119: 스킬트리 반영
+  S.crowns={blue:0,red:0};   /* v148: 위젯 리셋 */ S.kills={blue:0,red:0}; S.deaths={blue:0,red:0}; S.spells={blue:0,red:0}; S.shake=0; S.clash=null; S.cam={x:W/2,y:H/2,z:1}   /* v388 */; S._home={x:W/2,y:H/2,z:1}   /* v388 */;   /* v382 */ S.focus=null; S.slow=0; S.spellQuiet=0; S._sk={}; S.__rin=(function(){try{var r=localStorage.getItem('ra_relic_inrun_v1'); if(r) localStorage.removeItem('ra_relic_inrun_v1'); return r;}catch(e){return null;}})(); S.__rinRoll=(S.__rin==='relic_gamble')?(Math.random()<0.5?1.25:0.85):1; S.__rinMul=1+0.05*__raClearLv();   /* v212 소비 + v218: 토벌 단계 렐릭 증폭 */ try{ relayoutHud(); }catch(e){}   // v122: 경기 시작 기둥 배치   // v115: 초기 화면 상태 기억 — 강제 복귀 기준점 + v118: 주문 진정 기간 리셋   // v111: 구 추적 객체 2종 폐지(단일 S.focus만) S.boss=null; S.bossSpawned=false; S.ks=false; S.ksCd=0; S.focusGap=0; S.zHold=0; S._tp=0; S.repCd=0; S.__used={}; try{ syncGradeVisual(); }catch(e){} try{ S.relic=(function(){try{return localStorage.getItem('ra_relic_v1')||''}catch(e){return ''}})(); applyRelics(); applySkills(); }catch(e){}   // v119: 스킬트리 반영
   P.elixir=5;A.elixir=5;A.timer=4.5;P.sel=null;P._full=false;
   try{ var __sb2=document.getElementById('screen-battle'); if(__sb2) __sb2.classList.remove('ended'); }catch(e){}
   initDeck(P);initDeck(A,true);   /* v192: 적 덱 = 아군과 무관 랜덤 */
@@ -2714,7 +2713,7 @@ function forceHomeCam(){   // v115: 초기 화면 상태 강제 복귀 — ⟲ �
   if(S.cam){ S.cam.x=hm.x; S.cam.y=hm.y; S.cam.z=hm.z; }
 }
 function updateCam(dt){
-  const c=S.cam||(S.cam={x:VW/2,y:H/2,z:1});   /* v382 */
+  const c=S.cam||(S.cam={x:W/2,y:H/2,z:1}   /* v388 */);   /* v382 */
   S._now=(S._now||0)+dt;
   if(S.focus){ const f=S.focus; f.t-=dt; f.a=(f.a||0)+dt;
     if(f.v){ if(f.v.dead){ f.v=null; } else { f.x=f.v.x*TILE; f.y=f.v.y*TILE; } }
@@ -2723,11 +2722,11 @@ function updateCam(dt){
   if(S.focusGap>0) S.focusGap-=dt; if(S._zSpot&&S._now>S._zSpot.exp) S._zSpot=null;   /* v175 */   // v91: 쿨다운 동안 1배 유지
   if(S.spellQuiet>0) S.spellQuiet-=dt;   // v118: 주문 진정 기간 감소
   if(c.z>1.05){ S._hiAge=(S._hiAge||0)+dt; if(S._hiAge>3.5){ S.focus=null; S.focusGap=1.0; S._hiAge=0; S._zSpot={x:c.x,y:c.y,exp:S._now+6}; }   /* v175: 해제 지점 기억 — 동일 교전 재점화 6s 억제(캡 3.5s 유지) */ } else S._hiAge=0;   // v112: 고정 감시견 — 5s 초과 줌인 지속 강제 해제
-  const tgt=S.focus? {x:S.focus.x, y:S.focus.y, z:2.5} : {x:VW/2,y:H/2,z:1};
+  const tgt=S.focus? {x:S.focus.x, y:S.focus.y, z:2.5} : {x:W/2,y:H/2,z:1}   /* v388 */;
   const k=1-Math.exp(-5.0*dt), kz=1-Math.exp(-3.2*dt);
   c.x=lerp(c.x,tgt.x,k); c.y=lerp(c.y,tgt.y,k); c.z=lerp(c.z,tgt.z,kz);
   const vw=VW/c.z, vh=H/c.z;
-  c.x=clamp(c.x,vw/2,VW-vw/2); c.y=clamp(c.y,vh/2,H-vh/2);   // 아레나 밖 노출 방지
+  c.x=(vw>=W)?W/2:clamp(c.x,vw/2,W-vw/2);   /* v388 */ c.y=clamp(c.y,vh/2,H-vh/2);   // 아레나 밖 노출 방지
   var zc=document.getElementById('zoom-chip');
   if(!zc){ zc=document.createElement('div'); zc.id='zoom-chip';
     zc.style.cssText="z-index:61;font-family:var(--fd,'Pretendard Variable','Noto Sans KR',sans-serif);font-size:14px;font-weight:700;letter-spacing:-.3px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.8);pointer-events:none;white-space:nowrap";
