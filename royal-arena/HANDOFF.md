@@ -1,5 +1,5 @@
 # 로얄 아레나 인수인계 문서 (HANDOFF)
-> 최종 갱신: 2026-11-09 (v382 기준) — 이전 세션의 작업 결과·현재 상태·검증 절차를 담는다. 매 사이클 종료 시 갱신 의무(dev-pipeline G5).
+> 최종 갱신: 2026-11-09 (v383 기준) — 이전 세션의 작업 결과·현재 상태·검증 절차를 담는다. 매 사이클 종료 시 갱신 의무(dev-pipeline G5).
 
 ## 1. 현재 버전·배포 상태 (v382, 코드 게이트 통과·라이브 검증 진행)
 - 라이브: https://erioweb-lab.github.io/Royal-Arena/royal-arena/ — 칩 v381·sw 캐시 v381 동기화 확인.
@@ -50,6 +50,9 @@
 - 다리 1~3 랜덤: startMatch마다 재배치(1개=중앙, 2개=±d, 3개=중앙±d, d=4.2~5.3) — BRIDGES let화, drawStatic startMatch 호출로 도로·다리 데코 자동 반영, 경로/AI는 실행시점 참조라 무수정 추종.
 - 게이트: vm 컴파일·audit 실측 결과는 커밋 전 측정값으로 기입. 라이브 검증은 푸시 후 별도 보고.
 
-### v382 최종 (2026-11-09 — 현재)
+### v382 (2026-11-09)
 - g9-wide.js 신규 청크(GT_IM·__rollWide·resize) — g1은 VW/BAND/BRIDGES 선언+drawStatic 확장만. 파일 분할은 file-governance 예산 규정 준수.
 - 교훈: audit.sh는 AUDIT:FAIL이어도 exit 0 — 파이프라인에선 반드시 출력 문자열 grep으로 게이트 강제(v324 가드 hang 폴백 계열). 커밋 메시지 게이트 문구는 실측 후에만 기입.
+
+### v383 (2026-11-09 — 현재)
+- 기기 캡처(v382) 판독: 칩 v382·생성 질감·랜덤 다리 정상 확인, 좌우 여백 한쪽 5~7% 잔존 — startMatch 시점 1회 측상이 레이아웃 안정 전 값. __fitWide/__rollWide 분리+1.2s 주기 __wideCheck 자동 보정(다리 유지)으로 수복. 칩·sw v383.
