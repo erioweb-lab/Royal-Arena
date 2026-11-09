@@ -1,5 +1,5 @@
 /* v382/v383: 와이드 아레나 시스템 — 캔버스 폭=박스 비율(레터박스 제거)+다리 1~3 랜덤+지면 재렌더. g1의 VW/BAND/BRIDGES를 갱신 */
-const GT_IM={};['classic','lava','ice','wasteland','abyss'].forEach(function(t){const im=new Image();im.src='assets/ground_'+t+'.png';GT_IM[t]=im;});
+const GT_IM={};['classic','lava','ice','wasteland','abyss'].forEach(function(t){const im=new Image();im.src='assets/ground_'+t+'.png?v=385';GT_IM[t]=im;});
 function __fitWide(){   /* v383: 측정+캔버스 리사이즈+지면 재도색(다리·타워 불변) */
   try{
     const r=canvas.getBoundingClientRect(), asp=r.width/Math.max(1,r.height);
