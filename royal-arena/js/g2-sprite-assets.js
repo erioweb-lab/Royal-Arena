@@ -270,8 +270,8 @@ function relayoutHud(){
     document.body.classList.toggle('battle-on', on);
     if(!on) return;
     var fxp=null;
-    try{ var cv2=aw.querySelector('canvas'); if(cv2){ fxp=Math.max(0, (cv2.clientWidth - cv2.clientHeight*(612/1088))/2); } }catch(e){}
-    if(fxp==null){ var gw=aw.clientWidth||window.innerWidth||1280, gh=aw.clientHeight||520; var cw2=gh*(612/1088); if(cw2>gw) cw2=gw; fxp=Math.max(0,(gw-cw2)/2); }
+    try{ var cv2=aw.querySelector('canvas'); if(cv2){ fxp=Math.max(0, (cv2.clientWidth - cv2.clientHeight*(cv2.width/cv2.height))/2); } }catch(e){}   /* v389: --fx 실측(비트맵 비율) */
+    if(fxp==null){ fxp=0; }   /* v389: 풀핏 비트맵 — 박스=필드 */
     aw.style.setProperty('--fx', fxp.toFixed(1)+'px');
     try{ document.body.style.setProperty('--fx', fxp.toFixed(1)+'px'); }catch(e){}   /* v133: 상단 코너 버튼(타이머·소리)도 프레임 기준 정렬 */
     try{ if(typeof ensureKsBtn==='function') ensureKsBtn(); }catch(e){}

@@ -1406,14 +1406,14 @@ function drawStatic(){
   }
   g.save();   /* v386: 외벽=캔버스 가장자리 */
   g.fillStyle=T.stone;
-  g.fillRect(BAND,0,VW,7); g.fillRect(BAND,H-7,VW,7); g.fillRect(BAND,0,7,H); g.fillRect(BAND+VW-7,0,7,H);
+  g.fillRect(BAND,0,VW,7); g.fillRect(BAND,H-7,VW,7); g.fillRect(0,0,7,H); g.fillRect(VW-7,0,7,H);   /* v389: 세로 벽=캔버스 가장자리 */
   if(WALL_IM.complete&&WALL_IM.naturalWidth){
     g.drawImage(WALL_IM,BAND,0,VW,22); g.save(); g.translate(BAND+VW,H); g.rotate(Math.PI); g.drawImage(WALL_IM,BAND,0,VW,22); g.restore();
-    g.save(); g.translate(BAND,H); g.rotate(-Math.PI/2); g.drawImage(WALL_IM,0,0,H,22); g.restore();
-    g.save(); g.translate(BAND+VW,0); g.rotate(Math.PI/2); g.drawImage(WALL_IM,0,0,H,22); g.restore(); }
+    g.save(); g.translate(0,H); g.rotate(-Math.PI/2); g.drawImage(WALL_IM,0,0,H,22); g.restore();
+    g.save(); g.translate(VW,0); g.rotate(Math.PI/2); g.drawImage(WALL_IM,0,0,H,22); g.restore(); }
   g.fillStyle='rgba(255,255,255,.25)'; g.fillRect(BAND,0,VW,2); g.fillStyle='rgba(0,0,0,.25)'; g.fillRect(BAND,H-2,VW,2);
-  g.fillStyle='rgba(255,255,255,.25)'; g.fillRect(BAND,0,VW,2); g.fillRect(BAND,0,2,H);
-  g.fillStyle='rgba(0,0,0,.25)'; g.fillRect(BAND,H-2,VW,2); g.fillRect(BAND+VW-2,0,2,H);
+  g.fillStyle='rgba(255,255,255,.25)'; g.fillRect(BAND,0,VW,2); g.fillRect(0,0,2,H);
+  g.fillStyle='rgba(0,0,0,.25)'; g.fillRect(BAND,H-2,VW,2); g.fillRect(VW-2,0,2,H);
   g.restore();
   for(const bx of BRIDGES){   // 다리 끝단 임계(강과 만나는 단면 처리) — 고대비 돌출 돌단
     g.fillStyle='#3d4350';
