@@ -8,7 +8,7 @@ let uid=1, now=0;
 
 /* ---------- 아레나 상수 (REA 설계도 §1) ---------- */
 const COLS=18, ROWS=32, TILE=34, W=COLS*TILE, H=ROWS*TILE;   // 플레이 영역 612×1088
-let VW=W, BAND=0;   /* v382: 본체는 g9-wide.js */
+let VW=W, BAND=0;   /* v382 */
 const RIVER_Y0=15, RIVER_Y1=17, RIVER_MID=16;                 // 강: 15~17행
 let BRIDGES=[3.5,14.5];   /* v382: 랜덤 1~3개 */
 const BLUE_DEPLOY_MIN=16.8, RED_DEPLOY_MAX=15.2;
@@ -1322,7 +1322,7 @@ function roundRect(x,y,w,h,r){
 function drawStatic(){
   const T=THEMES[S.theme];
   const g=bgc.getContext('2d');
-  g.setTransform(BSCALE,0,0,BSCALE,BAND*BSCALE,0);   /* v384: bgc 좌표=월드+BAND 쉬프트 — 좌우 밴드 대칭 도색 */
+  g.setTransform(BSCALE,0,0,BSCALE,BAND*BSCALE,0);   /* v384 */
   g.fillStyle=T.g1; g.fillRect(-BAND,0,VW,H);   /* v382 */
   for(let r=0;r<ROWS;r++)for(let c2=0;c2<COLS;c2++){
     g.fillStyle=(r+c2)%2?T.g1:T.g2;
@@ -1404,16 +1404,16 @@ function drawStatic(){
     else { g.fillStyle=T.flower; g.beginPath(); g.arc(dx,dy,3.5,0,7); g.fill();
       g.fillStyle='rgba(255,255,255,.7)'; g.beginPath(); g.arc(dx-1,dy-1,1.4,0,7); g.fill(); }
   }
-  g.save();   /* v384: 외벽은 플레이 경계(월드 0..W) — 기본 변환에 BAND 쉬프트 포함 */
+  g.save();   /* v386: 외벽=캔버스 가장자리 */
   g.fillStyle=T.stone;
-  g.fillRect(0,0,W,7); g.fillRect(0,H-7,W,7); g.fillRect(0,0,7,H); g.fillRect(W-7,0,7,H);
+  g.fillRect(BAND,0,VW,7); g.fillRect(BAND,H-7,VW,7); g.fillRect(BAND,0,7,H); g.fillRect(BAND+VW-7,0,7,H);
   if(WALL_IM.complete&&WALL_IM.naturalWidth){
-    g.drawImage(WALL_IM,0,0,W,22); g.save(); g.translate(W,H); g.rotate(Math.PI); g.drawImage(WALL_IM,0,0,W,22); g.restore();
-    g.save(); g.translate(0,H); g.rotate(-Math.PI/2); g.drawImage(WALL_IM,0,0,H,22); g.restore();
-    g.save(); g.translate(W,0); g.rotate(Math.PI/2); g.drawImage(WALL_IM,0,0,H,22); g.restore(); }
-  g.fillStyle='rgba(255,255,255,.25)'; g.fillRect(0,0,W,2); g.fillStyle='rgba(0,0,0,.25)'; g.fillRect(0,H-2,W,2);
-  g.fillStyle='rgba(255,255,255,.25)'; g.fillRect(0,0,W,2); g.fillRect(0,0,2,H);
-  g.fillStyle='rgba(0,0,0,.25)'; g.fillRect(0,H-2,W,2); g.fillRect(W-2,0,2,H);
+    g.drawImage(WALL_IM,BAND,0,VW,22); g.save(); g.translate(BAND+VW,H); g.rotate(Math.PI); g.drawImage(WALL_IM,BAND,0,VW,22); g.restore();
+    g.save(); g.translate(BAND,H); g.rotate(-Math.PI/2); g.drawImage(WALL_IM,0,0,H,22); g.restore();
+    g.save(); g.translate(BAND+VW,0); g.rotate(Math.PI/2); g.drawImage(WALL_IM,0,0,H,22); g.restore(); }
+  g.fillStyle='rgba(255,255,255,.25)'; g.fillRect(BAND,0,VW,2); g.fillStyle='rgba(0,0,0,.25)'; g.fillRect(BAND,H-2,VW,2);
+  g.fillStyle='rgba(255,255,255,.25)'; g.fillRect(BAND,0,VW,2); g.fillRect(BAND,0,2,H);
+  g.fillStyle='rgba(0,0,0,.25)'; g.fillRect(BAND,H-2,VW,2); g.fillRect(BAND+VW-2,0,2,H);
   g.restore();
   for(const bx of BRIDGES){   // 다리 끝단 임계(강과 만나는 단면 처리) — 고대비 돌출 돌단
     g.fillStyle='#3d4350';
@@ -2120,15 +2120,15 @@ function render(){
   ctx.setTransform(BSCALE,0,0,BSCALE,0,0);   // v117: 프레임 시작마다 절대 기준 변환 고정 — 렌더 도중 예외로 save 잔여분이 스택에 누적돼 확대 배율이 프레임마다 쌓이던 것(칩 1.01x·화면 지속 줌인) 근본 차단
   ctx.save();
   if(S.shake>0){ ctx.translate((Math.random()-0.5)*S.shake*14,(Math.random()-0.5)*S.shake*14); S.shake=Math.max(0,S.shake-0.02); }
-  ctx.clearRect(-24,-24,W+48,H+48);
+  ctx.clearRect(-BAND-24,-24,VW+48,H+48);   /* v386 */
   { const cam=S.cam||{x:W/2,y:H/2,z:1};
     ctx.translate(VW/2,H/2); ctx.scale(cam.z,cam.z); ctx.translate(-cam.x,-cam.y); }   /* v382 */
-  ctx.drawImage(bgc,-BAND,0,VW,H); tilehlDraw(ctx);   /* v384: 지면 캐시도 밴드 폭으로 합성 — 미확장 시 밴드 미도색 원인 */   /* v149: 배치 가능 타일 하이라이트(유닛 아래 가이드) */
+  ctx.drawImage(bgc,-BAND,0,VW,H); tilehlDraw(ctx);   /* v384 */   /* v149 */
   const T=THEMES[S.theme];
   ctx.strokeStyle=T.spark; ctx.lineWidth=S.theme==='lava'?3:2;
   if(S.theme==='lava'){ ctx.save(); ctx.shadowColor='#ff8a2a'; ctx.shadowBlur=14; }
   for(let i=0;i<5;i++){
-    const yy=(RIVER_Y0+0.35+i*0.4)*TILE, off=(now*36+i*77)%(W+80)-40;
+    const yy=(RIVER_Y0+0.35+i*0.4)*TILE, off=(now*36+i*77)%(VW+80)-40;   /* v386 */
     ctx.beginPath();
     ctx.moveTo(off-16,yy+Math.sin(now*2.4+i)*1.6);
     ctx.quadraticCurveTo(off-5,yy-3+Math.sin(now*2.4+i)*1.6, off+6,yy+Math.sin(now*2.4+i+1)*1.6);
@@ -2648,7 +2648,7 @@ function fireKingShot(p){
 function drawBossHUD(){
   const b=S.boss; if(!b||b.dead) return;
   ctx.save(); ctx.setTransform(BSCALE,0,0,BSCALE,0,0);
-  const bw=Math.min(380,W-60), x=(W-bw)/2, y=10, h=30;
+  const bw=Math.min(380,VW-60), x=(VW-bw)/2, y=10, h=30;   /* v386 */
   ctx.fillStyle='rgba(8,12,24,.88)'; ctx.strokeStyle='#f7c531'; ctx.lineWidth=2;
   ctx.fillRect(x,y,bw,h); ctx.strokeRect(x,y,bw,h);
   const hf=Math.max(0,b.hp/b.maxHp);
