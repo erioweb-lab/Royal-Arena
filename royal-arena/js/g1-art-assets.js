@@ -1304,7 +1304,7 @@ function drawAmbient(){
 }
 let vig=null;
 function drawVignette(){
-  if(!vig){ vig=ctx.createRadialGradient(VW/2,H/2,H*0.42,VW/2,H/2,H*0.75);   /* v382 */
+  if(!vig){ vig=ctx.createRadialGradient(W/2,H/2,H*0.42,W/2,H/2,H*0.75);   /* v384: 월드 중심=W/2 */   /* v382 */
     vig.addColorStop(0,'rgba(0,0,0,0)'); vig.addColorStop(1,'rgba(8,14,26,.35)'); }
   ctx.fillStyle=vig; ctx.fillRect(-BAND,0,VW,H);   /* v382 */
 }
@@ -1322,7 +1322,7 @@ function roundRect(x,y,w,h,r){
 function drawStatic(){
   const T=THEMES[S.theme];
   const g=bgc.getContext('2d');
-  g.setTransform(BSCALE,0,0,BSCALE,0,0);
+  g.setTransform(BSCALE,0,0,BSCALE,BAND*BSCALE,0);   /* v384: bgc 좌표=월드+BAND 쉬프트 — 좌우 밴드 대칭 도색 */
   g.fillStyle=T.g1; g.fillRect(-BAND,0,VW,H);   /* v382 */
   for(let r=0;r<ROWS;r++)for(let c2=0;c2<COLS;c2++){
     g.fillStyle=(r+c2)%2?T.g1:T.g2;
@@ -1404,7 +1404,7 @@ function drawStatic(){
     else { g.fillStyle=T.flower; g.beginPath(); g.arc(dx,dy,3.5,0,7); g.fill();
       g.fillStyle='rgba(255,255,255,.7)'; g.beginPath(); g.arc(dx-1,dy-1,1.4,0,7); g.fill(); }
   }
-  g.save(); g.translate(-BAND,0);   /* v382 */
+  g.save();   /* v384: 외벽은 플레이 경계(월드 0..W) — 기본 변환에 BAND 쉬프트 포함 */
   g.fillStyle=T.stone;
   g.fillRect(0,0,W,7); g.fillRect(0,H-7,W,7); g.fillRect(0,0,7,H); g.fillRect(W-7,0,7,H);
   if(WALL_IM.complete&&WALL_IM.naturalWidth){
@@ -2123,7 +2123,7 @@ function render(){
   ctx.clearRect(-24,-24,W+48,H+48);
   { const cam=S.cam||{x:W/2,y:H/2,z:1};
     ctx.translate(VW/2,H/2); ctx.scale(cam.z,cam.z); ctx.translate(-cam.x,-cam.y); }   /* v382 */
-  ctx.drawImage(bgc,0,0,W,H); tilehlDraw(ctx);   /* v149: 배치 가능 타일 하이라이트(유닛 아래 가이드) */
+  ctx.drawImage(bgc,-BAND,0,VW,H); tilehlDraw(ctx);   /* v384: 지면 캐시도 밴드 폭으로 합성 — 미확장 시 밴드 미도색 원인 */   /* v149: 배치 가능 타일 하이라이트(유닛 아래 가이드) */
   const T=THEMES[S.theme];
   ctx.strokeStyle=T.spark; ctx.lineWidth=S.theme==='lava'?3:2;
   if(S.theme==='lava'){ ctx.save(); ctx.shadowColor='#ff8a2a'; ctx.shadowBlur=14; }
