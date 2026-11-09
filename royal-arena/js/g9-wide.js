@@ -1,4 +1,5 @@
 /* v382/v391: 와이드 아레나 — 캔버스=박스 풀핏(VW+VH)+다리 타워축 스냅+지면 재렌더 */
+const GT_IM={};['classic','lava','ice','wasteland','abyss'].forEach(function(t){const im=new Image();im.src='assets/ground_'+t+'.png?v=396';GT_IM[t]=im;});   /* v396: 텍스처 지면 로딩 복원(gen2 신규 5종) */
 function __fitWide(){
   try{
     const r=canvas.getBoundingClientRect(); if(r.width<10||r.height<10) return;
