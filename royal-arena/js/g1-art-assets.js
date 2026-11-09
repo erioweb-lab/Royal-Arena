@@ -1324,37 +1324,11 @@ function drawStatic(){
   const T=THEMES[S.theme];
   const g=bgc.getContext('2d');
   g.setTransform(BSCALE,0,0,BSCALE,BAND*BSCALE,0);
-  g.fillStyle=T.g1; g.fillRect(-BAND,-VBAND,VW,VH);
-  for(let r=0;r<ROWS;r++)for(let c2=0;c2<COLS;c2++){
-    g.fillStyle=(r+c2)%2?T.g1:T.g2;
-    g.fillRect(c2*TILE,r*TILE,TILE,TILE);
-  }
-  
-    g.fillStyle='rgba(0,0,0,.055)';
-    for(let r=0;r<ROWS;r++)for(let c2=0;c2<COLS;c2++) if((r+c2)%2) g.fillRect(c2*TILE,r*TILE,TILE,TILE); }
-  try{ var __RK=[[1.1,7.5,0.55],[COLS-1.2,5.2,0.42],[1.4,ROWS-7,0.5],[COLS-1.5,ROWS-9,0.62],[2.2,ROWS/2-4,0.36],[COLS-2.1,ROWS/2+3,0.4]];   /* v209: 바위 장식 — 절차적 드로잉 */
-  for(var __ri=0;__ri<__RK.length;__ri++){ var __rk=__RK[__ri], __rx=__rk[0]*TILE, __ry=__rk[1]*TILE, __rr=__rk[2]*TILE;
-    g.save(); g.translate(__rx,__ry);
-    g.fillStyle='rgba(0,0,0,.18)'; g.beginPath(); g.ellipse(2,4,__rr,__rr*0.55,0,0,6.29); g.fill();
-    g.fillStyle='#6b7280'; g.beginPath(); g.moveTo(-__rr,0); g.lineTo(-__rr*0.55,-__rr*0.8); g.lineTo(__rr*0.4,-__rr*0.9); g.lineTo(__rr,__rr*0.05); g.lineTo(__rr*0.45,__rr*0.55); g.lineTo(-__rr*0.5,__rr*0.5); g.closePath(); g.fill();
-    g.fillStyle='#9aa2ad'; g.beginPath(); g.moveTo(-__rr*0.55,-__rr*0.8); g.lineTo(__rr*0.4,-__rr*0.9); g.lineTo(__rr*0.2,-__rr*0.2); g.lineTo(-__rr*0.3,-__rr*0.15); g.closePath(); g.fill();
-    var __rimg=(window.__ROCKS&&window.__ROCKS.length)?window.__ROCKS[__ri%2]:null; if(__rimg&&__rimg.complete&&__rimg.naturalWidth>0&&__rimg.__valid!==false){ var __rw=__rr*2.6; g.drawImage(__rimg,-__rw/2,-__rw*0.6,__rw,__rw); }   /* v324: 바위 이미지 데코 */
-    g.restore(); }
-  }catch(__e){}
-  let seed=7;
-  const rnd=()=>{ seed=(seed*16807)%2147483647; return seed/2147483647; };
-  g.fillStyle=T.speck;
-  for(let i=0;i<240;i++){ const x=rnd()*VW-BAND, y=rnd()*VH-VBAND;
-    if(y>RIVER_Y0*TILE-4&&y<RIVER_Y1*TILE+4) continue;
-    g.fillRect(x,y,2,3); }
-  g.strokeStyle=T.blade; g.lineWidth=1;
-  for(let i=0;i<90;i++){ const x=rnd()*VW-BAND, y=rnd()*VH-VBAND;
-    if(y>RIVER_Y0*TILE-6&&y<RIVER_Y1*TILE+6) continue;
-    g.beginPath(); g.moveTo(x,y+4); g.quadraticCurveTo(x+1,y+1,x+2,y); g.stroke(); }
-  g.fillStyle='rgba(15,23,42,'+((S.theme==='lava')?0.50:(S.theme==='ice')?0.56:0.54)+')';g.fillRect(-BAND,-VBAND,VW,VH);   /* v145b: 슬레이트 베일 — FIELD/LAVA/ICE 전면 텍스처 이후·승부 구역 틴트 이전 배치(구역 색은 베일 위에 선명 유지) */
+  g.fillStyle=T.g1; g.fillRect(-BAND,-VBAND,VW,VH);   /* v394: 단색 지면 풀핏 — 이미지 의존 0 */
+  g.fillStyle='rgba(15,23,42,'+((S.theme==='lava')?0.50:(S.theme==='ice')?0.56:0.54)+')'; g.fillRect(-BAND,-VBAND,VW,VH);   /* v145b 베일 */
   g.fillStyle=S.theme==='lava'?'rgba(255,90,30,.16)':S.theme==='ice'?'rgba(140,200,255,.22)':'rgba(63,123,245,.13)';
   g.fillRect(-BAND,RIVER_Y1*TILE,VW,VH-RIVER_Y1*TILE);
-  g.fillStyle='rgba(230,76,76,.14)'; g.fillRect(-BAND,0,VW,RIVER_Y0*TILE);
+  g.fillStyle='rgba(230,76,76,.14)'; g.fillRect(-BAND,-VBAND,VW,RIVER_Y0*TILE+VBAND);
   g.fillStyle=T.road;
   for(const bx of BRIDGES){
     g.fillRect((bx-0.45)*TILE, RIVER_Y1*TILE, 0.9*TILE, 9.2*TILE);
@@ -1367,14 +1341,13 @@ function drawStatic(){
   g.fillRect(-BAND,RIVER_Y0*TILE-6,VW,6); g.fillRect(-BAND,RIVER_Y1*TILE,VW,6);
   const __rim=RIVER_IM[S.theme];
   if(__rim&&__rim.complete&&__rim.naturalWidth){ g.drawImage(__rim,-BAND,RIVER_Y0*TILE,VW,(RIVER_Y1-RIVER_Y0)*TILE); }
-  else {
-  g.fillStyle=T.riverA; g.fillRect(-BAND,RIVER_Y0*TILE,VW,(RIVER_Y1-RIVER_Y0)*TILE);
-  g.fillStyle=T.riverB; g.fillRect(-BAND,RIVER_Y0*TILE+4,VW,(RIVER_Y1-RIVER_Y0)*TILE-8);
-  g.fillStyle='rgba(255,255,255,.20)'; g.fillRect(-BAND,RIVER_Y0*TILE,VW,3); g.fillRect(-BAND,RIVER_Y1*TILE-3,VW,3);
+  else{
+    g.fillStyle=T.riverA; g.fillRect(-BAND,RIVER_Y0*TILE,VW,(RIVER_Y1-RIVER_Y0)*TILE);
+    g.fillStyle=T.riverB; g.fillRect(-BAND,RIVER_Y0*TILE+4,VW,(RIVER_Y1-RIVER_Y0)*TILE-8);
+    g.fillStyle='rgba(255,255,255,.20)'; g.fillRect(-BAND,RIVER_Y0*TILE,VW,3); g.fillRect(-BAND,RIVER_Y1*TILE-3,VW,3);
   }
   for(const b of BRIDGES){
     if(BRIDGE_IM.complete&&BRIDGE_IM.naturalWidth){ const bx2=(b-0.8)*TILE, bw2=1.6*TILE; g.save(); const __bh=BRIDGE_IM.naturalHeight/BRIDGE_IM.naturalWidth*bw2; g.drawImage(BRIDGE_IM,bx2,RIVER_Y0*TILE-7,bw2,__bh); g.restore(); continue; }
-
     const bx=(b-0.8)*TILE, bw=1.6*TILE, bh=(RIVER_Y1-RIVER_Y0)*TILE+16;
     g.fillStyle='rgba(0,0,0,.20)'; g.fillRect(bx-3,RIVER_Y0*TILE-9,bw+6,bh+7);
     g.fillStyle='#8a5a2b'; g.fillRect(bx,RIVER_Y0*TILE-8,bw,bh);
@@ -1393,38 +1366,17 @@ function drawStatic(){
   const deco=S.theme==='classic'?[]:[[0.9,13.2,'b'],[17.1,18.8,'b'],[0.9,19.4,'b'],[17.1,12.8,'b'],[8.9,14.5,'f'],[5.2,14.4,'f'],[12.8,17.6,'f']];
   for(const d of deco){
     const dx=d[0]*TILE, dy=d[1]*TILE;
-    if(d[2]==='b'){ g.fillStyle=T.bush; g.beginPath();
-      g.arc(dx-6,dy,8,0,7); g.arc(dx+5,dy-3,10,0,7); g.arc(dx+1,dy+5,7,0,7); g.fill();
+    if(d[2]==='b'){ g.fillStyle=T.bush; g.beginPath(); g.arc(dx-6,dy,8,0,7); g.arc(dx+5,dy-3,10,0,7); g.arc(dx+1,dy+5,7,0,7); g.fill();
       g.fillStyle='rgba(255,255,255,.14)'; g.beginPath(); g.arc(dx+3,dy-6,4,0,7); g.fill(); }
     else { g.fillStyle=T.flower; g.beginPath(); g.arc(dx,dy,3.5,0,7); g.fill();
       g.fillStyle='rgba(255,255,255,.7)'; g.beginPath(); g.arc(dx-1,dy-1,1.4,0,7); g.fill(); }
   }
-  g.save();
-  g.fillStyle=T.stone;
   if(WALL_IM.complete&&WALL_IM.naturalWidth){
-    g.drawImage(WALL_IM,BAND,-VBAND,VW,22); g.save(); g.translate(BAND+VW,VH-VBAND); g.rotate(Math.PI); g.drawImage(WALL_IM,BAND,-VBAND,VW,22); g.restore();
-  }   /* v391: WALL_IM 블록 닫힘 복원 */
-  g.fillStyle='rgba(255,255,255,.25)'; g.fillRect(BAND,-VBAND,VW,2); g.fillStyle='rgba(0,0,0,.25)'; g.fillRect(BAND,VH-VBAND-2,VW,2);
-  g.restore();
-  for(const bx of BRIDGES){   // 다리 끝단 임계(강과 만나는 단면 처리) — 고대비 돌출 돌단
-    g.fillStyle='#3d4350';
-    g.fillRect((bx-0.54)*TILE, RIVER_Y0*TILE-15, 1.08*TILE, 15);
-    g.fillRect((bx-0.54)*TILE, RIVER_Y1*TILE, 1.08*TILE, 15);
-    g.fillStyle='#98a0b0';
-    g.fillRect((bx-0.54)*TILE, RIVER_Y0*TILE-15, 1.08*TILE, 7);
-    g.fillRect((bx-0.54)*TILE, RIVER_Y1*TILE, 1.08*TILE, 7);
-    g.strokeStyle='rgba(8,12,22,.8)'; g.lineWidth=2;
-    g.strokeRect((bx-0.54)*TILE, RIVER_Y0*TILE-15, 1.08*TILE, 15);
-    g.strokeRect((bx-0.54)*TILE, RIVER_Y1*TILE, 1.08*TILE, 15);
+    g.drawImage(WALL_IM,BAND,-VBAND,VW,22); g.save(); g.translate(BAND+VW,VH-VBAND); g.rotate(Math.PI); g.drawImage(WALL_IM,BAND,0,VW,22); g.restore();
   }
-  if(BRIDGE_IM.complete&&BRIDGE_IM.naturalWidth){
-    for(const b of BRIDGES){
-      const bw2=1.9*TILE, bh2=(RIVER_Y1-RIVER_Y0)*TILE+40;
-      g.drawImage(BRIDGE_IM,(b-0.95)*TILE,RIVER_Y0*TILE-20,bw2,bh2);
-    }
-  }
-
-
+  g.fillStyle='rgba(255,255,255,.25)'; g.fillRect(BAND,-VBAND,VW,2);
+  g.fillStyle='rgba(0,0,0,.25)'; g.fillRect(BAND,VH-VBAND-2,VW,2);
+}
 function flagPole(px,py,col){
   ctx.strokeStyle='#5a4632'; ctx.lineWidth=2;
   ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(px,py-22); ctx.stroke();

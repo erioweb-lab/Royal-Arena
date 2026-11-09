@@ -39,7 +39,7 @@ function pixCount(){
     var g=t.getContext('2d');g.drawImage(c,0,0,w2,h2);
     var d=g.getImageData(0,0,w2,h2).data,n=0;
     for(var i=0;i<d.length;i+=4){if(d[i+3]>10&&(d[i]>12||d[i+1]>12||d[i+2]>12))n++;}
-    return ' BGC:'+cv.width+'x'+cv.height;return 'PIX:'+n+'/'+(w2*h2);
+    return ' BGC:'+c.width+'x'+c.height;return 'PIX:'+n+'/'+(w2*h2);
   }catch(e){return 'PIXERR:'+(e.message||'?');}
 }
 function ovfCount(){
