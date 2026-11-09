@@ -247,11 +247,11 @@ function drawFrame(){
   try{
     ctx.setTransform(BSCALE,0,0,BSCALE,0,0);
     ctx.lineJoin='round';
-    roundRect(4,4,VW-8,H-8,14);   /* v387: 프레임=캔버스 가장자리 */ ctx.strokeStyle='rgba(4,8,16,.92)'; ctx.lineWidth=6; ctx.stroke();
-    var g2=ctx.createLinearGradient(0,0,VW,H); g2.addColorStop(0,'#f7c531'); g2.addColorStop(.55,'#d4af37'); g2.addColorStop(1,'#b8860b');
-    roundRect(6.5,6.5,VW-13,H-13,12); ctx.strokeStyle=g2; ctx.lineWidth=2.5; ctx.stroke();
-    roundRect(10,10,VW-20,H-20,10); ctx.strokeStyle='rgba(247,197,49,.32)'; ctx.lineWidth=1; ctx.stroke();
-    var cl=26, cs=[[5,5,1,1],[VW-5,5,-1,1],[5,H-5,1,-1],[VW-5,H-5,-1,-1]];
+    roundRect(4,4,VW-8,VH-8,14);   /* v387: 프레임=캔버스 가장자리 */ ctx.strokeStyle='rgba(4,8,16,.92)'; ctx.lineWidth=6; ctx.stroke();
+    var g2=ctx.createLinearGradient(0,0,VW,VH); g2.addColorStop(0,'#f7c531'); g2.addColorStop(.55,'#d4af37'); g2.addColorStop(1,'#b8860b');
+    roundRect(6.5,6.5,VW-13,VH-13,12); ctx.strokeStyle=g2; ctx.lineWidth=2.5; ctx.stroke();
+    roundRect(10,10,VW-20,VH-20,10); ctx.strokeStyle='rgba(247,197,49,.32)'; ctx.lineWidth=1; ctx.stroke();
+    var cl=26, cs=[[5,5,1,1],[VW-5,5,-1,1],[5,VH-5,1,-1],[VW-5,VH-5,-1,-1]];
     ctx.strokeStyle='#FFD54F'; ctx.lineWidth=4;
     for(var ci=0;ci<4;ci++){ var qx=cs[ci][0],qy=cs[ci][1],qsx=cs[ci][2],qsy=cs[ci][3];
       ctx.beginPath(); ctx.moveTo(qx,qy+qsy*cl); ctx.lineTo(qx,qy); ctx.lineTo(qx+qsx*cl,qy); ctx.stroke(); }

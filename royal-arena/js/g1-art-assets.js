@@ -8,8 +8,8 @@ let uid=1, now=0;
 
 /* ---------- 아레나 상수 (REA 설계도 §1) ---------- */
 const COLS=18, ROWS=32, TILE=34, W=COLS*TILE, H=ROWS*TILE;   // 플레이 영역 612×1088
-let VW=W, BAND=0;
-var __rollWide=function(){ try{ VW=W; BAND=0; drawStatic(); }catch(e){} };   /* v390: g9 미로드 폴백 */
+let VW=W, BAND=0, VH=H, VBAND=0;   /* v391 */
+var __rollWide=function(){ try{ VW=W; BAND=0; VH=H; VBAND=0; drawStatic(); }catch(e){} };   /* v390: g9 미로드 폴백 */
 const RIVER_Y0=15, RIVER_Y1=17, RIVER_MID=16;                 // 강: 15~17행
 let BRIDGES=[3.5,14.5];
 const BLUE_DEPLOY_MIN=16.8, RED_DEPLOY_MAX=15.2;
@@ -1305,9 +1305,9 @@ function drawAmbient(){
 }
 let vig=null;
 function drawVignette(){
-  if(!vig){ vig=ctx.createRadialGradient(VW/2,H/2,H*0.42,VW/2,H/2,H*0.75);
+  if(!vig){ vig=ctx.createRadialGradient(VW/2,VH/2,VH*0.42,VW/2,VH/2,VH*0.75);
     vig.addColorStop(0,'rgba(0,0,0,0)'); vig.addColorStop(1,'rgba(8,14,26,.35)'); }
-  ctx.fillStyle=vig; ctx.fillRect(-BAND,0,VW,H);
+  ctx.fillStyle=vig; ctx.fillRect(-BAND,-VBAND,VW,VH);
 }
 
 /* ---------- 렌더링 ---------- */
@@ -1324,14 +1324,14 @@ function drawStatic(){
   const T=THEMES[S.theme];
   const g=bgc.getContext('2d');
   g.setTransform(BSCALE,0,0,BSCALE,BAND*BSCALE,0);
-  g.fillStyle=T.g1; g.fillRect(-BAND,0,VW,H);
+  g.fillStyle=T.g1; g.fillRect(-BAND,-VBAND,VW,VH);
   for(let r=0;r<ROWS;r++)for(let c2=0;c2<COLS;c2++){
     g.fillStyle=(r+c2)%2?T.g1:T.g2;
     g.fillRect(c2*TILE,r*TILE,TILE,TILE);
   }
   const __gt=GT_IM[S.theme];
-  if(__gt&&__gt.complete&&__gt.naturalWidth){ g.save(); g.globalAlpha=0.95; g.drawImage(__gt,-BAND,0,VW,H); g.restore(); }
-  else if(S.theme==='classic'&&GRASS_IM.complete&&GRASS_IM.naturalWidth){ g.save(); g.globalAlpha=0.93; g.drawImage(GRASS_IM,-BAND,0,VW,H); g.restore();
+  if(__gt&&__gt.complete&&__gt.naturalWidth){ g.save(); g.globalAlpha=0.95; g.drawImage(__gt,-BAND,-VBAND,VW,VH); g.restore(); }
+  else if(S.theme==='classic'&&GRASS_IM.complete&&GRASS_IM.naturalWidth){ g.save(); g.globalAlpha=0.93; g.drawImage(GRASS_IM,-BAND,-VBAND,VW,VH); g.restore();
   
     g.fillStyle='rgba(0,0,0,.055)';
     for(let r=0;r<ROWS;r++)for(let c2=0;c2<COLS;c2++) if((r+c2)%2) g.fillRect(c2*TILE,r*TILE,TILE,TILE); }
@@ -1347,19 +1347,19 @@ function drawStatic(){
   let seed=7;
   const rnd=()=>{ seed=(seed*16807)%2147483647; return seed/2147483647; };
   g.fillStyle=T.speck;
-  for(let i=0;i<240;i++){ const x=rnd()*VW-BAND, y=rnd()*H;
+  for(let i=0;i<240;i++){ const x=rnd()*VW-BAND, y=rnd()*VH-VBAND;   /* v391 */
     if(y>RIVER_Y0*TILE-4&&y<RIVER_Y1*TILE+4) continue;
     g.fillRect(x,y,2,3); }
   g.strokeStyle=T.blade; g.lineWidth=1;
-  for(let i=0;i<90;i++){ const x=rnd()*VW-BAND, y=rnd()*H;
+  for(let i=0;i<90;i++){ const x=rnd()*VW-BAND, y=rnd()*VH-VBAND;   /* v391 */
     if(y>RIVER_Y0*TILE-6&&y<RIVER_Y1*TILE+6) continue;
     g.beginPath(); g.moveTo(x,y+4); g.quadraticCurveTo(x+1,y+1,x+2,y); g.stroke(); }
   if(S.theme==='classic'&&FIELD_IM.complete&&FIELD_IM.naturalWidth){ g.drawImage(FIELD_IM,0,0,W,H); }
-  else if(S.theme==='lava'&&LAVA_IM.complete&&LAVA_IM.naturalWidth){ g.save(); g.globalAlpha=0.93; g.drawImage(LAVA_IM,-BAND,0,VW,H); g.restore(); }
-  else if(S.theme==='ice'&&ICE_IM.complete&&ICE_IM.naturalWidth){ g.save(); g.globalAlpha=0.93; g.drawImage(ICE_IM,-BAND,0,VW,H); g.restore(); }
-  g.fillStyle='rgba(15,23,42,'+((S.theme==='lava')?0.50:(S.theme==='ice')?0.56:0.54)+')';g.fillRect(-BAND,0,VW,H);   /* v145b: 슬레이트 베일 — FIELD/LAVA/ICE 전면 텍스처 이후·승부 구역 틴트 이전 배치(구역 색은 베일 위에 선명 유지) */
+  else if(S.theme==='lava'&&LAVA_IM.complete&&LAVA_IM.naturalWidth){ g.save(); g.globalAlpha=0.93; g.drawImage(LAVA_IM,-BAND,-VBAND,VW,VH); g.restore(); }
+  else if(S.theme==='ice'&&ICE_IM.complete&&ICE_IM.naturalWidth){ g.save(); g.globalAlpha=0.93; g.drawImage(ICE_IM,-BAND,-VBAND,VW,VH); g.restore(); }
+  g.fillStyle='rgba(15,23,42,'+((S.theme==='lava')?0.50:(S.theme==='ice')?0.56:0.54)+')';g.fillRect(-BAND,-VBAND,VW,VH);   /* v145b: 슬레이트 베일 — FIELD/LAVA/ICE 전면 텍스처 이후·승부 구역 틴트 이전 배치(구역 색은 베일 위에 선명 유지) */
   g.fillStyle=S.theme==='lava'?'rgba(255,90,30,.16)':S.theme==='ice'?'rgba(140,200,255,.22)':'rgba(63,123,245,.13)';
-  g.fillRect(-BAND,RIVER_Y1*TILE,VW,H-RIVER_Y1*TILE);
+  g.fillRect(-BAND,RIVER_Y1*TILE,VW,VH-RIVER_Y1*TILE);
   g.fillStyle='rgba(230,76,76,.14)'; g.fillRect(-BAND,0,VW,RIVER_Y0*TILE);
   g.fillStyle=T.road;
   for(const bx of BRIDGES){
@@ -1407,14 +1407,10 @@ function drawStatic(){
   }
   g.save();
   g.fillStyle=T.stone;
-  g.fillRect(BAND,0,VW,7); g.fillRect(BAND,H-7,VW,7); g.fillRect(-BAND,0,7,H); g.fillRect(VW-BAND-7,0,7,H);   /* v390 */
   if(WALL_IM.complete&&WALL_IM.naturalWidth){
-    g.drawImage(WALL_IM,BAND,0,VW,22); g.save(); g.translate(BAND+VW,H); g.rotate(Math.PI); g.drawImage(WALL_IM,BAND,0,VW,22); g.restore();
-    g.save(); g.translate(-BAND,H); g.rotate(-Math.PI/2); g.drawImage(WALL_IM,0,0,H,22); g.restore();
-    g.save(); g.translate(VW-BAND,0); g.rotate(Math.PI/2); g.drawImage(WALL_IM,0,0,H,22); g.restore(); }   /* v390 */
-  g.fillStyle='rgba(255,255,255,.25)'; g.fillRect(BAND,0,VW,2); g.fillStyle='rgba(0,0,0,.25)'; g.fillRect(BAND,H-2,VW,2);
-  g.fillStyle='rgba(255,255,255,.25)'; g.fillRect(BAND,0,VW,2); g.fillRect(-BAND,0,2,H);
-  g.fillStyle='rgba(0,0,0,.25)'; g.fillRect(BAND,H-2,VW,2); g.fillRect(VW-BAND-2,0,2,H);   /* v390 */
+    g.drawImage(WALL_IM,BAND,-VBAND,VW,22); g.save(); g.translate(BAND+VW,VH-VBAND); g.rotate(Math.PI); g.drawImage(WALL_IM,BAND,-VBAND,VW,22); g.restore();
+  }   /* v391: WALL_IM 블록 닫힘 복원 */
+  g.fillStyle='rgba(255,255,255,.25)'; g.fillRect(BAND,-VBAND,VW,2); g.fillStyle='rgba(0,0,0,.25)'; g.fillRect(BAND,VH-VBAND-2,VW,2);
   g.restore();
   for(const bx of BRIDGES){   // 다리 끝단 임계(강과 만나는 단면 처리) — 고대비 돌출 돌단
     g.fillStyle='#3d4350';
@@ -2103,7 +2099,7 @@ function drawFx(f){
   }
   else if(f.kind==='muzzle'){ const mx=px+Math.cos(f.a)*13, my=py+Math.sin(f.a)*13;
       ctx.fillStyle='#ffe9a8'; ctx.beginPath(); ctx.arc(mx,my,4*(1-k)+2,0,7); ctx.fill(); }
-  else if(f.kind==='flash'){ ctx.globalAlpha=(1-k)*0.45; ctx.fillStyle='#fff'; ctx.fillRect(-BAND-24,-24,VW+48,H+48); }
+  else if(f.kind==='flash'){ ctx.globalAlpha=(1-k)*0.45; ctx.fillStyle='#fff'; ctx.fillRect(-BAND-24,-24,VW+48,VH+48); }
   else if(f.kind==='crownfly'){
     const e=1-Math.pow(1-k,3), cx2=lerp(px,f.tx,e), cy2=lerp(py,f.ty,e)-Math.sin(Math.PI*e)*40;
     ctx.globalAlpha=1; ctx.font='26px sans-serif'; ctx.textAlign='center';
@@ -2121,10 +2117,10 @@ function render(){
   ctx.setTransform(BSCALE,0,0,BSCALE,0,0);   // v117: 프레임 시작마다 절대 기준 변환 고정 — 렌더 도중 예외로 save 잔여분이 스택에 누적돼 확대 배율이 프레임마다 쌓이던 것(칩 1.01x·화면 지속 줌인) 근본 차단
   ctx.save();
   if(S.shake>0){ ctx.translate((Math.random()-0.5)*S.shake*14,(Math.random()-0.5)*S.shake*14); S.shake=Math.max(0,S.shake-0.02); }
-  ctx.clearRect(-24,-24,VW+48,H+48);
+  ctx.clearRect(-24,-24,VW+48,VH+48);
   { const cam=S.cam||{x:W/2,y:H/2,z:1};
-    ctx.translate(VW/2,H/2); ctx.scale(cam.z,cam.z); ctx.translate(-cam.x,-cam.y); }
-  ctx.drawImage(bgc,0,0,VW,H); tilehlDraw(ctx);   /* v149 */
+    ctx.translate(VW/2,VH/2); ctx.scale(cam.z,cam.z); ctx.translate(-cam.x,-cam.y); }
+  ctx.drawImage(bgc,0,0,VW,VH); tilehlDraw(ctx);   /* v149 */
   const T=THEMES[S.theme];
   ctx.strokeStyle=T.spark; ctx.lineWidth=S.theme==='lava'?3:2;
   if(S.theme==='lava'){ ctx.save(); ctx.shadowColor='#ff8a2a'; ctx.shadowBlur=14; }
@@ -2156,7 +2152,7 @@ function render(){
     try{ ctx.save(); ctx.globalAlpha=0.09+0.05*Math.sin((S._now||0)*5); ctx.fillStyle='#ffd75e'; ctx.fillRect(0,BLUE_DEPLOY_MIN*TILE,W,(ROWS-BLUE_DEPLOY_MIN)*TILE); ctx.restore(); }catch(e){ }   /* v192 P13: 배치 구역 펄스 */
     const c=CARDS[P.hand[P.sel]];
     ctx.fillStyle=c.kind==='spell'?'rgba(199,125,255,.15)':'rgba(63,123,245,.17)';
-    if(c.kind==='spell') ctx.fillRect(-BAND,0,VW,H);
+    if(c.kind==='spell') ctx.fillRect(-BAND,-VBAND,VW,VH);
     else ctx.fillRect(0,BLUE_DEPLOY_MIN*TILE,W,H-BLUE_DEPLOY_MIN*TILE);
     ctx.strokeStyle='rgba(255,255,255,.5)'; ctx.setLineDash([10,7]); ctx.lineWidth=2;
     ctx.beginPath(); ctx.moveTo(-BAND,BLUE_DEPLOY_MIN*TILE); ctx.lineTo(VW-BAND,BLUE_DEPLOY_MIN*TILE); ctx.stroke(); ctx.setLineDash([]);
@@ -2196,9 +2192,9 @@ function render(){
 /* ---------- 입력 ---------- */
 function evtPos(e){
   const r=canvas.getBoundingClientRect();
-  let px=(e.clientX-r.left)*VW/Math.max(1,r.width), py=(e.clientY-r.top)*H/Math.max(1,r.height);
+  let px=(e.clientX-r.left)*VW/Math.max(1,r.width), py=(e.clientY-r.top)*VH/Math.max(1,r.height);
   const cam=S.cam||{x:W/2,y:H/2,z:1};
-  px=(px-VW/2)/cam.z+cam.x; py=(py-H/2)/cam.z+cam.y;   // 컴뱃 캠 역변환
+  px=(px-VW/2)/cam.z+cam.x; py=(py-VH/2)/cam.z+cam.y;   // 컴뱃 캠 역변환
   return {x:px/TILE, y:py/TILE};
 }
 function tryDeploy(e){
@@ -2218,8 +2214,8 @@ window.addEventListener('pointermove',e=>{
   const dx=e.clientX-S._pan.x, dy=e.clientY-S._pan.y;
   if(!S._pan.moved&&Math.hypot(dx,dy)>12&&S.cam&&S.cam.z>1.05) S._pan.moved=true;
   if(S._pan.moved&&S.scene==='battle'){
-    const c=S.cam, vw=VW/c.z, vh=H/c.z;
-    c.x=(vw>=W)?W/2:clamp(c.x-dx/c.z,vw/2,W-vw/2); c.y=clamp(c.y-dy/c.z,vh/2,H-vh/2);
+    const c=S.cam, vw=VW/c.z, vh=VH/c.z;
+    c.x=(vw>=W)?W/2:clamp(c.x-dx/c.z,vw/2,W-vw/2); c.y=(vh>=H)?H/2:clamp(c.y-dy/c.z,vh/2,H-vh/2);
     if(S.focus){ S.focus.x=c.x; S.focus.y=c.y; S.focus.v=null; }   // v111: 팬 전환 시 추적 해제(고정 클로즈업 유지)
     S._pan.x=e.clientX; S._pan.y=e.clientY;
   }
@@ -2726,8 +2722,8 @@ function updateCam(dt){
   const tgt=S.focus? {x:S.focus.x, y:S.focus.y, z:2.5} : {x:W/2,y:H/2,z:1};
   const k=1-Math.exp(-5.0*dt), kz=1-Math.exp(-3.2*dt);
   c.x=lerp(c.x,tgt.x,k); c.y=lerp(c.y,tgt.y,k); c.z=lerp(c.z,tgt.z,kz);
-  const vw=VW/c.z, vh=H/c.z;
-  c.x=(vw>=W)?W/2:clamp(c.x,vw/2,W-vw/2); c.y=clamp(c.y,vh/2,H-vh/2);   // 아레나 밖 노출 방지
+  const vw=VW/c.z, vh=VH/c.z;
+  c.x=(vw>=W)?W/2:clamp(c.x,vw/2,W-vw/2); c.y=(vh>=H)?H/2:clamp(c.y,vh/2,H-vh/2);   // 아레나 밖 노출 방지
   var zc=document.getElementById('zoom-chip');
   if(!zc){ zc=document.createElement('div'); zc.id='zoom-chip';
     zc.style.cssText="z-index:61;font-family:var(--fd,'Pretendard Variable','Noto Sans KR',sans-serif);font-size:14px;font-weight:700;letter-spacing:-.3px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.8);pointer-events:none;white-space:nowrap";
