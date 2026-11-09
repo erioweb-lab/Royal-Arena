@@ -8,9 +8,9 @@ let uid=1, now=0;
 
 /* ---------- 아레나 상수 (REA 설계도 §1) ---------- */
 const COLS=18, ROWS=32, TILE=34, W=COLS*TILE, H=ROWS*TILE;   // 플레이 영역 612×1088
-let VW=W, BAND=0;   /* v382: 와이드 캔버스 — VW(가시 폭)·BAND(좌우 밴드)는 전투 시작 시 박스 비율로 산출, 플레이 좌표계는 불변 */
+let VW=W, BAND=0;   /* v382: 본체는 g9-wide.js */
 const RIVER_Y0=15, RIVER_Y1=17, RIVER_MID=16;                 // 강: 15~17행
-let BRIDGES=[3.5,14.5];   /* v382: 다리 1~3개 — 전투 시작 시 랜덤 재배치(경로·AI는 실행시점 참조라 자동 따라감) */
+let BRIDGES=[3.5,14.5];   /* v382: 랜덤 1~3개 */
 const BLUE_DEPLOY_MIN=16.8, RED_DEPLOY_MAX=15.2;
 
 /* ---------- 카드 데이터 (REA 설계도 §5) ---------- */
@@ -100,7 +100,6 @@ const DSPR={};for(const kk in ART_DECO){const im=new Image();im.src=ART_DECO[kk]
 const GSPR={};for(const kk in ART_GDEC){const im=new Image();im.src=ART_GDEC[kk];GSPR[kk]=im;}
 const ART_BRIDGE="assets/img_064.png";
 const BRIDGE_IM=new Image();BRIDGE_IM.src='assets/img_065.png';
-const GT_IM={};['classic','lava','ice','wasteland','abyss'].forEach(function(t){const im=new Image();im.src='assets/ground_'+t+'.png';GT_IM[t]=im;});   /* v382: 테마별 생성형 바닥 텍스처(seamless·top-down·no-shadow) */
 
 
 'use strict';
@@ -541,20 +540,6 @@ function buildTowers(){
     mkTower('red','king',9,2.4),   mkTower('red','princess',3.5,6.5),   mkTower('red','princess',14.5,6.5)
   ];
 }
-
-function __rollWide(){   /* v382: 캔버스 폭=박스 비율(레터박스 제거)+다리 1~3 랜덤+지면 재렌더 */
-  try{
-    const r=canvas.getBoundingClientRect(), asp=r.width/Math.max(1,r.height);
-    VW=Math.max(W,Math.min(H,Math.round(H*asp/TILE)*TILE)); BAND=(VW-W)/2;
-  }catch(e){ VW=W; BAND=0; }
-  canvas.width=VW*BSCALE; canvas.height=H*BSCALE; ctx.scale(BSCALE,BSCALE);
-  bgc.width=VW*BSCALE; bgc.height=H*BSCALE; vig=null;
-  try{ buildTowers(); }catch(e){}
-  const n=1+Math.floor(Math.random()*3), d=(n===1)?0:4.2+Math.random()*1.1;
-  BRIDGES=(n===1)?[9,9]:(n===2?[9-d,9+d]:[9-d,9,9+d]);
-  try{ drawStatic(); }catch(e){}
-}
-window.addEventListener('resize',function(){ try{ if(S&&S.scene==='battle'){ __rollWide(); if(S.cam){S.cam.x=VW/2;S.cam.y=H/2;} relayoutHud(); } }catch(e){} });   /* v382: 회전 대응 */
 
 /* ---------- 유닛 생성 ---------- */
 function formation(n){
@@ -1338,13 +1323,13 @@ function drawStatic(){
   const T=THEMES[S.theme];
   const g=bgc.getContext('2d');
   g.setTransform(BSCALE,0,0,BSCALE,0,0);
-  g.fillStyle=T.g1; g.fillRect(-BAND,0,VW,H);   /* v382: 밴드 포함 기본 바닥 */
+  g.fillStyle=T.g1; g.fillRect(-BAND,0,VW,H);   /* v382 */
   for(let r=0;r<ROWS;r++)for(let c2=0;c2<COLS;c2++){
     g.fillStyle=(r+c2)%2?T.g1:T.g2;
     g.fillRect(c2*TILE,r*TILE,TILE,TILE);
   }
   const __gt=GT_IM[S.theme];
-  if(__gt&&__gt.complete&&__gt.naturalWidth){ g.save(); g.globalAlpha=0.95; g.drawImage(__gt,-BAND,0,VW,H); g.restore(); }   /* v382: 생성형 바닥 — 밴드 포함 전체 덮음 */
+  if(__gt&&__gt.complete&&__gt.naturalWidth){ g.save(); g.globalAlpha=0.95; g.drawImage(__gt,-BAND,0,VW,H); g.restore(); }   /* v382 */
   else if(S.theme==='classic'&&GRASS_IM.complete&&GRASS_IM.naturalWidth){ g.save(); g.globalAlpha=0.93; g.drawImage(GRASS_IM,-BAND,0,VW,H); g.restore();
   
     g.fillStyle='rgba(0,0,0,.055)';
@@ -1370,7 +1355,7 @@ function drawStatic(){
     g.beginPath(); g.moveTo(x,y+4); g.quadraticCurveTo(x+1,y+1,x+2,y); g.stroke(); }
   if(S.theme==='classic'&&FIELD_IM.complete&&FIELD_IM.naturalWidth){ g.drawImage(FIELD_IM,0,0,W,H); }
   else if(S.theme==='lava'&&LAVA_IM.complete&&LAVA_IM.naturalWidth){ g.save(); g.globalAlpha=0.93; g.drawImage(LAVA_IM,-BAND,0,VW,H); g.restore(); }
-  else if(S.theme==='ice'&&ICE_IM.complete&&ICE_IM.naturalWidth){ g.save(); g.globalAlpha=0.93; g.drawImage(ICE_IM,-BAND,0,VW,H); g.restore(); }   /* v382: 폭 확장 */
+  else if(S.theme==='ice'&&ICE_IM.complete&&ICE_IM.naturalWidth){ g.save(); g.globalAlpha=0.93; g.drawImage(ICE_IM,-BAND,0,VW,H); g.restore(); }   /* v382 */
   g.fillStyle='rgba(15,23,42,'+((S.theme==='lava')?0.50:(S.theme==='ice')?0.56:0.54)+')';g.fillRect(-BAND,0,VW,H);   /* v382 */   /* v145b: 슬레이트 베일 — FIELD/LAVA/ICE 전면 텍스처 이후·승부 구역 틴트 이전 배치(구역 색은 베일 위에 선명 유지) */
   g.fillStyle=S.theme==='lava'?'rgba(255,90,30,.16)':S.theme==='ice'?'rgba(140,200,255,.22)':'rgba(63,123,245,.13)';
   g.fillRect(-BAND,RIVER_Y1*TILE,VW,H-RIVER_Y1*TILE);   /* v382 */
@@ -1390,7 +1375,7 @@ function drawStatic(){
   else {
   g.fillStyle=T.riverA; g.fillRect(-BAND,RIVER_Y0*TILE,VW,(RIVER_Y1-RIVER_Y0)*TILE);
   g.fillStyle=T.riverB; g.fillRect(-BAND,RIVER_Y0*TILE+4,VW,(RIVER_Y1-RIVER_Y0)*TILE-8);
-  g.fillStyle='rgba(255,255,255,.20)'; g.fillRect(-BAND,RIVER_Y0*TILE,VW,3); g.fillRect(-BAND,RIVER_Y1*TILE-3,VW,3);   /* v382: 강도 밴드 끝까지 */
+  g.fillStyle='rgba(255,255,255,.20)'; g.fillRect(-BAND,RIVER_Y0*TILE,VW,3); g.fillRect(-BAND,RIVER_Y1*TILE-3,VW,3);   /* v382 */
   }
   for(const b of BRIDGES){
     if(BRIDGE_IM.complete&&BRIDGE_IM.naturalWidth){ const bx2=(b-0.8)*TILE, bw2=1.6*TILE; g.save(); const __bh=BRIDGE_IM.naturalHeight/BRIDGE_IM.naturalWidth*bw2; g.drawImage(BRIDGE_IM,bx2,RIVER_Y0*TILE-7,bw2,__bh); g.restore(); continue; }
@@ -1419,7 +1404,7 @@ function drawStatic(){
     else { g.fillStyle=T.flower; g.beginPath(); g.arc(dx,dy,3.5,0,7); g.fill();
       g.fillStyle='rgba(255,255,255,.7)'; g.beginPath(); g.arc(dx-1,dy-1,1.4,0,7); g.fill(); }
   }
-  g.save(); g.translate(-BAND,0);   /* v382: 외곽 장식을 캔버스 가장자리로 — 플레이 경계 0..W는 개방 */
+  g.save(); g.translate(-BAND,0);   /* v382 */
   g.fillStyle=T.stone;
   g.fillRect(0,0,W,7); g.fillRect(0,H-7,W,7); g.fillRect(0,0,7,H); g.fillRect(W-7,0,7,H);
   if(WALL_IM.complete&&WALL_IM.naturalWidth){
@@ -2564,7 +2549,7 @@ function startMatch(){ try{ localStorage.setItem('ra_slot_used_v1',String(active
   try{ if(false&&typeof localStorage!=='undefined'&&localStorage.getItem('ra_tut_done')!=='1'&&!localStorage.getItem('ra_hist_v1')) tutBegin();   /* v176: 튜토리얼 모드 일단 제외 — 재활성 시 if(false&&) 제거 */ }catch(e){}   /* v147: 첫 실행(기록 없음)만 활성 */
   units=[];projs=[];fx=[];floats=[];parts=[];ambient=[];
   S.over=false;S.shown=false;S.winner=null;S.t=300;S.overtime=false;S.double=false;   /* v142: 경기 시간 5분 */
-  try{ DPSW.acc={}; DPSW.cnt={}; DPSW.time=0; DPSW._c=0; dpswEnsure(); }catch(e){}  try{ heroPlxReset(); }catch(e){}   /* v150: 전투 진입 시 패럴럭스 리셋 */__rollWide();   /* v382: 와이드 산출+다리 랜덤+지면 재도색 — startMatch 진입점 */
+  try{ DPSW.acc={}; DPSW.cnt={}; DPSW.time=0; DPSW._c=0; dpswEnsure(); }catch(e){}  try{ heroPlxReset(); }catch(e){}   /* v150: 전투 진입 시 패럴럭스 리셋 */__rollWide();   /* v382 */
   S.crowns={blue:0,red:0};   /* v148: 위젯 리셋 */ S.kills={blue:0,red:0}; S.deaths={blue:0,red:0}; S.spells={blue:0,red:0}; S.shake=0; S.clash=null; S.cam={x:VW/2,y:H/2,z:1}; S._home={x:VW/2,y:H/2,z:1};   /* v382 */ S.focus=null; S.slow=0; S.spellQuiet=0; S._sk={}; S.__rin=(function(){try{var r=localStorage.getItem('ra_relic_inrun_v1'); if(r) localStorage.removeItem('ra_relic_inrun_v1'); return r;}catch(e){return null;}})(); S.__rinRoll=(S.__rin==='relic_gamble')?(Math.random()<0.5?1.25:0.85):1; S.__rinMul=1+0.05*__raClearLv();   /* v212 소비 + v218: 토벌 단계 렐릭 증폭 */ try{ relayoutHud(); }catch(e){}   // v122: 경기 시작 기둥 배치   // v115: 초기 화면 상태 기억 — 강제 복귀 기준점 + v118: 주문 진정 기간 리셋   // v111: 구 추적 객체 2종 폐지(단일 S.focus만) S.boss=null; S.bossSpawned=false; S.ks=false; S.ksCd=0; S.focusGap=0; S.zHold=0; S._tp=0; S.repCd=0; S.__used={}; try{ syncGradeVisual(); }catch(e){} try{ S.relic=(function(){try{return localStorage.getItem('ra_relic_v1')||''}catch(e){return ''}})(); applyRelics(); applySkills(); }catch(e){}   // v119: 스킬트리 반영
   P.elixir=5;A.elixir=5;A.timer=4.5;P.sel=null;P._full=false;
   try{ var __sb2=document.getElementById('screen-battle'); if(__sb2) __sb2.classList.remove('ended'); }catch(e){}
