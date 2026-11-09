@@ -57,7 +57,7 @@ const THEMES={
     bush:'#3f7a2f',flower:'#e8b4d8',stone:'#9aa3ae',stoneHi:'#b7bfc9',stoneEdge:'rgba(60,70,80,.5)',amb:null},
   lava:{g1:'#54403c',g2:'#63493f',speck:'rgba(255,140,60,.10)',blade:'rgba(255,120,40,.20)',
     road:'rgba(255,180,110,.22)',riverA:'#a83b12',riverB:'#e86a1e',spark:'rgba(255,220,120,.65)',
-    bush:'#8a4a20',flower:'#ffcf5e',stone:'#6f6a72',stoneHi:'#8a8490',stoneEdge:'rgba(35,25,30,.6)',amb:'ember'},
+    bush:'#8a4a20',flower:'#ffcf5e',stone:'#6f6a72',stoneHi:'#8a8490',stoneEdge:'rgba(35,25,30,.6)',amb:null},   /* v381: 라바 엠버 제거 — 유닛 위로 떠오르는 붉은 점을 투사체로 오인하는 혼란 방지(순수 장식, 전투 기능 없음) */
   ice:{g1:'#a9cde3',g2:'#c2e0f0',speck:'rgba(255,255,255,.50)',blade:'rgba(120,170,210,.35)',
     road:'rgba(180,205,230,.55)',riverA:'#7fb6d9',riverB:'#a8d8f0',spark:'rgba(255,255,255,.65)',
     bush:'#7fa8c4',flower:'#ffffff',stone:'#9fb4c4',stoneHi:'#c4d6e4',stoneEdge:'rgba(70,95,120,.5)',amb:'snow'},
