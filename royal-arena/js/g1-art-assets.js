@@ -1223,6 +1223,7 @@ function aiTick(dt){
   A.timer-=dt; if(A.timer>0) return;
   A.timer=(1.0+Math.random()*0.8)/(1+0.25*(aiDiff()*0.7+aiMeta()*0.3));   /* v143 */
   const hand=A.hand;
+  if(!A._opened){ A._opened=1; var __fp=firstIn(hand,['knight','valk','musketeer','archers','skarmy','minions'])||hand[0]; playCard(A,hand.indexOf(__fp),Math.random()<0.5?BRIDGES[0]:BRIDGES[1],3.2); return; }   /* v403: 개전 5초 첫 배치 보장 — 코스트≤5 확정 스폰 */
   const threats=units.filter(u=>u.team==='blue'&&!u.dead&&u.spawnFx<=0&&u.y<17.5);
   let pick=null,px=9,py=6;
   if(threats.length){
@@ -2500,7 +2501,7 @@ function startMatch(){ try{ localStorage.setItem('ra_slot_used_v1',String(active
   S.over=false;S.shown=false;S.winner=null;S.t=300;S.overtime=false;S.double=false;   /* v142: 경기 시간 5분 */
   try{ DPSW.acc={}; DPSW.cnt={}; DPSW.time=0; DPSW._c=0; dpswEnsure(); }catch(e){}  try{ heroPlxReset(); }catch(e){}   /* v150: 전투 진입 시 패럴럭스 리셋 */try{ __rollWide(); }catch(__e){}   /* v390 */
   S.crowns={blue:0,red:0};   /* v148: 위젯 리셋 */ S.kills={blue:0,red:0}; S.deaths={blue:0,red:0}; S.spells={blue:0,red:0}; S.shake=0; S.clash=null; S.cam={x:W/2,y:H/2,z:1}; S._home={x:W/2,y:H/2,z:1}; S.focus=null; S.slow=0; S.spellQuiet=0; S._sk={}; S.__rin=(function(){try{var r=localStorage.getItem('ra_relic_inrun_v1'); if(r) localStorage.removeItem('ra_relic_inrun_v1'); return r;}catch(e){return null;}})(); S.__rinRoll=(S.__rin==='relic_gamble')?(Math.random()<0.5?1.25:0.85):1; S.__rinMul=1+0.05*__raClearLv();   /* v212 소비 + v218: 토벌 단계 렐릭 증폭 */ try{ relayoutHud(); }catch(e){}   // v122: 경기 시작 기둥 배치   // v115: 초기 화면 상태 기억 — 강제 복귀 기준점 + v118: 주문 진정 기간 리셋   // v111: 구 추적 객체 2종 폐지(단일 S.focus만) S.boss=null; S.bossSpawned=false; S.ks=false; S.ksCd=0; S.focusGap=0; S.zHold=0; S._tp=0; S.repCd=0; S.__used={}; try{ syncGradeVisual(); }catch(e){} try{ S.relic=(function(){try{return localStorage.getItem('ra_relic_v1')||''}catch(e){return ''}})(); applyRelics(); applySkills(); }catch(e){}   // v119: 스킬트리 반영
-  P.elixir=5;A.elixir=5;A.timer=4.5;P.sel=null;P._full=false;
+  P.elixir=5;A.elixir=5;A.timer=5;A._opened=0;P.sel=null;P._full=false;   /* v403: 적 첫 스폰 5초 보장(A._opened) — 엘릭서 게이트 대기(체감 최악 ~20s) 제거 */
   try{ var __sb2=document.getElementById('screen-battle'); if(__sb2) __sb2.classList.remove('ended'); }catch(e){}
   initDeck(P);initDeck(A,true);   /* v192: 적 덱 = 아군과 무관 랜덤 */
   try{ window.__qaDecks={blue:P.hand.join(','),red:A.hand.join(',')}; }catch(e){ }
