@@ -1162,7 +1162,7 @@ html body #overlay-info>div{height:100% !important}
 html body #overlay-info .t-how,html body #overlay-info .t-note{padding-bottom:14px !important}
 html body #overlay-info #btn-info-close{position:sticky !important;bottom:calc(6px + env(safe-area-inset-bottom,0px)) !important;margin:10px auto 0 !important;flex-shrink:0 !important;z-index:7 !important;box-shadow:0 4px 14px rgba(0,0,0,.55) !important}
 html body #overlay-info{padding-bottom:env(safe-area-inset-bottom,0px) !important}
-</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v417</div><div id="app">
+</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v418</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1517,7 +1517,7 @@ b.style.setProperty('background-size','auto,100% 100%','important');b.style.setP
 html body #rpane-score{overflow-y:auto !important;max-height:46vh !important;-webkit-overflow-scrolling:touch !important}
 html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;white-space:pre-line !important;word-break:keep-all !important;overflow-wrap:anywhere !important;text-align:right !important;max-width:200px !important;font-weight:600 !important}
 </style>
-<script src="js/g1-art-assets.js?v=417"></script>
+<script src="js/g1-art-assets.js?v=418"></script>
 
 
 
@@ -1529,7 +1529,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g2-sprite-assets.js?v=417"></script>
+<script src="js/g2-sprite-assets.js?v=418"></script>
 
 
 
@@ -1538,7 +1538,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g3-frame-assets.js?v=417"></script>
+<script src="js/g3-frame-assets.js?v=418"></script>
 
 
 
@@ -1549,7 +1549,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g4-ux-data.js?v=417"></script>
+<script src="js/g4-ux-data.js?v=418"></script>
 
 
 
@@ -1560,7 +1560,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g5-core.js?v=417"></script>
+<script src="js/g5-core.js?v=418"></script>
 
 
 
@@ -1571,7 +1571,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g6-battle.js?v=417"></script>
+<script src="js/g6-battle.js?v=418"></script>
 
 
 
@@ -1583,7 +1583,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g7-ui-systems.js?v=417"></script>
+<script src="js/g7-ui-systems.js?v=418"></script>
 
 
 
@@ -1595,7 +1595,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g8-boot.js?v=417"></script><script src="js/g9-wide.js?v=417"></script>
+<script src="js/g8-boot.js?v=418"></script><script src="js/g9-wide.js?v=418"></script>
 
 
 
@@ -2010,6 +2010,36 @@ html body button#btn-sound.off{opacity:.55;filter:grayscale(.7)}
  if(sb){if((sb.textContent||'').indexOf('🔊')>=0){sb.classList.remove('off');}else{sb.classList.add('off');}}
  window.__raSkinOK=true;}
 skin();setInterval(skin,1200);document.addEventListener('click',function(){setTimeout(skin,80);});})();
+</script>
+<style id="ui-v418">/* v418: 프로필 이름 편집기 + 지도 선택 버튼 */
+#ra-name-edit input{flex:1;padding:8px;border-radius:10px;border:1px solid #c89b3c;background:rgba(10,18,36,.9);color:#ffe9b8;font-weight:700;text-align:center;min-width:0}
+#ra-name-edit button{padding:8px 14px;border-radius:10px;border:1px solid #c89b3c;background:rgba(18,24,43,.9);color:#ffd54f;font-weight:800;cursor:pointer;white-space:nowrap}
+#btn-map{color:#ffe9b8!important}
+</style>
+<script id="ui-v418-js">/* v418/v419: 프로필 이름 편집(ra_prof_name — __raProfName 기존 진실원)+지도 사다리 선택 버튼(토벌 해금 게이트) */
+(function(){function ui(){
+ var ov=document.getElementById('overlay-profile');
+ if(ov&&!ov.classList.contains('hidden')&&!document.getElementById('ra-name-edit')){
+  var d=document.createElement('div'); d.id='ra-name-edit'; d.style.cssText='margin:8px auto;max-width:320px;display:flex;gap:6px;justify-content:center;align-items:center;width:92%';
+  var inp=document.createElement('input'); inp.maxLength=12; inp.placeholder='지휘관 이름 (최대 12자)'; inp.value=(localStorage.getItem('ra_prof_name')||'');
+  var b=document.createElement('button'); b.textContent='저장';
+  b.onclick=function(){ var v=(inp.value||'').trim().slice(0,12); if(v) localStorage.setItem('ra_prof_name',v); else localStorage.removeItem('ra_prof_name'); try{toast('이름 저장 — 전당 기록부터 적용돼요: '+(v||'지휘관'));}catch(e){} };
+  d.appendChild(inp); d.appendChild(b); ov.insertBefore(d, ov.firstChild);
+ }
+ var ta=document.getElementById('title-actions');
+ if(ta&&!document.getElementById('btn-map')){
+  var ref=document.getElementById('btn-diff'); if(!ref){ var l=ta.querySelectorAll('button'); for(var i=0;i<l.length;i++){ if((l[i].textContent||'').indexOf('⚔ 난이도')===0){ ref=l[i]; break; } } }
+  if(ref){ var mk=document.createElement('button'); mk.id='btn-map';
+   function mapPaint(){ var mi=(window.__raMapIdx?__raMapIdx():0); var m=(window.__raMAPS?__raMAPS[mi]:null); mk.textContent='🗺 지도: '+(m?m.name:'-'); mk.dataset.map=String(mi); }
+   mapPaint();
+   mk.onclick=function(){ var mi=__raMapIdx(); var cl=(parseInt(localStorage.getItem('ra_map_clear_v1')||'-1',10))+1; var nd=(mi+1)%5;
+    if(nd>Math.min(4,cl)){ try{toast('잠금 — 이전 지도의 왕 타워 파괴 후 해금');}catch(e){} return; }
+    localStorage.setItem('ra_map_v1',String(nd)); mapPaint(); try{toast('지도: '+__raMAPS[nd].name+' — 적 체력×'+__raMAPS[nd].mult);}catch(e){} };
+   if(ref.parentNode) ref.parentNode.insertBefore(mk, ref); else ta.appendChild(mk);
+  }
+ }
+}
+ui();setInterval(ui,900);document.addEventListener('click',function(){setTimeout(ui,80);});})();
 </script>
 </body>
 </html>

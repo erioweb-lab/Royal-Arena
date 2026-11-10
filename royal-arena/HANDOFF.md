@@ -190,3 +190,6 @@
 ## v417·기록 보강 (2026-11-11)
 - v417: 메인 버튼 텍스처(CTA plaque·HOF gold)는 ui-v417-js **inline setProperty important+1.2s interval+클릭 위임**이 최종 해법 — CSS 블록만으로는 기존 ui-v4xx 규칙에 배경이 눌리고(테두리는 적용되는 부분 적용 실증), 스킨 1회 실행은 늦게 생성되는 버튼을 놓친다. 난이도 버튼 __raDIFF.col 색 스킨·사운드 .off 상태 동일 스크립트.
 - 기록 보강(누락분): ①v414b — 신규 4종 카드 JPG v411 때 원천 미커밋 확인→재생성·투입(a5f338a). CDN "Error 503 Maximum threads/Varnish"는 GitHub Pages 일시 과부하로 게임 결함 아님. ②프롬프트 참조: self-check/live-url-verify-prompt, art-pipeline/{deck-editor-layout·main-buttons-design·map-boss-design}-prompt, dev-pipeline/hof-profile-link-prompt — 연결·save 완료. ③덱 편집기 버튼 텍스처 미해결(v416 기록) — v417 해법(inline important+interval)을 그대로 적용하면 된다. ④btn-hof는 동적 생성 — id 스코프.
+## v418·v419 (2026-11-11)
+- 2번 완료: 프로필 이름 편집기(`ra_prof_name`)+`__raProfName` 이중 배열 버그 수복 — HOF 스냅샷·포디엄 연동 확정(포디엄 '1위 테스트지휘관' 실측). 3번 완료: `__raMAPS` 5맵(mult 1~1.32, __raDiffHp와 곱셈)·지도 버튼(해금 게이트 ra_map_clear_v1)·맵별 보스 스프라이트 5종(마젠타 키잉 게이트 통과)·스폰 교체(SPR.boss·S.__bossName)·파멸기 맵별 존 효과.
+- 후속: 보스 HUD 라벨에 S.__bossName 표기 연결, 파멸기 효과 기기 실측(보스 웨이브 도달), 덱 편집기 버튼 텍스처(v416 미해결 — inline important 해법 적용), g1 분할 검토.

@@ -497,7 +497,10 @@ try{ (function(){ var EV=[
 
 /* v208: 난이도 3단계(영구 저장) + P13 배치 구역 하이라이트 */
 try{ (function(){
-  window.__raDIFF={name:['보통','악몽','지옥'],col:['#67d98a','#e0a13c','#e05c6e'],hp:[1,1.25,1.55],dmg:[1,1.15,1.35],aelix:[1,1.12,1.28]};   /* v402: 적 엘릭서 충전 배율 — 스폰 속도 레벨링(단일 진실원) */   /* v210: 단일 진실원 통합 */
+  window.__raDIFF={name:['보통','악몽','지옥'],col:['#67d98a','#e0a13c','#e05c6e'],hp:[1,1.25,1.55],dmg:[1,1.15,1.35],aelix:[1,1.12,1.28]};
+  window.__raMAPS=[{id:'royal',name:'로얄 클래식',boss:'왕국 성기사장',sprite:'assets/ra_boss_royal.png',mult:1,ult:null},{id:'frost',name:'서리 호수',boss:'서리 날개 군주',sprite:'assets/ra_boss_frost.png',mult:1.08,ult:'frost'},{id:'lava',name:'용암 협곡',boss:'화염 골렘',sprite:'assets/ra_boss_lava.png',mult:1.16,ult:'lava'},{id:'waste',name:'황야 유적',boss:'사암 미라 군주',sprite:'assets/ra_boss_waste.png',mult:1.24,ult:'waste'},{id:'abyss',name:'심연의 소굴',boss:'심연 군주',sprite:'assets/ra_boss_abyss.png',mult:1.32,ult:'abyss'}];   /* v419: 지도 사다리 단일 진실원 — 스테이지 hp 배율·맵별 보스 스프라이트/이름/파멸기 효과 */
+  window.__raMapIdx=function(){ try{ return Math.max(0,Math.min(4,parseInt(localStorage.getItem('ra_map_v1')||'0',10)||0)); }catch(e){ return 0; } };
+  window.__raMapHp=function(){ return __raMAPS[__raMapIdx()].mult; };   /* v419: 난이도 배율과 곱셈 결합 */   /* v402: 적 엘릭서 충전 배율 — 스폰 속도 레벨링(단일 진실원) */   /* v210: 단일 진실원 통합 */
   window.__raDiffHp=function(){ var d=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; return __raDIFF.hp[d]||1; };
   window.__raDiffDmg=function(){ var d=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; return __raDIFF.dmg[d]||1; };
   window.__raAel=function(){ var d=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; return __raDIFF.aelix[d]||1; };   /* v402 */
@@ -526,7 +529,7 @@ function mkTower(team,kind,x,y){
 }
 function spawnBossNow(){ if(S.bossSpawned||S.over) return; S.bossSpawned=true;
     const kt=towers.find(t=>t.team==='blue'&&t.kind==='king'&&!t.dead);
-    if(kt){ var __bw=(S.__bossWave||0), __bh=Math.round(BOSS_STATS.hp*__raDiffHp()*(1+0.35*__bw)), __bs2=Object.assign({},BOSS_STATS,{dmg:Math.round(BOSS_STATS.dmg*(1+0.15*__bw))}); const BU={key:'boss',team:'red',x:9,y:3.2,c:__bs2,hp:__bh,maxHp:__bh,shield:900,cd:1.2,dir:Math.PI/2,dead:false,swing:0,bob:1,spawnFx:0.45,doom:0,chargeT:0};
+    if(kt){ var __mp=__raMAPS[__raMapIdx()]; try{ if(__mp&&SPR.boss&&__mp.sprite) SPR.boss.src=__mp.sprite; }catch(e){} try{ S.__bossName=__mp?__mp.boss:null; }catch(e){} var __bw=(S.__bossWave||0), __bh=Math.round(BOSS_STATS.hp*__raDiffHp()*__raMapHp()*(1+0.35*__bw)), __bs2=Object.assign({},BOSS_STATS,{dmg:Math.round(BOSS_STATS.dmg*(1+0.15*__bw))}); const BU={key:'boss',team:'red',x:9,y:3.2,c:__bs2,hp:__bh,maxHp:__bh,shield:900,cd:1.2,dir:Math.PI/2,dead:false,swing:0,bob:1,spawnFx:0.45,doom:0,chargeT:0};
       BU.target=kt; units.push(BU); S.boss=BU; ensureKsBtn(); banner('💀 부활한 왕이 강림했다!',2200); sfx('boomL'); } }   /* v192: 보스 강림(최상위 — 타워 파괴·타이머 폴백 공용) */
 
 
@@ -564,7 +567,7 @@ function spawnCard(key,team,x,y){ try{ tutOnSpawn(key,team); }catch(e){}   /* v1
   var __m=1+0.04*(__cL-1);
   const cc=(__m>1)?Object.assign({},c,{hp:Math.round(c.hp*__m),dmg:Math.round((c.dmg||0)*__m)}):c;   /* CARDS 원본 보존 — 유닛별 클론 */
   if(team==='blue'&&S.theme==='ice') cc.hp=Math.round(cc.hp*1.02);   /* v220: 서리 테마 보너스 — 아군 HP +2% */
-  var __dm=(team==='red')?__raDiffHp()*__raWaveHp():1;   /* v208 난이도 + v212 웨이브 곡선 */
+  var __dm=(team==='red')?__raDiffHp()*__raWaveHp()*__raMapHp():1;   /* v208 난이도 + v212 웨이브 곡선 */
   var __sh=0,__hl=false,__sp=false; if(team==='red'&&!c.kind&&key!=='boss'){ var __tq=Math.random(); if(__tq<0.08){ __sh=Math.round(cc.hp*0.3); } else if(__tq<0.15){ __hl=true; } else if(__tq<0.22){ __sp=true; } }   /* v209: 적 특성 패턴 — 실드·힐러·분열 */
   for(const o of formation(c.count||1)){
     let ux=clamp(x+o[0],0.7,COLS-0.7), uy=clamp(y+o[1],0.7,ROWS-0.7);
@@ -974,7 +977,7 @@ function dealDamage(e,dmg,fromTeam,fromSpell){
   if(e.hp<=0){ e.hp=0; e.dead=true;
     if(fromTeam&&S.kills&&!e.isTower) S.kills[fromTeam]++;
     if(!e.isTower&&S.deaths&&e.team) S.deaths[e.team]=(S.deaths[e.team]||0)+1;   // v99 P8: 데스 집계
-  if(e.isTower&&e.kind==='king'&&fromTeam==='blue'){ try{ var __cd0=parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)||-1; var __dc0=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; if(__dc0>__cd0) localStorage.setItem('ra_diff_clear_v1',String(__dc0)); }catch(__e){} }   /* v209: 난이도 토벌 기록 — 다음 난이도 해금 */
+  if(e.isTower&&e.kind==='king'&&fromTeam==='blue'){ try{ var __mi0=(window.__raMapIdx?__raMapIdx():0); if(__mi0>(parseInt(localStorage.getItem('ra_map_clear_v1')||'-1',10))) localStorage.setItem('ra_map_clear_v1',String(__mi0)); }catch(__e){} try{ var __cd0=parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)||-1; var __dc0=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; if(__dc0>__cd0) localStorage.setItem('ra_diff_clear_v1',String(__dc0)); }catch(__e){} }   /* v209: 난이도 토벌 기록 — 다음 난이도 해금 */
   if(fromTeam==='blue'&&!e.isTower){ try{ var __kg=parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)+1; if(typeof P!=='undefined'&&P&&typeof P.elixir==='number') P.elixir=Math.min(ELX_MAX,P.elixir+0.04*(1+Math.max(0,__kg))*(S&&S.__rin==='relic_hoard'?2*(S.__rinMul||1):1)   /* v218 증폭 */);   /* v212: 금고의 인장 — 보상 2배 */ }catch(__e){} }   /* v209: 처치 보상 — 킬 엘릭서(토벌 단계 계수, killGoldBonus 프레임) */
   if(!e.isTower&&e.split&&e.team==='red'){ setTimeout(function(){ try{ if(S.over) return; var __sc=Object.assign({},CARDS.minions,{hp:70,dmg:22,name:'분열체',count:1}); for(var __si=0;__si<2;__si++){ units.push({id:uid++, key:'minions', team:'red', c:__sc, r:0.32, x:clamp(e.x+(__si?0.35:-0.35),0.7,COLS-0.7), y:clamp(e.y+0.3,0.7,ROWS-0.7), hp:70, maxHp:70, cd:0.4, swing:0, bob:Math.random()*6.28, target:null, spawnFx:0.45, building:false, life:0, dead:false, stun:0, slowT:0, frozenT:0, chargeT:0, charging:false, dir:Math.PI/2}); } }catch(__e){} },60); }   /* v209: 분열 특성 — 사망 시 소형 2체 */
     if(e.isTower) destroyTower(e,fromTeam); else killUnit(e,false); }
@@ -1174,7 +1177,7 @@ function update(dt){
   if(S.repCd>0) S.repCd-=dt;   // v106 #12: 수리 쿨다운
   if(S.boss&&!S.boss.dead){ const b=S.boss; b.doom+=dt;
     if(b.doom>=12){ b.doom=0; const kt=towers.find(t=>t.team==='blue'&&t.kind==='king'&&!t.dead);
-      if(kt){ dealDamage(kt,500,'red'); fx.push({x:kt.x,y:kt.y,t:0,dur:0.7,kind:'boom'}); S.shake=0.6; banner('💥 파멸기 폭발!',1800); } } }
+      if(kt){ dealDamage(kt,500,'red'); fx.push({x:kt.x,y:kt.y,t:0,dur:0.7,kind:'boom'}); var __mu=__raMAPS[__raMapIdx()], __uz=__mu?__mu.ult:null, __ur=2.2; if(__uz==='lava'){ fx.push({x:kt.x,y:kt.y,t:0,dur:4.5,kind:'burnzone',r:__ur,team:'red'}); } else if(__uz==='frost'){ fx.push({x:kt.x,y:kt.y,t:0,dur:6,kind:'snowzone',r:__ur,team:'red'}); } else if(__uz==='abyss'){ fx.push({x:kt.x,y:kt.y,t:0,dur:6,kind:'venomzone',r:__ur,team:'red'}); } else if(__uz==='waste'){ fx.push({x:kt.x,y:kt.y,t:0,dur:8,kind:'crater',r:__ur,team:'red'}); } S.shake=0.6; banner('💥 파멸기 폭발!'+(__mu?' — '+__mu.boss:''),1800); } } }
   if(S.boss&&S.boss.dead){ S.kills.blue+=5; P.elixir=ELX_MAX; P._full=false;
     S.focus=null; S.focusGap=1.5;   // v116: 보스 격파 줌인 삭제(사용자 지정) — 즉시 해제 + 1.5s 신규 포커스 억제
     banner('💀 보스 토벌! 엘릭서 만땅 · 킬 +5',2200); sfx('crown');
@@ -2671,7 +2674,7 @@ function drawBossHUD(){
 
 /* ---------- v80: P6 명예의 전당 ---------- */
 function __raProfName(){ try{
-  var ks=[['ra_prof_name', 'ra_profile_name', 'ra_pf_name']];
+  var ks=['ra_prof_name','ra_profile_name','ra_pf_name'];   /* v418b: 중첩 배열 버그 수복 — getItem(배열)이 실패해 항상 폴백 '지휘관'이던 것 */
   for(var i=0;i<ks.length;i++){ var v=localStorage.getItem(ks[i]); if(v) return v; }
   var pk='ra_prof_v1'; if(pk){ var o=JSON.parse(localStorage.getItem(pk)||'null');
     if(Array.isArray(o)){ var act=o.filter(function(x){return x&&x.active;})[0]||o[o.length-1]; if(act&&(act.name||act.nick)) return act.name||act.nick; }
