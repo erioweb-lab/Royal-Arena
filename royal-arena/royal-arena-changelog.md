@@ -183,3 +183,6 @@
 - 난이도 버튼도 동일 방식(현재 __raDIFF.col과 계산 스타일 불일치 시에만 재적용 — 클릭 가드 불필요). 사운드 .off 동기 유지.
 ## v423 (2026-11-11): 전 버튼 텍스처 유지 확정 — 라운드로빈 복원
 - v422의 0.5s 스로틀 복원이 게임 재스타일 패처(~250ms, ui-v113이 #title-actions button 전반을 재기록)에 반복 덮임이 실측으로 확인(start/HOF/네비 배경 false, 지도·난이도는 패처 미대상이라 유지) — **rAF 라운드로빈**(프레임당 4개 순회 → 버튼당 ~80ms 검사 주기)으로 수복: 패처보다 빠른 주기로 손실 즉시 복원하면서 프레임당 getComputedStyle는 4회로 제한(성능 보호). 텍스처 8종(camp·decked·shield·relic·crown·tactics·diff·map)+기존 gold/plaque 전 버튼 적용, 난이도 버튼은 텍스처+현재 난이도 색 테두리 병행.
+## v425 후기록 (2026-11-11): 프롬프트 정합화
+- main-buttons-design-prompt: v425 캐스케이드 정복 아키텍처로 교체(스타일시트 important 주체·정규화 라벨·동적 id 태깅·깜빡임 계량 검증 프로토콜).
+- self-check/references/error-sweep-prompt.md 신설 — 그 밖의 오류 전수 점검 10항목(사용자 요청).
