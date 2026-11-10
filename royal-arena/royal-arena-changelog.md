@@ -166,3 +166,7 @@
 - **완료·이중 실측 통과**: 전투 덱 10장 표시를 flex-wrap에서 grid repeat(5,minmax(0,1fr))로 교체(.dkw, 보유 풀과 동일 폭 430px) — 로컬·라이브 헤드리스 모두 cols=5·rows=2·첫 행 5열·10장(UI 규약 시딩) 확인, 페이지 에러 0.
 - **미완**: 저장(ra_btn_gold)·랜덤/닫기(ra_btn_navy) 텍스처와 오버레이 padding-bottom 46px — g1 주입 style, html body+id 결합 특이성, index.html 말단 ui-v416 !important 블록 3중 시도 모두 계산 스타일 실측에서 saveBG=false·paddingBottom=12px. 원인 미규명 — 측정 대상 요소와 실제 렌더 요소 불일치 가능성(.dkw 마크업은 적용되고 같은 style 요소의 규칙만 미적용되는 모순). 기기 실측이 최종 판정자.
 - 교훈: qa 이벤트 팝업(overlay-event)이 9~12s에 #btn-deck 클릭을 가린다 — 편집기 시험 선두에서 팝업 제거 필수. 검증 실패 시 터미네이터 뒤 개행 문이 무조건 실행되므로 기록·커밋은 && 안에(재실증).
+## v417 (2026-11-11): 메인화면 버튼 생성형 그래픽 — 텍스처·상태 3단·난이도 색상 스킨
+- 시작 CTA `ra_cta_plaque.png`·명예의 전당 `ra_btn_gold.png` 텍스처 — index 말단 ui-v417-js가 **inline setProperty(...,'important') + 1.2s 주기 유지 + 클릭 위임**으로 적용(스타일시트 !important 경합과 동적 생성 타이밍을 모두 무력화 — ui-v417 CSS 블록만으론 배경이 경합 패배해 v417a로 재작성). CTA 빨간 테두리 예외 유지, 게임방법은 기존 나무 border-image 재사용.
+- 난이도 버튼 `__raDIFF.col` 단일 진실원 색 스킨(테두리 2px+발광 — 보통 #67d98a·악몽 #e0a13c·지옥 #e05c6e), data-diff 마킹. 사운드 음소거 .off(투명 .55+그레이스케일). :active 3단은 ui-v417 CSS 블록.
+- sw CORE ra_cta_plaque 등록·CACHE v417, 칩·?v=417 3종 세트. 검증: vm COMPILE:OK · 헤드리스 계산 스타일 실측(배경 이미지·난이도 테두리 rgb(103,217,138)) · 페이지 에러 0.

@@ -187,3 +187,6 @@
 - 완료: 덱 편집기 전투 덱 10장 2행 5열 고정(.dkw grid repeat(5,minmax(0,1fr))) — 로컬+라이브 실측 통과, v415 배포.
 - 미완(다음 세션 1순위): 편집기 버튼 텍스처(gold/navy)·padding-bottom 46px — 3중 시도 모두 계산 스타일 미적용(saveBG=false·ovPadB=12px). 의심: 편집기를 실제로 렌더하는 모듈이 g1이 아닐 가능성(g9-wide 등 이중 렌더러) — `grep -n "deck-edit" js/*.js` 전수 후 실제 렌더러에 패치. 기기 캡처가 판정자.
 - 프롬프트: art-pipeline/references/deck-editor-layout-prompt.md(2×5 그리드·버튼 텍스처·깔끔함 표준).
+## v417·기록 보강 (2026-11-11)
+- v417: 메인 버튼 텍스처(CTA plaque·HOF gold)는 ui-v417-js **inline setProperty important+1.2s interval+클릭 위임**이 최종 해법 — CSS 블록만으로는 기존 ui-v4xx 규칙에 배경이 눌리고(테두리는 적용되는 부분 적용 실증), 스킨 1회 실행은 늦게 생성되는 버튼을 놓친다. 난이도 버튼 __raDIFF.col 색 스킨·사운드 .off 상태 동일 스크립트.
+- 기록 보강(누락분): ①v414b — 신규 4종 카드 JPG v411 때 원천 미커밋 확인→재생성·투입(a5f338a). CDN "Error 503 Maximum threads/Varnish"는 GitHub Pages 일시 과부하로 게임 결함 아님. ②프롬프트 참조: self-check/live-url-verify-prompt, art-pipeline/{deck-editor-layout·main-buttons-design·map-boss-design}-prompt, dev-pipeline/hof-profile-link-prompt — 연결·save 완료. ③덱 편집기 버튼 텍스처 미해결(v416 기록) — v417 해법(inline important+interval)을 그대로 적용하면 된다. ④btn-hof는 동적 생성 — id 스코프.
