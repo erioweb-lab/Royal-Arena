@@ -97,3 +97,9 @@
 - 대공 불가 공격자(도끼전사·기사단장·화염방사병·폭탄병·캐논 등 hitsAir:false/ground)의 스플래시(탄환 70%·근접 60%)와 둔화 전파가 공중 유닛에까지 적용되던 것 수복 — shoot() 투사체에 hitsAir 적재 + 근접/탄환/둔화 3루프에 (s2.flying&&!hitsAir) 필터.
 - 검증: vm COMPILE:OK · balance outliers=0(medianEff 415) · 헤드리스 통제 추적(dealDamage 래퍼 로그: 직격 100·스플래시 60 단일 호출·공중 0·논스플래시 근접 주변 0·icem 탄환 hitsAir=true) · QA ERR:0 OVF:0 BATTLE:OK 칩 v405 · 푸시 cde7fd9.
 - 잔여 관찰: 비통제 첫 실측의 splashGround 120은 통제 추적(60 단일 호출)에서 재현 불가 — 근접 스플래시 60% 단일 적용 확정.
+
+## v406 (2026-11-10) — 플라즈마 타워 발사 빔(생성형 그래픽)+AOE 감사 표준
+- 플라즈마 시전 시 킹타워→목표로 생성형 빔 스프라이트(ra_fx_plasma_beam.png, gpt-image-2·ra_card_plasma.jpg -i 레퍼런스·키잉·투명 38%)가 진행도(k)로 신축 렌더 — plasmabolt 포탄은 진행 머리로 병행, 스프라이트 로드 실패 시 캔버스 그라디언트 폴백 내장. 칩·sw v406.
+- 눈보라 "초당 피해 없음" 확인: snowzone 틱은 둔화(slowT 0.6s) 전용 — v326 규격·카드 설명('광역 둔화 3초 주문')과 일치하는 의도된 동작(결함 아님). 피해 추가는 별도 설계 변경.
+- 감사 프롬프트 2종 신설: balance-map references/aoe-zone-audit-prompt.md(존별 틱 진실원표·헤드리스 계측)·art-pipeline references/cast-fx-audit-prompt.md(이펙트 전수 지도·생성형 필요부 판정).
+- 검증: vm COMPILE:OK · 빔 렌더 시각 판독(가시 yes·화풍 yes·오류 no)·FXBEAM.ok 런타임 true·페이지 에러 0.

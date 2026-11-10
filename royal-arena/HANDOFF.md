@@ -143,3 +143,7 @@
 - 스플래시 감사 표준 신설: royal-arena-balance-map 스킬 references/splash-damage-prompt.md(모드 A 현황/B 기계 단언/C 조정안) — "스플래시 데미지/광역 데미지" 트리거와 연결. 32종 감사에서 광역 컨셉 누락 0건.
 - P1 수복: 대공 불가 공격자의 탄환·근접 스플래시·둔화 전파가 공중 유닛 무피해로 수정(shoot hitsAir 적재, 3루프 필터). 칩·sw v405, 푸시 cde7fd9.
 - 검증 게이트: vm COMPILE:OK · balance_check outliers=0 · 헤드리스 통제 추적(직격 100·스플래시 60·공중 0) · QA ERR:0 OVF:0 BATTLE:OK · 헤드리스 캡처 360x780 정상 렌더.
+
+## v406 (2026-11-10) — 플라즈마 발사 빔+AOE 감사 표준
+- 플라즈마: 킹타워→목표 빔 스프라이트(drawFx 'beam' 분기, 진행도 신축+폴백 그라디언트) — castPlasma가 fx.push beam(x0,y0=킹타워,T=비행시간). 스프라이트 assets/ra_fx_plasma_beam.png(244x1360, 키잉 완료).
+- 지면 존 틱 진실원: snowzone=둔화 전용(피해 없음, 규격 일치)·burnzone=0.5s마다 burn 재적용·plasmazone/crater=시각 전용·venom=유닛 측 venT DoT. 상세는 balance-map 스킬 aoe-zone-audit-prompt.md.

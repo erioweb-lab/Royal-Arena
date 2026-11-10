@@ -911,6 +911,7 @@ function castPlasma(team,x,y){ const c=CARDS.plasma;
   const _kt=towers.find(t=>t.team===team&&t.kind==='king'&&!t.dead)||{x:9,y:team==='blue'?29:3};
   const x1c=clamp(x,0.4,COLS-0.4), y1c=clamp(y,0.4,ROWS-0.4), _T0=Math.max(0.5,Math.hypot(x-_kt.x,y-_kt.y)/10);
   projs.push({kind:'plasmabolt',team,x0:_kt.x,y0:_kt.y,x1:x1c,y1:y1c,x:_kt.x,y:_kt.y,t:0,T:_T0});
+  fx.push({x:x1c,y:y1c,t:0,dur:_T0+0.2,kind:'beam',x0:_kt.x,y0:_kt.y,T:_T0});   /* v406: 타워 발사 빔 — 생성형 그래픽 */
   fx.push({x:x1c,y:y1c,t:0,dur:_T0+0.25,kind:'warnring'}); S.spellQuiet=_T0+2.0; sfx('cast'); }
 function explodePlasma(p){ const c=CARDS.plasma, et=enemyOf(p.team), x=p.x1, y=p.y1, team=p.team;
   fx.push({x,y,t:0,dur:0.35,kind:'flash'}); fx.push({x,y,t:0,dur:0.5,kind:'ring',col:'rgba(207,157,255,.9)'}); fx.push({x,y,t:0,dur:0.55,kind:'shockring'}); addParts(x,y,12,'#cf9dff',3.0,0.5,45); S.shake=0.35; sfx('zap');
@@ -1894,9 +1895,18 @@ function drawProj(p){
     ctx.moveTo(px-Math.cos(va)*8,py2-Math.sin(va)*8); ctx.lineTo(px+Math.cos(va)*5,py2+Math.sin(va)*5); ctx.stroke(); }
 }
 const ZK=new Set(['snowzone','crater','venomzone','burnzone','plasmazone']);   /* v404: 지면 지속 존 종류 — 렌더 순서 분리용 */
+const FXBEAM={img:null,ok:false}; try{ const __bi=new Image(); __bi.onload=function(){FXBEAM.ok=true;}; __bi.src='assets/ra_fx_plasma_beam.png'; FXBEAM.img=__bi; }catch(e){}   /* v406: 플라즈마 발사 빔 생성 스프라이트(실패 시 캔버스 폴백) */
 function drawFx(f){
   const k=f.t/f.dur, px=f.x*TILE, py=f.y*TILE;
   ctx.globalAlpha=Math.max(0,1-k);
+  if(f.kind==='beam'){   /* v406: 플라즈마 타워 발사 빔 — 생성 스프라이트 신축(폴백 그라디언트 내장) */
+    const bx0=f.x0*TILE, by0=f.y0*TILE, bl=Math.hypot(px-bx0,py-by0), ba=Math.atan2(py-by0,px-bx0);
+    const bp=Math.min(1,f.t/(f.T||0.2)), bw=TILE*0.55, fd=Math.max(0,Math.min(1,f.t*8))*Math.max(0,Math.min(1,(f.dur-f.t)*4));
+    ctx.save(); ctx.translate(bx0,by0); ctx.rotate(ba); ctx.globalAlpha=fd;
+    if(FXBEAM.ok&&FXBEAM.img&&FXBEAM.img.naturalWidth){ ctx.shadowColor='#b47cff'; ctx.shadowBlur=18; ctx.drawImage(FXBEAM.img,0,-bw/2,Math.max(1,bl*bp),bw); }
+    else { const bg=ctx.createLinearGradient(0,0,Math.max(1,bl*bp),0); bg.addColorStop(0,'rgba(207,157,255,0)'); bg.addColorStop(0.55,'rgba(207,157,255,.9)'); bg.addColorStop(1,'rgba(255,255,255,.95)'); ctx.strokeStyle=bg; ctx.lineWidth=bw*0.4; ctx.lineCap='round'; ctx.shadowColor='#cf9dff'; ctx.shadowBlur=22; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(bl*bp,0); ctx.stroke(); }
+    ctx.restore(); return; }
+
   if(f.kind==='hit'){ var __hb=window.__FXIMG&&window.__FXIMG.hitburst; if(__hb&&__hb.complete&&__hb.naturalWidth>0&&__hb.__valid!==false){ var _hx=f.x*TILE,_hy=f.y*TILE,_hw=TILE*1.25; ctx.save(); ctx.globalAlpha=0.92; ctx.drawImage(__hb,_hx-_hw/2,_hy-_hw*0.6,_hw,_hw); ctx.restore(); }   /* v329: 타격 버스트 스프라이트(타워 화살 포함) */
    ctx.fillStyle='#fff';
     for(let i=0;i<4;i++){ const a=i*1.57+0.6;
