@@ -195,3 +195,5 @@
 - 후속: 보스 HUD 라벨에 S.__bossName 표기 연결, 파멸기 효과 기기 실측(보스 웨이브 도달), 덱 편집기 버튼 텍스처(v416 미해결 — inline important 해법 적용), g1 분할 검토.
 ## v420 (2026-11-11)
 - 메인 버튼 깜빡임 수복: setInterval 주기 스타일 재적용이 원인 — dataset 가드+MutationObserver 1회성 적용이 표준(v420-js). 전 버튼(훈련캠프/덱편성/덱1·2/유물/프로필/전술연구소/난이도/지도) 소재 배정표·생성 레시피는 art-pipeline/references/main-buttons-design-prompt.md — 후속 구현 시 이 프롬프트 그대로 사용. 네비 버튼은 id 없는 텍스트 라벨 매칭(g1:2609 ui-nav 분류 참조).
+## v421 (2026-11-11)
+- 타이틀 버튼 텍스처 적용의 최종 표준: ui-v421-js rAF 손실 복원 루프(손실 시에만 setProperty important). 깜빡임(주기 재적용)·소실(1회 적용) 모두 해결 — 이후 전 버튼 그래픽 구현(art-pipeline/references/main-buttons-design-prompt.md 소재 배정표)도 이 루프에 항목을 추가하는 방식으로.

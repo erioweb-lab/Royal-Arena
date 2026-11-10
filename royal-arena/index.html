@@ -1162,7 +1162,7 @@ html body #overlay-info>div{height:100% !important}
 html body #overlay-info .t-how,html body #overlay-info .t-note{padding-bottom:14px !important}
 html body #overlay-info #btn-info-close{position:sticky !important;bottom:calc(6px + env(safe-area-inset-bottom,0px)) !important;margin:10px auto 0 !important;flex-shrink:0 !important;z-index:7 !important;box-shadow:0 4px 14px rgba(0,0,0,.55) !important}
 html body #overlay-info{padding-bottom:env(safe-area-inset-bottom,0px) !important}
-</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v420</div><div id="app">
+</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v421</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1517,7 +1517,7 @@ b.style.setProperty('background-size','auto,100% 100%','important');b.style.setP
 html body #rpane-score{overflow-y:auto !important;max-height:46vh !important;-webkit-overflow-scrolling:touch !important}
 html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;white-space:pre-line !important;word-break:keep-all !important;overflow-wrap:anywhere !important;text-align:right !important;max-width:200px !important;font-weight:600 !important}
 </style>
-<script src="js/g1-art-assets.js?v=420"></script>
+<script src="js/g1-art-assets.js?v=421"></script>
 
 
 
@@ -1529,7 +1529,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g2-sprite-assets.js?v=420"></script>
+<script src="js/g2-sprite-assets.js?v=421"></script>
 
 
 
@@ -1538,7 +1538,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g3-frame-assets.js?v=420"></script>
+<script src="js/g3-frame-assets.js?v=421"></script>
 
 
 
@@ -1549,7 +1549,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g4-ux-data.js?v=420"></script>
+<script src="js/g4-ux-data.js?v=421"></script>
 
 
 
@@ -1560,7 +1560,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g5-core.js?v=420"></script>
+<script src="js/g5-core.js?v=421"></script>
 
 
 
@@ -1571,7 +1571,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g6-battle.js?v=420"></script>
+<script src="js/g6-battle.js?v=421"></script>
 
 
 
@@ -1583,7 +1583,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g7-ui-systems.js?v=420"></script>
+<script src="js/g7-ui-systems.js?v=421"></script>
 
 
 
@@ -1595,7 +1595,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g8-boot.js?v=420"></script><script src="js/g9-wide.js?v=420"></script>
+<script src="js/g8-boot.js?v=421"></script><script src="js/g9-wide.js?v=421"></script>
 
 
 
@@ -1998,22 +1998,24 @@ html body button#btn-hof{background:url(assets/ra_btn_gold.png)!important;backgr
 html body button#btn-start:active,html body button#btn-hof:active{filter:brightness(1.18)!important;outline:2px solid #ffd76a;transform:scale(1.02)}
 html body button#btn-sound.off{opacity:.55;filter:grayscale(.7)}
 </style>
-<script id="ui-v420-js">/* v420: 버튼 텍스처 1회 적용(MutationObserver·dataset 가드) — v417의 setInterval 재적용이 재도색을 반복해 깜빡인 것을 수복. 애니메이션·펄스 없음(정적 광택만) */
-(function(){function skin(){
- var st=document.getElementById('btn-start');
- if(st&&!st.dataset.tex){st.dataset.tex='1';st.style.setProperty('background-image','url(assets/ra_cta_plaque.png)','important');st.style.setProperty('background-size','100% 100%','important');st.style.setProperty('background-color','transparent','important');}
- var hb=document.getElementById('btn-hof');
- if(hb&&!hb.dataset.tex){hb.dataset.tex='1';hb.style.setProperty('background-image','url(assets/ra_btn_gold.png)','important');hb.style.setProperty('background-size','100% 100%','important');hb.style.setProperty('border','2px solid #c89b3c','important');hb.style.setProperty('color','#3a2400','important');hb.style.setProperty('box-shadow','inset 0 0 8px rgba(255,215,120,.4)','important');}
- var db=document.getElementById('btn-diff')||(function(){var l=document.querySelectorAll('button');for(var i=0;i<l.length;i++){if((l[i].textContent||'').indexOf('⚔ 난이도')===0)return l[i];}return null;})();
- if(db&&!db.dataset.diffskin){var d=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0;var c=(window.__raDIFF?__raDIFF.col[d]:null)||'#67d98a';db.dataset.diffskin='1';db.style.setProperty('border-width','2px','important');db.style.setProperty('border-color',c,'important');db.style.setProperty('box-shadow','0 0 12px '+c+'55','important');db.dataset.diff=String(d);}
+<script id="ui-v421-js">/* v421: 버튼 텍스처 손실 복원 — rAF마다 '손실 시에만' 재적용(정상이면 no-op → 재도색 없음). v417 주기 재적용(깜빡임)과 v420 1회 적용(게임 패처에 덮여 손실)의 절충 확정 해법 */
+(function(){function repair(){
+ var jobs=[[document.getElementById('btn-start'),'ra_cta_plaque.png','transparent'],[document.getElementById('btn-hof'),'ra_btn_gold.png','#3a2400']];
+ for(var i=0;i<jobs.length;i++){ var el=jobs[i][0]; if(!el) continue;
+  var cs=getComputedStyle(el); var want='url("'+(location.origin+location.pathname.replace(/index[^/]*$/,'') )+'assets/'+jobs[i][1]+'")';
+  var cur=cs.backgroundImage||'';
+  if(cur.indexOf(jobs[i][1])<0){ el.style.setProperty('background-image','url(assets/'+jobs[i][1]+')','important'); el.style.setProperty('background-size','100% 100%','important');
+   if(jobs[i][0].id==='btn-hof'){ el.style.setProperty('border','2px solid #c89b3c','important'); el.style.setProperty('color','#3a2400','important'); el.style.setProperty('box-shadow','inset 0 0 8px rgba(255,215,120,.4)','important'); }
+   else { el.style.setProperty('background-color','transparent','important'); } }
+ }
+ var db=document.getElementById('btn-diff')||(function(){var l=document.querySelectorAll('button');for(var i2=0;i2<l.length;i2++){if((l[i2].textContent||'').indexOf('⚔ 난이도')===0)return l[i2];}return null;})();
+ if(db){ var d=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; var c=(window.__raDIFF?__raDIFF.col[d]:null)||'#67d98a';
+  var cs2=getComputedStyle(db); if(cs2.borderTopColor!==c||cs2.borderTopWidth!=='2px'){ db.style.setProperty('border-width','2px','important'); db.style.setProperty('border-color',c,'important'); db.style.setProperty('box-shadow','0 0 12px '+c+'55','important'); db.dataset.diff=String(d); } }
  var sb=document.getElementById('btn-sound');
- if(sb){if((sb.textContent||'').indexOf('🔊')>=0){sb.classList.remove('off');}else{sb.classList.add('off');}}
+ if(sb){ if((sb.textContent||'').indexOf('🔊')>=0){ sb.classList.remove('off'); } else { sb.classList.add('off'); } }
  window.__raSkinOK=true;}
-skin();
-try{ new MutationObserver(function(){skin();}).observe(document.body,{childList:true,subtree:true}); }catch(e){ setTimeout(skin,1500); }
-document.addEventListener('click',function(e){ var t=e.target; if(!t) return;
- if(t.id==='btn-sound'){ setTimeout(skin,50); }
- if(t.id==='btn-diff'||(t.textContent||'').indexOf('⚔ 난이도')===0){ delete t.dataset.diffskin; setTimeout(skin,60); } });
+repair();
+(function loop(){ try{ repair(); }catch(e){} requestAnimationFrame(loop); })();
 })();
 </script>
 <style id="ui-v418">/* v418: 프로필 이름 편집기 + 지도 선택 버튼 */
