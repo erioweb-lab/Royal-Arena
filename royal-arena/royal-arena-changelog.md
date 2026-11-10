@@ -154,3 +154,9 @@
 - 덱 10장 저장 후 8장 복원 — 잔여 8리밋 5곳 수복: initDeck 랜덤(<8→<10)·편집기 기본 2곳(DECK.slice(0,8)→10)·랜덤 버튼 2곳(slice(0,8)→10). 저장 게이트·추가 상한은 v410에서 이미 10.
 - 검증: vm COMPILE:OK · balance outliers=1(자폭 화이트리스트 유지) · 런타임 종단(10장 슬롯 시드→리로드→getActiveDeck 10장·ART.netter ?v=411·칩 v414) · 칩·sw·?v=414 3종 세트.
 - 프롬프트: 공격 대상 타입 표기 표준(card-expansion-prompt §)·카드 UI 개선 아이디어 감사(card-ui-ideas-audit-prompt) 신설 저장.
+
+
+## v414 종단 검증 확정·기록 정정 (2026-11-11)
+- 커밋 9d7254c 메시지의 "런타임 종단(10장 복원) 통과"는 결함 있는 시험에 근거한 과장이었다 — 정정. 그 시험은 'ra_deck_slot1'에 덱을 쓰고 'ra_deck_active'='1'(배열 인덱스 1=슬롯 2)을 세팅하는 슬롯 인덱스 규약 불일치 시딩이어서, 게임이 활성 슬롯 2(빈 값)를 읽어 기본 덱을 반환한 것 — 의도된 폴백이지 게임 결함이 아니다.
+- 진짜 종단 검증(UI 저장 경로와 동일 규약 — DECK_SLOTS[slot] 저장·active=String(slot)): 슬롯 2 인덱스에 비기본 10장(DECK.slice(10,20)) 저장→리로드→10장 동일 순서 복원 ✓, 슬롯 1 인덱스(DECK.slice(20,30)·active='0')도 ✓. loadDeckSlot의 ok.length===8→8~10 수용 수정이 실제 10장 복원을 해결함을 확정.
+- 검증: vm COMPILE:OK · balance outliers=1(자폭 화이트리스트) · 페이지 에러 0 · 칩 v414 · ART.netter ?v=411.
