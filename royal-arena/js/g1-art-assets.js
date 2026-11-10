@@ -1893,6 +1893,7 @@ function drawProj(p){
   else { ctx.strokeStyle='#f4e9c8'; ctx.lineWidth=2.5; ctx.beginPath();
     ctx.moveTo(px-Math.cos(va)*8,py2-Math.sin(va)*8); ctx.lineTo(px+Math.cos(va)*5,py2+Math.sin(va)*5); ctx.stroke(); }
 }
+const ZK=new Set(['snowzone','crater','venomzone','burnzone','plasmazone']);   /* v404: 지면 지속 존 종류 — 렌더 순서 분리용 */
 function drawFx(f){
   const k=f.t/f.dur, px=f.x*TILE, py=f.y*TILE;
   ctx.globalAlpha=Math.max(0,1-k);
@@ -2074,7 +2075,7 @@ function render(){
   }catch(__e){}
   { const cam=S.cam||{x:W/2,y:H/2,z:1};
     ctx.translate(VW/2,VH/2); ctx.scale(cam.z,cam.z); ctx.translate(-cam.x,-cam.y); }
-  ctx.drawImage(bgc,-BAND,0,VW,VH); tilehlDraw(ctx);   /* v399: 합성 dest x=-BAND — bgc 내부 +BAND 쉬프트 상쇄(지면+2BAND 우편위 해소), 화면 0..BAND 언더레이어 노출(좌측 밝은 올리브 띠) 제거 */   /* v149 */
+  ctx.drawImage(bgc,-BAND,0,VW,VH); try{for(const f of fx) if(ZK.has(f.kind)) drawFx(f);}catch(__e){} tilehlDraw(ctx);   /* v404: 지면 존(눈보라·분화구·맹독 등)은 유닛·타워·보스 아래에서 렌더 — 가림 제거 */   /* v399: 합성 dest x=-BAND — bgc 내부 +BAND 쉬프트 상쇄(지면+2BAND 우편위 해소), 화면 0..BAND 언더레이어 노출(좌측 밝은 올리브 띠) 제거 */   /* v149 */
   const T=THEMES[S.theme];
   ctx.strokeStyle=T.spark; ctx.lineWidth=S.theme==='lava'?3:2;
   if(S.theme==='lava'){ ctx.save(); ctx.shadowColor='#ff8a2a'; ctx.shadowBlur=14; }
@@ -2115,7 +2116,7 @@ function render(){
   try{for(const t of towers) if(!t.dead) drawTower(t);}catch(__e){window.__skip=(window.__skip||0)+1;console.warn("draw-skip",__e.message);}
   try{for(const u of [...units].sort((a,b)=>a.y-b.y)) drawUnit(u);}catch(__e){window.__skip=(window.__skip||0)+1;console.warn("draw-skip",__e.message);}
   try{for(const p of projs) drawProj(p);}catch(__e){window.__skip=(window.__skip||0)+1;console.warn("draw-skip",__e.message);}
-  for(const f of fx) drawFx(f);
+  for(const f of fx) if(!ZK.has(f.kind)) drawFx(f);   /* v404: 지면 존은 아래 패스로 이동(순수 렌더 변경 — 틱 데미지 로직 무변경) */
   drawParts();
   drawAmbient();
   if(S.clash&&S.clash.a>0){   // 황금 교전 링 + 발광
