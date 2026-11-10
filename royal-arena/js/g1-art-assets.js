@@ -480,7 +480,7 @@ try{ (function(){ var EV=[
  {t:'💰 왕실 세금관', d:'세금관이 금화 자루를 내민다.', a:['재정 확충','relic_gravy'], b:['번영 계약','relic_boom']},
  {t:'❄️ 서리 주술사', d:'주술사가 룬을 내밀며 거래를 청한다.', a:['서리 계약','relic_frost'], b:['수호 룬','relic_guard']}];   /* v297: 신규 렐릭 노드 */
  var iv2=setInterval(function(){ var ov=document.getElementById('overlay-result'); if(!ov) return;
-  if(ov.classList.contains('hidden')){ var m0=document.getElementById('overlay-event'); if(m0) m0.remove(); window.__raEvSeen=false; return; }
+  if(!ov.classList.contains('hidden')){ window.__raEvSeen=false; return; }   /* v401: 결과 카드(승리 화면) 표시 중엔 이벤트 보류 — 카드 가림 제거, 카드가 닫힌 뒤 타이틀에서 표시 */
   if(window.__raEvSeen) return; window.__raEvSeen=true; var __ec=(window.S&&S.theme==='abyss')?0.45:0.30; if(Math.random()>=__ec) return;   /* v220: 심연 테마 — 이벤트 확률 +15%p */
   var ev=EV[Math.floor(Math.random()*EV.length)];
   var m=document.createElement('div'); m.id='overlay-event'; m.style.cssText='position:fixed;inset:0;z-index:120;background:rgba(5,8,18,.9);display:flex;align-items:center;justify-content:center';
