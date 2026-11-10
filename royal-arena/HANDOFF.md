@@ -197,3 +197,5 @@
 - 메인 버튼 깜빡임 수복: setInterval 주기 스타일 재적용이 원인 — dataset 가드+MutationObserver 1회성 적용이 표준(v420-js). 전 버튼(훈련캠프/덱편성/덱1·2/유물/프로필/전술연구소/난이도/지도) 소재 배정표·생성 레시피는 art-pipeline/references/main-buttons-design-prompt.md — 후속 구현 시 이 프롬프트 그대로 사용. 네비 버튼은 id 없는 텍스트 라벨 매칭(g1:2609 ui-nav 분류 참조).
 ## v421 (2026-11-11)
 - 타이틀 버튼 텍스처 적용의 최종 표준: ui-v421-js rAF 손실 복원 루프(손실 시에만 setProperty important). 깜빡임(주기 재적용)·소실(1회 적용) 모두 해결 — 이후 전 버튼 그래픽 구현(art-pipeline/references/main-buttons-design-prompt.md 소재 배정표)도 이 루프에 항목을 추가하는 방식으로.
+## v423 (2026-11-11)
+- 전 버튼 그래픽 최종: ui-v423-js 라벨 매칭 맵 + rAF 라운드로빈 손실 복원(프레임당 4개 — 패처 250ms 대비 우위). 신규 버튼은 MAP 배열에 [라벨,텍스처,size] 추가. 텍스처: camp/decked/shield(편집기 슬롯 cover)/relic/crown/tactics/diff/map + gold(HOF)/cta_plaque(시작).
