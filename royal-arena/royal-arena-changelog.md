@@ -120,3 +120,9 @@
 - 충격파: 피해·기절 유지+넉백 0.8타일 추가 — 반경 내 적을 중심 방사형으로 밀침(필드 클램프 0.7~COLS/ROWS-0.7). desc '광역 기절 0.5초+넉백'.
 - 맹독: 존 틱으로 반경 내 적의 중독 지속 갱신(venT max 6·venDps 30 유지) — 존에 머무는 동안 중독 지속, 이탈 후 6초. 존 push에 team 보강.
 - 검증: vm COMPILE:OK · balance outliers=0 · 실유닛 계측(넉백 disp≈0.8·필드 내·stun>0 / 즉발 힐 +160+틱 증가 / 맹독 venT 갱신·venDps 30) · 힐 존 캡처 판독.
+
+
+## v410 (2026-11-10) — 덱 확장 8→10장 + 카드별 DPS 표기
+- 덱편성 상한 10장: 빌더 표기(/10·10장 교체 안내)·추가 상한(deck.length>=10 shift)·저장 게이트(!==10) — 저장된 8장 덱은 2장 추가 후 저장 가능.
+- 카드별 DPS 표기: 덱·카드풀 모든 카드에 소형 행 추가(유닛 DPS=dmg/hs·즉발 주문 '즉발 n'·힐 '힐 n') + 헤더에 '평균 DPS' 표기 — 덱편성 실측: ? · 평균DPS ? · 카드별 표기 ? · 잘림 no · 오류 no.
+- 컴파일·balance(outliers=0) 통과. 카드 확장·잘림 감사 프롬프트는 art-pipeline card-expansion-prompt.md·screen-audit post-change-clip-audit-prompt.md(이전 커밋에서 저장).
