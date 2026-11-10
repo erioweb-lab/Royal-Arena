@@ -199,3 +199,5 @@
 - 타이틀 버튼 텍스처 적용의 최종 표준: ui-v421-js rAF 손실 복원 루프(손실 시에만 setProperty important). 깜빡임(주기 재적용)·소실(1회 적용) 모두 해결 — 이후 전 버튼 그래픽 구현(art-pipeline/references/main-buttons-design-prompt.md 소재 배정표)도 이 루프에 항목을 추가하는 방식으로.
 ## v423 (2026-11-11)
 - 전 버튼 그래픽 최종: ui-v423-js 라벨 매칭 맵 + rAF 라운드로빈 손실 복원(프레임당 4개 — 패처 250ms 대비 우위). 신규 버튼은 MAP 배열에 [라벨,텍스처,size] 추가. 텍스처: camp/decked/shield(편집기 슬롯 cover)/relic/crown/tactics/diff/map + gold(HOF)/cta_plaque(시작).
+## v426 (2026-11-11)
+- 버튼 텍스처 최종 아키텍처: ui-v426-js **렌더 전 관찰자**(스타일 변경 마이크로태스크 덧칠 — 게임 리스타일러와 공존, 깜빡임 원리적 0) + v425-css 정적 important(보조). **타이틀 화면 검증은 qa 파라미터 없이 재현 필수** — qa 모드는 타이틀 리스타일러가 빠져 기기와 달랐다.

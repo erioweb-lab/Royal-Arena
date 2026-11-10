@@ -1162,7 +1162,7 @@ html body #overlay-info>div{height:100% !important}
 html body #overlay-info .t-how,html body #overlay-info .t-note{padding-bottom:14px !important}
 html body #overlay-info #btn-info-close{position:sticky !important;bottom:calc(6px + env(safe-area-inset-bottom,0px)) !important;margin:10px auto 0 !important;flex-shrink:0 !important;z-index:7 !important;box-shadow:0 4px 14px rgba(0,0,0,.55) !important}
 html body #overlay-info{padding-bottom:env(safe-area-inset-bottom,0px) !important}
-</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v425</div><div id="app">
+</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v426</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1517,7 +1517,7 @@ b.style.setProperty('background-size','auto,100% 100%','important');b.style.setP
 html body #rpane-score{overflow-y:auto !important;max-height:46vh !important;-webkit-overflow-scrolling:touch !important}
 html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;white-space:pre-line !important;word-break:keep-all !important;overflow-wrap:anywhere !important;text-align:right !important;max-width:200px !important;font-weight:600 !important}
 </style>
-<script src="js/g1-art-assets.js?v=425"></script>
+<script src="js/g1-art-assets.js?v=426"></script>
 
 
 
@@ -1529,7 +1529,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g2-sprite-assets.js?v=425"></script>
+<script src="js/g2-sprite-assets.js?v=426"></script>
 
 
 
@@ -1538,7 +1538,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g3-frame-assets.js?v=425"></script>
+<script src="js/g3-frame-assets.js?v=426"></script>
 
 
 
@@ -1549,7 +1549,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g4-ux-data.js?v=425"></script>
+<script src="js/g4-ux-data.js?v=426"></script>
 
 
 
@@ -1560,7 +1560,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g5-core.js?v=425"></script>
+<script src="js/g5-core.js?v=426"></script>
 
 
 
@@ -1571,7 +1571,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g6-battle.js?v=425"></script>
+<script src="js/g6-battle.js?v=426"></script>
 
 
 
@@ -1583,7 +1583,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g7-ui-systems.js?v=425"></script>
+<script src="js/g7-ui-systems.js?v=426"></script>
 
 
 
@@ -1595,7 +1595,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g8-boot.js?v=425"></script><script src="js/g9-wide.js?v=425"></script>
+<script src="js/g8-boot.js?v=426"></script><script src="js/g9-wide.js?v=426"></script>
 
 
 
@@ -2009,24 +2009,27 @@ html body #deck-pick .dkpick{background-image:url(assets/ra_btn_shield.png)!impo
 html body #title-actions #btn-diff{background-image:url(assets/ra_btn_diff.png)!important;background-size:100% 100%!important}
 html body #title-actions #btn-map{background-image:url(assets/ra_btn_map.png)!important;background-size:100% 100%!important}
 </style>
-<script id="ui-v425-js">/* v425: 동적 보충 — id 없는 라벨 버튼(훈련 캠프 등)은 정규화 매칭으로 id 태깅+규칙 1회 주입(그 후엔 스타일시트가 유지). 난이도 색 테두리·사운드 상태만 1s 동기. rAF 재도색 루프 폐지. */
+<script id="ui-v426-js">/* v426: 전 버튼 텍스처 확정 — 렌더 전 관찰자. 게임 리스타일러가 인라인 important로 배경을 다시 써도 MutationObserver(스타일 속성)가 마이크로태스크(다음 페인트 전)에 문양을 덧칠해 그라데이션 프레임이 화면에 도달하지 않는다(단일 결과 상태=문양 → 깜빡임 0). 시작 버튼은 게임 자체 페인트(ra_cta_card) 유지. */
 (function(){
-var MAP=[['훈련캠프','ra_btn_camp.png','100% 100%'],['덱1','ra_btn_shield.png','100% 100%'],['덱2','ra_btn_shield.png','100% 100%'],['덱편성','ra_btn_decked.png','100% 100%'],['유물','ra_btn_relic.png','100% 100%'],['프로필','ra_btn_crown.png','100% 100%'],['전술연구소','ra_btn_tactics.png','100% 100%'],['⚔난이도','ra_btn_diff.png','100% 100%'],['🗺지도','ra_btn_map.png','100% 100%'],['명예의전당','ra_btn_gold.png','100% 100%']];
-var done={};
-function injectRule(key,tex,size){ if(done[key]) return; done[key]=1;
- var st=document.createElement('style'); st.id='ra-tex-'+key;
- st.textContent='html body button#ra-btn-'+key+',html body #title-actions #ra-btn-'+key+',html body .t-links #ra-btn-'+key+',html body #deck-pick #ra-btn-'+key+'{background-image:url(assets/'+tex+')!important;background-size:'+size+'!important}';
- document.head.appendChild(st); }
-function sync(){ var els=document.querySelectorAll('button,.t-links *');
- for(var i=0;i<els.length;i++){ var t=(els[i].textContent||'').replace(/\s+/g,''); if(!t||t.length>60) continue;
-  for(var j=0;j<MAP.length;j++){ var k=MAP[j][0];
-   if(t.indexOf(k)>=0){ if(!els[i].id){ els[i].id='ra-btn-'+k; } injectRule(k,MAP[j][1],MAP[j][2]); break; } } }
- var db=document.getElementById('btn-diff'); if(db){ var d=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; var c=(window.__raDIFF?__raDIFF.col[d]:null)||'#67d98a';
+var MAP=[['훈련캠프','ra_btn_camp.png','100% 100%'],['덱편성','ra_btn_decked.png','100% 100%'],['유물','ra_btn_relic.png','100% 100%'],['프로필','ra_btn_crown.png','100% 100%'],['전술연구소','ra_btn_tactics.png','100% 100%'],['⚔난이도','ra_btn_diff.png','100% 100%'],['🗺지도','ra_btn_map.png','100% 100%'],['명예의전당','ra_btn_gold.png','100% 100%'],['덱1','ra_btn_shield.png','100% 100%'],['덱2','ra_btn_shield.png','100% 100%']];
+function paint(el){ var t=(el.textContent||'').replace(/\s+/g,''); if(!t||t.length>60) return;
+ for(var j=0;j<MAP.length;j++){ if(t.indexOf(MAP[j][0])>=0){
+  var on=/덱1|덱2/.test(MAP[j][0])&&el.classList.contains('on');
+  el.style.setProperty('background-image',(on?'linear-gradient(180deg,rgba(247,197,49,.22),rgba(13,22,40,.88)),' :'')+'url(assets/'+MAP[j][1]+')','important');
+  el.style.setProperty('background-size','100% 100%','important'); return true; } }
+ return false; }
+function scan(){ var els=document.querySelectorAll('button,.t-links *');
+ for(var i=0;i<els.length;i++){ var cs=getComputedStyle(els[i]); var bg=cs.backgroundImage||'';
+  if(bg.indexOf('ra_btn_')>=0||bg.indexOf('ra_cta_')>=0) continue;   /* 이미 문양 — 무재도색 */
+  paint(els[i]); }
+ var db=document.getElementById('btn-diff');
+ if(db){ var d=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; var c=(window.__raDIFF?__raDIFF.col[d]:null)||'#67d98a';
   db.style.setProperty('border-width','2px','important'); db.style.setProperty('border-color',c,'important'); db.style.setProperty('box-shadow','0 0 12px '+c+'55','important'); }
  var sb=document.getElementById('btn-sound');
  if(sb){ if((sb.textContent||'').indexOf('🔊')>=0){ sb.classList.remove('off'); } else { sb.classList.add('off'); } }
  window.__raSkinOK=true; }
-sync(); setInterval(sync,1000);
+try{ new MutationObserver(function(){ scan(); }).observe(document.body,{attributes:true,attributeFilter:['style'],childList:true,subtree:true}); }catch(e){}
+scan(); setInterval(scan,1000);
 })();
 </script>
 <style id="ui-v418">/* v418: 프로필 이름 편집기 + 지도 선택 버튼 */
