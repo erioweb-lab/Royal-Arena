@@ -377,21 +377,21 @@ function openDeckEditor(){
    '.dk .dke{font-size:26px;line-height:1.1}.dk .dkn{font-size:11px;color:#dfe8ff}.dk .dkc{font-size:10px;color:#c77dff}';
   document.head.appendChild(style);
   function render(){
-    const cost=Math.round(deck.reduce((a,k)=>a+CARDS[k].cost,0)/deck.length*10)/10;
+    const cost=Math.round(deck.reduce((a,k)=>a+CARDS[k].cost,0)/deck.length*10)/10; const dpsAvg=Math.round(deck.reduce((a,k)=>{const c2=CARDS[k]; return a+((c2.dmg&&c2.hs)?(c2.dmg/c2.hs):0);},0)/deck.length);
     ov.innerHTML=
    '<div style="text-align:center;margin-top:2px"><span style="font-family:Jua,sans-serif;font-size:21px;color:#f7c531;white-space:nowrap">🃏 덱 편성</span></div>'+
    '<div style="display:flex;gap:8px;align-items:stretch;justify-content:center;margin-top:4px">'+
       DECK_SLOTS.map((_,n)=>'<button class="dk'+(n===slot?' on':'')+'" data-slot="'+n+'"><div class="dke">'+(n===0?'🅰':(n===1?'🅱':'🅲'))+'</div><div class="dkn">덱 슬롯 '+(n+1)+'</div></button>').join('')+'</div>'+
 
-   '<div style="font-family:Jua,sans-serif;color:#c3d2f2;font-size:13px;margin-top:6px;padding-bottom:3px;line-height:1.45;text-align:center">평균 엘릭서 '+cost+' · 슬롯 '+(slot+1)+' 편집 중</div>'+
+   '<div style="font-family:Jua,sans-serif;color:#c3d2f2;font-size:13px;margin-top:6px;padding-bottom:3px;line-height:1.45;text-align:center">평균 엘릭서 '+cost+' · 평균 DPS '+dpsAvg+' · 슬롯 '+(slot+1)+' 편집 중</div>'+
       
       
-     '<div style="font-family:Jua,sans-serif;color:#dfe8ff;font-size:14px;margin-top:10px">전투 덱 '+deck.length+'/8 — 카드를 누르면 빠짐</div>'+
+     '<div style="font-family:Jua,sans-serif;color:#dfe8ff;font-size:14px;margin-top:10px">전투 덱 '+deck.length+'/10 — 카드를 누르면 빠짐</div>'+
      '<div style="display:flex;flex-wrap:wrap;justify-content:center;max-width:560px">'+deck.map(k=>
-       '<div class="dk" data-rm="'+k+'"><div class="dke">'+(ART[k]?'<img class="art" style="width:34px" src="'+ART[k]+'">':CARDS[k].emoji)+'</div><div class="dkn">'+CARDS[k].name+'</div><div class="dkc">'+CARDS[k].cost+'</div></div>').join('')+'</div>'+
-     '<div style="font-family:Jua,sans-serif;color:#c3d2f2;font-size:13px;margin-top:10px;word-break:keep-all;line-height:1.45;text-align:center">보유 카드 풀 — 카드를 누르면 추가<br><span style="font-size:11.5px;color:#a9bce6">(8장이면 마지막 카드와 교체)</span></div>'+
+       '<div class="dk" data-rm="'+k+'"><div class="dke">'+(ART[k]?'<img class="art" style="width:34px" src="'+ART[k]+'">':CARDS[k].emoji)+'</div><div class="dkn">'+CARDS[k].name+'</div><div style="font-size:9.5px;color:#9fb0d0;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+(function(c2){ if(c2.dmg&&c2.hs) return 'DPS '+Math.round(c2.dmg/c2.hs); if(c2.dmg) return '즉발 '+c2.dmg; if(c2.heal) return '힐 '+c2.heal; return '—'; })(CARDS[k])+'</div><div class="dkc">'+CARDS[k].cost+'</div></div>').join('')+'</div>'+
+     '<div style="font-family:Jua,sans-serif;color:#c3d2f2;font-size:13px;margin-top:10px;word-break:keep-all;line-height:1.45;text-align:center">보유 카드 풀 — 카드를 누르면 추가<br><span style="font-size:11.5px;color:#a9bce6">(10장이면 마지막 카드와 교체)</span></div>'+
      '<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px;width:100%;max-width:430px">'+Object.keys(CARDS).filter(k=>!deck.includes(k)).map(k=>
-       '<div class="dk" data-add="'+k+'"><div class="dke">'+(ART[k]?'<img class="art" style="width:34px" src="'+ART[k]+'">':CARDS[k].emoji)+'</div><div class="dkn">'+CARDS[k].name+'</div><div class="dkc">'+CARDS[k].cost+'</div></div>').join('')+'</div>'+
+       '<div class="dk" data-add="'+k+'"><div class="dke">'+(ART[k]?'<img class="art" style="width:34px" src="'+ART[k]+'">':CARDS[k].emoji)+'</div><div class="dkn">'+CARDS[k].name+'</div><div style="font-size:9.5px;color:#9fb0d0;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+(function(c2){ if(c2.dmg&&c2.hs) return 'DPS '+Math.round(c2.dmg/c2.hs); if(c2.dmg) return '즉발 '+c2.dmg; if(c2.heal) return '힐 '+c2.heal; return '—'; })(CARDS[k])+'</div><div class="dkc">'+CARDS[k].cost+'</div></div>').join('')+'</div>'+
      '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0 4px;width:100%">'+
       '<button id="dk-save" class="dk-act">💾 저장</button>'+
       '<button id="btn-deck-random" class="dk-sub">🎲 랜덤</button>'+
@@ -399,10 +399,10 @@ function openDeckEditor(){
     ov.querySelectorAll('[data-slot]').forEach(b=>b.onclick=()=>{ slot=parseInt(b.dataset.slot,10); deck=(loadDeckSlot(slot)||DECK.slice(0,8)).slice(); render(); });
     ov.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{ deck=deck.filter(k=>k!==b.dataset.rm); render(); });
     ov.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>{ if(deck.includes(b.dataset.add)) return;
-      if(deck.length>=8) deck.shift(); deck.push(b.dataset.add); render(); });
+      if(deck.length>=10) deck.shift(); deck.push(b.dataset.add); render(); });
     ov.querySelector('#dk-close').onclick=()=>{ ov.remove(); style.remove(); };
     var __rb=ov.querySelector('#btn-deck-random'); if(__rb) __rb.onclick=function(){ var q=shuffle([...DECK]).slice(0,8); try{ localStorage.setItem(DECK_SLOTS[slot],JSON.stringify(q)); }catch(e){} deck=q.slice(); render(); try{ toast('덱을 랜덤으로 구성했어요'); }catch(e){} try{ sfx('tap'); }catch(e){} };   /* v267: 랜덤 버튼 빌더 내장 — 렌더 후에도 생존·편집 슬롯에 저장 */
-    ov.querySelector('#dk-save').onclick=()=>{ if(deck.length!==8) return;
+    ov.querySelector('#dk-save').onclick=()=>{ if(deck.length!==10) return;
       try{ localStorage.setItem(DECK_SLOTS[slot],JSON.stringify(deck)); localStorage.setItem('ra_deck_active',String(slot)); }catch(e){}
       sfx('crown'); toast('덱 슬롯 '+(slot+1)+'에 저장했어요'); ov.remove(); style.remove(); };
   }
