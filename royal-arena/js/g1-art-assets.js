@@ -493,9 +493,10 @@ try{ (function(){ var EV=[
 
 /* v208: 난이도 3단계(영구 저장) + P13 배치 구역 하이라이트 */
 try{ (function(){
-  window.__raDIFF={name:['보통','악몽','지옥'],col:['#67d98a','#e0a13c','#e05c6e'],hp:[1,1.25,1.55],dmg:[1,1.15,1.35]};   /* v210: 단일 진실원 통합 */
+  window.__raDIFF={name:['보통','악몽','지옥'],col:['#67d98a','#e0a13c','#e05c6e'],hp:[1,1.25,1.55],dmg:[1,1.15,1.35],aelix:[1,1.12,1.28]};   /* v402: 적 엘릭서 충전 배율 — 스폰 속도 레벨링(단일 진실원) */   /* v210: 단일 진실원 통합 */
   window.__raDiffHp=function(){ var d=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; return __raDIFF.hp[d]||1; };
   window.__raDiffDmg=function(){ var d=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; return __raDIFF.dmg[d]||1; };
+  window.__raAel=function(){ var d=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; return __raDIFF.aelix[d]||1; };   /* v402 */
   window.__raClearLv=function(){ try{ return Math.max(0,parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)+1); }catch(e){ return 0; } };   /* v218 */
   window.__raWaveHp=function(el){ try{ if(typeof el!=='number'){ var S0=(typeof S!=='undefined'&&S)?S:0; el=S0?Math.max(0,180-(S0.t||180)):0; } return 1+0.10*Math.pow(el/60,1.8); }catch(e){ return 1; } };   /* v212: 웨이브 HP 이중 곡선 — 경과 180s 최대 ×1.9 */
   var DN=__raDIFF.name, DC=__raDIFF.col;
@@ -503,7 +504,7 @@ try{ (function(){
     var b=document.createElement('button'); b.id='btn-diff';
     var __cl0=parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)+1; var d=Math.max(0,Math.min(2,Math.min(parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0,__cl0)));   /* v209: 미해금 난이도 저장값 클램프 */
     b.textContent='⚔ 난이도: '+DN[d]; b.style.marginTop='12px'; b.style.color=DC[d]; b.title='토벌 단계당 아군 성벽 HP +6%·처치 시 엘릭서 +4%×단계'; if(__cl0>0) b.textContent+=' 🏆'+__cl0;   /* v211: 토벌 단계 표시 */
-    b.onclick=function(){ var __cl=parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)+1; var __nd=(d+1)%3; if(__nd>__cl){ toast('잠금 — 이전 난이도 토벌(왕 타워 파괴) 후 해금'); sfx('tap'); return; } d=__nd; localStorage.setItem('ra_diff_v1',String(d)); b.textContent='⚔ 난이도: '+DN[d]; b.style.color=DC[d]; sfx('tap'); toast('난이도: '+DN[d]+' — 적 체력×'+__raDIFF.hp[d]+' 공격×'+__raDIFF.dmg[d]); };   /* v209: 토벌 해금 게이트 */
+    b.onclick=function(){ var __cl=parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)+1; var __nd=(d+1)%3; if(__nd>__cl){ toast('잠금 — 이전 난이도 토벌(왕 타워 파괴) 후 해금'); sfx('tap'); return; } d=__nd; localStorage.setItem('ra_diff_v1',String(d)); b.textContent='⚔ 난이도: '+DN[d]; b.style.color=DC[d]; sfx('tap'); toast('난이도: '+DN[d]+' — 적 체력×'+__raDIFF.hp[d]+' 공격×'+__raDIFF.dmg[d]+' 충전×'+__raDIFF.aelix[d]); };   /* v209: 토벌 해금 게이트 */
     ta.appendChild(b); },300);
   window.__raZoneHL=function(on){ try{
     var w=document.getElementById('arena-wrap'); if(!w) return;
@@ -1109,7 +1110,7 @@ function aiDiff(){   // v73: 동적 난이도 -1(자비)~+1(가혹) — 플레�
 function regenElixir(dt){
   const rate=(1/2.8)*(S.double?2:1);
   P.elixir=Math.min(ELX_MAX,P.elixir+rate*(S&&S.__rin==='relic_gravy'?1.15:1)*(S&&S.relic==='relic_gold'?1.1:1)   /* v297: 재정의 인장 */*(1+0.06*((S._sk&&S._sk.mag1)||0)+0.06*((S._sk&&S._sk.mag3)||0))*dt);   // v119: 스킬트리 엘릭서 회복   // v109 #13: 유물 — 황금 엘릭서 통
-  A.elixir=Math.min(ELX_MAX,A.elixir+rate*0.95*(1+0.18*(aiDiff()*0.7+aiMeta()*0.3))*dt);   /* v143: 승패 이력 메타 난이도 혼합 */
+  A.elixir=Math.min(ELX_MAX,A.elixir+rate*0.95*__raAel()*(1+0.18*(aiDiff()*0.7+aiMeta()*0.3))*dt);   /* v143: 승패 이력 메타 난이도 혼합 */
 }
 function updateFx(dt){
   updateAmbient(dt);
@@ -1247,6 +1248,7 @@ function aiTick(dt){
       else { px=9+(Math.random()*6-3); py=5+Math.random()*4; }
     }
   }
+  if(!pick&&S.boss&&!S.boss.dead&&A.elixir>=ELX_MAX-1){ pick=firstIn(hand,['knight','archers','musketeer','skarmy','minions'])||hand[0]; px=Math.random()<0.5?BRIDGES[0]:BRIDGES[1]; py=3.2; }   /* v402: 보스 중 스폰 보장 — 엘릭서 만접이면 교전 무관 배치 */
   if(!pick) return;
   playCard(A,hand.indexOf(pick),px,py);
 }

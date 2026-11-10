@@ -1041,7 +1041,7 @@ html,body{overflow:hidden !important;height:100%}
 .cx .e.g2{border-color:#4fa3d1!important;box-shadow:0 0 8px rgba(79,163,209,.45)}
 .cx .e.g3{border-color:#ffd54f!important;box-shadow:0 0 10px rgba(255,213,84,.6)}
 #screen-battle #cards .cost{background:rgba(10,18,34,.85)!important;border:2px solid rgba(255,255,255,.85)!important}
-</style><style id="ui-v401">/* v401: 승리 화면 수복 — ①종합 통계 바(#ra-stats)는 결과 카드 내 미러(rt-mirror)로 표시, 상단 바 숨김 ②버튼(다시 배틀·메인으로)이 카드 높이 넘침으로 밀려 안 보이던 것 — 카드 스크롤+r-actions 스티키 하단 고정 */
+</style><style id="ui-v402">/* v402: 승리 화면 수복 — ①종합 통계 바(#ra-stats)는 결과 카드 내 미러(rt-mirror)로 표시, 상단 바 숨김 ②버튼(다시 배틀·메인으로)이 카드 높이 넘침으로 밀려 안 보이던 것 — 카드 스크롤+r-actions 스티키 하단 고정 */
 #screen-battle.ended #ra-stats,body:has(#overlay-result:not(.hidden)) #ra-stats{display:none !important}
 #overlay-result .r-box{max-height:min(86dvh,880px) !important;overflow-y:auto !important;overscroll-behavior:contain}
 #overlay-result #r-actions{position:sticky;bottom:0;margin-top:10px;padding:10px 0 4px;background:linear-gradient(180deg,rgba(10,16,32,0),rgba(10,16,32,.96) 45%)}
@@ -1157,7 +1157,7 @@ html body .theme-row .t-btn{height:34px !important;font-size:11px !important;lin
 html body .t-links button, html body #btn-deck-random, html body #btn-deck-edit{background:linear-gradient(180deg,rgba(14,34,61,.95),rgba(10,22,40,.95)) !important;border:1px solid #c89b3c !important;border-radius:14px !important;color:#f2f6ff !important;font-weight:700 !important;line-height:1.2 !important;text-shadow:none !important;min-height:34px !important;display:flex !important;align-items:center !important;justify-content:center !important;overflow:hidden !important;text-overflow:ellipsis !important;white-space:nowrap !important;padding:4px 8px !important}
 html body #deck-edit{padding-bottom:150px !important}
 </style>
-<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v401</div><div id="app">
+<div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v402</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1627,7 +1627,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
       var seen=false; try{seen=!!sessionStorage.getItem('ra-rec');}catch(e){}
       if(seen)return;
       try{sessionStorage.setItem('ra-rec','1');}catch(e){}
-      var done=0; function go(){ if(done)return; try{ var __ro=document.getElementById('overlay-result'); if(__ro && !__ro.classList.contains('hidden')){ setTimeout(go,10000); return; } }catch(e){} done=1; location.reload(); }   /* v401: 승리 화면(결과 오버레이) 표시 중엔 자동 리로드 보류 — 화면 이탈 차단 */
+      var done=0; function go(){ if(done)return; try{ var __ro=document.getElementById('overlay-result'); if(__ro && !__ro.classList.contains('hidden')){ setTimeout(go,10000); return; } }catch(e){} done=1; location.reload(); }   /* v402: 승리 화면(결과 오버레이) 표시 중엔 자동 리로드 보류 — 화면 이탈 차단 */
       if(window.caches&&caches.keys){
         caches.keys().then(function(ks){return Promise.all(ks.map(function(k){return caches.delete(k);}));}).catch(function(){}).then(function(){
           if(navigator.serviceWorker&&navigator.serviceWorker.getRegistrations){
