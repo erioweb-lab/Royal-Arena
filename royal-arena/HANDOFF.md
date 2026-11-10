@@ -117,3 +117,7 @@
 
 ### v399 검증 완료 (2026-11-10 10:35)
 - 헤드리스 브라우저(playwright chromium+로컬 http 서버) 배틀 로드 성공 — 캡처 서비스 한계의 실질 우회 경로 확보. QA 토큰: BATTLE:OK BGC:1842x2176 FIT:0.00% ERR:0 W:0 OVF:0 TIME:ok ENEMYD:diff, 칩 v399. 픽셀 스캔: 좌측 평탄 띠 0.5%(소멸 — BAND=154.5 환경에서도 -BAND 합성 수정 유효 확인). 지면 텍스처 금프레임까지 균일. 좌측 띠 결함 종결.
+
+### v400 (2026-11-10 — 현재)
+- 승리 화면 수복(사용자 지시 "승리화면위에 내용이 아래에 표시"+홈 버튼): ①종합 통계 바(#ra-stats)는 결과 오버레이 열림 시 CSS(#screen-battle.ended + body:has)로 숨기고 카드 내 미러 행(#rt-mirror, index.html:1260 — g1 미러 인터벌 g1:1054)이 아래에 표시. 재시작 시 .ended 해제(g1:2502)로 자동 복원. ②버튼(#btn-again·#btn-home, index.html:1268~1269)은 마크업·클릭 로직이 원래 존재 — 카드 높이 넘침으로 시야 밀림이 원인 → r-box 스크롤(max-height 86dvh)+#r-actions 스티키 하단 고정.
+- 헤드리스 검증(390×760): 강제 승리(showResult) 후 bar display:none·overlay 열림·home(199,650,152×40)/again(43,656,144×34) 가시·미러 채움·btn-home 클릭→타이틀 복귀 전부 확인. 승리 보상 모달(왕실 세금관 류)이 카드 위에 뜨는 건 정상 보상 흐름. 커밋 cd4b345, PUSH:REAL_OK — gh-pages 전파 지속 중(기기 반영은 전파 후 새로고침).
