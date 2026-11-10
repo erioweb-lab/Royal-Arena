@@ -158,3 +158,7 @@
 ## v409 (2026-11-10) — 주문 리워드 3종 완료
 - healzone(dur3·r=radius·team·틱힐 10dps) 신설+castHealWind 통합 / castShock 넉백 0.8(방사형·클램프) / venomzone 틱 재부여(venT 갱신). ZK에 healzone 추가.
 - 넉백 시험은 시전점을 유닛 중심에서 0.5 오프셋해야 방사 방향 확보(중심 시전은 __kd>0.01 제외). 상세는 storm-rework-prompt 로드맵 완료 섹션.
+
+
+## v410 (2026-11-10) — 덱 10장+DPS 표기
+- 덱 빌더(g1 ~380-405): 상한 10·저장 !==10·헤더 평균 DPS·카드 공통 렌더러 DPS/즉발/힐 행. 신규 카드 확장은 art-pipeline card-expansion-prompt 파이프라인.
