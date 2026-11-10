@@ -154,3 +154,7 @@
 
 ## v408 (2026-11-10) — 번개 리워드(1안) 완료
 - stormzone: castZap push(dur 3.5·r=radius·team) → updateFx 틱(6dps+진입 1회 미니기절 0.3s·_stormId) → drawFx(원판+지그재그, ZK 하층). 코스트 3·desc 갱신. 설계·가치표는 balance-map 스킬 storm-rework-prompt.md.
+
+## v409 (2026-11-10) — 주문 리워드 3종 완료
+- healzone(dur3·r=radius·team·틱힐 10dps) 신설+castHealWind 통합 / castShock 넉백 0.8(방사형·클램프) / venomzone 틱 재부여(venT 갱신). ZK에 healzone 추가.
+- 넉백 시험은 시전점을 유닛 중심에서 0.5 오프셋해야 방사 방향 확보(중심 시전은 __kd>0.01 제외). 상세는 storm-rework-prompt 로드맵 완료 섹션.

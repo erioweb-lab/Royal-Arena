@@ -41,13 +41,13 @@ const CARDS={
   fort:     {name:'최전방 요새', emoji:'🏰', cost:5, kind:'building', count:1, hp:2600, dmg:45, hs:1.8, range:4.5, hitsAir:true, targets:'any', r:0.75, life:40, desc:'트레이드오프 — 견고한 방벽·약한 화력'},
   lordknight:{name:'기사단장',   emoji:'👑', cost:6, count:1, hp:3200, dmg:220, hs:1.3, range:1.0, spd:1.0, flying:false, hitsAir:false, targets:'any', r:0.60, splash:1.4, desc:'에픽 — 광역 일격 근접 대장'},
   xbow:     {name:'석궁병',     emoji:'🏹', cost:3, count:1, hp:640,  dmg:95,  hs:1.0, range:4.5, spd:1.2, flying:false, hitsAir:true, targets:'any', r:0.42, desc:'속사 원거리 · 대공'},
-  healwind: {name:'회복의 바람', emoji:'🍃', cost:3, kind:'spell', heal:220, radius:2.5, desc:'아군 광역 회복 주문'},
+  healwind: {name:'회복의 바람', emoji:'🍃', cost:3, kind:'spell', heal:160, radius:2.5, desc:'아군 광역 회복+잔류 존 3초'}   /* v409: 잔류 회복 존 리워드 — 즉발 160+존 틱 10dps(총 190) */,
   flamer:   {name:'화염방사병', emoji:'🔥', cost:4, count:1, hp:960,  dmg:85,  hs:0.8, range:1.2, spd:1.1, flying:false, hitsAir:false, targets:'any', r:0.45, splash:1.0, desc:'근접 속사 광역 화염'},
   golem:    {name:'수정 골렘',  emoji:'💎', cost:6, count:1, hp:5200, dmg:140, hs:1.8, range:1.0, spd:0.7, flying:false, hitsAir:false, targets:'buildings', r:0.70, desc:'초대형 건물 탱커'},
   scarecrow:{name:'허수아비',   emoji:'🎭', cost:1, count:1, hp:950,  dmg:6,   hs:1.0, range:0.5, spd:1.4, flying:false, hitsAir:false, targets:'any', r:0.40, desc:'미끼 — 값싼 어그로 방벽'},
   plasma:{name:'플라즈마',    emoji:'🌀', cost:4, kind:'spell', dmg:280, towerDmg:110, radius:1.4, desc:'플라즈마탄 발사 — 피해+화상 3초+잔류 존'},
   venom:{name:'맹독 안개',    emoji:'☠️', cost:4, kind:'spell', dmg:85,  towerDmg:50,  radius:2.2, desc:'광역 맹독 — 중독 틱 6초'},
-  shock:{name:'충격파',      emoji:'💫', cost:5, kind:'spell', dmg:160, towerDmg:70,  radius:2.6, stun:0.5, desc:'광역 기절 0.5초'}
+  shock:{name:'충격파',      emoji:'💫', cost:5, kind:'spell', dmg:160, towerDmg:70,  radius:2.6, stun:0.5, desc:'광역 기절 0.5초+넉백'}   /* v409: 넉백 추가 */,
 };
 const DECK=['knight','archers','giant','minions','musketeer','fireball','skarmy','cannon','wizard','sniper','prince','zap','valk','bomber','babyd','cleric','boar','icem','meteor','blizzard','greed','glass','fort','lordknight','xbow','healwind','flamer','golem','scarecrow','plasma','venom','shock'];   /* v214: 29종 — 화염방사병·수정 골렘·허수아비 */   /* v324: 주문 3종 추가 — 32종 */
 const __ch2=document.getElementById('cards-h2'); if(__ch2) __ch2.textContent='🃏 카드 도감 ('+DECK.length+'종)';
@@ -847,7 +847,7 @@ function castSpellBase(key,team,x,y){ if(S.spells) S.spells[team]=(S.spells[team
 }
 /* v213: 회복의 바람 — 아군 광역 회복 */
 function castHealWind(team,x,y){ const c=CARDS.healwind;
-  fx.push({x,y,t:0,dur:0.6,kind:'ring',col:'rgba(143,230,168,.9)'}); fx.push({x,y,t:0,dur:1.0,kind:'healzone'}); addParts(x,y,12,'#8fe6a8',2.6,0.5,35); sfx('cast'); S.spellQuiet=1.2;
+  fx.push({x,y,t:0,dur:0.6,kind:'ring',col:'rgba(143,230,168,.9)'}); fx.push({x,y,t:0,dur:3,kind:'healzone',r:c.radius,team:team}); addParts(x,y,12,'#8fe6a8',2.6,0.5,35); sfx('cast'); S.spellQuiet=1.2;   /* v409: 시전 플래시를 잔류 회복 존으로 통합 — 틱 힐 10dps(3초 총 30) */
   for(const u of units){ if(u.dead||u.team!==team||u.isTower) continue; if(Math.hypot(u.x-x,u.y-y)<=c.radius&&u.hp<u.maxHp){ var __hv=Math.min(c.heal,u.maxHp-u.hp); u.hp+=__hv; floats.push({dx:(Math.random()*10-5),dy:0,x:u.x,y:u.y-1.1,txt:'+'+Math.round(__hv),t:0.8,col:'#8fe6a8',big:false}); } } }
 /* v208: 유성우 — 즉시 착탄 광역+화상 3초 */
 function castMeteor(team,x,y){ const c=CARDS.meteor, et=enemyOf(team);
@@ -922,13 +922,15 @@ function explodePlasma(p){ const c=CARDS.plasma, et=enemyOf(p.team), x=p.x1, y=p
   for(const t of towers){ if(t.dead||t.team!==et) continue; if(Math.hypot(t.x-x,t.y-y)<=c.radius+0.5) dealDamage(t,spellDmg(c.towerDmg),team); } }
 /* v324: 맹독 안개 — 광역 중독 틱 6초 */
 function castVenom(team,x,y){ const c=CARDS.venom, et=enemyOf(team);
-  fx.push({x,y,t:0,dur:0.7,kind:'ring',col:'rgba(165,232,92,.85)'}); fx.push({x,y,t:0.15,dur:0.9,kind:'ring',col:'rgba(165,232,92,.5)'}); fx.push({x,y,t:0,dur:6,kind:'venomzone',r:c.radius}); addParts(x,y,16,'#a5e85c',2.8,0.6,25); sfx('cast'); S.spellQuiet=1.6;
+  fx.push({x,y,t:0,dur:0.7,kind:'ring',col:'rgba(165,232,92,.85)'}); fx.push({x,y,t:0.15,dur:0.9,kind:'ring',col:'rgba(165,232,92,.5)'}); fx.push({x,y,t:0,dur:6,kind:'venomzone',r:c.radius,team:team});   /* v409: 존 틱 팀 필터용 */ addParts(x,y,16,'#a5e85c',2.8,0.6,25); sfx('cast'); S.spellQuiet=1.6;
   for(const u of units){ if(u.dead||u.team!==et) continue; if(Math.hypot(u.x-x,u.y-y)<=c.radius){ u.venT=Math.max(u.venT||0,6); u.venDps=30; u.venAcc=0; floats.push({dx:(Math.random()*10-5),dy:0,x:u.x,y:u.y-1.2,txt:'☠ 중독',t:0.7,col:'#a5e85c',big:false}); dealDamage(u,spellDmg(c.dmg),team,true); } }
   for(const t of towers){ if(t.dead||t.team!==et) continue; if(Math.hypot(t.x-x,t.y-y)<=c.radius+0.4) dealDamage(t,spellDmg(c.towerDmg),team); } }
 /* v324: 충격파 — 광역 기절 0.5초 */
 function castShock(team,x,y){ const c=CARDS.shock, et=enemyOf(team);
   fx.push({x,y,t:0,dur:0.45,kind:'zapx'}); fx.push({x,y,t:0,dur:0.55,kind:'ring',col:'rgba(255,233,94,.9)'}); fx.push({x,y,t:0,dur:0.6,kind:'shockring'}); addParts(x,y,18,'#ffe95e',3.2,0.55,55); S.shake=0.5; S.spellQuiet=2.4; sfx('boomL');
   for(const u of units){ if(u.dead||u.team!==et) continue; if(Math.hypot(u.x-x,u.y-y)<=c.radius){ u.stun=Math.max(u.stun||0,c.stun); floats.push({dx:(Math.random()*10-5),dy:0,x:u.x,y:u.y-1.2,txt:'💫 기절',t:0.7,col:'#ffe95e',big:false}); dealDamage(u,spellDmg(c.dmg),team,true); } }
+    for(const u of units){ if(u.dead||u.team!==et) continue; var __kd=Math.hypot(u.x-x,u.y-y); if(__kd<=c.radius&&__kd>0.01){ var __kx=(u.x-x)/__kd*0.8, __ky=(u.y-y)/__kd*0.8; u.x=Math.max(0.7,Math.min(COLS-0.7,u.x+__kx)); u.y=Math.max(0.7,Math.min(ROWS-0.7,u.y+__ky)); } }   /* v409: 넉백 0.8타일 — 중심 방사형·필드 클램프 */
+
   for(const t of towers){ if(t.dead||t.team!==et) continue; if(Math.hypot(t.x-x,t.y-y)<=c.radius+0.4) dealDamage(t,spellDmg(c.towerDmg),team); } }
 
 /* ---------- 피해 / 파괴 / 승패 (REA 설계도 §2·§6) ---------- */
@@ -1121,6 +1123,9 @@ function updateFx(dt){
       for(const u of units){ if(u.dead||u.isTower||u.team===f.team) continue; if(Math.hypot(u.x-f.x,u.y-f.y)<=f.r){ u.slowT=Math.max(u.slowT||0,0.6); if(__zt){ dealDamage(u,spellDmg(5),f.team,true); if(Math.random()<0.35) floats.push({dx:(Math.random()*10-5),dy:0,x:u.x,y:u.y-1.1,txt:'❄',t:0.45,col:'#bfe4ff',big:false}); } } } }
     else if(f.kind==='plasmazone'||f.kind==='crater'){ f._acc=(f._acc||0)+dt; const __zt=f._acc>=0.5; if(__zt) f._acc=0;   /* v407: 존 틱 데미지 — 플라즈마 8dps·분화구 6dps(0.5s마다) */
       if(__zt) for(const u of units){ if(u.dead||u.isTower||u.team===f.team) continue; if(Math.hypot(u.x-f.x,u.y-f.y)<=f.r){ dealDamage(u,spellDmg(f.kind==='plasmazone'?4:3),f.team,true); if(Math.random()<0.35) floats.push({dx:(Math.random()*10-5),dy:0,x:u.x,y:u.y-1.1,txt:f.kind==='plasmazone'?'⚡':'🔥',t:0.45,col:f.kind==='plasmazone'?'#cf9dff':'#ff9d3c',big:false}); } } }
+    else if(f.kind==='healzone'){ f._acc=(f._acc||0)+dt; const __zt=f._acc>=0.5; if(__zt) f._acc=0;   /* v409: 잔류 회복 존 — 0.5s마다 아군 +5(10dps) */
+      if(__zt) for(const u of units){ if(u.dead||u.isTower||u.team!==f.team||u.hp>=u.maxHp) continue; if(Math.hypot(u.x-f.x,u.y-f.y)<=f.r){ u.hp=Math.min(u.maxHp,u.hp+5); if(Math.random()<0.5) floats.push({dx:(Math.random()*10-5),dy:0,x:u.x,y:u.y-1.1,txt:'+5',t:0.5,col:'#8fe6a8',big:false}); } } }    else if(f.kind==='venomzone'){ f._acc2=(f._acc2||0)+dt; const __vt=f._acc2>=0.5; if(__vt) f._acc2=0;   /* v409: 맹독 존 재진입 재부여 — 존 내 적은 중독 6s 유지 갱신(venDps 30 유지) */
+      if(__vt) for(const u of units){ if(u.dead||u.isTower||u.team===f.team) continue; if(Math.hypot(u.x-f.x,u.y-f.y)<=f.r){ u.venT=Math.max(u.venT||0,6); u.venDps=Math.max(u.venDps||0,30); } } }
     else if(f.kind==='stormzone'){ f._acc=(f._acc||0)+dt; const __zt=f._acc>=0.5; if(__zt) f._acc=0;   /* v408: 번개 폭풍 틱 — 6dps(0.5s마다 3)+진입 미니기절(존당 1회·재진입 재부여) */
       for(const u of units){ if(u.dead||u.isTower||u.team===f.team) continue; if(Math.hypot(u.x-f.x,u.y-f.y)<=f.r){ if(u._stormId!==f){ u._stormId=f; u.stun=Math.max(u.stun||0,0.3); floats.push({dx:(Math.random()*10-5),dy:0,x:u.x,y:u.y-1.2,txt:'⚡ 기절',t:0.6,col:'#ffe95e',big:false}); }
         if(__zt){ dealDamage(u,spellDmg(3),f.team,true); if(Math.random()<0.35) floats.push({dx:(Math.random()*10-5),dy:0,x:u.x,y:u.y-1.1,txt:'⚡',t:0.45,col:'#ffe95e',big:false}); } } } }
@@ -1900,7 +1905,7 @@ function drawProj(p){
   else { ctx.strokeStyle='#f4e9c8'; ctx.lineWidth=2.5; ctx.beginPath();
     ctx.moveTo(px-Math.cos(va)*8,py2-Math.sin(va)*8); ctx.lineTo(px+Math.cos(va)*5,py2+Math.sin(va)*5); ctx.stroke(); }
 }
-const ZK=new Set(['snowzone','crater','venomzone','burnzone','plasmazone','stormzone']);   /* v404: 지면 지속 존 종류 — 렌더 순서 분리용 */
+const ZK=new Set(['snowzone','crater','venomzone','burnzone','plasmazone','stormzone','healzone']);   /* v404: 지면 지속 존 종류 — 렌더 순서 분리용 */
 const FXBEAM={img:null,ok:false}; try{ const __bi=new Image(); __bi.onload=function(){FXBEAM.ok=true;}; __bi.src='assets/ra_fx_plasma_beam.png'; FXBEAM.img=__bi; }catch(e){}   /* v406: 플라즈마 발사 빔 생성 스프라이트(실패 시 캔버스 폴백) */
 function drawFx(f){
   const k=f.t/f.dur, px=f.x*TILE, py=f.y*TILE;
@@ -1986,6 +1991,18 @@ function drawFx(f){
       let _jx=_lx, _jy=_ly-_sr*0.85; ctx.moveTo(_jx,_jy);
       for(let s2=1;s2<=4;s2++){ _jx=_lx+Math.sin(now*9+i*3+s2*2.2)*7; _jy=_ly-_sr*0.85+_sr*0.85*(s2/4); ctx.lineTo(_jx,_jy); }
       ctx.stroke(); }
+    ctx.shadowBlur=0; ctx.restore(); }
+  else if(f.kind==='healzone'){   /* v409: 잔류 회복 존 — 연녹색 발광 원판+상승 글린트(v327 화풍 표준) */
+    const _hx=f.x*TILE, _hy=f.y*TILE, _hr=f.r*TILE, _ha0=Math.min(1,f.t*2.5)*Math.min(1,(f.dur-f.t)*2);
+    ctx.save();
+    const _hg=ctx.createRadialGradient(_hx,_hy,_hr*0.05,_hx,_hy,_hr);
+    _hg.addColorStop(0,'rgba(80,160,110,0.5)'); _hg.addColorStop(0.65,'rgba(60,130,90,0.38)'); _hg.addColorStop(1,'rgba(100,200,140,0)');
+    ctx.globalAlpha=_ha0; ctx.fillStyle=_hg; ctx.beginPath(); ctx.arc(_hx,_hy,_hr,0,7); ctx.fill();
+    ctx.shadowColor='#8fe6a8'; ctx.shadowBlur=12;
+    for(let i=0;i<5;i++){ const _gs=Math.sin(i*77.7+f.x*5.1)*999.9, _gq=_gs-Math.floor(_gs);
+      const _gx=_hx+(_gq-0.5)*_hr*1.5, _gy=_hy+_hr*0.4-((now*0.35+_gq)%1)*_hr*0.9;
+      ctx.globalAlpha=_ha0*(0.3+0.5*Math.sin(now*5+i*2.2)); ctx.fillStyle='#bdf0cf';
+      ctx.beginPath(); ctx.arc(_gx,_gy,1.4+((now+i*0.7)%1)*1.8,0,7); ctx.fill(); }
     ctx.shadowBlur=0; ctx.restore(); }
   else if(f.kind==='plasmazone'){   /* v380: 플라즈마 잔류 존 — 전기 아크+상승 스파크(시각 전용·페이드 인아웃) */
     const _px=f.x*TILE, _py=f.y*TILE, _rr=f.r*TILE, _a0=Math.min(1,f.t*2.5)*Math.min(1,(f.dur-f.t)*2);
