@@ -170,3 +170,7 @@
 
 ## v412 (2026-11-10) — 모달 닫기 스티키
 - #overlay-info #btn-info-close sticky bottom(safe-area) — 기기에서 모달 하단 잘림 수복. 엔딩 잘림 보고는 기기 v399 구버전(전파)으로 판별 — 칩 최우선 원칙. 프롬프트: screen-audit modal-clip-fix-prompt.md.
+
+
+## v413 (2026-11-10) — 서브리소스 캐시버스팅
+- 코어 script 태그 전부 ?v=<버전> — 혼합 캐시(index 신규+g1 구버전) 근본 수복. 이후 배포는 칩+sw+?v= 3종 세트. 프롬프트: self-check subresource-stale-fix-prompt.md.

@@ -141,3 +141,9 @@
 - 기기 실측(사용자 캡처 v410)에서 게임방법 모달 하단(골드 프레임·닫기 버튼)이 잘려 미노출 — #btn-info-close를 sticky bottom(safe-area 포함)으로 고정+패널 safe-area 패딩(v412). 헤드리스 실측: close bottom≤innerHeight·sticky 적용·칩 v412 확인.
 - 엔딩 세부집계 잘림 캡처는 칩 v399 — v400~401에서 이미 수복된 결함의 구버전 재현(전파·SW 캐시)으로 판정, 코드 수정 없음. 기기 강제갱신 안내로 종결.
 - 잘림 수복 프롬프트 신설: screen-audit references/modal-clip-fix-prompt.md(기기 칩 최우선 판별→스티키 표준→id 직접 셀렉터 검증). 재발방지: 감사 셀렉터 오타통과(overlay-hof 오식별) 교훈 qa-tokens 기록.
+
+
+## v413 (2026-11-10) — 서브리소스 캐시버스팅(신규 카드 기기 미노출 수복)
+- 기기 실측(v412 사용자 캡처): 칩 v412·덱 표기 8/10(v410 g1)·신규 4종 누락(v411 이전 g1) — index는 새것이지만 g1 서브리소스가 구버전인 혼합 캐시 확정. 라이브 g1 원본 실측으로 전파 상태 확인 후 코드 결함 아님을 판별.
+- 수복: index 코어 스크립트 태그 전부에 ?v=413 부착(g9 GT 선례 전면화) — URL 단위로 구버전 우회. 칩·sw v413.
+- 프롬프트 신설: self-check references/subresource-stale-fix-prompt.md(진단 3단계·수복 표준·재발방지 3종 세트: 칩+sw+?v= 동시 bump).
