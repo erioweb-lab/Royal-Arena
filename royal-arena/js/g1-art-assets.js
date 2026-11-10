@@ -374,11 +374,11 @@ function openDeckEditor(){
   if(document.getElementById('deck-edit')) return;
   let slot=activeSlot(); let deck=(loadDeckSlot(slot)||DECK.slice(0,10)).slice();   /* v414: 슬롯 빈 기본 10장 */
   const ov=document.createElement('div'); ov.id='deck-edit';
-  ov.style.cssText='position:fixed;inset:0;z-index:80;background:rgba(5,8,18,.94);display:flex;flex-direction:column;align-items:center;padding:16px;overflow-y:auto;';
+  ov.style.cssText='position:fixed;inset:0;z-index:80;background:rgba(5,8,18,.94);display:flex;flex-direction:column;align-items:center;padding:12px 12px 46px;overflow-y:auto;';
   const style=document.createElement('style');
   style.textContent='.dk{background:#101a30;border:2px solid #2a3f6e;border-radius:12px;padding:6px;margin:3px;cursor:pointer;min-width:64px;text-align:center;font-family:Jua,sans-serif}'+
    '.dk.on{border-color:#f7c531;box-shadow:0 0 10px rgba(247,197,49,.5)}'+
-   '.dk .dke{font-size:26px;line-height:1.1}.dk .dkn{font-size:11px;color:#dfe8ff}.dk .dkc{font-size:10px;color:#c77dff}';
+   '.dk .dke{font-size:26px;line-height:1.1}.dk .dkn{font-size:11px;color:#dfe8ff}.dk .dkc{font-size:10px;color:#c77dff}.dkw .dk{min-width:0}button.dk-act{background:url(assets/ra_btn_gold.png)!important;background-size:100% 100%!important;color:#3a2400!important;border:1px solid #c89b3c!important;box-shadow:inset 0 0 8px rgba(255,215,120,.4),0 0 10px rgba(247,197,49,.35);font-family:Jua,sans-serif}button.dk-sub{background:url(assets/ra_btn_navy.png)!important;background-size:100% 100%!important;color:#ffe9b8!important;border:1px solid #6a7ea8!important;box-shadow:inset 0 0 8px rgba(120,150,220,.28);font-family:Jua,sans-serif}button.dk-act:active,button.dk-sub:active{filter:brightness(1.18);outline:2px solid #ffd76a}';
   document.head.appendChild(style);
   function render(){
     const cost=Math.round(deck.reduce((a,k)=>a+CARDS[k].cost,0)/deck.length*10)/10; const dpsAvg=Math.round(deck.reduce((a,k)=>{const c2=CARDS[k]; return a+((c2.dmg&&c2.hs)?(c2.dmg/c2.hs):0);},0)/deck.length);
@@ -391,12 +391,12 @@ function openDeckEditor(){
       
       
      '<div style="font-family:Jua,sans-serif;color:#dfe8ff;font-size:14px;margin-top:10px">전투 덱 '+deck.length+'/10 — 카드를 누르면 빠짐</div>'+
-     '<div style="display:flex;flex-wrap:wrap;justify-content:center;max-width:560px">'+deck.map(k=>
+     '<div class="dkw" style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;width:100%;max-width:430px">'+deck.map(k=>
        '<div class="dk" data-rm="'+k+'"><div class="dke">'+(ART[k]?'<img class="art" style="width:34px" src="'+ART[k]+'">':CARDS[k].emoji)+'</div><div class="dkn">'+CARDS[k].name+'</div><div style="font-size:9.5px;color:#9fb0d0;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+(function(c2){ if(c2.dmg&&c2.hs) return 'DPS '+Math.round(c2.dmg/c2.hs); if(c2.dmg) return '즉발 '+c2.dmg; if(c2.heal) return '힐 '+c2.heal; return '—'; })(CARDS[k])+'</div><div class="dkc">'+CARDS[k].cost+'</div></div>').join('')+'</div>'+
      '<div style="font-family:Jua,sans-serif;color:#c3d2f2;font-size:13px;margin-top:10px;word-break:keep-all;line-height:1.45;text-align:center">보유 카드 풀 — 카드를 누르면 추가<br><span style="font-size:11.5px;color:#a9bce6">(10장이면 마지막 카드와 교체)</span></div>'+
      '<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px;width:100%;max-width:430px">'+Object.keys(CARDS).filter(k=>!deck.includes(k)).map(k=>
        '<div class="dk" data-add="'+k+'"><div class="dke">'+(ART[k]?'<img class="art" style="width:34px" src="'+ART[k]+'">':CARDS[k].emoji)+'</div><div class="dkn">'+CARDS[k].name+'</div><div style="font-size:9.5px;color:#9fb0d0;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+(function(c2){ if(c2.dmg&&c2.hs) return 'DPS '+Math.round(c2.dmg/c2.hs); if(c2.dmg) return '즉발 '+c2.dmg; if(c2.heal) return '힐 '+c2.heal; return '—'; })(CARDS[k])+'</div><div class="dkc">'+CARDS[k].cost+'</div></div>').join('')+'</div>'+
-     '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0 4px;width:100%">'+
+     '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px auto 0;width:100%;max-width:300px">'+
       '<button id="dk-save" class="dk-act">💾 저장</button>'+
       '<button id="btn-deck-random" class="dk-sub">🎲 랜덤</button>'+
       '<button id="dk-close" class="dk-sub">닫기</button></div>';
