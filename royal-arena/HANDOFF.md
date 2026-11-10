@@ -193,3 +193,5 @@
 ## v418·v419 (2026-11-11)
 - 2번 완료: 프로필 이름 편집기(`ra_prof_name`)+`__raProfName` 이중 배열 버그 수복 — HOF 스냅샷·포디엄 연동 확정(포디엄 '1위 테스트지휘관' 실측). 3번 완료: `__raMAPS` 5맵(mult 1~1.32, __raDiffHp와 곱셈)·지도 버튼(해금 게이트 ra_map_clear_v1)·맵별 보스 스프라이트 5종(마젠타 키잉 게이트 통과)·스폰 교체(SPR.boss·S.__bossName)·파멸기 맵별 존 효과.
 - 후속: 보스 HUD 라벨에 S.__bossName 표기 연결, 파멸기 효과 기기 실측(보스 웨이브 도달), 덱 편집기 버튼 텍스처(v416 미해결 — inline important 해법 적용), g1 분할 검토.
+## v420 (2026-11-11)
+- 메인 버튼 깜빡임 수복: setInterval 주기 스타일 재적용이 원인 — dataset 가드+MutationObserver 1회성 적용이 표준(v420-js). 전 버튼(훈련캠프/덱편성/덱1·2/유물/프로필/전술연구소/난이도/지도) 소재 배정표·생성 레시피는 art-pipeline/references/main-buttons-design-prompt.md — 후속 구현 시 이 프롬프트 그대로 사용. 네비 버튼은 id 없는 텍스트 라벨 매칭(g1:2609 ui-nav 분류 참조).
