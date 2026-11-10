@@ -367,12 +367,12 @@ function getActiveDeck(){ if(typeof localStorage==='undefined') return null; ret
 function initDeck(p,rd){ if(!rd){ const q=shuffle([...(getActiveDeck()||DECK)]); p.hand=q.slice(0,4); p.queue=q.slice(4); return; }
   var __df=0; try{ __df=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; }catch(e){}
   var __bias=1+0.35*__df, __pool=DECK.slice(), __q=[];
-  while(__q.length<8&&__pool.length){ var __bi=0,__bsc=-1; for(var __i=0;__i<__pool.length;__i++){ var __sc=Math.random()+CARDS[__pool[__i]].cost*0.09*__bias; if(__sc>__bsc){__bsc=__sc;__bi=__i;} } __q.push(__pool.splice(__bi,1)[0]); }
+  while(__q.length<10&&__pool.length){   /* v414: 잔여 8리밋 수복 — 전투 랜덤 덱도 10장 */ var __bi=0,__bsc=-1; for(var __i=0;__i<__pool.length;__i++){ var __sc=Math.random()+CARDS[__pool[__i]].cost*0.09*__bias; if(__sc>__bsc){__bsc=__sc;__bi=__i;} } __q.push(__pool.splice(__bi,1)[0]); }
   p.hand=__q.slice(0,4); p.queue=__q.slice(4); }   /* v192 랜덤 → v218: 난이도 고코스트 가중치 */
 /* v72: 덱 편성 오버레이 — 덱 슬롯 2개 + 카드 교체 */
 function openDeckEditor(){
   if(document.getElementById('deck-edit')) return;
-  let slot=activeSlot(); let deck=(loadDeckSlot(slot)||DECK.slice(0,8)).slice();
+  let slot=activeSlot(); let deck=(loadDeckSlot(slot)||DECK.slice(0,10)).slice();   /* v414: 슬롯 빈 기본 10장 */
   const ov=document.createElement('div'); ov.id='deck-edit';
   ov.style.cssText='position:fixed;inset:0;z-index:80;background:rgba(5,8,18,.94);display:flex;flex-direction:column;align-items:center;padding:16px;overflow-y:auto;';
   const style=document.createElement('style');
@@ -400,12 +400,12 @@ function openDeckEditor(){
       '<button id="dk-save" class="dk-act">💾 저장</button>'+
       '<button id="btn-deck-random" class="dk-sub">🎲 랜덤</button>'+
       '<button id="dk-close" class="dk-sub">닫기</button></div>';
-    ov.querySelectorAll('[data-slot]').forEach(b=>b.onclick=()=>{ slot=parseInt(b.dataset.slot,10); deck=(loadDeckSlot(slot)||DECK.slice(0,8)).slice(); render(); });
+    ov.querySelectorAll('[data-slot]').forEach(b=>b.onclick=()=>{ slot=parseInt(b.dataset.slot,10); deck=(loadDeckSlot(slot)||DECK.slice(0,10)).slice();   /* v414: 슬롯 빈 기본 10장 */ render(); });
     ov.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{ deck=deck.filter(k=>k!==b.dataset.rm); render(); });
     ov.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>{ if(deck.includes(b.dataset.add)) return;
       if(deck.length>=10) deck.shift(); deck.push(b.dataset.add); render(); });
     ov.querySelector('#dk-close').onclick=()=>{ ov.remove(); style.remove(); };
-    var __rb=ov.querySelector('#btn-deck-random'); if(__rb) __rb.onclick=function(){ var q=shuffle([...DECK]).slice(0,8); try{ localStorage.setItem(DECK_SLOTS[slot],JSON.stringify(q)); }catch(e){} deck=q.slice(); render(); try{ toast('덱을 랜덤으로 구성했어요'); }catch(e){} try{ sfx('tap'); }catch(e){} };   /* v267: 랜덤 버튼 빌더 내장 — 렌더 후에도 생존·편집 슬롯에 저장 */
+    var __rb=ov.querySelector('#btn-deck-random'); if(__rb) __rb.onclick=function(){ var q=shuffle([...DECK]).slice(0,10);   /* v414: 랜덤 버튼 10장 */ try{ localStorage.setItem(DECK_SLOTS[slot],JSON.stringify(q)); }catch(e){} deck=q.slice(); render(); try{ toast('덱을 랜덤으로 구성했어요'); }catch(e){} try{ sfx('tap'); }catch(e){} };   /* v267: 랜덤 버튼 빌더 내장 — 렌더 후에도 생존·편집 슬롯에 저장 */
     ov.querySelector('#dk-save').onclick=()=>{ if(deck.length!==10) return;
       try{ localStorage.setItem(DECK_SLOTS[slot],JSON.stringify(deck)); localStorage.setItem('ra_deck_active',String(slot)); }catch(e){}
       sfx('crown'); toast('덱 슬롯 '+(slot+1)+'에 저장했어요'); ov.remove(); style.remove(); };
@@ -2780,7 +2780,7 @@ function __raAddRandomBtn(){
   var btn=document.createElement('button'); btn.id='btn-deck-random'; btn.textContent='🎲 랜덤';
   btn.style.cssText='flex:0 0 auto!important;height:42px!important;min-height:42px!important;max-height:42px!important;border-radius:12px;font-weight:800;background:linear-gradient(180deg,#2f6d4f,#1c4231);color:#d9fbe8;border:1.5px solid #63d69a';   /* v199b: 인라인 강제 — 시트 규칙 무시 환경 차단 */
   btn.onclick=function(){
-    var q=shuffle([...DECK]).slice(0,8);
+    var q=shuffle([...DECK]).slice(0,10);   /* v414: 랜덤 버튼 10장 */
     try{ __raSaveDeck(q); }catch(e){ }
     var cur=document.getElementById('deck-edit'); if(cur) cur.remove();
     openDeckEditor();
