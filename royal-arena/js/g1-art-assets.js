@@ -2071,7 +2071,7 @@ function render(){
   }catch(__e){}
   { const cam=S.cam||{x:W/2,y:H/2,z:1};
     ctx.translate(VW/2,VH/2); ctx.scale(cam.z,cam.z); ctx.translate(-cam.x,-cam.y); }
-  ctx.drawImage(bgc,0,0,VW,VH); tilehlDraw(ctx);   /* v149 */
+  ctx.drawImage(bgc,-BAND,0,VW,VH); tilehlDraw(ctx);   /* v399: 합성 dest x=-BAND — bgc 내부 +BAND 쉬프트 상쇄(지면+2BAND 우편위 해소), 화면 0..BAND 언더레이어 노출(좌측 밝은 올리브 띠) 제거 */   /* v149 */
   const T=THEMES[S.theme];
   ctx.strokeStyle=T.spark; ctx.lineWidth=S.theme==='lava'?3:2;
   if(S.theme==='lava'){ ctx.save(); ctx.shadowColor='#ff8a2a'; ctx.shadowBlur=14; }
