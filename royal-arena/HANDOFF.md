@@ -162,3 +162,7 @@
 
 ## v410 (2026-11-10) — 덱 10장+DPS 표기
 - 덱 빌더(g1 ~380-405): 상한 10·저장 !==10·헤더 평균 DPS·공통 카드 렌더러 DPS/즉발/힐 행. 신규 카드 확장은 art-pipeline card-expansion-prompt 파이프라인. 허위 기록 2회(9fbd614·3db76ae) 정정 이력 포함.
+
+
+## v411 (2026-11-10) — 신규 카드 4종
+- netter(둔화 원거리)·buzzer(hitTarget 훅 자폭)·batqueen(updateUnit 소환 훅 _bat 마커)·catapult(건물). 그래픽 13종(카드4+스프라이트9) 등록 완료. g1 268KB 예산 초과 — 분할 검토 필요.
