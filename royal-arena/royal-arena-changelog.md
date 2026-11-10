@@ -135,3 +135,9 @@
 - 밸런스: 박쥐 여왕·투석 수레 스탯 상향으로 기계 통과 — 자폭 벌레는 원샷 특성상 dps 기반 스크립트가 과대 평가(+) — greed·fort 선례의 트레이드오프 화이트리스트 예외로 문서화.
 - 검증: vm COMPILE:OK · balance outliers=1(화이트리스트 문서화) · 실유닛 스모크(박쥐 소환·netter 둔화) · 타이틀/배틀 캡처 CLIP:no ERR:no.
 - 주의: g1 크기 268KB — 260KB 예산 초과(다음 세션 g1 분할 검토 필요).
+
+
+## v412 (2026-11-10) — 게임방법 모달 닫기 스티키·안전영역 수복 + 잘림 수복 프롬프트
+- 기기 실측(사용자 캡처 v410)에서 게임방법 모달 하단(골드 프레임·닫기 버튼)이 잘려 미노출 — #btn-info-close를 sticky bottom(safe-area 포함)으로 고정+패널 safe-area 패딩(v412). 헤드리스 실측: close bottom≤innerHeight·sticky 적용·칩 v412 확인.
+- 엔딩 세부집계 잘림 캡처는 칩 v399 — v400~401에서 이미 수복된 결함의 구버전 재현(전파·SW 캐시)으로 판정, 코드 수정 없음. 기기 강제갱신 안내로 종결.
+- 잘림 수복 프롬프트 신설: screen-audit references/modal-clip-fix-prompt.md(기기 칩 최우선 판별→스티키 표준→id 직접 셀렉터 검증). 재발방지: 감사 셀렉터 오타통과(overlay-hof 오식별) 교훈 qa-tokens 기록.

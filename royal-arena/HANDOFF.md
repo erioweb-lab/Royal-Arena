@@ -166,3 +166,7 @@
 
 ## v411 (2026-11-10) — 신규 카드 4종
 - netter(둔화 원거리)·buzzer(hitTarget 훅 자폭)·batqueen(updateUnit 소환 훅 _bat 마커)·catapult(건물). 그래픽 13종(카드4+스프라이트9) 등록 완료. g1 268KB 예산 초과 — 분할 검토 필요.
+
+
+## v412 (2026-11-10) — 모달 닫기 스티키
+- #overlay-info #btn-info-close sticky bottom(safe-area) — 기기에서 모달 하단 잘림 수복. 엔딩 잘림 보고는 기기 v399 구버전(전파)으로 판별 — 칩 최우선 원칙. 프롬프트: screen-audit modal-clip-fix-prompt.md.
