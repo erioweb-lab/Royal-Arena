@@ -183,3 +183,7 @@
 ## v414 종단 확정 (2026-11-11 제2차)
 - 덱 10장 복원 종단 확정: UI 규약(DECK_SLOTS[slot]·active=String(slot), 0=슬롯1) 시딩으로 슬롯 1·2 각 10장 저장→리로드→복원 통과. 전 커밋(9d7254c)의 "종단 통과" 표기는 규약 불일치 시딩 오타음 — 본 기록으로 정정. loadDeckSlot 8~10 수용이 근본 수복.
 - 남음: 기기 강제갱신 후 신규 4종 아트 로드·10장 덱 저장/복원 사용자 확인. g1 ~269KB 분할 검토는 후속 과제.
+## v415·v416 (2026-11-11, 미완 포함)
+- 완료: 덱 편집기 전투 덱 10장 2행 5열 고정(.dkw grid repeat(5,minmax(0,1fr))) — 로컬+라이브 실측 통과, v415 배포.
+- 미완(다음 세션 1순위): 편집기 버튼 텍스처(gold/navy)·padding-bottom 46px — 3중 시도 모두 계산 스타일 미적용(saveBG=false·ovPadB=12px). 의심: 편집기를 실제로 렌더하는 모듈이 g1이 아닐 가능성(g9-wide 등 이중 렌더러) — `grep -n "deck-edit" js/*.js` 전수 후 실제 렌더러에 패치. 기기 캡처가 판정자.
+- 프롬프트: art-pipeline/references/deck-editor-layout-prompt.md(2×5 그리드·버튼 텍스처·깔끔함 표준).

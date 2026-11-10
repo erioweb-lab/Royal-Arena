@@ -161,3 +161,8 @@
 - 진짜 종단 검증(UI 저장 경로와 동일 규약 — DECK_SLOTS[slot] 저장·active=String(slot)): 슬롯 2 인덱스에 비기본 10장(DECK.slice(10,20)) 저장→리로드→10장 동일 순서 복원 ✓, 슬롯 1 인덱스(DECK.slice(20,30)·active='0')도 ✓. loadDeckSlot의 ok.length===8→8~10 수용 수정이 실제 10장 복원을 해결함을 확정.
 - 검증: vm COMPILE:OK · balance outliers=1(자폭 화이트리스트) · 페이지 에러 0 · 칩 v414 · ART.netter ?v=411.
 ## v414b (2026-11-11): 신규 4종 카드 JPG 원천 누락 재생성·투입 — v411 때 카드 일러스트 4장이 커밋 누락돼 CDN 404·sw CORE 설치 실패의 근원이었음(스프라이트 9종은 정상 커밋). gpt-image-2 화풍 레퍼런스 생성(-i: valk·greed·babyd·fort)·512px JPG 투입.
+
+## v415~v416 (2026-11-11): 덱 편성 편집기 개편 — 덱 2행 5열 확정·버튼 텍스처 미완(정직 기록)
+- **완료·이중 실측 통과**: 전투 덱 10장 표시를 flex-wrap에서 grid repeat(5,minmax(0,1fr))로 교체(.dkw, 보유 풀과 동일 폭 430px) — 로컬·라이브 헤드리스 모두 cols=5·rows=2·첫 행 5열·10장(UI 규약 시딩) 확인, 페이지 에러 0.
+- **미완**: 저장(ra_btn_gold)·랜덤/닫기(ra_btn_navy) 텍스처와 오버레이 padding-bottom 46px — g1 주입 style, html body+id 결합 특이성, index.html 말단 ui-v416 !important 블록 3중 시도 모두 계산 스타일 실측에서 saveBG=false·paddingBottom=12px. 원인 미규명 — 측정 대상 요소와 실제 렌더 요소 불일치 가능성(.dkw 마크업은 적용되고 같은 style 요소의 규칙만 미적용되는 모순). 기기 실측이 최종 판정자.
+- 교훈: qa 이벤트 팝업(overlay-event)이 9~12s에 #btn-deck 클릭을 가린다 — 편집기 시험 선두에서 팝업 제거 필수. 검증 실패 시 터미네이터 뒤 개행 문이 무조건 실행되므로 기록·커밋은 && 안에(재실증).
