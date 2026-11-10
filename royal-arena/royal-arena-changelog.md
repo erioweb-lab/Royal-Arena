@@ -103,3 +103,9 @@
 - 눈보라 "초당 피해 없음" 확인: snowzone 틱은 둔화(slowT 0.6s) 전용 — v326 규격·카드 설명('광역 둔화 3초 주문')과 일치하는 의도된 동작(결함 아님). 피해 추가는 별도 설계 변경.
 - 감사 프롬프트 2종 신설: balance-map references/aoe-zone-audit-prompt.md(존별 틱 진실원표·헤드리스 계측)·art-pipeline references/cast-fx-audit-prompt.md(이펙트 전수 지도·생성형 필요부 판정).
 - 검증: vm COMPILE:OK · 빔 렌더 시각 판독(가시 yes·화풍 yes·오류 no)·FXBEAM.ok 런타임 true·페이지 에러 0.
+
+## v407 (2026-11-10) — 지속 존 틱 데미지 전면화+총데미지 맵 표준
+- 지속시간 있는 존이 전부 데미지를 적용: 눈보라 냉기 틱 10dps(0.5s마다 5·둔화 유지 병행), 플라즈마 존 8dps, 분화구 6dps — 모두 0.5s 틱·spellDmg 경유·유닛만(타워 미포함·fromSpell=true). 파이어볼·유성우 분화구 push에 team 필드 보강(아군 오 피해 차단). 잔열(burnzone)·중독(venT)은 기존 DoT 경로 유지. 칩·sw v407.
+- 즉발 수치 무변경(총데미지 상향분은 존 틱으로) — 코스트·덱 경제 불변, balance outliers=0.
+- 총데미지→일렉서 매핑 프롬프트 신설: balance-map references/total-damage-elixir-map-prompt.md(산식·v407 스냅샷 맵·모드 A/B/C).
+- 검증: vm COMPILE:OK · 실유닛 종단 계측(틱 5회 발화+slowT 0.6 — 합성 유닛은 QA 환경 소거로 무효화됨을 qa-tokens에 기록) · 페이지 에러 0.

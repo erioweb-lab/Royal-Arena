@@ -147,3 +147,7 @@
 ## v406 (2026-11-10) — 플라즈마 발사 빔+AOE 감사 표준
 - 플라즈마: 킹타워→목표 빔 스프라이트(drawFx 'beam' 분기, 진행도 신축+폴백 그라디언트) — castPlasma가 fx.push beam(x0,y0=킹타워,T=비행시간). 스프라이트 assets/ra_fx_plasma_beam.png(244x1360, 키잉 완료).
 - 지면 존 틱 진실원: snowzone=둔화 전용(피해 없음, 규격 일치)·burnzone=0.5s마다 burn 재적용·plasmazone/crater=시각 전용·venom=유닛 측 venT DoT. 상세는 balance-map 스킬 aoe-zone-audit-prompt.md.
+
+## v407 (2026-11-10) — 지속 존 틱 데미지 전면화
+- updateFx: snowzone 냉기 틱(10dps·slow 병행)·plasmazone(8dps)·crater(6dps) 0.5s 틱 추가 — spellDmg(유닛만·fromSpell). crater push(fireball r1.4·meteor r=radius)에 team 보강. 잔열·중독은 기존 경로.
+- 총데미지 맵 표준: balance-map 스킬 total-damage-elixir-map-prompt.md — 총데미지(즉발+DoT+틱)로 원가치 정가, v407 스냅샷 포함.
