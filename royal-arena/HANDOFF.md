@@ -138,3 +138,8 @@
 
 ### v404 (2026-11-10 — 현재)
 - 지면 이펙트 가림 수복(사용자 지시): 눈보라(snowzone)·유성우(crater)·맹독·플라즈마·잔열 지면 존을 유닛 루프 아래로 — ZK Set 필터 2줄(bgc 합성 후 지면 패스 신설·상층 패스 제외). 존 화풍(v327/328/342/380 규격)·틱 데미지 무변경. ETEST(fx 존 존재)+틱 회귀(slowT/burnT·착탄 피해)+캡처 판독(유닛·타워 가림 0) 통과 — 결과는 위 실행 로그. 스킬: art-pipeline에 zone-fx-prompt.md 신설+트리거 연결.
+
+## v405 (2026-11-10) — 스플래시 비행 필터
+- 스플래시 감사 표준 신설: royal-arena-balance-map 스킬 references/splash-damage-prompt.md(모드 A 현황/B 기계 단언/C 조정안) — "스플래시 데미지/광역 데미지" 트리거와 연결. 32종 감사에서 광역 컨셉 누락 0건.
+- P1 수복: 대공 불가 공격자의 탄환·근접 스플래시·둔화 전파가 공중 유닛 무피해로 수정(shoot hitsAir 적재, 3루프 필터). 칩·sw v405, 푸시 cde7fd9.
+- 검증 게이트: vm COMPILE:OK · balance_check outliers=0 · 헤드리스 통제 추적(직격 100·스플래시 60·공중 0) · QA ERR:0 OVF:0 BATTLE:OK · 헤드리스 캡처 360x780 정상 렌더.
