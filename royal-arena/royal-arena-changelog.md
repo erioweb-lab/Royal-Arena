@@ -109,3 +109,8 @@
 - 즉발 수치 무변경(총데미지 상향분은 존 틱으로) — 코스트·덱 경제 불변, balance outliers=0.
 - 총데미지→일렉서 매핑 프롬프트 신설: balance-map references/total-damage-elixir-map-prompt.md(산식·v407 스냅샷 맵·모드 A/B/C).
 - 검증: vm COMPILE:OK · 실유닛 종단 계측(틱 5회 발화+slowT 0.6 — 합성 유닛은 QA 환경 소거로 무효화됨을 qa-tokens에 기록) · 페이지 에러 0.
+
+## v408 (2026-11-10) — 번개 리워드(1안): 지속 번개 폭풍 존(stormzone)
+- castZap이 시전점에 stormzone 3.5초(r=radius·team) 추가 — updateFx 틱: 0.5s마다 spellDmg(3)=6dps(존 총 21)+존에 새로 진입한 유닛 1회 미니기절 0.3s(_stormId 스탬프·재진입 재부여·연속 스턴락 없음). 즉발 140·기절 0.8·v138 연쇄 무변경.
+- 코스트 2→3(1안), desc '기절 0.8초+번개 폭풍 3.5초'. drawFx stormzone 분기(발광 원판+낙뢰 지그재그 3페이즈·v327 화풍 표준), ZK 등록으로 유닛 아래 하층 렌더(v404 규약). 칩·sw v408.
+- 검증: vm COMPILE:OK · balance outliers=0 · 실유닛 계측(틱 3회 발화·진입 스탬프·stun>0@150ms — 400ms 창 단언은 감쇠(stun<0)으로 오타팅, qa-tokens 기록) · 빔/존 캡처 판독.

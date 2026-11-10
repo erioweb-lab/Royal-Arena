@@ -151,3 +151,6 @@
 ## v407 (2026-11-10) — 지속 존 틱 데미지 전면화
 - updateFx: snowzone 냉기 틱(10dps·slow 병행)·plasmazone(8dps)·crater(6dps) 0.5s 틱 추가 — spellDmg(유닛만·fromSpell). crater push(fireball r1.4·meteor r=radius)에 team 보강. 잔열·중독은 기존 경로.
 - 총데미지 맵 표준: balance-map 스킬 total-damage-elixir-map-prompt.md — 총데미지(즉발+DoT+틱)로 원가치 정가, v407 스냅샷 포함.
+
+## v408 (2026-11-10) — 번개 리워드(1안) 완료
+- stormzone: castZap push(dur 3.5·r=radius·team) → updateFx 틱(6dps+진입 1회 미니기절 0.3s·_stormId) → drawFx(원판+지그재그, ZK 하층). 코스트 3·desc 갱신. 설계·가치표는 balance-map 스킬 storm-rework-prompt.md.

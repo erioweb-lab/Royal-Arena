@@ -27,7 +27,7 @@ const CARDS={
   wizard:   {name:'마법사',   emoji:'🔮', cost:5, count:1, hp:960,  dmg:150, hs:1.4, range:5.0, spd:1.0, flying:false, hitsAir:true,  targets:'any',       r:0.45, splash:1.5, desc:'광역 폭발 · 대공'},
   sniper:   {name:'저격수',   emoji:'🎯', cost:4, count:1, hp:480,  dmg:260, hs:2.6, range:8.5, spd:1.1, flying:false, hitsAir:true,  targets:'any',       r:0.42, desc:'최장 사거리 일격'},
   prince:   {name:'프린스',   emoji:'🐎', cost:5, count:1, hp:2400, dmg:180, hs:1.4, range:1.0, spd:1.3, flying:false, hitsAir:false, targets:'any',       r:0.55, charge:true, desc:'돌진 후 피해 2배'},
-  zap:      {name:'번개',     emoji:'⚡', cost:2, kind:'spell', dmg:140, towerDmg:40, radius:1.6, stun:0.8, desc:'0.8초 기절 주문'},
+  zap:      {name:'번개',     emoji:'⚡', cost:3, kind:'spell', dmg:140, towerDmg:40, radius:1.6, stun:0.8, desc:'기절 0.8초+번개 폭풍 3.5초'}   /* v408: 지속 번개 존 리워드(1안) — 코스트 2→3, 틱 6dps+진입 미니기절 0.3s */,
   valk:     {name:'도끼전사', emoji:'🪓', cost:4, count:1, hp:2600, dmg:130, hs:1.5, range:1.0, spd:1.1, flying:false, hitsAir:false, targets:'any', r:0.55, splash:1.3, desc:'주변 광역 근접'},
   bomber:   {name:'폭탄병',   emoji:'🧨', cost:3, count:1, hp:600,  dmg:130, hs:1.9, range:4.5, spd:1.3, flying:false, hitsAir:false, targets:'ground', r:0.40, splash:1.3, desc:'지상 폭탄 던지기'},
   babyd:    {name:'아기 드래곤', emoji:'🐉', cost:4, count:1, hp:1800, dmg:100, hs:1.6, range:3.2, spd:1.2, flying:true, hitsAir:true, targets:'any', r:0.50, splash:1.0, desc:'비행 화염 브레스'},
@@ -868,7 +868,7 @@ function castZap(team,x,y){
   const c=CARDS.zap, et=enemyOf(team);
   fx.push({x,y,t:0,dur:0.4,kind:'zap'}); fx.push({x,y,t:0,dur:0.4,kind:'zapx'}); fx.push({x,y,t:0,dur:0.5,kind:'shockring'}); S.shake=0.3; S.spellQuiet=2.6; sfx('zap');   // v118: 자패 진정 기간
   fx.push({x,y,t:0,dur:0.3,kind:'flash'});
-  addParts(x,y,14,'#ffe95e',3.6,0.45,50);
+  addParts(x,y,14,'#ffe95e',3.6,0.45,50); fx.push({x,y,t:0,dur:3.5,kind:'stormzone',r:c.radius,team:team});   /* v408: 지속 번개 폭풍 존 */
   for(const u of units){ if(u.dead||u.team!==et) continue;
     if(Math.hypot(u.x-x,u.y-y)<=c.radius){ u.stun=c.stun; floats.push({dx:(Math.random()*10-5),dy:0,x:u.x,y:u.y-1.2,txt:'⚡ 기절',t:0.7,col:'#ffe95e',big:false}); dealDamage(u,spellDmg(c.dmg),team,true); } }
   var __ch=null,__chd=1e9;
@@ -1121,6 +1121,9 @@ function updateFx(dt){
       for(const u of units){ if(u.dead||u.isTower||u.team===f.team) continue; if(Math.hypot(u.x-f.x,u.y-f.y)<=f.r){ u.slowT=Math.max(u.slowT||0,0.6); if(__zt){ dealDamage(u,spellDmg(5),f.team,true); if(Math.random()<0.35) floats.push({dx:(Math.random()*10-5),dy:0,x:u.x,y:u.y-1.1,txt:'❄',t:0.45,col:'#bfe4ff',big:false}); } } } }
     else if(f.kind==='plasmazone'||f.kind==='crater'){ f._acc=(f._acc||0)+dt; const __zt=f._acc>=0.5; if(__zt) f._acc=0;   /* v407: 존 틱 데미지 — 플라즈마 8dps·분화구 6dps(0.5s마다) */
       if(__zt) for(const u of units){ if(u.dead||u.isTower||u.team===f.team) continue; if(Math.hypot(u.x-f.x,u.y-f.y)<=f.r){ dealDamage(u,spellDmg(f.kind==='plasmazone'?4:3),f.team,true); if(Math.random()<0.35) floats.push({dx:(Math.random()*10-5),dy:0,x:u.x,y:u.y-1.1,txt:f.kind==='plasmazone'?'⚡':'🔥',t:0.45,col:f.kind==='plasmazone'?'#cf9dff':'#ff9d3c',big:false}); } } }
+    else if(f.kind==='stormzone'){ f._acc=(f._acc||0)+dt; const __zt=f._acc>=0.5; if(__zt) f._acc=0;   /* v408: 번개 폭풍 틱 — 6dps(0.5s마다 3)+진입 미니기절(존당 1회·재진입 재부여) */
+      for(const u of units){ if(u.dead||u.isTower||u.team===f.team) continue; if(Math.hypot(u.x-f.x,u.y-f.y)<=f.r){ if(u._stormId!==f){ u._stormId=f; u.stun=Math.max(u.stun||0,0.3); floats.push({dx:(Math.random()*10-5),dy:0,x:u.x,y:u.y-1.2,txt:'⚡ 기절',t:0.6,col:'#ffe95e',big:false}); }
+        if(__zt){ dealDamage(u,spellDmg(3),f.team,true); if(Math.random()<0.35) floats.push({dx:(Math.random()*10-5),dy:0,x:u.x,y:u.y-1.1,txt:'⚡',t:0.45,col:'#ffe95e',big:false}); } } } }
     else if(f.kind==='burnzone'){ f._acc=(f._acc||0)+dt; if(f._acc>=0.5){ f._acc=0;
       for(const u of units){ if(u.dead||u.isTower||u.team===f.team) continue; if(Math.hypot(u.x-f.x,u.y-f.y)<=f.r){ u.burnT=Math.max(u.burnT||0,1.5); u.burnDps=Math.max(u.burnDps||0,14); u.burnAcc=0; } } } }
   }
@@ -1897,7 +1900,7 @@ function drawProj(p){
   else { ctx.strokeStyle='#f4e9c8'; ctx.lineWidth=2.5; ctx.beginPath();
     ctx.moveTo(px-Math.cos(va)*8,py2-Math.sin(va)*8); ctx.lineTo(px+Math.cos(va)*5,py2+Math.sin(va)*5); ctx.stroke(); }
 }
-const ZK=new Set(['snowzone','crater','venomzone','burnzone','plasmazone']);   /* v404: 지면 지속 존 종류 — 렌더 순서 분리용 */
+const ZK=new Set(['snowzone','crater','venomzone','burnzone','plasmazone','stormzone']);   /* v404: 지면 지속 존 종류 — 렌더 순서 분리용 */
 const FXBEAM={img:null,ok:false}; try{ const __bi=new Image(); __bi.onload=function(){FXBEAM.ok=true;}; __bi.src='assets/ra_fx_plasma_beam.png'; FXBEAM.img=__bi; }catch(e){}   /* v406: 플라즈마 발사 빔 생성 스프라이트(실패 시 캔버스 폴백) */
 function drawFx(f){
   const k=f.t/f.dur, px=f.x*TILE, py=f.y*TILE;
@@ -1969,6 +1972,21 @@ function drawFx(f){
     ctx.beginPath(); ctx.ellipse(_px,_py,_rr,_rr*0.52,0,0,7); ctx.stroke();
     ctx.restore();
   }
+  else if(f.kind==='stormzone'){   /* v408: 번개 폭풍 존 — 발광 원판+낙뢰 지그재그 오버레이(페이드 인아웃·v327 화풍 표준) */
+    const _sx=f.x*TILE, _sy=f.y*TILE, _sr=f.r*TILE, _sa0=Math.min(1,f.t*2.5)*Math.min(1,(f.dur-f.t)*2);
+    ctx.save();
+    const _sg=ctx.createRadialGradient(_sx,_sy,_sr*0.05,_sx,_sy,_sr);
+    _sg.addColorStop(0,'rgba(70,50,110,0.55)'); _sg.addColorStop(0.65,'rgba(45,32,80,0.42)'); _sg.addColorStop(1,'rgba(80,60,140,0)');
+    ctx.globalAlpha=_sa0; ctx.fillStyle=_sg; ctx.beginPath(); ctx.arc(_sx,_sy,_sr,0,7); ctx.fill();
+    ctx.shadowColor='#ffe95e'; ctx.shadowBlur=14;
+    for(let i=0;i<3;i++){   /* 낙뢰 지그재그 — 위상 오프셋 페이즈 */
+      const _ph=now*1.9+i*2.09, _lx=_sx+Math.cos(_ph)*_sr*0.5, _ly=_sy+Math.sin(_ph)*_sr*0.28;
+      ctx.globalAlpha=_sa0*(0.55+0.45*Math.sin(now*7+i*2.6));
+      ctx.strokeStyle='#ffe95e'; ctx.lineWidth=2; ctx.beginPath();
+      let _jx=_lx, _jy=_ly-_sr*0.85; ctx.moveTo(_jx,_jy);
+      for(let s2=1;s2<=4;s2++){ _jx=_lx+Math.sin(now*9+i*3+s2*2.2)*7; _jy=_ly-_sr*0.85+_sr*0.85*(s2/4); ctx.lineTo(_jx,_jy); }
+      ctx.stroke(); }
+    ctx.shadowBlur=0; ctx.restore(); }
   else if(f.kind==='plasmazone'){   /* v380: 플라즈마 잔류 존 — 전기 아크+상승 스파크(시각 전용·페이드 인아웃) */
     const _px=f.x*TILE, _py=f.y*TILE, _rr=f.r*TILE, _a0=Math.min(1,f.t*2.5)*Math.min(1,(f.dur-f.t)*2);
     ctx.save();
