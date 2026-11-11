@@ -214,3 +214,4 @@
 - (v435) 보너스 체인 전면 연결 완료: 공격=lava·dusk(유닛 cc.dmg ×1.02, g1a 스폰)·XP=wasteland·divine(g1b 승리 __tb)·체력=ice·sky(g1a)·이벤트=abyss·tomb(g1a:488). 8테마 모두 실효과(classic 제외). 아레나 커스텀 스킨·신계 난이도 해금 조건은 사용자 결정으로 유지(폴백·순차 토벌).
 - (v436) 타이틀 지도버튼: 프레임=border-image-slice 44(fill 없음 — 내부 투명해 배경 아트 비침), 맵 아트=data-theme 선택자 CSS(재생성 스캔 대응, 인라인 금지), 칩=#trophy-chip+ra_btn_camp_new. 에셋 11종 sw.js CORE 등록. 구현 프롬프트=dev-pipeline/references/map-button-restyle-prompt.md.
 - (v437) 지도버튼 그래픽의 진실원: ui-v373-js의 CM 맵+setProperty 블록(1.2s 재적용) — 버튼 외관 변경은 반드시 여기 원천 패치. 스타일시트 오버라이드 신설은 인라인 !important에 지므로 금지. 신규 테마 버튼 배경=ra_map_<theme>.png(9종 전부).
+- (v438) 타이틀 밀도: 캠프 그래픽(#ra-prof-chip — v429부터 #trophy-chip은 display:none, 스타일 넣어도 무효)·지도버튼 42px 지정(실측 44)·#title-actions grid(gap 6px) 행 margin 0+6행 44px 통일(덱↔덱편성 간극 포함)·#diff-row(주의: id — 클래스 아님) 첫 화면 노출. #btn-diff는 구 진입 버튼(display:none 유지, 제외). 수용기준=#diff-row bottom<innerHeight(360×800) 게이트화(probe438.py).
