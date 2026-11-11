@@ -1162,7 +1162,7 @@ html body #overlay-info>div{height:100% !important}
 html body #overlay-info .t-how,html body #overlay-info .t-note{padding-bottom:14px !important}
 html body #overlay-info #btn-info-close{position:sticky !important;bottom:calc(6px + env(safe-area-inset-bottom,0px)) !important;margin:10px auto 0 !important;flex-shrink:0 !important;z-index:7 !important;box-shadow:0 4px 14px rgba(0,0,0,.55) !important}
 html body #overlay-info{padding-bottom:env(safe-area-inset-bottom,0px) !important}
-</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v428</div><div id="app">
+</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v429</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1517,7 +1517,7 @@ b.style.setProperty('background-size','auto,100% 100%','important');b.style.setP
 html body #rpane-score{overflow-y:auto !important;max-height:46vh !important;-webkit-overflow-scrolling:touch !important}
 html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;white-space:pre-line !important;word-break:keep-all !important;overflow-wrap:anywhere !important;text-align:right !important;max-width:200px !important;font-weight:600 !important}
 </style>
-<script src="js/g1-art-assets.js?v=428"></script>
+<script src="js/g1-art-assets.js?v=429"></script>
 
 
 
@@ -1529,7 +1529,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g2-sprite-assets.js?v=428"></script>
+<script src="js/g2-sprite-assets.js?v=429"></script>
 
 
 
@@ -1538,7 +1538,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g3-frame-assets.js?v=428"></script>
+<script src="js/g3-frame-assets.js?v=429"></script>
 
 
 
@@ -1549,7 +1549,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g4-ux-data.js?v=428"></script>
+<script src="js/g4-ux-data.js?v=429"></script>
 
 
 
@@ -1560,7 +1560,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g5-core.js?v=428"></script>
+<script src="js/g5-core.js?v=429"></script>
 
 
 
@@ -1571,7 +1571,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g6-battle.js?v=428"></script>
+<script src="js/g6-battle.js?v=429"></script>
 
 
 
@@ -1583,7 +1583,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g7-ui-systems.js?v=428"></script>
+<script src="js/g7-ui-systems.js?v=429"></script>
 
 
 
@@ -1595,7 +1595,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g8-boot.js?v=428"></script><script src="js/g9-wide.js?v=428"></script>
+<script src="js/g8-boot.js?v=429"></script><script src="js/g9-wide.js?v=429"></script>
 
 
 
@@ -2059,5 +2059,19 @@ ui();setInterval(ui,900);document.addEventListener('click',function(){setTimeout
 <style id="ui-v427">html body #trophy-chip,html body #ra-btn-camp,html body #btn-camp,html body #btn-train{background-image:url(assets/ra_btn_camp.png)!important   /* v428: 캠프 표기는 버튼 아닌 #trophy-chip span(프로브 실측) — 정적 규칙 직접 적용 */;background-size:100% 100%!important}
 html body #overlay-profile .rpanel{max-width:560px!important}
 </style>
+<style id="ui-v429">/* v429: 덱 편집기 버튼 텍스처 — 빌더 규칙(g1 v415)이 인덱스 골드(1755)·네이비(1157) 그라데이션에 특이성·후순위로 눌려 flat이던 것을 최후순위+상위 특이성 정적 규칙으로 수복(v416 미해결분 종결) */
+html body #deck-edit button#dk-save, html body #deck-edit button.dk-act{background-image:url(assets/ra_btn_gold.png)!important;background-size:100% 100%!important;background-color:transparent!important;color:#3a2400!important;border:1px solid #c89b3c!important;box-shadow:inset 0 0 8px rgba(255,215,120,.4),0 0 10px rgba(247,197,49,.35)!important}
+html body #deck-edit button#btn-deck-random, html body #deck-edit button#dk-close, html body #deck-edit button.dk-sub{background-image:url(assets/ra_btn_navy.png)!important;background-size:100% 100%!important;background-color:transparent!important;color:#ffe9b8!important;border:1px solid #6a7ea8!important}
+</style>
+<script id="ui-v429-js">/* v429: 덱 편집기 버튼 — 인라인 재기록 대응 렌더 전 관찰자(v426 아키텍처 이식). 게임 writer가 background를 다시 써도 마이크로태스크에 문양을 덧칠해 그라데이션 프레임이 화면에 도달하지 않는다 */
+(function(){
+ var MAP=[["dk-save","ra_btn_gold.png"],["btn-deck-random","ra_btn_navy.png"],["dk-close","ra_btn_navy.png"]];
+ function paint(el,tex){ try{ el.style.setProperty("background-image","url(assets/"+tex+")","important"); el.style.setProperty("background-size","100% 100%","important"); el.style.setProperty("background-color","transparent","important"); }catch(e){} }
+ function scan(){ for(var m=0;m<MAP.length;m++){ var el=document.getElementById(MAP[m][0]); if(el&&getComputedStyle(el).backgroundImage.indexOf(MAP[m][1])<0) paint(el,MAP[m][1]); } }
+ var q=false; function kick(){ if(q) return; q=true; Promise.resolve().then(function(){ q=false; scan(); }); }
+ var armed=false; function arm(){ if(armed) return; armed=true; try{ new MutationObserver(kick).observe(document.documentElement,{attributes:true,attributeFilter:["style"],childList:true,subtree:true}); }catch(e){} }
+ if(document.readyState==="complete"){ scan(); arm(); } else window.addEventListener("load",function(){ scan(); arm(); });
+})();
+</script>
 </body>
 </html>

@@ -45,6 +45,7 @@ function syncBossHud(){
   var df=w.querySelector('.bh-doomfill'); if(df) df.style.width=Math.min(100,(b.doom||0)/12*100)+'%';
   var dm=Math.max(0,12-(b.doom||0)), dt2=w.querySelector('.bh-doomtxt');
   if(dt2&&w.__dm!==dm){ dt2.textContent=dm.toFixed(1)+'s'; w.__dm=dm; }
+  var __bn=S.__bossName||'부활한 왕'; if(w.__bn!==__bn){ w.__bn=__bn; var __nel=w.querySelector('.bh-name'); if(!__nel){ __nel=document.createElement('div'); __nel.className='bh-name'; __nel.style.cssText='font-size:11px;font-weight:700;color:#ffd54f;text-align:center;line-height:1.3'; w.insertBefore(__nel,w.firstChild); } __nel.textContent='💀 '+__bn; }   /* v429: 보스 HUD 라벨에 맵별 보스명 표기 */
   w.classList.toggle('danger',(b.doom||0)>=9);
   var kb=document.getElementById('ks-btn');
   if(kb){ if(S.ksCd<=0&&!S.ks) kb.classList.add('ready'); else kb.classList.remove('ready'); }
