@@ -196,3 +196,4 @@
 - **이름 진실원 통합**: __raProfName이 ra_profiles_v1.active까지 읽게 확장 — 기존 시스템에서 개명해도 HOF에 반영(프로필 '도윤' → hofRecord 스냅샷 '도윤' 실측).
 - **프로필 통계 확폭(사용자 요청)**: 승률 이후 자료(최근 30전·난이도별·덱 승률) 가독 — ra-pstats max-width 320px→min(94%,560px), .rpanel 560px, .prf-row keep-all.
 - 검증: 일반+qa 이중 모드 — 캠프 텍스처·덱1 문양·전당 문양·profName='도윤'·HOF 스냅샷·중복 UI 부재 · 페이지 에러 0.
+- (보강) 프로필 오버레이 개방 실측(로컬+라이브): ra-pstats 확폭 min(94%,560px)·기존 이름 시스템(prf-name) 유지·중복 편집기(ra-name-edit) 부재 확인 — v427 완결.

@@ -461,7 +461,7 @@ try{ (function(){ var iv3=setInterval(function(){
   var __w=parseInt(localStorage.getItem('ra_wins_v1')||'0',10)||0, __l=parseInt(localStorage.getItem('ra_losses_v1')||'0',10)||0;
   var __sb=parseInt(localStorage.getItem('ra_streak_best_v1')||'0',10)||0, __tp=(typeof loadTrophies==='function')?loadTrophies():0;
   var __d=document.createElement('div'); __d.id='ra-pstats';
-  __d.style.cssText='margin:8px auto;padding:6px 10px;border-radius:10px;background:rgba(18,24,43,.85);border:1px solid rgba(255,179,0,.4);font-size:12px;color:#ffd54f;font-weight:700;text-align:center;max-width:320px';
+  __d.style.cssText='margin:8px auto;padding:6px 10px;border-radius:10px;background:rgba(18,24,43,.85);border:1px solid rgba(255,179,0,.4);font-size:12px;color:#ffd54f;font-weight:700;text-align:center;max-width:min(94%,560px)';
   var __hist=(function(){ try{ return (JSON.parse(localStorage.getItem('ra_hist_v1')||'[]')||[]).map(function(x){ return x==='W'?'승':(x==='L'?'패':'무'); }).join(' ')||'기록 없음'; }catch(e){ return '기록 없음'; } })();
   __d.id='ra-title-strip';__d.textContent='🏆 '+__w+'승 '+__l+'패('+((__w+__l)?Math.round(__w/(__w+__l)*100):0)+'%) · 🥇 최고 '+__sb+'연승 · 👑 '+__tp+'트로피';
   var __d2=document.createElement('div'); __d2.style.cssText='font-size:11px;color:#c3d2f2;margin-top:2px'; __d2.textContent='최근 5전: '+__hist; __d.appendChild(__d2);   /* v222 */
@@ -2676,6 +2676,7 @@ function drawBossHUD(){
 function __raProfName(){ try{
   var ks=['ra_prof_name','ra_profile_name','ra_pf_name'];   /* v418b: 중첩 배열 버그 수복 — getItem(배열)이 실패해 항상 폴백 '지휘관'이던 것 */
   for(var i=0;i<ks.length;i++){ var v=localStorage.getItem(ks[i]); if(v) return v; }
+  try{ var __pd=JSON.parse(localStorage.getItem('ra_profiles_v1')||'null'); if(__pd&&__pd.active) return __pd.active; }catch(__pe){}   /* v427 */
   var pk='ra_prof_v1'; if(pk){ var o=JSON.parse(localStorage.getItem(pk)||'null');
     if(Array.isArray(o)){ var act=o.filter(function(x){return x&&x.active;})[0]||o[o.length-1]; if(act&&(act.name||act.nick)) return act.name||act.nick; }
     else if(o&&typeof o==='object'){ for(var k2 in o){ if(o[k2]&&o[k2].name) return o[k2].name; } } }
