@@ -212,3 +212,4 @@
 - (v433) 프로필 칩 위치=.theme-row 다음 형제(전폭 바). 게임 방법 문양=CSS 규칙+관찰자 마이크로태스크 재도포(paintHow — 계산값 게이트, __raObs 플래그). 깜빡임 재발 시 진단법: MutationObserver 변이 카운트+150ms 배경 샘플링.
 - (v434) 맵 9종 — 사다리: 로얄1.00/서리1.08/용암1.16/황야1.24/심연1.32/천공1.40/묘지1.42/신전1.44/신계1.48. 해금 상한=min(8), 악몽=mclear()>=8, __raMapIdx 클램프=length-1(동적). 신규 테마 페인트 폴백=자매 팔레트(sky→ice·tomb→abyss·dusk→lava·divine→classic, g1c 클릭 핸들러). 보스 스프라이트 sky/tomb/dusk/divine(키잉 완료). 맵×난이도 매핑 규약=map-ladder-mapping-prompt.
 - (v435) 보너스 체인 전면 연결 완료: 공격=lava·dusk(유닛 cc.dmg ×1.02, g1a 스폰)·XP=wasteland·divine(g1b 승리 __tb)·체력=ice·sky(g1a)·이벤트=abyss·tomb(g1a:488). 8테마 모두 실효과(classic 제외). 아레나 커스텀 스킨·신계 난이도 해금 조건은 사용자 결정으로 유지(폴백·순차 토벌).
+- (v436) 타이틀 지도버튼: 프레임=border-image-slice 44(fill 없음 — 내부 투명해 배경 아트 비침), 맵 아트=data-theme 선택자 CSS(재생성 스캔 대응, 인라인 금지), 칩=#trophy-chip+ra_btn_camp_new. 에셋 11종 sw.js CORE 등록. 구현 프롬프트=dev-pipeline/references/map-button-restyle-prompt.md.

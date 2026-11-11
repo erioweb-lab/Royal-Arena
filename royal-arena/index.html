@@ -1166,7 +1166,7 @@ html body #overlay-info>div{height:100% !important}
 html body #overlay-info .t-how,html body #overlay-info .t-note{padding-bottom:14px !important}
 html body #overlay-info #btn-info-close{position:sticky !important;bottom:calc(6px + env(safe-area-inset-bottom,0px)) !important;margin:10px auto 0 !important;flex-shrink:0 !important;z-index:7 !important;box-shadow:0 4px 14px rgba(0,0,0,.55) !important}
 html body #overlay-info{padding-bottom:env(safe-area-inset-bottom,0px) !important}
-</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v435</div><div id="app">
+</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v436</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1524,7 +1524,7 @@ b.style.setProperty('background-size','auto,100% 100%','important');b.style.setP
 html body #rpane-score{overflow-y:auto !important;max-height:46vh !important;-webkit-overflow-scrolling:touch !important}
 html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;white-space:pre-line !important;word-break:keep-all !important;overflow-wrap:anywhere !important;text-align:right !important;max-width:200px !important;font-weight:600 !important}
 </style>
-<script src="js/g1a-art-assets.js?v=435"></script><script src="js/g1b-art-assets.js?v=435"></script><script src="js/g1c-art-assets.js?v=435"></script>
+<script src="js/g1a-art-assets.js?v=436"></script><script src="js/g1b-art-assets.js?v=436"></script><script src="js/g1c-art-assets.js?v=436"></script>
 
 
 
@@ -1536,7 +1536,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g2-sprite-assets.js?v=435"></script>
+<script src="js/g2-sprite-assets.js?v=436"></script>
 
 
 
@@ -1545,7 +1545,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g3-frame-assets.js?v=435"></script>
+<script src="js/g3-frame-assets.js?v=436"></script>
 
 
 
@@ -1556,7 +1556,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g4-ux-data.js?v=435"></script>
+<script src="js/g4-ux-data.js?v=436"></script>
 
 
 
@@ -1567,7 +1567,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g5-core.js?v=435"></script>
+<script src="js/g5-core.js?v=436"></script>
 
 
 
@@ -1578,7 +1578,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g6-battle.js?v=435"></script>
+<script src="js/g6-battle.js?v=436"></script>
 
 
 
@@ -1590,7 +1590,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g7-ui-systems.js?v=435"></script>
+<script src="js/g7-ui-systems.js?v=436"></script>
 
 
 
@@ -1602,7 +1602,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g8-boot.js?v=435"></script><script src="js/g9-wide.js?v=435"></script>
+<script src="js/g8-boot.js?v=436"></script><script src="js/g9-wide.js?v=436"></script>
 
 
 
@@ -2160,6 +2160,21 @@ html body #ra-prof-chip{height:38px!important;display:flex!important;align-items
 </script>
 <style id="ui-v433">/* v433: 프로필 칩을 지도(테마) 행 아래·배틀 시작 위 전폭 바로 */
 html body #ra-prof-chip{width:100%!important;max-width:540px!important;margin:8px auto 2px!important;height:40px!important;border-radius:12px!important;font-size:13px!important}
+</style>
+<style id="ui-v436">/* v436: 지도버튼 일관 금속 프레임(border-image)+맵 대표 아트+캠프 버튼 스키모픽 — 구현 프롬프트 references/map-button-restyle-prompt.md */
+html body .theme-row .t-btn{border-style:solid!important;border-color:transparent!important;border-width:12px!important;border-image-source:url(assets/ra_btn_mapframe.png)!important;border-image-slice:44!important;border-image-repeat:stretch!important;border-radius:6px!important}
+html body .theme-row .t-btn[data-theme="classic"]{background:linear-gradient(180deg,rgba(10,14,28,.05) 35%,rgba(10,14,28,.78)),url(assets/ra_map_classic.png) center/cover!important}
+html body .theme-row .t-btn[data-theme="lava"]{background:linear-gradient(180deg,rgba(10,14,28,.05) 35%,rgba(10,14,28,.78)),url(assets/ra_map_lava.png) center/cover!important}
+html body .theme-row .t-btn[data-theme="ice"]{background:linear-gradient(180deg,rgba(10,14,28,.05) 35%,rgba(10,14,28,.78)),url(assets/ra_map_ice.png) center/cover!important}
+html body .theme-row .t-btn[data-theme="wasteland"]{background:linear-gradient(180deg,rgba(10,14,28,.05) 35%,rgba(10,14,28,.78)),url(assets/ra_map_wasteland.png) center/cover!important}
+html body .theme-row .t-btn[data-theme="abyss"]{background:linear-gradient(180deg,rgba(10,14,28,.05) 35%,rgba(10,14,28,.78)),url(assets/ra_map_abyss.png) center/cover!important}
+html body .theme-row .t-btn[data-theme="sky"]{background:linear-gradient(180deg,rgba(10,14,28,.05) 35%,rgba(10,14,28,.78)),url(assets/ra_map_sky.png) center/cover!important}
+html body .theme-row .t-btn[data-theme="tomb"]{background:linear-gradient(180deg,rgba(10,14,28,.05) 35%,rgba(10,14,28,.78)),url(assets/ra_map_tomb.png) center/cover!important}
+html body .theme-row .t-btn[data-theme="dusk"]{background:linear-gradient(180deg,rgba(10,14,28,.05) 35%,rgba(10,14,28,.78)),url(assets/ra_map_dusk.png) center/cover!important}
+html body .theme-row .t-btn[data-theme="divine"]{background:linear-gradient(180deg,rgba(10,14,28,.05) 35%,rgba(10,14,28,.78)),url(assets/ra_map_divine.png) center/cover!important}
+html body .theme-row .t-btn{color:#fff!important}html body .theme-row .t-btn small{color:#f2e6c0!important;text-shadow:0 1px 3px rgba(0,0,0,.85)!important}
+html body .theme-row .t-btn.sel{box-shadow:0 0 16px rgba(247,197,49,.7)!important;outline:2px solid #FFD54F!important;outline-offset:-3px!important}
+html body #trophy-chip,html body #ra-btn-camp{background:linear-gradient(180deg,rgba(10,14,28,.2) 30%,rgba(10,14,28,.72)),url(assets/ra_btn_camp_new.png) center/cover!important;border:1px solid rgba(200,155,60,.85)!important;color:#ffe9b0!important}
 </style>
 </body>
 </html>
