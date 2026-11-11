@@ -1166,7 +1166,7 @@ html body #overlay-info>div{height:100% !important}
 html body #overlay-info .t-how,html body #overlay-info .t-note{padding-bottom:14px !important}
 html body #overlay-info #btn-info-close{position:sticky !important;bottom:calc(6px + env(safe-area-inset-bottom,0px)) !important;margin:10px auto 0 !important;flex-shrink:0 !important;z-index:7 !important;box-shadow:0 4px 14px rgba(0,0,0,.55) !important}
 html body #overlay-info{padding-bottom:env(safe-area-inset-bottom,0px) !important}
-</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v438</div><div id="app">
+</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v439</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1524,7 +1524,7 @@ b.style.setProperty('background-size','auto,100% 100%','important');b.style.setP
 html body #rpane-score{overflow-y:auto !important;max-height:46vh !important;-webkit-overflow-scrolling:touch !important}
 html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;white-space:pre-line !important;word-break:keep-all !important;overflow-wrap:anywhere !important;text-align:right !important;max-width:200px !important;font-weight:600 !important}
 </style>
-<script src="js/g1a-art-assets.js?v=438"></script><script src="js/g1b-art-assets.js?v=438"></script><script src="js/g1c-art-assets.js?v=438"></script>
+<script src="js/g1a-art-assets.js?v=439"></script><script src="js/g1b-art-assets.js?v=439"></script><script src="js/g1c-art-assets.js?v=439"></script>
 
 
 
@@ -1536,7 +1536,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g2-sprite-assets.js?v=438"></script>
+<script src="js/g2-sprite-assets.js?v=439"></script>
 
 
 
@@ -1545,7 +1545,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g3-frame-assets.js?v=438"></script>
+<script src="js/g3-frame-assets.js?v=439"></script>
 
 
 
@@ -1556,7 +1556,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g4-ux-data.js?v=438"></script>
+<script src="js/g4-ux-data.js?v=439"></script>
 
 
 
@@ -1567,7 +1567,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g5-core.js?v=438"></script>
+<script src="js/g5-core.js?v=439"></script>
 
 
 
@@ -1578,7 +1578,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g6-battle.js?v=438"></script>
+<script src="js/g6-battle.js?v=439"></script>
 
 
 
@@ -1590,7 +1590,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g7-ui-systems.js?v=438"></script>
+<script src="js/g7-ui-systems.js?v=439"></script>
 
 
 
@@ -1602,7 +1602,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g8-boot.js?v=438"></script><script src="js/g9-wide.js?v=438"></script>
+<script src="js/g8-boot.js?v=439"></script><script src="js/g9-wide.js?v=439"></script>
 
 
 
@@ -2186,6 +2186,32 @@ html body #app .theme-row .t-btn{height:42px !important}
 html body #app #title-actions > *{margin-top:0 !important;margin-bottom:0 !important}
 html body #app #title-actions > #btn-how,html body #app #title-actions > #btn-deck,html body #app #title-actions > #btn-relic,html body #app #title-actions > #btn-skill,html body #app #title-actions > #btn-hof,html body #app #title-actions > #btn-profile{height:44px !important}
 html body #app #title-actions > .diff-row{height:38px !important;margin-top:2px !important}
+</style>
+<style id="ui-v439">/* v439: 짧은 뷰포트(실기기 유효 높이 540~620px — 주소창·하단바 제외)에서 프로필·난이도 행 미노출 수복 — 2단 압축. 700px+ 기기는 v438 레이아웃 유지. 실측 출처: probe-vp.py(360×640 프로필 685 미노출) */
+@media (max-height:700px){
+  html body #app .t-hero .t-emblem{width:56px !important;height:56px !important}
+  html body #app .t-hero h1{font-size:18px !important}
+  html body #app .theme-row .t-btn{height:38px !important}
+  html body #app .theme-row{gap:6px !important}
+  html body #app #btn-start{height:40px !important}
+  html body #app #ra-prof-chip{height:36px !important;margin:6px auto 0 !important}
+  html body #app #title-actions > *{margin-top:0 !important;margin-bottom:0 !important}
+  html body #app #title-actions{gap:4px !important}
+  html body #app #title-actions > #btn-how,html body #app #title-actions > #btn-deck,html body #app #title-actions > #btn-relic,html body #app #title-actions > #btn-skill,html body #app #title-actions > #btn-hof,html body #app #title-actions > #btn-profile{height:40px !important}
+  html body #app #title-actions > #diff-row{height:34px !important;margin-top:2px !important}
+}
+@media (max-height:600px){
+  html body #app .t-hero .t-emblem{width:48px !important;height:48px !important}
+  html body #app .theme-row{gap:4px !important}
+  html body #app .theme-row .t-btn{height:34px !important}
+  html body #app #btn-start{height:38px !important}
+  html body #app #ra-prof-chip{height:34px !important;margin:4px auto 0 !important}
+  html body #app .theme-row .t-btn{height:34px !important}
+  html body #app #title-actions > #btn-how,html body #app #title-actions > #btn-deck,html body #app #title-actions > #btn-relic,html body #app #title-actions > #btn-skill,html body #app #title-actions > #btn-hof,html body #app #title-actions > #btn-profile{height:36px !important}
+  html body #app #title-actions{gap:2px !important}
+  html body #app #title-actions > #diff-row{height:30px !important;margin-top:2px !important}
+}   /* v439b: 612>600 실측 → 추가 압축(≈32px 예산) */
+
 </style>
 </body>
 </html>

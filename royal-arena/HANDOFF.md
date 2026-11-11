@@ -215,3 +215,4 @@
 - (v436) 타이틀 지도버튼: 프레임=border-image-slice 44(fill 없음 — 내부 투명해 배경 아트 비침), 맵 아트=data-theme 선택자 CSS(재생성 스캔 대응, 인라인 금지), 칩=#trophy-chip+ra_btn_camp_new. 에셋 11종 sw.js CORE 등록. 구현 프롬프트=dev-pipeline/references/map-button-restyle-prompt.md.
 - (v437) 지도버튼 그래픽의 진실원: ui-v373-js의 CM 맵+setProperty 블록(1.2s 재적용) — 버튼 외관 변경은 반드시 여기 원천 패치. 스타일시트 오버라이드 신설은 인라인 !important에 지므로 금지. 신규 테마 버튼 배경=ra_map_<theme>.png(9종 전부).
 - (v438) 타이틀 밀도: 캠프 그래픽(#ra-prof-chip — v429부터 #trophy-chip은 display:none, 스타일 넣어도 무효)·지도버튼 42px 지정(실측 44)·#title-actions grid(gap 6px) 행 margin 0+6행 44px 통일(덱↔덱편성 간극 포함)·#diff-row(주의: id — 클래스 아님) 첫 화면 노출. #btn-diff는 구 진입 버튼(display:none 유지, 제외). 수용기준=#diff-row bottom<innerHeight(360×800) 게이트화(probe438.py).
+- (v439b) 초단형(≤600px) 보정: 1차 압축에서 360×600 난이도 하단 612>600(12px 초과, probe439가 잡음) → 헤더 48·지도버튼 34px·액션행 36px·gap 2px·CTA 38·칩 34·diff 30px로 추가 압축. 압축 수치는 예산 계산 후 실측 확정 — 계산만 믿고 커밋 금지.
