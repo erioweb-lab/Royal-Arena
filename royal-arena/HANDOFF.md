@@ -218,3 +218,4 @@
 - (v439b) 초단형(≤600px) 보정: 1차 압축에서 360×600 난이도 하단 612>600(12px 초과, probe439가 잡음) → 헤더 48·지도버튼 34px·액션행 36px·gap 2px·CTA 38·칩 34·diff 30px로 추가 압축. 압축 수치는 예산 계산 후 실측 확정 — 계산만 믿고 커밋 금지.
 - (v440) 뷰포트 기준=600px 단일화(사용자 지시): 2단 압축(700/600) 폐지, 600px 기준 딥 압축(지도버튼 34px·액션행 36px·gap 2px·CTA 38px·칩 34px·헤더 48px)을 max-height:700px 전체에 적용. 수용기준=360×600(probe439 3점 실측 유지). 700px 초과 기기는 v438 레이아웃.
 - (v441) 뷰포트 기준=550px(사용자 지시): ≤700px 압축 완성 — t-btn max-height 30 클램프(문서 중부 max-width:520px 블록이 height 40 재지정, CSS height만으론 무시됨)·theme-row gap 2px·액션행 33px·CTA 34px·칩 30px·diff 25px. 수용기준 360×550 — 실측 프로필 517·난이도 545(<550). 명예의전당↔프로필 교환=명시적 grid order(profile 5·hof 6) — 부분 order(-1/1)는 grid 전체 재배치 유발 금지.
+- (v442) 지도버튼 프레임 6px(slice 44·border-image-width 6px) — 12px이 30px 버튼 세로 80% 잠식(아트 노출 ~6px) 수복(~18px). 높이 30px 통일 — .sel 구 규칙은 이중 클래스+요소 결합(sel.sel) 특이도 클램프로 차단. 원천 3곳(ui-v373-js 세터·칩 CSS 9종·69행). probe442.py(offsetHeight 기준 — bounding rect는 transform·소수 반올림 인공물 포함).

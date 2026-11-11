@@ -66,7 +66,7 @@ h1,h2{font-family:'Jua','Noto Sans KR',sans-serif;font-weight:400}
 .cx .s{display:none}
 .cx .c{display:inline-flex;align-items:center;gap:3px;margin-top:2px;font-size:9.5px;font-weight:900;color:#e9c8ff;background:rgba(138,63,208,.35);border:1px solid #a05ce0;border-radius:999px;padding:1px 6px}
 .theme-row{display:flex;gap:8px}
-.t-btn{flex:1;padding:9px 6px;color:#f7ecd8;text-shadow:0 1px 2px rgba(0,0,0,.55);border-style:solid;border-color:transparent;border-width:12px;border-image-source:var(--btn-wood);border-image-slice:44 fill;border-image-repeat:stretch;background:none;
+.t-btn{flex:1;padding:9px 6px;color:#f7ecd8;text-shadow:0 1px 2px rgba(0,0,0,.55);border-style:solid;border-color:transparent;border-width:6px;border-image-source:var(--btn-wood);border-image-slice:44 fill;border-image-repeat:stretch;background:none;
   color:#dbe7ff;font-weight:900;font-size:13px;display:flex;flex-direction:column;gap:3px;align-items:center}
 .t-btn .sw{width:100%;height:26px;border-radius:7px;border:1px solid rgba(0,0,0,.35)}
 .t-btn.sel{border-color:var(--gold);box-shadow:0 0 12px rgba(247,197,49,.45)}
@@ -1166,7 +1166,7 @@ html body #overlay-info>div{height:100% !important}
 html body #overlay-info .t-how,html body #overlay-info .t-note{padding-bottom:14px !important}
 html body #overlay-info #btn-info-close{position:sticky !important;bottom:calc(6px + env(safe-area-inset-bottom,0px)) !important;margin:10px auto 0 !important;flex-shrink:0 !important;z-index:7 !important;box-shadow:0 4px 14px rgba(0,0,0,.55) !important}
 html body #overlay-info{padding-bottom:env(safe-area-inset-bottom,0px) !important}
-</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v441</div><div id="app">
+</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v442</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1476,11 +1476,11 @@ html body #app #title-actions button:not(#btn-start):not(.sel),html body #app #s
 <script src="qa-driver.js"></script>
 <style id="ui-v368">/* v368: 메인화면 전 버튼 카드화풍 — 카드 프레임 문양 에셋 8종(메뉴·CTA·테마 칩 5색·팝업 소형), 텍스트는 HTML 오버레이 */
 html body #app #title-actions button:not(#btn-start):not(.sel),html body #app #screen-title button:not(#btn-start):not(.sel){background:linear-gradient(180deg,rgba(10,16,34,.22),rgba(8,13,28,.36)),url("assets/ra_btn_card.png") center/cover no-repeat !important;background-size:auto,100% 100% !important;border:1.5px solid #c89b3c !important;box-shadow:inset 0 1px 0 rgba(255,215,120,.22),0 0 10px rgba(247,197,49,.22),0 3px 0 rgba(0,0,0,.5) !important}
-html body #app .theme-row .t-btn[data-theme="classic"]:not(.sel){background:linear-gradient(180deg,rgba(10,16,34,.16),rgba(8,13,28,.28)),url("assets/ra_map_classic.png") center/cover no-repeat !important;background-size:auto,100% 100% !important;border:12px solid transparent !important;border-image:url("assets/ra_btn_mapframe.png") 44 stretch !important}
-html body #app .theme-row .t-btn[data-theme="lava"]:not(.sel){background:linear-gradient(180deg,rgba(10,16,34,.16),rgba(8,13,28,.28)),url("assets/ra_map_lava.png") center/cover no-repeat !important;background-size:auto,100% 100% !important;border:12px solid transparent !important;border-image:url("assets/ra_btn_mapframe.png") 44 stretch !important}
-html body #app .theme-row .t-btn[data-theme="ice"]:not(.sel){background:linear-gradient(180deg,rgba(10,16,34,.16),rgba(8,13,28,.28)),url("assets/ra_map_ice.png") center/cover no-repeat !important;background-size:auto,100% 100% !important;border:12px solid transparent !important;border-image:url("assets/ra_btn_mapframe.png") 44 stretch !important}
-html body #app .theme-row .t-btn[data-theme="wasteland"]:not(.sel){background:linear-gradient(180deg,rgba(10,16,34,.16),rgba(8,13,28,.28)),url("assets/ra_map_wasteland.png") center/cover no-repeat !important;background-size:auto,100% 100% !important;border:12px solid transparent !important;border-image:url("assets/ra_btn_mapframe.png") 44 stretch !important}
-html body #app .theme-row .t-btn[data-theme="abyss"]:not(.sel){background:linear-gradient(180deg,rgba(10,16,34,.16),rgba(8,13,28,.28)),url("assets/ra_map_abyss.png") center/cover no-repeat !important;background-size:auto,100% 100% !important;border:12px solid transparent !important;border-image:url("assets/ra_btn_mapframe.png") 44 stretch !important}
+html body #app .theme-row .t-btn[data-theme="classic"]:not(.sel){background:linear-gradient(180deg,rgba(10,16,34,.16),rgba(8,13,28,.28)),url("assets/ra_map_classic.png") center/cover no-repeat !important;background-size:auto,100% 100% !important;border:6px solid transparent !important;border-image:url("assets/ra_btn_mapframe.png") 44 stretch !important;border-image-width:6px !important}
+html body #app .theme-row .t-btn[data-theme="lava"]:not(.sel){background:linear-gradient(180deg,rgba(10,16,34,.16),rgba(8,13,28,.28)),url("assets/ra_map_lava.png") center/cover no-repeat !important;background-size:auto,100% 100% !important;border:6px solid transparent !important;border-image:url("assets/ra_btn_mapframe.png") 44 stretch !important;border-image-width:6px !important}
+html body #app .theme-row .t-btn[data-theme="ice"]:not(.sel){background:linear-gradient(180deg,rgba(10,16,34,.16),rgba(8,13,28,.28)),url("assets/ra_map_ice.png") center/cover no-repeat !important;background-size:auto,100% 100% !important;border:6px solid transparent !important;border-image:url("assets/ra_btn_mapframe.png") 44 stretch !important;border-image-width:6px !important}
+html body #app .theme-row .t-btn[data-theme="wasteland"]:not(.sel){background:linear-gradient(180deg,rgba(10,16,34,.16),rgba(8,13,28,.28)),url("assets/ra_map_wasteland.png") center/cover no-repeat !important;background-size:auto,100% 100% !important;border:6px solid transparent !important;border-image:url("assets/ra_btn_mapframe.png") 44 stretch !important;border-image-width:6px !important}
+html body #app .theme-row .t-btn[data-theme="abyss"]:not(.sel){background:linear-gradient(180deg,rgba(10,16,34,.16),rgba(8,13,28,.28)),url("assets/ra_map_abyss.png") center/cover no-repeat !important;background-size:auto,100% 100% !important;border:6px solid transparent !important;border-image:url("assets/ra_btn_mapframe.png") 44 stretch !important;border-image-width:6px !important}
 html body #app #btn-start{background:linear-gradient(180deg,rgba(60,36,6,.14),rgba(43,26,4,.26)),url("assets/ra_cta_card.png") center/cover no-repeat !important;background-size:auto,100% 100% !important;border:2px solid #b8860b !important;color:#2b1c05 !important;font-weight:800 !important;text-shadow:0 1px 0 rgba(255,235,170,.55) !important}
 html body #app #btn-hof-close,html body #app #btn-relic-close,html body #app #btn-info-close,html body #app #btn-skill-close,html body #app #btn-prf-close,html body #app #btn-skill-reset,html body #app #rtab-score,html body #app #rtab-rank,html body #app #overlay-profile .rpanel button,html body #app #btn-main{background:linear-gradient(180deg,rgba(14,24,46,.30),rgba(8,14,28,.42)),url("assets/ra_btn_small.png") center/cover no-repeat !important;background-size:auto,100% 100% !important}
 </style>
@@ -1513,7 +1513,7 @@ if(cta){cta.style.setProperty('background','linear-gradient(180deg,rgba(60,36,6,
 var CM={classic:'ra_map_classic',lava:'ra_map_lava',ice:'ra_map_ice',wasteland:'ra_map_wasteland',abyss:'ra_map_abyss',sky:'ra_map_sky',tomb:'ra_map_tomb',dusk:'ra_map_dusk',divine:'ra_map_divine'};   /* v437: 9테마 전체 확장 — 맵 대표 아트(ra_map_*→ra_map_*) */
 document.querySelectorAll('.t-btn[data-theme]').forEach(function(b){
 var dt=b.getAttribute('data-theme');var img=CM[dt];if(!img)return;
-b.style.setProperty('background','linear-gradient(180deg,rgba(10,16,34,.10) 35%,rgba(8,13,28,.66)),url("assets/'+img+'.png") center/cover no-repeat','important');b.style.setProperty('border-style','solid','important');b.style.setProperty('border-color','transparent','important');b.style.setProperty('border-width','12px','important');b.style.setProperty('border-image-source','url("assets/ra_btn_mapframe.png")','important');b.style.setProperty('border-image-slice','44','important');b.style.setProperty('border-image-repeat','stretch','important');var __sw=b.querySelector('.sw'); if(__sw) __sw.style.setProperty('display','none','important');   /* v437: 공통 프레임 border-image+텍스트 가독 스크림 강화+스와치 은닉 */
+b.style.setProperty('background','linear-gradient(180deg,rgba(10,16,34,.10) 35%,rgba(8,13,28,.66)),url("assets/'+img+'.png") center/cover no-repeat','important');b.style.setProperty('border-style','solid','important');b.style.setProperty('border-color','transparent','important');b.style.setProperty('border-width','6px','important');b.style.setProperty('border-image-source','url("assets/ra_btn_mapframe.png")','important');b.style.setProperty('border-image-slice','44','important');b.style.setProperty('border-image-width','6px','important');b.style.setProperty('border-image-repeat','stretch','important');var __sw=b.querySelector('.sw'); if(__sw) __sw.style.setProperty('display','none','important');   /* v437: 공통 프레임 border-image+텍스트 가독 스크림 강화+스와치 은닉 */
 b.style.setProperty('background-size','auto,100% 100%','important');b.style.setProperty('transition','none','important');});
 document.querySelectorAll('#btn-hof-close,#btn-relic-close,#btn-info-close,#btn-skill-close,#btn-prf-close,#btn-skill-reset,#rtab-score,#rtab-rank,#overlay-profile .rpanel button,#btn-main').forEach(function(b){
 b.style.setProperty('background','linear-gradient(180deg,rgba(14,24,46,.30),rgba(8,14,28,.42)),url("assets/ra_btn_small.png") center/cover no-repeat','important');
@@ -1524,7 +1524,7 @@ b.style.setProperty('background-size','auto,100% 100%','important');b.style.setP
 html body #rpane-score{overflow-y:auto !important;max-height:46vh !important;-webkit-overflow-scrolling:touch !important}
 html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;white-space:pre-line !important;word-break:keep-all !important;overflow-wrap:anywhere !important;text-align:right !important;max-width:200px !important;font-weight:600 !important}
 </style>
-<script src="js/g1a-art-assets.js?v=441"></script><script src="js/g1b-art-assets.js?v=441"></script><script src="js/g1c-art-assets.js?v=441"></script>
+<script src="js/g1a-art-assets.js?v=442"></script><script src="js/g1b-art-assets.js?v=442"></script><script src="js/g1c-art-assets.js?v=442"></script>
 
 
 
@@ -1536,7 +1536,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g2-sprite-assets.js?v=441"></script>
+<script src="js/g2-sprite-assets.js?v=442"></script>
 
 
 
@@ -1545,7 +1545,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g3-frame-assets.js?v=441"></script>
+<script src="js/g3-frame-assets.js?v=442"></script>
 
 
 
@@ -1556,7 +1556,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g4-ux-data.js?v=441"></script>
+<script src="js/g4-ux-data.js?v=442"></script>
 
 
 
@@ -1567,7 +1567,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g5-core.js?v=441"></script>
+<script src="js/g5-core.js?v=442"></script>
 
 
 
@@ -1578,7 +1578,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g6-battle.js?v=441"></script>
+<script src="js/g6-battle.js?v=442"></script>
 
 
 
@@ -1590,7 +1590,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g7-ui-systems.js?v=441"></script>
+<script src="js/g7-ui-systems.js?v=442"></script>
 
 
 
@@ -1602,7 +1602,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g8-boot.js?v=441"></script><script src="js/g9-wide.js?v=441"></script>
+<script src="js/g8-boot.js?v=442"></script><script src="js/g9-wide.js?v=442"></script>
 
 
 
@@ -2175,10 +2175,10 @@ html body .theme-row .t-btn[data-theme="divine"]{background:linear-gradient(180d
 html body .theme-row .t-btn{color:#fff!important}html body .theme-row .t-btn small{color:#f2e6c0!important;text-shadow:0 1px 3px rgba(0,0,0,.85)!important}
 html body .theme-row .t-btn.sel{box-shadow:0 0 16px rgba(247,197,49,.7)!important;outline:2px solid #FFD54F!important;outline-offset:-3px!important}
 html body #trophy-chip,html body #ra-btn-camp{background:linear-gradient(180deg,rgba(10,14,28,.2) 30%,rgba(10,14,28,.72)),url(assets/ra_btn_camp_new.png) center/cover!important;border:1px solid rgba(200,155,60,.85)!important;color:#ffe9b0!important}
-html body .theme-row .t-btn[data-theme="sky"]:not(.sel){background:linear-gradient(180deg,rgba(10,16,34,.10) 35%,rgba(8,13,28,.66)),url(assets/ra_map_sky.png) center/cover !important;border:12px solid transparent !important;border-image:url(assets/ra_btn_mapframe.png) 44 stretch !important}
-html body .theme-row .t-btn[data-theme="tomb"]:not(.sel){background:linear-gradient(180deg,rgba(10,16,34,.10) 35%,rgba(8,13,28,.66)),url(assets/ra_map_tomb.png) center/cover !important;border:12px solid transparent !important;border-image:url(assets/ra_btn_mapframe.png) 44 stretch !important}
-html body .theme-row .t-btn[data-theme="dusk"]:not(.sel){background:linear-gradient(180deg,rgba(10,16,34,.10) 35%,rgba(8,13,28,.66)),url(assets/ra_map_dusk.png) center/cover !important;border:12px solid transparent !important;border-image:url(assets/ra_btn_mapframe.png) 44 stretch !important}
-html body .theme-row .t-btn[data-theme="divine"]:not(.sel){background:linear-gradient(180deg,rgba(10,16,34,.10) 35%,rgba(8,13,28,.66)),url(assets/ra_map_divine.png) center/cover !important;border:12px solid transparent !important;border-image:url(assets/ra_btn_mapframe.png) 44 stretch !important}
+html body .theme-row .t-btn[data-theme="sky"]:not(.sel){background:linear-gradient(180deg,rgba(10,16,34,.10) 35%,rgba(8,13,28,.66)),url(assets/ra_map_sky.png) center/cover !important;border:6px solid transparent !important;border-image:url(assets/ra_btn_mapframe.png) 44 stretch !important;border-image-width:6px !important}
+html body .theme-row .t-btn[data-theme="tomb"]:not(.sel){background:linear-gradient(180deg,rgba(10,16,34,.10) 35%,rgba(8,13,28,.66)),url(assets/ra_map_tomb.png) center/cover !important;border:6px solid transparent !important;border-image:url(assets/ra_btn_mapframe.png) 44 stretch !important;border-image-width:6px !important}
+html body .theme-row .t-btn[data-theme="dusk"]:not(.sel){background:linear-gradient(180deg,rgba(10,16,34,.10) 35%,rgba(8,13,28,.66)),url(assets/ra_map_dusk.png) center/cover !important;border:6px solid transparent !important;border-image:url(assets/ra_btn_mapframe.png) 44 stretch !important;border-image-width:6px !important}
+html body .theme-row .t-btn[data-theme="divine"]:not(.sel){background:linear-gradient(180deg,rgba(10,16,34,.10) 35%,rgba(8,13,28,.66)),url(assets/ra_map_divine.png) center/cover !important;border:6px solid transparent !important;border-image:url(assets/ra_btn_mapframe.png) 44 stretch !important;border-image-width:6px !important}
 </style>
 <style id="ui-v438">/* v438: 캠프 칩 그래픽(#ra-prof-chip — 보이는 실체; #trophy-chip은 v429부터 display:none)·지도버튼 높이 49→42px·title-actions grid 행 margin 0 통일+6행 48→44px — 난이도 행(.diff-row) 첫 화면 노출(360×800) */
 html body #app #ra-prof-chip{background:linear-gradient(180deg,rgba(10,14,28,.15) 25%,rgba(10,14,28,.7)),url(assets/ra_btn_camp_new.png) center/cover !important;border:1px solid rgba(200,155,60,.85) !important;color:#ffe9b0 !important;text-shadow:0 1px 3px rgba(0,0,0,.85) !important}
@@ -2210,6 +2210,10 @@ html body #app #title-actions > #btn-diff{order:8 !important}   /* v441: 명예�
   html body #app #title-actions > #diff-row{height:25px !important;margin-top:1px !important}
 }   /* v441: 뷰포트 기준 550px(사용자 지시) — 압축 심화(emblem 36·h1 15·t-btn 30·CTA 34·칩 30·액션행 33·diff 28) */
 
+</style>
+<style id="ui-v442">/* v442: 프레임 12→6px(잠식 수복 — 아트 노출 ~6→18px)·버튼 높이 30px 통일 — 노란 트림 간극 등폭+대표 아트 꽉참 */
+html body .theme-row .t-btn{height:30px !important;max-height:30px !important;min-height:0 !important;border-width:6px !important;border-image-width:6px !important}
+html body #app .theme-row button.t-btn.sel.sel{height:30px !important;max-height:30px !important;min-height:0 !important;font-size:11px !important}   /* v442b: 이중 클래스+요소 결합 특이도 최상위 — 구 .sel 규칙(32px) 차단 */
 </style>
 </body>
 </html>
