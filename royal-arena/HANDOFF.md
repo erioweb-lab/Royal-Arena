@@ -201,3 +201,5 @@
 - 전 버튼 그래픽 최종: ui-v423-js 라벨 매칭 맵 + rAF 라운드로빈 손실 복원(프레임당 4개 — 패처 250ms 대비 우위). 신규 버튼은 MAP 배열에 [라벨,텍스처,size] 추가. 텍스처: camp/decked/shield(편집기 슬롯 cover)/relic/crown/tactics/diff/map + gold(HOF)/cta_plaque(시작).
 ## v426 (2026-11-11)
 - 버튼 텍스처 최종 아키텍처: ui-v426-js **렌더 전 관찰자**(스타일 변경 마이크로태스크 덧칠 — 게임 리스타일러와 공존, 깜빡임 원리적 0) + v425-css 정적 important(보조). **타이틀 화면 검증은 qa 파라미터 없이 재현 필수** — qa 모드는 타이틀 리스타일러가 빠져 기기와 달랐다.
+## v427 (2026-11-11)
+- 프로필 이름의 진실원 계층: ra_prof_name(수동) → ra_profiles_v1.active(지휘관 시스템 — 기존 UI: 이름 변경/사용 중/삭제/생성) → '지휘관' — __raProfName이 통합 게터. v418 ra-name-edit 중복 제거됨. 훈련 캠프 버튼은 #ra-btn-camp id 태깅+정적 규칙. 통계 박스 min(94%,560px). 프롬프트: dev-pipeline/references/profile-review-prompt.md.
