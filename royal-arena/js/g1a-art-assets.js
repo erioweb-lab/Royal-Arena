@@ -566,7 +566,8 @@ function spawnCard(key,team,x,y){ try{ tutOnSpawn(key,team); }catch(e){}   /* v1
   var __cL=1; try{ __cL=(team==='blue')?__cLv(key):1; }catch(__e){}   /* v185: 카드 레벨 시스템 */
   var __m=1+0.04*(__cL-1);
   const cc=(__m>1)?Object.assign({},c,{hp:Math.round(c.hp*__m),dmg:Math.round((c.dmg||0)*__m)}):c;   /* CARDS 원본 보존 — 유닛별 클론 */
-  if(team==='blue'&&(S.theme==='ice'||S.theme==='sky')) cc.hp=Math.round(cc.hp*1.02);   /* v434: sky(천공) — ice 체인 재사용 */   /* v220: 서리 테마 보너스 — 아군 HP +2% */
+  if(team==='blue'&&(S.theme==='ice'||S.theme==='sky')) cc.hp=Math.round(cc.hp*1.02);
+  if(team==='blue'&&(S.theme==='lava'||S.theme==='dusk')&&cc.dmg) cc.dmg=Math.round(cc.dmg*1.02);   /* v435: dusk(황혼) — lava 공격 체인 재사용 · lava·wasteland 표기 전용 해소(전면 연결) */   /* v434: sky(천공) — ice 체인 재사용 */   /* v220: 서리 테마 보너스 — 아군 HP +2% */
   var __dm=(team==='red')?__raDiffHp()*__raWaveHp()*__raMapHp():1;   /* v208 난이도 + v212 웨이브 곡선 */
   var __sh=0,__hl=false,__sp=false; if(team==='red'&&!c.kind&&key!=='boss'){ var __tq=Math.random(); if(__tq<0.08){ __sh=Math.round(cc.hp*0.3); } else if(__tq<0.15){ __hl=true; } else if(__tq<0.22){ __sp=true; } }   /* v209: 적 특성 패턴 — 실드·힐러·분열 */
   for(const o of formation(c.count||1)){
