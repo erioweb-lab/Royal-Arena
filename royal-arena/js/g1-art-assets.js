@@ -456,11 +456,11 @@ try{ (function(){ var iv4=setInterval(function(){
 /* v218: 프로필 통계 주입(승/패/승률/최고연승/트로피) */
 try{ (function(){ var iv3=setInterval(function(){
   var ov=document.getElementById('overlay-profile'); if(!ov) return;
-  if(ov.classList.contains('hidden')){ var x0=document.getElementById('ra-pstats'); if(x0) x0.remove(); return; }
-  if(document.getElementById('ra-pstats')) return;
+  if(ov.classList.contains('hidden')){ var x0=ov.querySelector('[data-ra-pstats]'); if(x0) x0.remove(); return; }
+  if(ov.querySelector('[data-ra-pstats]')) return;   /* v428: v218 가드가 존재하지 않는 id를 봐 개방 중 매 700ms 숨김 스트립 중복 생성되던 것 수복 */
   var __w=parseInt(localStorage.getItem('ra_wins_v1')||'0',10)||0, __l=parseInt(localStorage.getItem('ra_losses_v1')||'0',10)||0;
   var __sb=parseInt(localStorage.getItem('ra_streak_best_v1')||'0',10)||0, __tp=(typeof loadTrophies==='function')?loadTrophies():0;
-  var __d=document.createElement('div'); __d.id='ra-pstats';
+  var __d=document.createElement('div'); __d.setAttribute('data-ra-pstats','1');
   __d.style.cssText='margin:8px auto;padding:6px 10px;border-radius:10px;background:rgba(18,24,43,.85);border:1px solid rgba(255,179,0,.4);font-size:12px;color:#ffd54f;font-weight:700;text-align:center;max-width:min(94%,560px)';
   var __hist=(function(){ try{ return (JSON.parse(localStorage.getItem('ra_hist_v1')||'[]')||[]).map(function(x){ return x==='W'?'승':(x==='L'?'패':'무'); }).join(' ')||'기록 없음'; }catch(e){ return '기록 없음'; } })();
   __d.id='ra-title-strip';__d.textContent='🏆 '+__w+'승 '+__l+'패('+((__w+__l)?Math.round(__w/(__w+__l)*100):0)+'%) · 🥇 최고 '+__sb+'연승 · 👑 '+__tp+'트로피';

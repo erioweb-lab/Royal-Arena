@@ -204,3 +204,4 @@
 ## v427 (2026-11-11)
 - 프로필 이름의 진실원 계층: ra_prof_name(수동) → ra_profiles_v1.active(지휘관 시스템 — 기존 UI: 이름 변경/사용 중/삭제/생성) → '지휘관' — __raProfName이 통합 게터. v418 ra-name-edit 중복 제거됨. 훈련 캠프 버튼은 #ra-btn-camp id 태깅+정적 규칙. 통계 박스 min(94%,560px). 프롬프트: dev-pipeline/references/profile-review-prompt.md.
 - (v427 완결 보강) 프로필 화면: 통계 박스 확폭 확인, 기존 지휘관 시스템 단일화 확인 — 전 항목 로컬+라이브 실측.
+- (v428) 캠프 텍스처는 #trophy-chip(일반 버튼 아님)에 적용 — 스캔 셀렉터에 #title-actions 포함됨. 프로필 숨김 스트립 중복 생성 가드 수복(data-ra-pstats). 프로필 확폭 실효 값은 .rpanel 560px.

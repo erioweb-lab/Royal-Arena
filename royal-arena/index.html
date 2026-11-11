@@ -1162,7 +1162,7 @@ html body #overlay-info>div{height:100% !important}
 html body #overlay-info .t-how,html body #overlay-info .t-note{padding-bottom:14px !important}
 html body #overlay-info #btn-info-close{position:sticky !important;bottom:calc(6px + env(safe-area-inset-bottom,0px)) !important;margin:10px auto 0 !important;flex-shrink:0 !important;z-index:7 !important;box-shadow:0 4px 14px rgba(0,0,0,.55) !important}
 html body #overlay-info{padding-bottom:env(safe-area-inset-bottom,0px) !important}
-</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v427</div><div id="app">
+</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v428</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1517,7 +1517,7 @@ b.style.setProperty('background-size','auto,100% 100%','important');b.style.setP
 html body #rpane-score{overflow-y:auto !important;max-height:46vh !important;-webkit-overflow-scrolling:touch !important}
 html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;white-space:pre-line !important;word-break:keep-all !important;overflow-wrap:anywhere !important;text-align:right !important;max-width:200px !important;font-weight:600 !important}
 </style>
-<script src="js/g1-art-assets.js?v=427"></script>
+<script src="js/g1-art-assets.js?v=428"></script>
 
 
 
@@ -1529,7 +1529,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g2-sprite-assets.js?v=427"></script>
+<script src="js/g2-sprite-assets.js?v=428"></script>
 
 
 
@@ -1538,7 +1538,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g3-frame-assets.js?v=427"></script>
+<script src="js/g3-frame-assets.js?v=428"></script>
 
 
 
@@ -1549,7 +1549,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g4-ux-data.js?v=427"></script>
+<script src="js/g4-ux-data.js?v=428"></script>
 
 
 
@@ -1560,7 +1560,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g5-core.js?v=427"></script>
+<script src="js/g5-core.js?v=428"></script>
 
 
 
@@ -1571,7 +1571,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g6-battle.js?v=427"></script>
+<script src="js/g6-battle.js?v=428"></script>
 
 
 
@@ -1583,7 +1583,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g7-ui-systems.js?v=427"></script>
+<script src="js/g7-ui-systems.js?v=428"></script>
 
 
 
@@ -1595,7 +1595,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g8-boot.js?v=427"></script><script src="js/g9-wide.js?v=427"></script>
+<script src="js/g8-boot.js?v=428"></script><script src="js/g9-wide.js?v=428"></script>
 
 
 
@@ -2019,7 +2019,7 @@ function paint(el){ var t=(el.textContent||'').replace(/\s+/g,''); if(!t||t.leng
   el.style.setProperty('background-size','100% 100%','important'); return true; } }
  return false; }
 function scan(){ var els=document.querySelectorAll('button,.t-links *');
- for(var __c=0;__c<els.length;__c++){ var __t=(els[__c].textContent||'').replace(/\s+/g,''); if(__t.indexOf('훈련캠프')>=0&&!els[__c].id){ els[__c].id='ra-btn-camp'; } }
+ var __el2=document.querySelectorAll('button,.t-links *,#title-actions *'); for(var __c=0;__c<__el2.length;__c++){ var __t=(__el2[__c].textContent||'').replace(/\s+/g,''); if(__t.indexOf('훈련캠프')>=0&&!__el2[__c].id){ __el2[__c].id='ra-btn-camp'; } }   /* v428: 스캔에 #title-actions 포함 — trophy-chip이 셀렉터 밖이던 사각지대 해소 */
  for(var i=0;i<els.length;i++){ var cs=getComputedStyle(els[i]); var bg=cs.backgroundImage||'';
   if(bg.indexOf('ra_btn_')>=0||bg.indexOf('ra_cta_')>=0) continue;   /* 이미 문양 — 무재도색 */
   paint(els[i]); }
@@ -2056,7 +2056,7 @@ scan(); setInterval(scan,1000);
 }
 ui();setInterval(ui,900);document.addEventListener('click',function(){setTimeout(ui,80);});})();
 </script>
-<style id="ui-v427">html body #ra-btn-camp,html body #btn-camp,html body #btn-train{background-image:url(assets/ra_btn_camp.png)!important;background-size:100% 100%!important}
+<style id="ui-v427">html body #trophy-chip,html body #ra-btn-camp,html body #btn-camp,html body #btn-train{background-image:url(assets/ra_btn_camp.png)!important   /* v428: 캠프 표기는 버튼 아닌 #trophy-chip span(프로브 실측) — 정적 규칙 직접 적용 */;background-size:100% 100%!important}
 html body #overlay-profile .rpanel{max-width:560px!important}
 </style>
 </body>
