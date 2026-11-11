@@ -1166,7 +1166,7 @@ html body #overlay-info>div{height:100% !important}
 html body #overlay-info .t-how,html body #overlay-info .t-note{padding-bottom:14px !important}
 html body #overlay-info #btn-info-close{position:sticky !important;bottom:calc(6px + env(safe-area-inset-bottom,0px)) !important;margin:10px auto 0 !important;flex-shrink:0 !important;z-index:7 !important;box-shadow:0 4px 14px rgba(0,0,0,.55) !important}
 html body #overlay-info{padding-bottom:env(safe-area-inset-bottom,0px) !important}
-</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v449</div><div id="app">
+</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v450</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1524,7 +1524,7 @@ b.style.setProperty('background-size','auto,100% 100%','important');b.style.setP
 html body #rpane-score{overflow-y:auto !important;max-height:46vh !important;-webkit-overflow-scrolling:touch !important}
 html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;white-space:pre-line !important;word-break:keep-all !important;overflow-wrap:anywhere !important;text-align:right !important;max-width:200px !important;font-weight:600 !important}
 </style>
-<script src="js/g1a-art-assets.js?v=449"></script><script src="js/g1b-art-assets.js?v=449"></script><script src="js/g1c-art-assets.js?v=449"></script>
+<script src="js/g1a-art-assets.js?v=450"></script><script src="js/g1b-art-assets.js?v=450"></script><script src="js/g1c-art-assets.js?v=450"></script>
 
 
 
@@ -1536,7 +1536,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g2-sprite-assets.js?v=449"></script>
+<script src="js/g2-sprite-assets.js?v=450"></script>
 
 
 
@@ -1545,7 +1545,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g3-frame-assets.js?v=449"></script>
+<script src="js/g3-frame-assets.js?v=450"></script>
 
 
 
@@ -1556,7 +1556,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g4-ux-data.js?v=449"></script>
+<script src="js/g4-ux-data.js?v=450"></script>
 
 
 
@@ -1567,7 +1567,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g5-core.js?v=449"></script>
+<script src="js/g5-core.js?v=450"></script>
 
 
 
@@ -1578,7 +1578,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g6-battle.js?v=449"></script>
+<script src="js/g6-battle.js?v=450"></script>
 
 
 
@@ -1590,7 +1590,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g7-ui-systems.js?v=449"></script>
+<script src="js/g7-ui-systems.js?v=450"></script>
 
 
 
@@ -1602,7 +1602,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g8-boot.js?v=449"></script><script src="js/g9-wide.js?v=449"></script>
+<script src="js/g8-boot.js?v=450"></script><script src="js/g9-wide.js?v=450"></script>
 
 
 
@@ -2116,7 +2116,7 @@ html body #ra-prof-chip{height:38px!important;display:flex!important;align-items
  var DN=['보통','악몽','지옥'], DC=['#67d98a','#e0a13c','#e05c6e'];
  var TEX=['ra_btn_diff_normal.png','ra_btn_diff_nightmare.png','ra_btn_diff_hell.png'];
  function mclear(){ try{ var __mv=parseInt(localStorage.getItem('ra_map_clear_v1')||'-1',10); return isNaN(__mv)?-1:__mv; }catch(e){ return -1; } }
- function unlockedDiff(d){ var cl=-1; try{ var __rv=parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10); cl=isNaN(__rv)?-1:__rv; }catch(e){} /* v432b: parseInt(x)||-1은 유효한 '0'을 -1로 먹는 falsy-zero 버그 — isNaN 가드로 수복(규약: 해금티어=clear+1) */ if(d===0) return true; if(d===1) return cl>=0&&mclear()>=8;   /* v434: 전 맵 토벌 = 9맵(마지막 idx 8) */ return cl>=1; }
+ function unlockedDiff(d){ var cl=-1; try{ var __rv=parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10); cl=isNaN(__rv)?-1:__rv; }catch(e){} /* v432b: parseInt(x)||-1은 유효한 '0'을 -1로 먹는 falsy-zero 버그 — isNaN 가드로 수복(규약: 해금티어=clear+1) */ if(d===0) return true; if(d===1) return cl>=0&&mclear()>=8;   /* v434: 전 맵 토벌 = 9맵(마지막 idx 8) */ return cl>=1&&mclear()>=8; }   /* v450: 지옥은 악몽 해금(전맵 토벌)을 전제 — 사다리 비단조(지옥 열림+악몽 잠금) 오류 해소 */
  function swapHS(){ var ta=document.getElementById('title-actions'); if(!ta) return; var hof=null,sk=null,ns=ta.querySelectorAll('button');
   for(var i=0;i<ns.length;i++){ var t=norm(ns[i].textContent); if(t.indexOf('명예의전당')>=0) hof=ns[i]; if(t.indexOf('전술연구소')>=0) sk=ns[i]; }
   if(hof&&sk&&hof.previousElementSibling!==sk) hof.parentNode.insertBefore(sk,hof); }
@@ -2227,6 +2227,8 @@ html body #app .theme-row .t-btn:not(#ra-nx):not(#ra-nx2).ra-locked:hover,
 html body #app .theme-row .t-btn:not(#ra-nx):not(#ra-nx2).ra-locked:active{filter:grayscale(.9) brightness(.62)!important;outline:0!important;outline-offset:0!important;transform:none!important;box-shadow:none!important}
 html body #app button.ra-locked:not(#ra-nx):hover,html body #app button.ra-locked:not(#ra-nx):active{filter:grayscale(.9) brightness(.62)!important;outline:0!important;transform:none!important}
 html body #app .t-btn.ra-locked,html body #app .ra-dbtn.ra-locked{cursor:not-allowed!important}
+html body #app .theme-row .t-btn.ra-locked{position:relative!important}
+html body #app .theme-row .t-btn.ra-locked::after{content:"🔒";position:absolute;top:3px;right:5px;font-size:13px;filter:none!important;pointer-events:none;text-shadow:0 1px 2px rgba(0,0,0,.8)}   /* v450: 흑백만으론 잠금 인지 불가 — 맵 버튼 🔒 배지(의사요소, 게임 재렌더에 생존) */
 </style>
 <script id="ui-v447-js">/* v447: 잠금 상태 진실화 — data-locked·aria-disabled 동기화, 잠긴 버튼의 .sel 강제 탈거(선택 하이라이트 차단), 잠긴 난이도가 ra_diff_v1에 남아있으면 보통으로 자동 복귀. 500ms 항등 스캔(재생성에도 생존) */
 (function(){
@@ -2236,7 +2238,7 @@ html body #app .t-btn.ra-locked,html body #app .ra-dbtn.ra-locked{cursor:not-all
   for(var j=0;j<rows.length;j++){ var p=norm(rows[j].name).slice(0,2); if(p&&t.indexOf(p)>=0) return j; } return -1; }
  function mapUn(){ try{ return Math.min(8,parseInt(localStorage.getItem('ra_map_clear_v1')||'-1',10)+1); }catch(e){ return 0; } }
  function mclear(){ try{ var v=parseInt(localStorage.getItem('ra_map_clear_v1')||'-1',10); return isNaN(v)?-1:v; }catch(e){ return -1; } }
- function diffUn(d){ if(d===0) return true; if(d===1) return mclear()>=8; try{ return parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)>=1; }catch(e){ return false; } }
+ function diffUn(d){ if(d===0) return true; if(d===1) return mclear()>=8; try{ return parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)>=1&&mclear()>=8; }catch(e){ return false; } }   /* v450: 지옥=악몽 해금 전제(사다리 단조) */
  function scan(){
   try{ var un=mapUn(), bs=document.querySelectorAll('.t-btn'), selIdx=null;
    for(var k=0;k<bs.length;k++){ var i3=mapIdx(bs[k]); if(i3<0) continue; var lk=i3>un;
