@@ -210,3 +210,4 @@
 - (v431) 맵 선택 진입점은 상단 테마 행 단일(ui-v431-js: 캡처 게이트+ra_map_v1 동기화+잠금 배지+sel 하이라이트 인라인 강제). 테마 행 표시 순서와 __raMAPS 사다리 순서는 다르다(이름 매칭). 악몽 해금=보통 토벌+전맵(ra_map_clear_v1>=4). 난이도 텍스처 3종은 ui-v431-js 관찰자가 ra_diff_v1 추적.
 - (v432) 난이도 UI=#diff-row(.ra-dbtn 3개 — 해금: 악몽=clear>=0+맵전토벌, 지옥=clear>=1; clear는 '마지막 토벌 난이도 idx', 파싱은 isNaN 가드). 프로필 칩=#ra-prof-chip. 게임 방법=#btn-how(문양 인라인+CSS 병용). #btn-diff·#trophy-chip은 인라인 important 숨김. 재배치 스캔=ui-v432-js(900ms).
 - (v433) 프로필 칩 위치=.theme-row 다음 형제(전폭 바). 게임 방법 문양=CSS 규칙+관찰자 마이크로태스크 재도포(paintHow — 계산값 게이트, __raObs 플래그). 깜빡임 재발 시 진단법: MutationObserver 변이 카운트+150ms 배경 샘플링.
+- (v434) 맵 9종 — 사다리: 로얄1.00/서리1.08/용암1.16/황야1.24/심연1.32/천공1.40/묘지1.42/신전1.44/신계1.48. 해금 상한=min(8), 악몽=mclear()>=8, __raMapIdx 클램프=length-1(동적). 신규 테마 페인트 폴백=자매 팔레트(sky→ice·tomb→abyss·dusk→lava·divine→classic, g1c 클릭 핸들러). 보스 스프라이트 sky/tomb/dusk/divine(키잉 완료). 맵×난이도 매핑 규약=map-ladder-mapping-prompt.

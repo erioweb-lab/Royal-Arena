@@ -696,6 +696,10 @@ html body #screen-title .t-hero h1{background:none !important;-webkit-background
 .t-btn[data-theme="ice"]{background:linear-gradient(180deg,#0f2438,#0a1826) !important;border:1px solid rgba(129,212,250,.65) !important;color:#e1f5fe !important}
 .t-btn[data-theme="wasteland"]{background:linear-gradient(180deg,#2b2413,#1a140a) !important;border:1px solid rgba(205,180,90,.65) !important;color:#eee5c1 !important}
 .t-btn[data-theme="abyss"]{background:linear-gradient(180deg,#191b38,#101226) !important;border:1px solid rgba(140,125,255,.65) !important;color:#d9d4ff !important}
+.t-btn[data-theme="sky"]{background:linear-gradient(180deg,#1a2c40,#0f1b2a) !important;border:1px solid rgba(127,199,240,.65) !important;color:#e1f5fe !important}
+.t-btn[data-theme="tomb"]{background:linear-gradient(180deg,#1e222e,#12141d) !important;border:1px solid rgba(130,140,160,.65) !important;color:#d5dae6 !important}
+.t-btn[data-theme="dusk"]{background:linear-gradient(180deg,#3a2030,#1e1018) !important;border:1px solid rgba(224,133,90,.65) !important;color:#ffd9c4 !important}
+.t-btn[data-theme="divine"]{background:linear-gradient(180deg,#3a3423,#221e12) !important;border:1px solid rgba(201,169,74,.65) !important;color:#f7ecd0 !important}
 .t-btn.sel{border-color:#FFD54F !important;box-shadow:0 0 10px rgba(247,197,49,.45) !important}
 #title-actions>button{height:42px !important;padding:0 6px !important;font-size:12px !important;font-weight:700 !important;line-height:1 !important;white-space:nowrap !important;overflow:hidden !important;text-overflow:ellipsis !important;border-radius:14px !important;text-shadow:none !important;box-shadow:inset 0 1px 0 rgba(255,255,255,.06) !important}
 #title-actions #btn-deck{background:linear-gradient(180deg,#0d4a44,#082e2a) !important;border:1px solid rgba(38,166,154,.65) !important;color:#b2dfdb !important}
@@ -1162,7 +1166,7 @@ html body #overlay-info>div{height:100% !important}
 html body #overlay-info .t-how,html body #overlay-info .t-note{padding-bottom:14px !important}
 html body #overlay-info #btn-info-close{position:sticky !important;bottom:calc(6px + env(safe-area-inset-bottom,0px)) !important;margin:10px auto 0 !important;flex-shrink:0 !important;z-index:7 !important;box-shadow:0 4px 14px rgba(0,0,0,.55) !important}
 html body #overlay-info{padding-bottom:env(safe-area-inset-bottom,0px) !important}
-</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v433</div><div id="app">
+</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v434</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1176,7 +1180,10 @@ html body #overlay-info{padding-bottom:env(safe-area-inset-bottom,0px) !importan
       <button class="t-btn" data-theme="ice"><span class="sw" style="background:linear-gradient(#c2e0f0,#7fb6d9)"></span>서리 왕국<small>체력 +2%</small></button>
       <button class="t-btn" data-theme="wasteland"><span class="sw" style="background:linear-gradient(#9c8a56,#57a68f)"></span>황야의 문<small>승리 XP +1</small></button>
       <button class="t-btn" data-theme="abyss"><span class="sw" style="background:linear-gradient(#343857,#6a5ac9)"></span>심연 소굴<small>이벤트 +15%</small></button>
-    </div>
+      <button class="t-btn" data-theme="sky"><span class="sw" style="background:linear-gradient(#dcedff,#7fc7f0)"></span>천공 정원<small>체력 +2%</small></button>
+      <button class="t-btn" data-theme="tomb"><span class="sw" style="background:linear-gradient(#2a2f3e,#57606f)"></span>봉인 묘지<small>이벤트 +15%</small></button>
+      <button class="t-btn" data-theme="dusk"><span class="sw" style="background:linear-gradient(#4a2c3d,#e0855a)"></span>황혼 신전<small>공격 +2%</small></button>
+      <button class="t-btn" data-theme="divine"><span class="sw" style="background:linear-gradient(#f2e6c0,#c9a94a)"></span>잠든 신계<small>XP +1</small></button></div>
     <button id="btn-start" class="t-cta"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px;margin-right:6px" aria-hidden="true"><path d="M4.5 3.5l11 11M19.5 3.5l-11 11" stroke="#1a0e00" stroke-width="2.6" stroke-linecap="round"/><path d="M17.3 16.3l2.2 2.2M14.7 19.3l4.6-4.6M6.7 16.3l-2.2 2.2M4.7 14.7l4.6 4.6" stroke="#1a0e00" stroke-width="2.6" stroke-linecap="round"/></svg>배틀 시작</button>
   <div id="title-actions"></div>
     <div class="t-panel">
@@ -1517,7 +1524,7 @@ b.style.setProperty('background-size','auto,100% 100%','important');b.style.setP
 html body #rpane-score{overflow-y:auto !important;max-height:46vh !important;-webkit-overflow-scrolling:touch !important}
 html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;white-space:pre-line !important;word-break:keep-all !important;overflow-wrap:anywhere !important;text-align:right !important;max-width:200px !important;font-weight:600 !important}
 </style>
-<script src="js/g1a-art-assets.js?v=433"></script><script src="js/g1b-art-assets.js?v=433"></script><script src="js/g1c-art-assets.js?v=433"></script>
+<script src="js/g1a-art-assets.js?v=434"></script><script src="js/g1b-art-assets.js?v=434"></script><script src="js/g1c-art-assets.js?v=434"></script>
 
 
 
@@ -1529,7 +1536,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g2-sprite-assets.js?v=433"></script>
+<script src="js/g2-sprite-assets.js?v=434"></script>
 
 
 
@@ -1538,7 +1545,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g3-frame-assets.js?v=433"></script>
+<script src="js/g3-frame-assets.js?v=434"></script>
 
 
 
@@ -1549,7 +1556,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g4-ux-data.js?v=433"></script>
+<script src="js/g4-ux-data.js?v=434"></script>
 
 
 
@@ -1560,7 +1567,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g5-core.js?v=433"></script>
+<script src="js/g5-core.js?v=434"></script>
 
 
 
@@ -1571,7 +1578,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g6-battle.js?v=433"></script>
+<script src="js/g6-battle.js?v=434"></script>
 
 
 
@@ -1583,7 +1590,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g7-ui-systems.js?v=433"></script>
+<script src="js/g7-ui-systems.js?v=434"></script>
 
 
 
@@ -1595,7 +1602,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g8-boot.js?v=433"></script><script src="js/g9-wide.js?v=433"></script>
+<script src="js/g8-boot.js?v=434"></script><script src="js/g9-wide.js?v=434"></script>
 
 
 
@@ -2066,8 +2073,14 @@ html body .t-btn.ra-locked small{color:#dcc99a}
   for(var j=0;j<rows.length;j++){ var p=norm(rows[j].name).slice(0,2); if(p&&t.indexOf(p)>=0) return j; }
   return -1; }
  function unlocked(){ try{ return parseInt(localStorage.getItem('ra_map_clear_v1')||'-1',10)+1; }catch(e){ return 0; } }
- document.addEventListener('click',function(e){ try{ var b=e.target&&e.target.closest?e.target.closest('.t-btn'):null; if(!b) return; var i2=idxOf(b); if(i2<0) return; var un=Math.min(4,unlocked()); if(i2>un){ e.preventDefault(); e.stopPropagation(); try{ toast('잠금 — 이전 지도의 왕 타워 파괴 후 해금'); }catch(x){} try{ sfx('tap'); }catch(x){} }else{ try{ if(localStorage.getItem('ra_map_v1')!==String(i2)) localStorage.setItem('ra_map_v1',String(i2)); }catch(x){} }   /* v431: 테마 선택=맵 선택 단일화 — 기존엔 테마 행이 ra_map_v1을 set하지 않아 사다리(보스·배율)가 정지해 있었다 */ }catch(e){} },true);
- setInterval(function(){ try{ var un=Math.min(4,unlocked()), bs=document.querySelectorAll('.t-btn');
+ document.addEventListener('click',function(e){ try{ var b=e.target&&e.target.closest?e.target.closest('.t-btn'):null; if(!b) return; var i2=idxOf(b); if(i2<0) return; var un=Math.min(8,unlocked()); if(i2>un){ e.preventDefault(); e.stopPropagation(); try{ toast('잠금 — 이전 지도의 왕 타워 파괴 후 해금'); }catch(x){} try{ sfx('tap'); }catch(x){} }else{ try{ if(localStorage.getItem('ra_map_v1')!==String(i2)) localStorage.setItem('ra_map_v1',String(i2)); }catch(x){} }   /* v431: 테마 선택=맵 선택 단일화 — 기존엔 테마 행이 ra_map_v1을 set하지 않아 사다리(보스·배율)가 정지해 있었다 */ }catch(e){} },true);
+ function ensureRow(){ try{ var tr=document.querySelector('.theme-row'); if(!tr||!window.__raMAPS) return; if(document.querySelectorAll('.t-btn').length>=__raMAPS.length) return;   /* v434c: 충분하면 생성 금지 — 중복 누적 차단 */
+  for(var i=0;i<__raMAPS.length;i++){ var nm2=norm(__raMAPS[i].name); var ex=document.querySelectorAll('.t-btn'); var found=false;
+   for(var j=0;j<ex.length;j++){ if(norm(ex[j].textContent).indexOf(nm2)>=0){ found=true; break; } }
+   if(!found){ var b=document.createElement('button'); b.className='t-btn'; b.setAttribute('data-theme',__raMAPS[i].id);
+    b.innerHTML='<span class="sw" style="background:linear-gradient(#8a93a8,#4a5570)"></span>'+__raMAPS[i].name+'<small>×'+__raMAPS[i].mult+'</small>';
+    tr.appendChild(b); } } }catch(e){} }   /* v434b: 정적 버튼이 런타임에 유실돼도 진실원에서 재생성 — 9맵 보장 */
+ setInterval(function(){ try{ ensureRow(); var un=Math.min(8,unlocked()), bs=document.querySelectorAll('.t-btn');
   for(var k=0;k<bs.length;k++){ var i3=idxOf(bs[k]); if(i3<0) continue; var lk=i3>un; bs[k].classList.toggle('ra-locked',lk);
  var sm=bs[k].querySelector('small'); if(sm){ var has=sm.textContent.indexOf('🔒')===0; if(lk&&!has) sm.textContent='🔒 '+sm.textContent; else if(!lk&&has) sm.textContent=sm.textContent.replace(/^🔒\s*/,''); }
    if(bs[k].classList.contains('sel')){ try{ bs[k].style.setProperty('box-shadow','0 0 0 3px rgba(247,197,49,.9), 0 0 22px rgba(247,197,49,.85), inset 0 0 16px rgba(247,197,49,.4)','important'); bs[k].style.setProperty('transform','scale(1.05)','important'); bs[k].setAttribute('data-ras','1'); }catch(e){} } else if(bs[k].getAttribute('data-ras')){ try{ bs[k].style.removeProperty('box-shadow'); bs[k].style.removeProperty('transform'); }catch(e){} bs[k].removeAttribute('data-ras'); } } }catch(e){} },900);
@@ -2103,7 +2116,7 @@ html body #ra-prof-chip{height:38px!important;display:flex!important;align-items
  var DN=['보통','악몽','지옥'], DC=['#67d98a','#e0a13c','#e05c6e'];
  var TEX=['ra_btn_diff_normal.png','ra_btn_diff_nightmare.png','ra_btn_diff_hell.png'];
  function mclear(){ try{ var __mv=parseInt(localStorage.getItem('ra_map_clear_v1')||'-1',10); return isNaN(__mv)?-1:__mv; }catch(e){ return -1; } }
- function unlockedDiff(d){ var cl=-1; try{ var __rv=parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10); cl=isNaN(__rv)?-1:__rv; }catch(e){} /* v432b: parseInt(x)||-1은 유효한 '0'을 -1로 먹는 falsy-zero 버그 — isNaN 가드로 수복(규약: 해금티어=clear+1) */ if(d===0) return true; if(d===1) return cl>=0&&mclear()>=4; return cl>=1; }
+ function unlockedDiff(d){ var cl=-1; try{ var __rv=parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10); cl=isNaN(__rv)?-1:__rv; }catch(e){} /* v432b: parseInt(x)||-1은 유효한 '0'을 -1로 먹는 falsy-zero 버그 — isNaN 가드로 수복(규약: 해금티어=clear+1) */ if(d===0) return true; if(d===1) return cl>=0&&mclear()>=8;   /* v434: 전 맵 토벌 = 9맵(마지막 idx 8) */ return cl>=1; }
  function swapHS(){ var ta=document.getElementById('title-actions'); if(!ta) return; var hof=null,sk=null,ns=ta.querySelectorAll('button');
   for(var i=0;i<ns.length;i++){ var t=norm(ns[i].textContent); if(t.indexOf('명예의전당')>=0) hof=ns[i]; if(t.indexOf('전술연구소')>=0) sk=ns[i]; }
   if(hof&&sk&&hof.previousElementSibling!==sk) hof.parentNode.insertBefore(sk,hof); }

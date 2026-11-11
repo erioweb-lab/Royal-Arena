@@ -1127,7 +1127,7 @@ window.__syncCodex=__syncCodex; window.__qaCodex=function(){ try{ return DECK.le
 $('#elixir-ticks').innerHTML='<i></i>'.repeat(9);
 try{ var __st0=localStorage.getItem('ra_theme_v1'); if(__st0) document.querySelectorAll('.t-btn[data-theme]').forEach(function(x){ x.classList.toggle('sel',x.dataset.theme===__st0); }); }catch(e){}
 document.querySelectorAll('.t-btn[data-theme]').forEach(b=>b.addEventListener('click',()=>{
-  S.theme=b.dataset.theme; drawStatic();   // 지면·강 톤 재페인트
+  S.theme=b.dataset.theme; try{ drawStatic(); }catch(__te){ try{ var __old=S.theme; S.theme={sky:'ice',tomb:'abyss',dusk:'lava',divine:'classic'}[b.dataset.theme]||'classic'; drawStatic(); S.theme=__old; }catch(__te2){} }   /* v434d: 신규 테마 무케이스(THEMES.g1 조회 실패 실측) — 자매 팔레트로 재페인트 폴백, S.theme 원복(보너스 체인은 신규 키 유지) */
   document.querySelectorAll('.t-btn[data-theme]').forEach(x=>x.classList.toggle('sel',x===b)); try{ localStorage.setItem('ra_theme_v1',S.theme); }catch(e){}   /* v222 */
 }));
 window.__auto=new URLSearchParams(location.search).has('auto');
