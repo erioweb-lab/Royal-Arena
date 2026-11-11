@@ -1166,7 +1166,7 @@ html body #overlay-info>div{height:100% !important}
 html body #overlay-info .t-how,html body #overlay-info .t-note{padding-bottom:14px !important}
 html body #overlay-info #btn-info-close{position:sticky !important;bottom:calc(6px + env(safe-area-inset-bottom,0px)) !important;margin:10px auto 0 !important;flex-shrink:0 !important;z-index:7 !important;box-shadow:0 4px 14px rgba(0,0,0,.55) !important}
 html body #overlay-info{padding-bottom:env(safe-area-inset-bottom,0px) !important}
-</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v446</div><div id="app">
+</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v447</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1524,7 +1524,7 @@ b.style.setProperty('background-size','auto,100% 100%','important');b.style.setP
 html body #rpane-score{overflow-y:auto !important;max-height:46vh !important;-webkit-overflow-scrolling:touch !important}
 html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;white-space:pre-line !important;word-break:keep-all !important;overflow-wrap:anywhere !important;text-align:right !important;max-width:200px !important;font-weight:600 !important}
 </style>
-<script src="js/g1a-art-assets.js?v=446"></script><script src="js/g1b-art-assets.js?v=446"></script><script src="js/g1c-art-assets.js?v=446"></script>
+<script src="js/g1a-art-assets.js?v=447"></script><script src="js/g1b-art-assets.js?v=447"></script><script src="js/g1c-art-assets.js?v=447"></script>
 
 
 
@@ -1536,7 +1536,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g2-sprite-assets.js?v=446"></script>
+<script src="js/g2-sprite-assets.js?v=447"></script>
 
 
 
@@ -1545,7 +1545,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g3-frame-assets.js?v=446"></script>
+<script src="js/g3-frame-assets.js?v=447"></script>
 
 
 
@@ -1556,7 +1556,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g4-ux-data.js?v=446"></script>
+<script src="js/g4-ux-data.js?v=447"></script>
 
 
 
@@ -1567,7 +1567,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g5-core.js?v=446"></script>
+<script src="js/g5-core.js?v=447"></script>
 
 
 
@@ -1578,7 +1578,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g6-battle.js?v=446"></script>
+<script src="js/g6-battle.js?v=447"></script>
 
 
 
@@ -1590,7 +1590,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g7-ui-systems.js?v=446"></script>
+<script src="js/g7-ui-systems.js?v=447"></script>
 
 
 
@@ -1602,7 +1602,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g8-boot.js?v=446"></script><script src="js/g9-wide.js?v=446"></script>
+<script src="js/g8-boot.js?v=447"></script><script src="js/g9-wide.js?v=447"></script>
 
 
 
@@ -2221,5 +2221,45 @@ html body #app #deck-desc{margin:2px 0 !important;padding:0 !important;line-heig
 html body #app #title-actions{margin-top:0 !important;margin-bottom:0 !important}
 html body #app #title-actions > #btn-how,html body #app #title-actions > #btn-deck{margin-top:0 !important}   /* v443c: btn-how 음수 마진(-6px) 돌출 차단 — 간극 비대칭의 마지막 요인 */
 </style>
+
+<style id="ui-v447">/* v447: 잠금 완전화 — 잠긴 맵·난이도 버튼의 호버 하이라이트 차단(v360 hover가 .ra-locked를 배제하지 않던 갭) + 커서·접근성 상태 */
+html body #app .theme-row .t-btn:not(#ra-nx):not(#ra-nx2).ra-locked:hover,
+html body #app .theme-row .t-btn:not(#ra-nx):not(#ra-nx2).ra-locked:active{filter:grayscale(.9) brightness(.62)!important;outline:0!important;outline-offset:0!important;transform:none!important;box-shadow:none!important}
+html body #app button.ra-locked:not(#ra-nx):hover,html body #app button.ra-locked:not(#ra-nx):active{filter:grayscale(.9) brightness(.62)!important;outline:0!important;transform:none!important}
+html body #app .t-btn.ra-locked,html body #app .ra-dbtn.ra-locked{cursor:not-allowed!important}
+</style>
+<script id="ui-v447-js">/* v447: 잠금 상태 진실화 — data-locked·aria-disabled 동기화, 잠긴 버튼의 .sel 강제 탈거(선택 하이라이트 차단), 잠긴 난이도가 ra_diff_v1에 남아있으면 보통으로 자동 복귀. 500ms 항등 스캔(재생성에도 생존) */
+(function(){
+ function norm(s){ return (s||'').replace(/\s+/g,''); }
+ function mapIdx(btn){ var t=norm(btn.textContent), rows=window.__raMAPS||[]; if(!t) return -1;
+  for(var i=0;i<rows.length;i++){ var n=norm(rows[i].name); if(n&&t.indexOf(n)>=0) return i; }
+  for(var j=0;j<rows.length;j++){ var p=norm(rows[j].name).slice(0,2); if(p&&t.indexOf(p)>=0) return j; } return -1; }
+ function mapUn(){ try{ return Math.min(8,parseInt(localStorage.getItem('ra_map_clear_v1')||'-1',10)+1); }catch(e){ return 0; } }
+ function mclear(){ try{ var v=parseInt(localStorage.getItem('ra_map_clear_v1')||'-1',10); return isNaN(v)?-1:v; }catch(e){ return -1; } }
+ function diffUn(d){ if(d===0) return true; if(d===1) return mclear()>=8; try{ return parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)>=1; }catch(e){ return false; } }
+ function scan(){
+  try{ var un=mapUn(), bs=document.querySelectorAll('.t-btn'), selIdx=null;
+   for(var k=0;k<bs.length;k++){ var i3=mapIdx(bs[k]); if(i3<0) continue; var lk=i3>un;
+    bs[k].dataset.locked=lk?'1':'0'; bs[k].setAttribute('aria-disabled',lk?'true':'false');
+    if(!bs[k].__raLockStop){ bs[k].__raLockStop=1; bs[k].addEventListener('click',function(ev){ if(this.dataset.locked==='1'){ ev.preventDefault(); ev.stopPropagation(); ev.stopImmediatePropagation(); } },true); }
+    if(lk&&bs[k].classList.contains('sel')){ bs[k].classList.remove('sel'); }
+    if(bs[k].classList.contains('sel')&&!lk) selIdx=i3; }
+   var want=-1; try{ want=parseInt(localStorage.getItem('ra_map_v1')||'0',10)||0; }catch(e){}
+   if(selIdx===null&&bs.length){ var tgt=null;
+    for(var k2=0;k2<bs.length;k2++){ if(mapIdx(bs[k2])===want&&bs[k2].dataset.locked!=='1'){ tgt=bs[k2]; break; } }
+    if(!tgt){ for(var k3=0;k3<bs.length;k3++){ if(bs[k3].dataset.locked!=='1'){ tgt=bs[k3]; break; } } }
+    if(tgt) tgt.classList.add('sel'); }
+  }catch(e){}
+  try{ var db=document.querySelectorAll('.ra-dbtn');
+   for(var k4=0;k4<db.length;k4++){ var d=+db[k4].dataset.d, lk2=!diffUn(d);
+    db[k4].dataset.locked=lk2?'1':'0'; db[k4].setAttribute('aria-disabled',lk2?'true':'false');
+    if(lk2&&db[k4].classList.contains('ra-sel')){ db[k4].classList.remove('ra-sel'); } }
+   var cur=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0;
+   if(!diffUn(cur)){ localStorage.setItem('ra_diff_v1','0'); try{ window.dispatchEvent(new Event('ra-diff-changed')); }catch(e){} }
+  }catch(e){}
+ }
+ setInterval(scan,500); if(document.readyState==='complete') scan(); else window.addEventListener('load',scan);
+})();
+</script>
 </body>
 </html>
