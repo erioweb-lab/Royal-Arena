@@ -208,3 +208,4 @@
 - (v429) 보스 HUD = HP/실드/파멸기 + 보스명 라벨(.bh-name, S.__bossName — 맵별 상이). 덱 편집기 저장=금 문양·랜덤/닫기=네이비 문양(정적 규칙 ui-v429).
 - (v429 후기록) 파멸기 존 실측 완료(burnzone 확인). 남음: g1 분할(착수 시), 장기 기기 확인.
 - (v431) 맵 선택 진입점은 상단 테마 행 단일(ui-v431-js: 캡처 게이트+ra_map_v1 동기화+잠금 배지+sel 하이라이트 인라인 강제). 테마 행 표시 순서와 __raMAPS 사다리 순서는 다르다(이름 매칭). 악몽 해금=보통 토벌+전맵(ra_map_clear_v1>=4). 난이도 텍스처 3종은 ui-v431-js 관찰자가 ra_diff_v1 추적.
+- (v432) 난이도 UI=#diff-row(.ra-dbtn 3개 — 해금: 악몽=clear>=0+맵전토벌, 지옥=clear>=1; clear는 '마지막 토벌 난이도 idx', 파싱은 isNaN 가드). 프로필 칩=#ra-prof-chip. 게임 방법=#btn-how(문양 인라인+CSS 병용). #btn-diff·#trophy-chip은 인라인 important 숨김. 재배치 스캔=ui-v432-js(900ms).

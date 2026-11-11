@@ -1162,7 +1162,7 @@ html body #overlay-info>div{height:100% !important}
 html body #overlay-info .t-how,html body #overlay-info .t-note{padding-bottom:14px !important}
 html body #overlay-info #btn-info-close{position:sticky !important;bottom:calc(6px + env(safe-area-inset-bottom,0px)) !important;margin:10px auto 0 !important;flex-shrink:0 !important;z-index:7 !important;box-shadow:0 4px 14px rgba(0,0,0,.55) !important}
 html body #overlay-info{padding-bottom:env(safe-area-inset-bottom,0px) !important}
-</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v431</div><div id="app">
+</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v432</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1517,7 +1517,7 @@ b.style.setProperty('background-size','auto,100% 100%','important');b.style.setP
 html body #rpane-score{overflow-y:auto !important;max-height:46vh !important;-webkit-overflow-scrolling:touch !important}
 html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;white-space:pre-line !important;word-break:keep-all !important;overflow-wrap:anywhere !important;text-align:right !important;max-width:200px !important;font-weight:600 !important}
 </style>
-<script src="js/g1a-art-assets.js?v=431"></script><script src="js/g1b-art-assets.js?v=431"></script><script src="js/g1c-art-assets.js?v=431"></script>
+<script src="js/g1a-art-assets.js?v=432"></script><script src="js/g1b-art-assets.js?v=432"></script><script src="js/g1c-art-assets.js?v=432"></script>
 
 
 
@@ -1529,7 +1529,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g2-sprite-assets.js?v=431"></script>
+<script src="js/g2-sprite-assets.js?v=432"></script>
 
 
 
@@ -1538,7 +1538,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g3-frame-assets.js?v=431"></script>
+<script src="js/g3-frame-assets.js?v=432"></script>
 
 
 
@@ -1549,7 +1549,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g4-ux-data.js?v=431"></script>
+<script src="js/g4-ux-data.js?v=432"></script>
 
 
 
@@ -1560,7 +1560,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g5-core.js?v=431"></script>
+<script src="js/g5-core.js?v=432"></script>
 
 
 
@@ -1571,7 +1571,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g6-battle.js?v=431"></script>
+<script src="js/g6-battle.js?v=432"></script>
 
 
 
@@ -1583,7 +1583,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g7-ui-systems.js?v=431"></script>
+<script src="js/g7-ui-systems.js?v=432"></script>
 
 
 
@@ -1595,7 +1595,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g8-boot.js?v=431"></script><script src="js/g9-wide.js?v=431"></script>
+<script src="js/g8-boot.js?v=432"></script><script src="js/g9-wide.js?v=432"></script>
 
 
 
@@ -2083,6 +2083,60 @@ html body .t-btn.ra-locked small{color:#dcc99a}
  function tick(){ paint(); arm(); }
  if(document.readyState==='complete') tick(); else window.addEventListener('load',tick);
  setInterval(paint,900);
+})();
+</script>
+<style id="ui-v432">/* v432: 타이틀 메뉴 재배치 — ①난이도 3버튼 한 줄 소형(순환 버튼 폐기·해금 표시) ②훈련 캠프 칩 삭제→프로필 칩(이름·등급·트로피) ③게임 방법을 캠프 자리로 이동+문양 ④명예의 전당↔전술 연구소 교체(유물+전술/명예+프로필 인접) */
+html body #btn-diff{display:none!important}
+html body #trophy-chip{display:none!important}
+html body #diff-row{grid-column:1/-1!important;display:flex!important;gap:6px!important;width:100%!important;margin:2px 0 6px!important}
+html body .ra-dbtn{flex:1!important;min-width:0!important;height:32px!important;font-size:12px!important;font-weight:800!important;border-radius:10px!important;border:1px solid #c89b3c!important;background-color:transparent!important;letter-spacing:-.2px!important;font-family:inherit!important}
+html body .ra-dbtn.ra-locked{filter:grayscale(.9) brightness(.6)}
+html body .ra-dbtn.ra-sel{box-shadow:0 0 0 2px rgba(247,197,49,.9),0 0 12px rgba(247,197,49,.7),inset 0 0 10px rgba(247,197,49,.35)!important;transform:scale(1.04)}
+html body #btn-how{min-height:38px!important;font-size:12px!important}
+html body #btn-how{background-image:url(assets/ra_btn_map.png)!important;background-size:100% 100%!important}   /* v432b: 인라인 대신 CSS — v361 스트립과 무경쟁 */
+html body #ra-prof-chip{height:38px!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:11.5px!important;font-weight:700!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;border-radius:14px!important;background:linear-gradient(180deg,#15213c,#0d1830)!important;border:1px solid #c89b3c!important;color:#ffd54f!important;padding:0 10px!important}
+</style>
+<script id="ui-v432-js">/* v432: 타이틀 메뉴 재배치 시스템 — 900ms 항등 스캔(재생성에도 생존) */
+(function(){
+ function norm(s){ return (s||'').replace(/\s+/g,''); }
+ function gradeName(tro){ var g=window.GRADES||[], n='훈련 캠프'; for(var i=0;i<g.length;i++){ if(tro>=(g[i][1]||0)) n=g[i][0]; } return n; }
+ var DN=['보통','악몽','지옥'], DC=['#67d98a','#e0a13c','#e05c6e'];
+ var TEX=['ra_btn_diff_normal.png','ra_btn_diff_nightmare.png','ra_btn_diff_hell.png'];
+ function mclear(){ try{ var __mv=parseInt(localStorage.getItem('ra_map_clear_v1')||'-1',10); return isNaN(__mv)?-1:__mv; }catch(e){ return -1; } }
+ function unlockedDiff(d){ var cl=-1; try{ var __rv=parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10); cl=isNaN(__rv)?-1:__rv; }catch(e){} /* v432b: parseInt(x)||-1은 유효한 '0'을 -1로 먹는 falsy-zero 버그 — isNaN 가드로 수복(규약: 해금티어=clear+1) */ if(d===0) return true; if(d===1) return cl>=0&&mclear()>=4; return cl>=1; }
+ function swapHS(){ var ta=document.getElementById('title-actions'); if(!ta) return; var hof=null,sk=null,ns=ta.querySelectorAll('button');
+  for(var i=0;i<ns.length;i++){ var t=norm(ns[i].textContent); if(t.indexOf('명예의전당')>=0) hof=ns[i]; if(t.indexOf('전술연구소')>=0) sk=ns[i]; }
+  if(hof&&sk&&hof.previousElementSibling!==sk) hof.parentNode.insertBefore(sk,hof); }
+ function moveHow(){ var ta=document.getElementById('title-actions'); if(!ta) return;
+  if(document.getElementById('btn-how')&&ta.contains(document.getElementById('btn-how'))){ try{ var w2=document.getElementById('btn-how'); w2.style.setProperty('background-image','url(assets/ra_btn_map.png)','important'); w2.style.setProperty('background-size','100% 100%','important'); }catch(e){} return; }   /* v432c: 인라인+CSS 병용 — g2 런타임 스타일 블록 스트립 사이 빈틈 메우기 */
+  var cands=document.querySelectorAll('button,a,.t-link,.t-links *'), h=null;
+  for(var i=0;i<cands.length;i++){ if(!cands[i].textContent) continue; if(cands[i].children.length>2) continue; if(norm(cands[i].textContent).indexOf('게임방법')>=0&&!ta.contains(cands[i])){ h=cands[i]; break; } }
+  if(h){ h.id='btn-how'; ta.insertBefore(h,ta.firstChild); try{ h.style.setProperty('background-image','url(assets/ra_btn_map.png)','important'); h.style.setProperty('background-size','100% 100%','important'); }catch(e){} } }
+ function buildRow(){ var ta=document.getElementById('title-actions'); if(!ta) return;
+  var row=document.getElementById('diff-row');
+  if(!row){ row=document.createElement('div'); row.id='diff-row';
+   for(var i=0;i<3;i++){ (function(di){ var b=document.createElement('button'); b.className='ra-dbtn'; b.dataset.d=String(di);
+    b.onclick=function(){ if(!unlockedDiff(di)){ try{ toast(di===1?'잠금 — 보통에서 지도 5개 토벌 후 악몽 해금':'잠금 — 악몽 토벌 후 지옥 해금'); }catch(e){} try{ sfx('tap'); }catch(e){} return; }
+    localStorage.setItem('ra_diff_v1',String(di)); try{ window.dispatchEvent(new Event('ra-diff-changed')); }catch(e){} try{ toast('난이도: '+DN[di]); }catch(e){} try{ sfx('tap'); }catch(e){} };
+    row.appendChild(b); })(i); }
+   var bd=document.getElementById('btn-diff'); if(bd&&bd.parentNode) bd.parentNode.insertBefore(row,bd); else ta.appendChild(row); }
+  var cur=0; try{ cur=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0; }catch(e){}
+  var bs=row.querySelectorAll('.ra-dbtn');
+  for(var k=0;k<bs.length;k++){ var d=+bs[k].dataset.d, un=unlockedDiff(d), sel=d===cur;
+   var txt=(un?'':'🔒 ')+DN[d]; if(bs[k].__t!==txt){ bs[k].__t=txt; bs[k].textContent=txt; }
+   bs[k].classList.toggle('ra-locked',!un); bs[k].classList.toggle('ra-sel',sel);
+   bs[k].style.color=un?(sel?'#ffd76a':DC[d]):'#dcc99a';
+   if((bs[k].style.backgroundImage||'').indexOf(TEX[d])<0){ try{ bs[k].style.setProperty('background-image','url(assets/'+TEX[d]+')','important'); bs[k].style.setProperty('background-size','100% 100%','important'); }catch(e){} } } }
+ function profChip(){ var ta=document.getElementById('title-actions'); if(!ta) return;
+  var old=document.getElementById('trophy-chip'); if(old){ try{ old.style.setProperty('display','none','important'); }catch(e){} }
+  var c=document.getElementById('ra-prof-chip');
+  if(!c){ c=document.createElement('span'); c.id='ra-prof-chip'; c.onclick=function(){ var pb=document.getElementById('btn-profile'); if(pb) pb.click(); }; ta.insertBefore(c,ta.firstChild); }
+  var nm='지휘관'; try{ if(typeof __raProfName==='function'){ var v=__raProfName(); if(v) nm=v; } }catch(e){}
+  var tro=0; try{ tro=(typeof loadTrophies==='function')?loadTrophies():0; }catch(e){}
+  var txt='👤 '+nm+' · '+gradeName(tro)+' · 🏆'+tro; if(c.__t!==txt){ c.__t=txt; c.textContent=txt; } }
+ function tick(){ try{ var obd=document.getElementById('btn-diff'); if(obd&&obd.style.display!=='none') obd.style.setProperty('display','none','important'); swapHS(); moveHow(); buildRow(); profChip(); }catch(e){} }
+ if(document.readyState==='complete') tick(); else window.addEventListener('load',tick);
+ setInterval(tick,900);
 })();
 </script>
 </body>
