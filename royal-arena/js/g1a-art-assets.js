@@ -480,7 +480,6 @@ try{ (function(){ var EV=[
  {t:'📦 보물 상자', d:'나무 상자가 반짝인다.', a:['안전 회수 — 금고','relic_hoard'], b:['도박 — 확률 강화','relic_gamble']},
  {t:'🧙 전술 상담', d:'노병이 전술서를 내민다.', a:['공세 중시','relic_frenzy'], b:['방벽 중시','relic_bulwark']},
  {t:'🏕️ 급행 훈련', d:'훈련관이 두 코스를 제안한다.', a:['기동 중시','relic_sprint'], b:['재생 중시','relic_mend']},
- {t:'🎭 수수께끼 상인', d:'가면 상인이 거래를 제안한다.', a:['도박 — 확률 강화','relic_gamble'], b:['거절','null']},
  {t:'💰 왕실 세금관', d:'세금관이 금화 자루를 내민다.', a:['재정 확충','relic_gravy'], b:['번영 계약','relic_boom']},
  {t:'❄️ 서리 주술사', d:'주술사가 룬을 내밀며 거래를 청한다.', a:['서리 계약','relic_frost'], b:['수호 룬','relic_guard']}];   /* v297: 신규 렐릭 노드 */
  var iv2=setInterval(function(){ var ov=document.getElementById('overlay-result'); if(!ov) return;
