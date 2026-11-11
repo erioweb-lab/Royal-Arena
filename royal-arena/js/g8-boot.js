@@ -1292,7 +1292,7 @@ try{ if(!SPR.boss&&ART.boss){ SPR.boss=new Image(); SPR.boss.src=ART.boss; ASPR.
 
 /* 서비스 워커 등록 — 오프라인 실행 지원 */
 if('serviceWorker' in navigator){
-  addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+  addEventListener('load',()=>navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).catch(()=>{}));
 }
 
 /* v34: 신규 6종 아트 오버라이드(3D 프롬프트 가이드 스타일) — 기존 정의를 재선언하지 않고 내용만 교체 */
