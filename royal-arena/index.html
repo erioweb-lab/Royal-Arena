@@ -2288,7 +2288,7 @@ var raf=0,projs=[],last=0,cool=0,ux=40,udir=1;
 cb.addEventListener('click',function(){if(raf)cancelAnimationFrame(raf);raf=0;projs=[];ov.className='hidden';});
 b.addEventListener('click',function(){ov.className='';last=performance.now();cool=0;
  function frame(now){var dt=Math.min(40,now-last);last=now;var c=cv.getContext('2d');
-  if(A('ra_practice_arena'))c.drawImage(A('ra_practice_arena_png'),0,0,300,430);
+  if(A('ra_practice_arena'))c.drawImage(A('ra_practice_arena'),0,0,300,430);
   else{c.fillStyle='#241d45';c.fillRect(0,0,300,430);
   if(A('ra_test_floor')){c.fillStyle=c.createPattern(A('ra_test_floor'),'repeat');c.fillRect(0,0,300,430);}
   c.fillStyle='rgba(60,110,220,.55)';c.fillRect(0,200,300,26);c.fillStyle='#8a5a2b';c.fillRect(118,198,64,30);
