@@ -627,7 +627,7 @@ function moveUnit(u,dt){
     else { gx=bx; gy=u.y<RIVER_MID? RIVER_Y0-0.7 : RIVER_Y1+0.7; }
   }
   const a=Math.atan2(gy-u.y,gx-u.x); u.dir=a;
-  const sp=u.c.spd*(u.charging?1.7:1)*(u.slowT>0?0.55:1)*(u.team==='blue'&&S.__rin==='relic_sprint'?1.15:1)*(u.team==='red'&&S.__rin==='relic_frost'?0.9:1);   /* v297: 서리의 인장 */   /* v212: 기동의 인장 */
+  const sp=u.c.spd*(u.charging?1.7:1)*(u.slowT>0?0.55:1)*(u.team==='blue'&&S.__rin==='relic_sprint'?1.15:1)*(u.team==='red'&&S.__rin==='relic_frost'?0.9:1)*(u.team==='blue'&&S.relic==='relic_speed'?1.06:1);   /* v476: 유물 바람 깃털 */   /* v297: 서리의 인장 */   /* v212: 기동의 인장 */
   let nx=u.x+Math.cos(a)*sp*dt, ny=u.y+Math.sin(a)*sp*dt;
   if(!u.c.flying&&ny>RIVER_Y0-0.25&&ny<RIVER_Y1+0.25){
     const onB=BRIDGES.some(b=>Math.abs(nx-b)<0.75);
