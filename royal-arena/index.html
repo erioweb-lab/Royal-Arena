@@ -1166,7 +1166,7 @@ html body #overlay-info>div{height:100% !important}
 html body #overlay-info .t-how,html body #overlay-info .t-note{padding-bottom:14px !important}
 html body #overlay-info #btn-info-close{position:sticky !important;bottom:calc(6px + env(safe-area-inset-bottom,0px)) !important;margin:10px auto 0 !important;flex-shrink:0 !important;z-index:7 !important;box-shadow:0 4px 14px rgba(0,0,0,.55) !important}
 html body #overlay-info{padding-bottom:env(safe-area-inset-bottom,0px) !important}
-</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v451</div><div id="app">
+</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v452</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1524,7 +1524,7 @@ b.style.setProperty('background-size','auto,100% 100%','important');b.style.setP
 html body #rpane-score{overflow-y:auto !important;max-height:46vh !important;-webkit-overflow-scrolling:touch !important}
 html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;white-space:pre-line !important;word-break:keep-all !important;overflow-wrap:anywhere !important;text-align:right !important;max-width:200px !important;font-weight:600 !important}
 </style>
-<script src="js/g1a-art-assets.js?v=451"></script><script src="js/g1b-art-assets.js?v=451"></script><script src="js/g1c-art-assets.js?v=451"></script>
+<script src="js/g1a-art-assets.js?v=452"></script><script src="js/g1b-art-assets.js?v=452"></script><script src="js/g1c-art-assets.js?v=452"></script>
 
 
 
@@ -1536,7 +1536,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g2-sprite-assets.js?v=451"></script>
+<script src="js/g2-sprite-assets.js?v=452"></script>
 
 
 
@@ -1545,7 +1545,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g3-frame-assets.js?v=451"></script>
+<script src="js/g3-frame-assets.js?v=452"></script>
 
 
 
@@ -1556,7 +1556,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g4-ux-data.js?v=451"></script>
+<script src="js/g4-ux-data.js?v=452"></script>
 
 
 
@@ -1567,7 +1567,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g5-core.js?v=451"></script>
+<script src="js/g5-core.js?v=452"></script>
 
 
 
@@ -1578,7 +1578,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g6-battle.js?v=451"></script>
+<script src="js/g6-battle.js?v=452"></script>
 
 
 
@@ -1590,7 +1590,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g7-ui-systems.js?v=451"></script>
+<script src="js/g7-ui-systems.js?v=452"></script>
 
 
 
@@ -1602,7 +1602,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g8-boot.js?v=451"></script><script src="js/g9-wide.js?v=451"></script>
+<script src="js/g8-boot.js?v=452"></script><script src="js/g9-wide.js?v=452"></script>
 
 
 
@@ -2072,7 +2072,7 @@ html body .t-btn.ra-locked small{color:#dcc99a}
   for(var i=0;i<rows.length;i++){ var n=norm(rows[i].name); if(n&&t.indexOf(n)>=0) return i; }
   for(var j=0;j<rows.length;j++){ var p=norm(rows[j].name).slice(0,2); if(p&&t.indexOf(p)>=0) return j; }
   return -1; }
- function unlocked(){ try{ return parseInt(localStorage.getItem('ra_map_clear_v1')||'-1',10)+1; }catch(e){ return 0; } }   /* v451: 표시 순서 기준 해금 개수(인덱스 0=클래식 항상 열림) */
+ function unlocked(){ try{ return parseInt(localStorage.getItem('ra_map_clear_v1')||'-1',10)+1; }catch(e){ return 0; } }   /* v452: 표시 순서 기준 해금 개수(인덱스 0=클래식 항상 열림) */
  document.addEventListener('click',function(e){ try{ var b=e.target&&e.target.closest?e.target.closest('.t-btn'):null; if(!b) return; var bs2=document.querySelectorAll('.theme-row .t-btn'); var i2=Array.prototype.indexOf.call(bs2,b); if(i2<0) return; var un=unlocked(); if(i2>un){ e.preventDefault(); e.stopPropagation(); try{ toast('잠금 — 이전 지도의 왕 타워 파괴 후 해금'); }catch(x){} try{ sfx('tap'); }catch(x){} }else{ try{ if(localStorage.getItem('ra_map_v1')!==String(i2)) localStorage.setItem('ra_map_v1',String(i2)); }catch(x){} }   /* v431: 테마 선택=맵 선택 단일화 — 기존엔 테마 행이 ra_map_v1을 set하지 않아 사다리(보스·배율)가 정지해 있었다 */ }catch(e){} },true);
  function ensureRow(){ try{ var tr=document.querySelector('.theme-row'); if(!tr||!window.__raMAPS) return; if(document.querySelectorAll('.t-btn').length>=__raMAPS.length) return;   /* v434c: 충분하면 생성 금지 — 중복 누적 차단 */
   for(var i=0;i<__raMAPS.length;i++){ var nm2=norm(__raMAPS[i].name); var ex=document.querySelectorAll('.t-btn'); var found=false;
@@ -2080,9 +2080,9 @@ html body .t-btn.ra-locked small{color:#dcc99a}
    if(!found){ var b=document.createElement('button'); b.className='t-btn'; b.setAttribute('data-theme',__raMAPS[i].id);
     b.innerHTML='<span class="sw" style="background:linear-gradient(#8a93a8,#4a5570)"></span>'+__raMAPS[i].name+'<small>×'+__raMAPS[i].mult+'</small>';
     tr.appendChild(b); } } }catch(e){} }   /* v434b: 정적 버튼이 런타임에 유실돼도 진실원에서 재생성 — 9맵 보장 */
- setInterval(function(){ try{ ensureRow(); var un=unlocked(), bs=document.querySelectorAll('.theme-row .t-btn');   /* v451: 표시 순서=해금 사다리 단일화 — DOM 순서 기준, 앞 맵 클리어 직후 다음 1개만 해금 */
+ setInterval(function(){ try{ ensureRow(); var un=unlocked(), bs=document.querySelectorAll('.theme-row .t-btn');   /* v452: 표시 순서=해금 사다리 단일화 — DOM 순서 기준, 앞 맵 클리어 직후 다음 1개만 해금 */
   for(var k=0;k<bs.length;k++){ var lk=k>un; bs[k].classList.toggle('ra-locked',lk);
-   if(lk){ try{ bs[k].style.setProperty('filter','grayscale(.9) brightness(.6)','important'); bs[k].style.setProperty('pointer-events','none','important'); }catch(e){} }   /* v451: 흑백 절대 유지 — 재도포기 무시 인라인 가드+터치 호버 원천 차단 */
+   if(lk){ try{ bs[k].style.setProperty('filter','grayscale(.9) brightness(.6)','important'); bs[k].style.setProperty('pointer-events','none','important'); }catch(e){} }   /* v452: 흑백 절대 유지 — 재도포기 무시 인라인 가드+터치 호버 원천 차단 */
    else { try{ bs[k].style.removeProperty('filter'); bs[k].style.removeProperty('pointer-events'); }catch(e){} }
  var sm=bs[k].querySelector('small'); if(sm){ var has=sm.textContent.indexOf('🔒')===0; if(lk&&!has) sm.textContent='🔒 '+sm.textContent; else if(!lk&&has) sm.textContent=sm.textContent.replace(/^🔒\s*/,''); }
    if(bs[k].classList.contains('sel')){ try{ bs[k].style.setProperty('box-shadow','0 0 0 3px rgba(247,197,49,.9), 0 0 22px rgba(247,197,49,.85), inset 0 0 16px rgba(247,197,49,.4)','important'); bs[k].style.setProperty('transform','scale(1.05)','important'); bs[k].setAttribute('data-ras','1'); }catch(e){} } else if(bs[k].getAttribute('data-ras')){ try{ bs[k].style.removeProperty('box-shadow'); bs[k].style.removeProperty('transform'); }catch(e){} bs[k].removeAttribute('data-ras'); } } }catch(e){} },900);
@@ -2238,21 +2238,21 @@ html body #app .theme-row .t-btn.ra-locked::after{content:"🔒";position:absolu
  function mapIdx(btn){ var t=norm(btn.textContent), rows=window.__raMAPS||[]; if(!t) return -1;
   for(var i=0;i<rows.length;i++){ var n=norm(rows[i].name); if(n&&t.indexOf(n)>=0) return i; }
   for(var j=0;j<rows.length;j++){ var p=norm(rows[j].name).slice(0,2); if(p&&t.indexOf(p)>=0) return j; } return -1; }
- function mapUn(){ try{ return parseInt(localStorage.getItem('ra_map_clear_v1')||'-1',10)+1; }catch(e){ return 0; } }   /* v451: 표시 순서 기준 해금 개수 */
+ function mapUn(){ try{ return parseInt(localStorage.getItem('ra_map_clear_v1')||'-1',10)+1; }catch(e){ return 0; } }   /* v452: 표시 순서 기준 해금 개수 */
  function mclear(){ try{ var v=parseInt(localStorage.getItem('ra_map_clear_v1')||'-1',10); return isNaN(v)?-1:v; }catch(e){ return -1; } }
  function diffUn(d){ if(d===0) return true; if(d===1) return mclear()>=8; try{ return parseInt(localStorage.getItem('ra_diff_clear_v1')||'-1',10)>=1&&mclear()>=8; }catch(e){ return false; } }   /* v450: 지옥=악몽 해금 전제(사다리 단조) */
  function scan(){
-  try{ var un=mapUn(), bs=document.querySelectorAll('.theme-row .t-btn'), selIdx=null;   /* v451: 표시 순서=사다리 */
+  try{ var un=mapUn(), bs=document.querySelectorAll('.theme-row .t-btn'), selIdx=null;   /* v452: 표시 순서=사다리 */
    for(var k=0;k<bs.length;k++){ var lk=k>un;
     bs[k].dataset.locked=lk?'1':'0'; bs[k].setAttribute('aria-disabled',lk?'true':'false');
-    if(lk){ try{ bs[k].style.setProperty('filter','grayscale(.9) brightness(.6)','important'); bs[k].style.setProperty('pointer-events','none','important'); }catch(e){} }   /* v451: 흑백 절대 유지(3중 가드) */
+    if(lk){ try{ bs[k].style.setProperty('filter','grayscale(.9) brightness(.6)','important'); bs[k].style.setProperty('pointer-events','none','important'); }catch(e){} }   /* v452: 흑백 절대 유지(3중 가드) */
     else { try{ bs[k].style.removeProperty('filter'); bs[k].style.removeProperty('pointer-events'); }catch(e){} }
     if(!bs[k].__raLockStop){ bs[k].__raLockStop=1; bs[k].addEventListener('click',function(ev){ if(this.dataset.locked==='1'){ ev.preventDefault(); ev.stopPropagation(); ev.stopImmediatePropagation(); } },true); }
     if(lk&&bs[k].classList.contains('sel')){ bs[k].classList.remove('sel'); }
     if(bs[k].classList.contains('sel')&&!lk) selIdx=k; }   /* v451b: i3 참조 잔존(ReferenceError→스캔 매 주기 중단) 수복 — DOM 순서 k */
    var want=-1; try{ want=parseInt(localStorage.getItem('ra_map_v1')||'0',10)||0; }catch(e){}
    if(selIdx===null&&bs.length){ var tgt=null;
-    for(var k2=0;k2<bs.length;k2++){ if(k2===want&&bs[k2].dataset.locked!=='1'){ tgt=bs[k2]; break; } }   /* v451: DOM 순서 인덱스로 정합 */
+    for(var k2=0;k2<bs.length;k2++){ if(k2===want&&bs[k2].dataset.locked!=='1'){ tgt=bs[k2]; break; } }   /* v452: DOM 순서 인덱스로 정합 */
     if(!tgt){ for(var k3=0;k3<bs.length;k3++){ if(bs[k3].dataset.locked!=='1'){ tgt=bs[k3]; break; } } }
     if(tgt) tgt.classList.add('sel'); }
   }catch(e){}
@@ -2265,6 +2265,47 @@ html body #app .theme-row .t-btn.ra-locked::after{content:"🔒";position:absolu
   }catch(e){}
  }
  setInterval(scan,500); if(document.readyState==='complete') scan(); else window.addEventListener('load',scan);
+})();
+</script>
+<style id="ui-v452">/* v452: 연습게임 테스트 버튼 - 황혼 비전 신규 그래픽 미리보기(전면 교체 전 샌드박스) */ #btn-practice{letter-spacing:.5px} #overlay-practice.hidden{display:none}</style>
+<script id="ui-v452-js">
+(function(){
+if(document.getElementById('btn-practice'))return;
+var ts=document.getElementById('screen-title');if(!ts)return;
+var b=document.createElement('button');b.id='btn-practice';b.type='button';b.textContent='연습게임';
+b.style.cssText="position:absolute;left:10px;bottom:12px;z-index:30;height:28px;line-height:1;padding:0 10px;border-radius:12px;border:1px solid #8b5cf6;background:linear-gradient(180deg,#2a2350,#171233);color:#d8ccff;font-weight:700;font-size:11px;box-shadow:0 0 8px rgba(139,92,246,.5)";
+ts.appendChild(b);
+var ov=document.createElement('div');ov.id='overlay-practice';ov.className='hidden';
+ov.style.cssText="position:fixed;inset:0;z-index:120;background:rgba(8,6,20,.93);display:flex;align-items:center;justify-content:center";
+var wrap=document.createElement('div');wrap.style.cssText="text-align:center";
+var cv=document.createElement('canvas');cv.width=300;cv.height=430;cv.style.cssText="border-radius:14px;border:1px solid #8b5cf6;box-shadow:0 0 18px rgba(139,92,246,.4);background:#171233";
+var cb=document.createElement('button');cb.type='button';cb.textContent='닫기';cb.style.cssText="margin-top:10px;height:34px;padding:0 18px;border-radius:12px;border:1px solid #8b5cf6;background:#171233;color:#d8ccff;font-weight:700;font-size:13px";
+wrap.appendChild(cv);wrap.appendChild(document.createElement('br'));wrap.appendChild(cb);ov.appendChild(wrap);ts.appendChild(ov);
+var im={},names=['ra_test_floor','ra_test_king_b','ra_test_princess_b','ra_test_king_r','ra_test_princess_r','ra_test_unit_idle','ra_test_unit_atk','ra_test_proj'];
+for(var k=0;k<names.length;k++){var i=new Image();i.src='assets/'+names[k]+'.png';im[names[k]]=i;}
+var raf=0,projs=[],last=0,cool=0,ux=40,udir=1;
+cb.addEventListener('click',function(){if(raf)cancelAnimationFrame(raf);raf=0;projs=[];ov.className='hidden';});
+b.addEventListener('click',function(){ov.className='';last=performance.now();cool=0;
+ function frame(now){var dt=Math.min(40,now-last);last=now;var c=cv.getContext('2d');
+  if(im.ra_test_floor.complete&&im.ra_test_floor.naturalWidth){c.fillStyle=c.createPattern(im.ra_test_floor,'repeat');}else{c.fillStyle='#241d45';}
+  c.fillRect(0,0,300,430);
+  c.fillStyle='rgba(60,110,220,.55)';c.fillRect(0,200,300,26);
+  c.fillStyle='#8a5a2b';c.fillRect(118,198,64,30);
+  if(im.ra_test_king_b.complete)c.drawImage(im.ra_test_king_b,105,296,90,112);
+  if(im.ra_test_princess_b.complete){c.drawImage(im.ra_test_princess_b,26,318,58,74);c.drawImage(im.ra_test_princess_b,216,318,58,74);}
+  if(im.ra_test_king_r.complete)c.drawImage(im.ra_test_king_r,105,8,90,112);
+  if(im.ra_test_princess_r.complete){c.drawImage(im.ra_test_princess_r,26,26,58,74);c.drawImage(im.ra_test_princess_r,216,26,58,74);}
+  ux+=udir*dt*0.06;if(ux>230)udir=-1;if(ux<30)udir=1;cool-=dt;
+  if(cool<=0&&Math.random()<0.02)cool=1400;
+  var spr=cool>900?im.ra_test_unit_atk:im.ra_test_unit_idle;
+  if(spr.complete)c.drawImage(spr,ux-28,224,56,56);
+  if(cool>1300&&cool-dt<=1300)projs.push({x:ux,y:236});
+  for(var j=projs.length-1;j>=0;j--){var q=projs[j];q.y-=dt*0.22;q.x+=(150-q.x)*dt*0.001;
+   if(im.ra_test_proj.complete)c.drawImage(im.ra_test_proj,q.x-16,q.y-16,32,32);
+   if(q.y<90)projs.splice(j,1);}
+  c.fillStyle='rgba(216,204,255,.9)';c.font='bold 11px sans-serif';c.fillText('신규 그래픽 테스트 - 황혼 비전',70,422);
+  raf=requestAnimationFrame(frame);}
+ raf=requestAnimationFrame(frame);});
 })();
 </script>
 </body>
