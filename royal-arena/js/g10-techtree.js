@@ -1,4 +1,4 @@
-/* g10-techtree.js — v477: 전술 연구소 테크트리 개편 · 유물 8종 확장 · 연구소/유물/도움말 모달 수복.
+/* g10-techtree.js — v478: 전술 연구소 테크트리 개편 · 유물 8종 확장 · 연구소/유물/도움말 모달 수복.
    마지막 로드 청크 — 함수 선언 오버라이드로 런타임 승자가 된다. SKILLS/RELICS const는 건드리지 않고
    본 청크의 TECHS/RELICS8 데이터 + 오버라이드 함수만 사용한다. */
 (function(){
@@ -57,7 +57,7 @@ window.applySkills=function(){
     S._sk=sk;
     var hb=1+0.10*skillLv('def1')+0.10*skillLv('def3');
     for(var i=0;i<towers.length;i++){ var t=towers[i]; if(t.team==='blue'){ t.maxHp=Math.round(t.maxHp*hb); t.hp=t.maxHp; } }
-    if(S.relic==='relic_ante'){ P.elixir=Math.min(ELX_MAX,P.elixir+2); try{ syncHUD(); }catch(e2){} }   /* v477: 개전의 나팔 */
+    if(S.relic==='relic_ante'){ P.elixir=Math.min(ELX_MAX,P.elixir+2); try{ syncHUD(); }catch(e2){} }   /* v478: 개전의 나팔 */
   }catch(e){}
 };
 
@@ -99,13 +99,13 @@ function injectCss(){
   var st=document.createElement('style'); st.id='tt-style';
   st.textContent=
    '.hico{width:20px;height:20px;vertical-align:-4px;margin-right:5px;border-radius:5px;box-shadow:0 0 0 1px rgba(255,179,0,.35)}'+
-   '#overlay-skill .rpanel,#overlay-relic .rpanel{max-height:88dvh;padding-bottom:64px;overflow-y:auto}' /* v477: verchip 여백 — 하단 잘림 수복 */+
+   '#overlay-skill .rpanel,#overlay-relic .rpanel{max-height:88dvh;padding-bottom:64px;overflow-y:auto}' /* v478: verchip 여백 — 하단 잘림 수복 */+
    '#sk-grid{display:flex;gap:8px;justify-content:center;flex-wrap:nowrap;max-width:660px;margin:10px auto 0}'+
    '.tk-col{flex:1;min-width:110px;display:flex;flex-direction:column;gap:0;position:relative}'+
    '.tk-head{display:flex;align-items:center;gap:6px;font-weight:800;font-size:13px;margin-bottom:6px;letter-spacing:1px}'+
    '.tk-head img{width:22px;height:22px;border-radius:6px}'+
    '.tk-link{width:2px;height:10px;background:rgba(255,179,0,.4);margin:0 auto}'+
-   '.tk-row{display:flex;gap:6px}'+
+   '.tk-row{display:flex;gap:6px}@media (max-width:420px){.tk-row{flex-direction:column;gap:6px}}.tk-item small{min-height:0}@media (max-width:420px){.tk-item .tk-ic{width:26px;height:26px}.tk-item{padding:6px 6px 6px 7px}}'+
    '.tk-item{position:relative;background:rgba(18,24,43,.92);border:1.5px solid #3d4c73;border-radius:12px;padding:7px 6px 7px 8px;color:#dfe8ff;text-align:left;font-size:12px;flex:1;transition:box-shadow .15s,border-color .15s}'+
    '.tk-item .tk-ic{width:32px;height:32px;border-radius:8px;display:block;margin-bottom:4px}'+
    '.tk-item b{font-size:12.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}'+
@@ -184,7 +184,7 @@ window.renderSkillList=function(){
 
 window.ensureSkillUI=function(){
   injectCss();
-  var old=document.getElementById('overlay-skill'); if(old) old.remove();   /* v477: 구버전 UI 교체 — 조기리턴 폐기 */
+  var old=document.getElementById('overlay-skill'); if(old) old.remove();   /* v478: 구버전 UI 교체 — 조기리턴 폐기 */
   var ov=document.createElement('div'); ov.id='overlay-skill'; ov.className='overlay hidden';
   ov.innerHTML='<div class="rpanel"><h2><img class="hico" src="'+icoSrc('ra_rl_ui_lab')+'" alt="">전술 연구소</h2>'
     +'<p class="rsub">승리 보상 SP로 기술 연구 — 티어 2는 두 기술 중 하나를 선택(경로 확정) · 연쇄 환불 · 총 SP 보존</p>'
