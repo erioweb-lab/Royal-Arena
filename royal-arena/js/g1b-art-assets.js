@@ -309,7 +309,7 @@ function showResult(){
   if(w==='blue'){ try{ fwVictory(); }catch(e){} }   /* v140: 승리 연출 — 폭죽 파티클+왕관 낙하 */
   $('#r-title').style.color = w==='blue'?'#f7c531':w==='red'?'#ff8f8f':'#cfe0ff';
   $('#r-art').src = w==='blue'? RART.win : w==='red'? RART.lose : RART.win;
-  $('#r-crowns').innerHTML = '<img class="ric ric2" src="assets/ra_ic_crown.png?v=474" alt="">'.repeat(crowns)+' <img class="ric ric2" src="assets/ra_ic_swords.png?v=474" alt=""> '+'<img class="ric ric2" src="assets/ra_ic_crown.png?v=474" alt="">'.repeat(crownR);
+  $('#r-crowns').innerHTML = '<img class="ric ric2" src="assets/ra_ic_crown.png?v=475" alt="">'.repeat(crowns)+' <img class="ric ric2" src="assets/ra_ic_swords.png?v=475" alt=""> '+'<img class="ric ric2" src="assets/ra_ic_crown.png?v=475" alt="">'.repeat(crownR);
   $('#r-sub').innerHTML = `최종 왕관 <b>${crowns} : ${crownR}</b>${S.overtime?' · 연장전':''}<br>총점 <b>${score}</b>`;
   $('#rt-crown').textContent=crowns*300;
   $('#rt-kill').textContent=killsB*15;
