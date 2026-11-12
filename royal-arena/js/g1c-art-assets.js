@@ -180,7 +180,7 @@ function drawBody(u,r,la){
   }
 }
 const FIREARC={kingshot:30,arrow:10,bullet:3,wizfb:18,dragon:14,ice:16,bomb:34,cannon:46};
-const PROJ_BASE={net:0,arrow:2.3562,bomb:0,bullet:0,cannon:3.1416,dragon:1.5708,fireball:0,ice:1.5708,kingshot:0,wizfb:2.3562,zap:0};
+const PROJ_BASE={net:0,stone:0,arrow:2.3562,bomb:0,bullet:0,cannon:3.1416,dragon:1.5708,fireball:0,ice:1.5708,kingshot:0,wizfb:2.3562,zap:0};
 const PROJ16={};
 function cv16(fn){ const c=document.createElement('canvas'); c.width=64; c.height=64; fn(c.getContext('2d')); return c; }
 function pArrow(g){
@@ -254,7 +254,7 @@ function drawProj(p){
   const tc=p.team==='blue'?'96,158,255':'255,110,110';
   const LIFT=(p.arc&&p.dur)?Math.sin(Math.min(1,p.t/p.dur)*Math.PI)*(FIREARC[p.kind]||16):0;
   const py2=py-LIFT;
-  const SZ={net:40,kingshot:40,arrow:46,bullet:30,bomb:40,wizfb:46,dragon:44,ice:38,cannon:34}[p.kind]||44;
+  const SZ={net:40,stone:52,kingshot:40,arrow:46,bullet:30,bomb:40,wizfb:46,dragon:44,ice:38,cannon:34}[p.kind]||44;
 
   const va=visAngle(p,px,py2);
 
@@ -291,7 +291,7 @@ function drawFx(f){
    ctx.fillStyle='#fff';
     for(let i=0;i<4;i++){ const a=i*1.57+0.6;
       ctx.fillRect(px+Math.cos(a)*6*(1+k*2)-1.5,py+Math.sin(a)*6*(1+k*2)-1.5,3,3); } }
-    else if(f.kind==='slash'){ var __sl=window.__FXIMG&&window.__FXIMG.slash; if(__sl&&__sl.complete&&__sl.naturalWidth>0&&__sl.__valid!==false){ ctx.save(); ctx.translate(f.x*TILE,f.y*TILE); ctx.rotate(f.a||0); var _sw2=TILE*1.5; ctx.globalAlpha=0.9; ctx.drawImage(__sl,-_sw2/2,-_sw2/2,_sw2,_sw2); ctx.restore(); }   /* v329: 근접 베기 스프라이트(보스 포함) */
+    else if(f.kind==='slash360'){ var __s3=window.__FXIMG&&window.__FXIMG.slash360; if(__s3&&__s3.complete&&__s3.naturalWidth>0&&__s3.__valid!==false){ var _sw3=TILE*1.9; ctx.globalAlpha=Math.min(1,2.2*(1-f.t/f.dur)); ctx.drawImage(__s3,f.x*TILE-_sw3/2,f.y*TILE-_sw3/2,_sw3,_sw3); ctx.globalAlpha=1; } }   /* v469: 발키리 360 참격 스프라이트 — 페이드아웃 */ else if(f.kind==='slash'){ var __sl=window.__FXIMG&&window.__FXIMG.slash; if(__sl&&__sl.complete&&__sl.naturalWidth>0&&__sl.__valid!==false){ ctx.save(); ctx.translate(f.x*TILE,f.y*TILE); ctx.rotate(f.a||0); var _sw2=TILE*1.5; ctx.globalAlpha=0.9; ctx.drawImage(__sl,-_sw2/2,-_sw2/2,_sw2,_sw2); ctx.restore(); }   /* v329: 근접 베기 스프라이트(보스 포함) */
     ctx.strokeStyle=f.col; ctx.lineWidth=3.5; ctx.beginPath();
     ctx.arc(px,py,TILE*0.42,(f.a||0)-0.9+(1-k)*0.4,(f.a||0)+0.9+(1-k)*0.4); ctx.stroke();
   }

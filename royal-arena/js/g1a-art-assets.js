@@ -115,7 +115,7 @@ const BANB_IM=new Image();BANB_IM.src="assets/img_068.png";
 const HPFR_IM=new Image();HPFR_IM.src="assets/img_069.png";
 const WALL_IM=new Image();WALL_IM.onload=()=>{try{drawStatic()}catch(e){}};WALL_IM.src="assets/img_070.jpg";
 const GRASS_IM=new Image();GRASS_IM.onload=()=>{try{drawStatic()}catch(e){}};GRASS_IM.src=GRASS_B64;
-const ART_PROJ={fireball:"assets/img_071.png",zap:"assets/img_072.png","arrow":"assets/img_073.png","bullet":"assets/img_074.png","bomb":"assets/img_075.png","wizfb":"assets/img_076.png","dragon":"assets/img_077.png","ice":"assets/img_078.png","cannon":"assets/img_079.png",bolt:"assets/ra_proj_bolt.png",kingshot:"assets/ra_proj_kingshot.png",net:"assets/ra_proj_net.png?v=468"};   /* v334: 석궁 볼트·킹샷 스프라이트 — 캔버스 폴백 해소(화풍 통일) */
+const ART_PROJ={fireball:"assets/img_071.png",zap:"assets/img_072.png","arrow":"assets/img_073.png","bullet":"assets/img_074.png","bomb":"assets/img_075.png","wizfb":"assets/img_076.png","dragon":"assets/img_077.png","ice":"assets/img_078.png","cannon":"assets/img_079.png",bolt:"assets/ra_proj_bolt.png",kingshot:"assets/ra_proj_kingshot.png",net:"assets/ra_proj_net.png?v=468",stone:"assets/ra_proj_stone.png?v=469"};   /* v334: 석궁 볼트·킹샷 스프라이트 — 캔버스 폴백 해소(화풍 통일) */
 
 
 'use strict';
@@ -674,7 +674,7 @@ window.__raCombo=function(el,tgt,dmg,team){
   }catch(__ec){}
 };
 window.__ROCKS=[1,2].map(function(n){ var im=new Image(); im.src='assets/ra_rock_'+n+'.png'; im.onload=function(){ im.__valid=true; }; im.onerror=function(){ im.__valid=false; }; return im; });   /* v324: 바위 이미지 로더 */
-window.__FXIMG={frost:(function(){var im=new Image(); im.src='assets/ra_fx_frost.png'; im.onload=function(){ im.__valid=true; }; im.onerror=function(){ im.__valid=false; }; return im; })(), crater:(function(){var im=new Image(); im.src='assets/ra_fx_crater.png'; im.onload=function(){ im.__valid=true; }; im.onerror=function(){ im.__valid=false; }; return im; })()};   /* v328: 주문 지역 프리렌더 스프라이트 */
+window.__FXIMG={frost:(function(){var im=new Image(); im.src='assets/ra_fx_frost.png'; im.onload=function(){ im.__valid=true; }; im.onerror=function(){ im.__valid=false; }; return im; })(), crater:(function(){var im=new Image(); im.src='assets/ra_fx_crater.png'; im.onload=function(){ im.__valid=true; }; im.onerror=function(){ im.__valid=false; }; return im; })(), slash360:(function(){var im=new Image(); im.src='assets/ra_fx_slash360.png?v=469'; im.onload=function(){ im.__valid=true; }; im.onerror=function(){ im.__valid=false; }; return im; })()};   /* v328: 주문 지역 프리렌더 스프라이트 */
 Object.assign(window.__FXIMG,{hitburst:(function(){var im=new Image(); im.src='assets/ra_fx_hit.png'; im.onload=function(){ im.__valid=true; }; im.onerror=function(){ im.__valid=false; }; return im; })(),boom:(function(){var im=new Image(); im.src='assets/ra_fx_boom.png'; im.onload=function(){ im.__valid=true; }; im.onerror=function(){ im.__valid=false; }; return im; })(),slash:(function(){var im=new Image(); im.src='assets/ra_fx_slash.png'; im.onload=function(){ im.__valid=true; }; im.onerror=function(){ im.__valid=false; }; return im; })(),shockring:(function(){var im=new Image(); im.src='assets/ra_fx_shock.png'; im.onload=function(){ im.__valid=true; }; im.onerror=function(){ im.__valid=false; }; return im; })(),heal:(function(){var im=new Image(); im.src='assets/ra_fx_heal.png'; im.onload=function(){ im.__valid=true; }; im.onerror=function(){ im.__valid=false; }; return im; })(),venomfog:(function(){var im=new Image(); im.src='assets/ra_fx_venom.png'; im.onload=function(){ im.__valid=true; }; im.onerror=function(){ im.__valid=false; }; return im; })()});   /* v329: 공격·광역 이펙트 스프라이트 */
 function impactProj(p,tgt){
   try{ if(p.elem&&tgt&&!tgt.dead&&tgt.key&&!tgt.isTower) window.__raCombo(p.elem,tgt,p.dmg,p.team); }catch(__ec){}   /* v324: 원거리 원소 콤보 */
@@ -690,6 +690,7 @@ function impactProj(p,tgt){
     if(tgt&&!tgt.dead&&!tgt.isTower){ tgt.burnT=3; tgt.burnDps=22; tgt.burnAcc=0; } }
   else if(p.kind==='ice'){ fx.push({x:p.tx,y:p.ty,t:0,dur:0.3,kind:'ring',col:'rgba(156,220,255,.85)'}); addParts(p.tx,p.ty,8,'#9cdcff',2.6,0.45,40); sfx('icehit'); }
   else if(p.kind==='cannon'){ fx.push({x:p.tx,y:p.ty,t:0,dur:0.3,kind:'boom'}); addParts(p.tx,p.ty,6,'#cfd6e0',2.2,0.4,40); S.shake=Math.max(S.shake||0,0.12); sfx('boomL'); }
+  if(p.kind==='cannon'||p.kind==='stone'){ fx.push({x:p.tx,y:p.ty,t:0,dur:0.5,kind:'ring',col:'rgba(214,205,190,.55)'}); }   /* v469: 착탄 포연 링 잔류 0.5s */
   else { fx.push({x:p.tx,y:p.ty,t:0,dur:0.16,kind:'hit'}); }
 }
 function shoot(src,tgt,dmg,kind,splash){
@@ -718,7 +719,7 @@ function unitAtkFx(u,t){   // v135: 유닛별 컨셉 공격 이펙트(디펜스�
     else if(k==='minions'&&melee){ addParts(tx,ty,4,'#b388ff',2.2,0.35,40); playHit('physical'); }
     else if(k==='skarmy'&&melee){ addParts(tx,ty,3,'#eceff1',1.8,0.3,50); playHit('physical'); }
     else if(k==='prince'&&melee){ fx.push({x:tx,y:ty,t:0,dur:0.3,kind:'ring',col:'rgba(255,213,79,.9)'}); addParts(tx,ty,6,'#ffd54f',2.8,0.45,40); if(u.charging) S.shake=Math.max(S.shake||0,0.08); playHit('physical'); }
-    else if(k==='valk'&&melee){ fx.push({x:tx,y:ty,t:0,dur:0.3,kind:'ring',col:'rgba(255,183,77,.85)'}); fx.push({x:tx,y:ty,t:0.08,dur:0.3,kind:'ring',col:'rgba(255,224,138,.7)'}); addParts(tx,ty,5,'#ffb74d',2.4,0.4,40); playHit('cannon'); }
+    else if(k==='valk'&&melee){ fx.push({x:tx,y:ty,t:0,dur:0.35,kind:'slash360'}); addParts(tx,ty,5,'#ffb74d',2.4,0.4,40); playHit('cannon'); }   /* v469: 360도 도끼 참격 스프라이트 */
     else if(k==='boar'&&melee){ addParts(tx,ty,6,'#e0c9a6',2.4,0.4,50); S.shake=Math.max(S.shake||0,0.05); playHit('cannon'); }
     else if(k==='flamer'){ fx.push({x:tx,y:ty,t:0,dur:0.38,kind:'flamegrow'}); addParts(tx,ty,4,'#ff9d3c',2.2,0.35,-60); addParts(tx,ty,2,'#ffd54f',1.6,0.3,-90); playHit('flame'); }   /* v322: 화염방사병 — 커지는 화염(속사라 경량) */
     else if(k==='lordknight'&&melee){ fx.push({x:tx,y:ty,t:0,dur:0.32,kind:'ring',col:'rgba(255,213,79,.9)'}); fx.push({x:tx,y:ty,t:0.06,dur:0.32,kind:'ring',col:'rgba(207,109,245,.75)'}); addParts(tx,ty,7,'#ffd54f',2.8,0.45,50); S.shake=Math.max(S.shake||0,0.12); playHit('boss'); }   /* v322: 기사단장 — 에픽 광역 일격 */
@@ -735,7 +736,7 @@ function unitAtkFx(u,t){   // v135: 유닛별 컨셉 공격 이펙트(디펜스�
 }
 function hitTarget(u,t,dm){ try{ if(u&&u.team==='blue'&&u.key) DPSW.acc[u.key]=(DPSW.acc[u.key]||0)+dm; }catch(e){}   /* v148: 피해 귀속 */
   dm=dm||u.c.dmg; unitAtkFx(u,t);
-  if(u.c.range>1.6){ const __pk=(u.key==='musketeer'||u.key==='sniper')?'bullet':(u.key==='xbow'?'bolt':(u.key==='wizard'?'wizfb':(u.key==='bomber'?'bomb':(u.key==='babyd'?'dragon':(u.key==='icem'?'ice':(u.key==='netter'?'net':'arrow')))))); shoot(u,t,dm,__pk,u.c.splash); }   /* v321: 석궁병 볼트 컨셉 탄환 */
+  if(u.c.range>1.6){ const __pk=(u.key==='musketeer'||u.key==='sniper')?'bullet':(u.key==='xbow'?'bolt':(u.key==='wizard'?'wizfb':(u.key==='bomber'?'bomb':(u.key==='babyd'?'dragon':(u.key==='icem'?'ice':(u.key==='netter'?'net':(u.key==='catapult'?'stone':'arrow'))))))); shoot(u,t,dm,__pk,u.c.splash); }   /* v321: 석궁병 볼트 컨셉 탄환 */
   else { dealDamage(t,dm,u.team); fx.push({x:t.x,y:t.y,t:0,dur:0.18,kind:'hit'}); fx.push({x:t.x,y:t.y,t:0,dur:0.16,kind:'slash',a:Math.atan2(t.y-u.y,t.x-u.x),col:u.team==='blue'?'rgba(159,201,255,.95)':'rgba(255,150,150,.95)'}); addParts(t.x,t.y,3,'#fff2c8',2.0,0.25,0); playHit('physical');
     if(u.c.splash){ for(const s2 of units){ if(s2.dead||s2.team===u.team||s2===t||(s2.flying&&!u.c.hitsAir)) continue;   /* v405: 근접 스플래시 비행 필터 — 대공 불가 공격자 파장은 공중 무피해 */
       if(Math.hypot(s2.x-t.x,s2.y-t.y)<=u.c.splash) dealDamage(s2,Math.round(dm*0.6),u.team); } } }

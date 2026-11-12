@@ -56,7 +56,7 @@ function updateUnit(u,dt){
       u.chargeT=0; u.charging=false; }
   } else {
     if(u.c.charge){ u.chargeT+=dt; u.charging=u.chargeT>1.1;
-      if(u.charging&&Math.random()<0.35) addParts(u.x,u.y-0.3,1,'#ff9d3c',0.9,0.3,-20); }
+      if(u.charging){ addParts(u.x,u.y-0.3,1,'#ff9d3c',0.9,0.3,-20); var __tr=(u._trC||0)+1; if(__tr%3===0){ u._trC=0; var _dx=Math.cos(u.dir),_dy=Math.sin(u.dir); for(var _ti=1;_ti<=3;_ti++) addParts(u.x-_dx*0.35*_ti,u.y-_dy*0.35*_ti,1,_ti===1?'rgba(255,213,94,.9)':'rgba(255,180,80,'+(0.55-_ti*0.14)+')',0.7-_ti*0.12,0.25,-15); } } else u._trC=0; }   /* v469: 돌진 속도선 트레일 — 진행 반대편 3점 감쇠 */
     moveUnit(u,dt);
   }
   u.swing=Math.max(0,u.swing-dt);
@@ -390,7 +390,7 @@ function updateFx(dt){
     else if(f.kind==='plasmazone'||f.kind==='crater'){ f._acc=(f._acc||0)+dt; const __zt=f._acc>=0.5; if(__zt) f._acc=0;   /* v407: 존 틱 데미지 — 플라즈마 8dps·분화구 6dps(0.5s마다) */
       if(__zt) for(const u of units){ if(u.dead||u.isTower||u.team===f.team) continue; if(Math.hypot(u.x-f.x,u.y-f.y)<=f.r){ dealDamage(u,spellDmg(f.kind==='plasmazone'?4:3),f.team,true); if(Math.random()<0.35) floats.push({dx:(Math.random()*10-5),dy:0,x:u.x,y:u.y-1.1,txt:f.kind==='plasmazone'?'⚡':'🔥',t:0.45,col:f.kind==='plasmazone'?'#cf9dff':'#ff9d3c',big:false}); } } }
     else if(f.kind==='healzone'){ f._acc=(f._acc||0)+dt; const __zt=f._acc>=0.5; if(__zt) f._acc=0;   /* v409: 잔류 회복 존 — 0.5s마다 아군 +5(10dps) */
-      if(__zt) for(const u of units){ if(u.dead||u.isTower||u.team!==f.team||u.hp>=u.maxHp) continue; if(Math.hypot(u.x-f.x,u.y-f.y)<=f.r){ u.hp=Math.min(u.maxHp,u.hp+5); if(Math.random()<0.5) floats.push({dx:(Math.random()*10-5),dy:0,x:u.x,y:u.y-1.1,txt:'+5',t:0.5,col:'#8fe6a8',big:false}); } } }    else if(f.kind==='venomzone'){ f._acc2=(f._acc2||0)+dt; const __vt=f._acc2>=0.5; if(__vt) f._acc2=0;   /* v409: 맹독 존 재진입 재부여 — 존 내 적은 중독 6s 유지 갱신(venDps 30 유지) */
+      if(__zt) for(const u of units){ if(u.dead||u.isTower||u.team!==f.team||u.hp>=u.maxHp) continue; if(Math.hypot(u.x-f.x,u.y-f.y)<=f.r){ u.hp=Math.min(u.maxHp,u.hp+5); addParts(u.x,u.y-0.3,2,'#a8f0c0',1.2,0.5,55); if(Math.random()<0.5) floats.push({dx:(Math.random()*10-5),dy:0,x:u.x,y:u.y-1.1,txt:'+5',t:0.5,col:'#8fe6a8',big:false}); } } }   /* v469: 힐 존 잎사귀 파티클 상승 */    else if(f.kind==='venomzone'){ f._acc2=(f._acc2||0)+dt; const __vt=f._acc2>=0.5; if(__vt) f._acc2=0;   /* v409: 맹독 존 재진입 재부여 — 존 내 적은 중독 6s 유지 갱신(venDps 30 유지) */
       if(__vt) for(const u of units){ if(u.dead||u.isTower||u.team===f.team) continue; if(Math.hypot(u.x-f.x,u.y-f.y)<=f.r){ u.venT=Math.max(u.venT||0,6); u.venDps=Math.max(u.venDps||0,30); } } }
     else if(f.kind==='stormzone'){ f._acc=(f._acc||0)+dt; const __zt=f._acc>=0.5; if(__zt) f._acc=0;   /* v408: 번개 폭풍 틱 — 6dps(0.5s마다 3)+진입 미니기절(존당 1회·재진입 재부여) */
       for(const u of units){ if(u.dead||u.isTower||u.team===f.team) continue; if(Math.hypot(u.x-f.x,u.y-f.y)<=f.r){ if(u._stormId!==f){ u._stormId=f; u.stun=Math.max(u.stun||0,0.3); floats.push({dx:(Math.random()*10-5),dy:0,x:u.x,y:u.y-1.2,txt:'⚡ 기절',t:0.6,col:'#ffe95e',big:false}); }
