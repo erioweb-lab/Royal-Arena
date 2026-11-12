@@ -1259,22 +1259,22 @@ html body #overlay-info{padding-bottom:env(safe-area-inset-bottom,0px) !importan
       <p id="r-sub"></p>
 
       <div class="r-tabs">
-        <button id="rtab-score" class="rtab on">📊 세부 집계</button>
-        <button id="rtab-rank" class="rtab">👑 랭크 평가</button>
+        <button id="rtab-score" class="rtab on"><img class="ric" src="assets/ra_ic_chart.png?v=474" alt=""> 세부 집계</button>
+        <button id="rtab-rank" class="rtab"><img class="ric" src="assets/ra_ic_crown.png?v=474" alt=""> 랭크 평가</button>
       </div>
       <div id="rpane-score" class="rpane">
-        <div class="rrow"><span>👑 왕관 획득</span><b id="rt-crown">0</b></div>
-        <div class="rrow"><span>⚔️ 유닛 킬</span><b id="rt-kill">0</b></div>
-        <div class="rrow"><span>🏰 잔존 타워 체력</span><b id="rt-hp">0</b></div>
-        <div class="rrow"><span>⏱ 남은 시간</span><b id="rt-time">0</b></div>
-        <div class="rrow"><span>⚔️ 킬 / 데스</span><b id="rt-kd">0 / 0</b></div>
-        <div class="rrow"><span>✨ 주문 사용</span><b id="rt-spell">0회</b></div>
-        <div class="rrow"><span>🏆 트로피</span><b id="rt-trophy">+0</b></div>
-        <div class="rrow"><span>🥇 최고 연승</span><b id="rt-sbest">0</b></div>
-        <div class="rrow"><span>🌅 첫승 보너스</span><b id="rt-first">-</b></div>
-        <div class="rrow"><span>⭐ XP 획득</span><b id="rt-xp">-</b></div>
-        <div class="rrow"><span>🎓 SP 획득</span><b id="rt-sp">-</b></div>
-        <div class="rrow rrow-mirror"><span>📊 상단 통계 전체</span><b id="rt-mirror">-</b></div>
+        <div class="rrow"><span><img class="ric" src="assets/ra_ic_crown.png?v=474" alt=""> 왕관 획득</span><b id="rt-crown">0</b></div>
+        <div class="rrow"><span><img class="ric" src="assets/ra_ic_swords.png?v=474" alt=""> 유닛 킬</span><b id="rt-kill">0</b></div>
+        <div class="rrow"><span><img class="ric" src="assets/ra_ic_castle.png?v=474" alt=""> 잔존 타워 체력</span><b id="rt-hp">0</b></div>
+        <div class="rrow"><span><img class="ric" src="assets/ra_ic_timer.png?v=474" alt=""> 남은 시간</span><b id="rt-time">0</b></div>
+        <div class="rrow"><span><img class="ric" src="assets/ra_ic_swords.png?v=474" alt=""> 킬 / 데스</span><b id="rt-kd">0 / 0</b></div>
+        <div class="rrow"><span><img class="ric" src="assets/ra_ic_spark.png?v=474" alt=""> 주문 사용</span><b id="rt-spell">0회</b></div>
+        <div class="rrow"><span><img class="ric" src="assets/ra_ic_trophy.png?v=474" alt=""> 트로피</span><b id="rt-trophy">+0</b></div>
+        <div class="rrow"><span><img class="ric" src="assets/ra_ic_medal.png?v=474" alt=""> 최고 연승</span><b id="rt-sbest">0</b></div>
+        <div class="rrow"><span><img class="ric" src="assets/ra_ic_sunrise.png?v=474" alt=""> 첫승 보너스</span><b id="rt-first">-</b></div>
+        <div class="rrow"><span><img class="ric" src="assets/ra_ic_star.png?v=474" alt=""> XP 획득</span><b id="rt-xp">-</b></div>
+        <div class="rrow"><span><img class="ric" src="assets/ra_ic_grad.png?v=474" alt=""> SP 획득</span><b id="rt-sp">-</b></div>
+        <div class="rrow rrow-mirror"><span><img class="ric" src="assets/ra_ic_chart.png?v=474" alt=""> 상단 통계 전체</span><b id="rt-mirror">-</b></div>
         <div class="rrow rsum"><span>총점</span><b id="rt-sum">0</b></div>
       </div>
       <div id="rpane-rank" class="rpane hidden">
@@ -1282,7 +1282,7 @@ html body #overlay-info{padding-bottom:env(safe-area-inset-bottom,0px) !importan
         <div class="rt-bar"><div id="rt-barfill"></div></div>
         <p id="rt-brief"></p>
       </div>
-      <div id="r-btnrow"><button id="btn-again" class="t-cta">🔁 다시 배틀</button><button id="btn-home" class="r-home">메인으로</button></div>
+      <div id="r-btnrow"><button id="btn-again" class="t-cta"><img class="ric" src="assets/ra_ic_refresh.png?v=474" alt=""> 다시 배틀</button><button id="btn-home" class="r-home">메인으로</button></div>
     </div>
   </div>
 </div>
@@ -1547,7 +1547,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
       window.__raNextStage=null;
       if(S.winner==='blue'){
         var cur=(window.__raMapIdx?__raMapIdx():0), nx=cur+1;
-        if(nx<mlen()){ window.__raNextStage=nx; ba.textContent='\u23ed \ub2e4\uc74c \uc2a4\ud14c\uc774\uc9c0'; }
+        if(nx<mlen()){ window.__raNextStage=nx; ba.innerHTML='<b style=\"color:#ffd75e\">\u25b6</b> \ub2e4\uc74c \uc2a4\ud14c\uc774\uc9c0'; }
         else ba.textContent='🔁 다시 배틀';
       } else ba.textContent='🔁 다시 배틀';
     }catch(e){}
@@ -2395,5 +2395,9 @@ html body #overlay-result #btn-again{font-size:17px!important}
 html body #overlay-result #btn-home{font-size:14px!important}
 html body #overlay-result .r-crowns{font-size:15px!important;letter-spacing:1px!important;filter:drop-shadow(0 1px 2px rgba(0,0,0,.5))}
 html body #overlay-result #r-btnrow{padding-bottom:4px!important}</style>
+<style id="ui-v474b">/* v474: 결과 화면 이모지 아이콘 → 게임 화풍 아이콘 스프라이트 12종 교체 */
+html body #overlay-result .ric{width:15px!important;height:15px!important;vertical-align:-3px!important;margin-right:3px!important;display:inline-block!important}
+html body #overlay-result .ric2{width:17px!important;height:17px!important;vertical-align:-4px!important;margin:0 1px!important}
+html body #overlay-result .rtab .ric{width:13px!important;height:13px!important;vertical-align:-2px!important}</style>
 </body>
 </html>
