@@ -180,7 +180,7 @@ function drawBody(u,r,la){
   }
 }
 const FIREARC={kingshot:30,arrow:10,bullet:3,wizfb:18,dragon:14,ice:16,bomb:34,cannon:46};
-const PROJ_BASE={arrow:2.3562,bomb:0,bullet:0,cannon:3.1416,dragon:1.5708,fireball:0,ice:1.5708,kingshot:0,wizfb:2.3562,zap:0};
+const PROJ_BASE={net:0,arrow:2.3562,bomb:0,bullet:0,cannon:3.1416,dragon:1.5708,fireball:0,ice:1.5708,kingshot:0,wizfb:2.3562,zap:0};
 const PROJ16={};
 function cv16(fn){ const c=document.createElement('canvas'); c.width=64; c.height=64; fn(c.getContext('2d')); return c; }
 function pArrow(g){
@@ -254,7 +254,7 @@ function drawProj(p){
   const tc=p.team==='blue'?'96,158,255':'255,110,110';
   const LIFT=(p.arc&&p.dur)?Math.sin(Math.min(1,p.t/p.dur)*Math.PI)*(FIREARC[p.kind]||16):0;
   const py2=py-LIFT;
-  const SZ={kingshot:40,arrow:46,bullet:30,bomb:40,wizfb:46,dragon:44,ice:38,cannon:34}[p.kind]||44;
+  const SZ={net:40,kingshot:40,arrow:46,bullet:30,bomb:40,wizfb:46,dragon:44,ice:38,cannon:34}[p.kind]||44;
 
   const va=visAngle(p,px,py2);
 

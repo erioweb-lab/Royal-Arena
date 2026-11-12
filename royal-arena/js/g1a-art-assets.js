@@ -115,7 +115,7 @@ const BANB_IM=new Image();BANB_IM.src="assets/img_068.png";
 const HPFR_IM=new Image();HPFR_IM.src="assets/img_069.png";
 const WALL_IM=new Image();WALL_IM.onload=()=>{try{drawStatic()}catch(e){}};WALL_IM.src="assets/img_070.jpg";
 const GRASS_IM=new Image();GRASS_IM.onload=()=>{try{drawStatic()}catch(e){}};GRASS_IM.src=GRASS_B64;
-const ART_PROJ={fireball:"assets/img_071.png",zap:"assets/img_072.png","arrow":"assets/img_073.png","bullet":"assets/img_074.png","bomb":"assets/img_075.png","wizfb":"assets/img_076.png","dragon":"assets/img_077.png","ice":"assets/img_078.png","cannon":"assets/img_079.png",bolt:"assets/ra_proj_bolt.png",kingshot:"assets/ra_proj_kingshot.png"};   /* v334: 석궁 볼트·킹샷 스프라이트 — 캔버스 폴백 해소(화풍 통일) */
+const ART_PROJ={fireball:"assets/img_071.png",zap:"assets/img_072.png","arrow":"assets/img_073.png","bullet":"assets/img_074.png","bomb":"assets/img_075.png","wizfb":"assets/img_076.png","dragon":"assets/img_077.png","ice":"assets/img_078.png","cannon":"assets/img_079.png",bolt:"assets/ra_proj_bolt.png",kingshot:"assets/ra_proj_kingshot.png",net:"assets/ra_proj_net.png?v=468"};   /* v334: 석궁 볼트·킹샷 스프라이트 — 캔버스 폴백 해소(화풍 통일) */
 
 
 'use strict';
@@ -735,7 +735,7 @@ function unitAtkFx(u,t){   // v135: 유닛별 컨셉 공격 이펙트(디펜스�
 }
 function hitTarget(u,t,dm){ try{ if(u&&u.team==='blue'&&u.key) DPSW.acc[u.key]=(DPSW.acc[u.key]||0)+dm; }catch(e){}   /* v148: 피해 귀속 */
   dm=dm||u.c.dmg; unitAtkFx(u,t);
-  if(u.c.range>1.6){ const __pk=(u.key==='musketeer'||u.key==='sniper')?'bullet':(u.key==='xbow'?'bolt':(u.key==='wizard'?'wizfb':(u.key==='bomber'?'bomb':(u.key==='babyd'?'dragon':(u.key==='icem'?'ice':'arrow'))))); shoot(u,t,dm,__pk,u.c.splash); }   /* v321: 석궁병 볼트 컨셉 탄환 */
+  if(u.c.range>1.6){ const __pk=(u.key==='musketeer'||u.key==='sniper')?'bullet':(u.key==='xbow'?'bolt':(u.key==='wizard'?'wizfb':(u.key==='bomber'?'bomb':(u.key==='babyd'?'dragon':(u.key==='icem'?'ice':(u.key==='netter'?'net':'arrow')))))); shoot(u,t,dm,__pk,u.c.splash); }   /* v321: 석궁병 볼트 컨셉 탄환 */
   else { dealDamage(t,dm,u.team); fx.push({x:t.x,y:t.y,t:0,dur:0.18,kind:'hit'}); fx.push({x:t.x,y:t.y,t:0,dur:0.16,kind:'slash',a:Math.atan2(t.y-u.y,t.x-u.x),col:u.team==='blue'?'rgba(159,201,255,.95)':'rgba(255,150,150,.95)'}); addParts(t.x,t.y,3,'#fff2c8',2.0,0.25,0); playHit('physical');
     if(u.c.splash){ for(const s2 of units){ if(s2.dead||s2.team===u.team||s2===t||(s2.flying&&!u.c.hitsAir)) continue;   /* v405: 근접 스플래시 비행 필터 — 대공 불가 공격자 파장은 공중 무피해 */
       if(Math.hypot(s2.x-t.x,s2.y-t.y)<=u.c.splash) dealDamage(s2,Math.round(dm*0.6),u.team); } } }
