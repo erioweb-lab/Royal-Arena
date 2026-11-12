@@ -2283,13 +2283,19 @@ var cb=document.createElement('button');cb.type='button';cb.textContent='닫기'
 wrap.appendChild(cv);wrap.appendChild(document.createElement('br'));wrap.appendChild(cb);ov.appendChild(wrap);ts.appendChild(ov);
 var A=function(n){var i=im[n];return (i&&i.complete&&i.naturalWidth)?i:null;};
 var im={},names=['ra_test_floor','ra_test_king_b','ra_test_princess_b','ra_test_king_r','ra_test_princess_r','ra_test_unit_idle','ra_test_unit_atk','ra_test_proj','ra_practice_arena'];
-for(var k=0;k<names.length;k++){var i=new Image();i.src='assets/'+names[k]+'.png';im[names[k]]=i;}
+for(var k=0;k<names.length;k++){var i=new Image();i.onerror=function(ev){console.warn('PRACTICE_IMG_FAIL',ev.target.src);};i.src='assets/'+names[k]+'.png';im[names[k]]=i;}
 var raf=0,projs=[],last=0,cool=0,ux=40,udir=1;
 cb.addEventListener('click',function(){if(raf)cancelAnimationFrame(raf);raf=0;projs=[];ov.className='hidden';});
 b.addEventListener('click',function(){ov.className='';last=performance.now();cool=0;
  function frame(now){var dt=Math.min(40,now-last);last=now;var c=cv.getContext('2d');
   if(A('ra_practice_arena'))c.drawImage(A('ra_practice_arena'),0,0,300,430);
-  else{c.fillStyle='#241d45';c.fillRect(0,0,300,430);}
+  else{c.fillStyle='#241d45';c.fillRect(0,0,300,430);
+  if(A('ra_test_floor')){c.fillStyle=c.createPattern(A('ra_test_floor'),'repeat');c.fillRect(0,0,300,430);}
+  c.fillStyle='rgba(60,110,220,.55)';c.fillRect(0,200,300,26);c.fillStyle='#8a5a2b';c.fillRect(118,198,64,30);
+  if(A('ra_test_king_b'))c.drawImage(A('ra_test_king_b'),105,296,90,112);
+  if(A('ra_test_princess_b')){c.drawImage(A('ra_test_princess_b'),26,318,58,74);c.drawImage(A('ra_test_princess_b'),216,318,58,74);}
+  if(A('ra_test_king_r'))c.drawImage(A('ra_test_king_r'),105,8,90,112);
+  if(A('ra_test_princess_r')){c.drawImage(A('ra_test_princess_r'),26,26,58,74);c.drawImage(A('ra_test_princess_r'),216,26,58,74);}}
   ux+=udir*dt*0.06;if(ux>230)udir=-1;if(ux<30)udir=1;cool-=dt;
   if(cool<=0&&Math.random()<0.02)cool=1400;
   var spr=cool>900?im.ra_test_unit_atk:im.ra_test_unit_idle;
