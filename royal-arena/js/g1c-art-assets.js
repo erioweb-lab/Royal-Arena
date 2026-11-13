@@ -1125,7 +1125,7 @@ buildCodex();   /* v194: 스탯·레벨 변경 시 도감 강제 동기화 */
 function __syncCodex(){ try{ var sig=JSON.stringify(CARDS); for(const k of DECK) sig+='|'+k+':'+(window.__CARD_LV&&__CARD_LV[k]||0); if(window.__cxSig===sig) return; window.__cxSig=sig; var box=document.getElementById('codex'); if(box){ box.innerHTML=''; buildCodex(); } }catch(e){ } }
 window.__syncCodex=__syncCodex; window.__qaCodex=function(){ try{ return DECK.length+':'+document.querySelectorAll('#codex .cx').length; }catch(e){ return 'n/a'; } };
 $('#elixir-ticks').innerHTML='<i></i>'.repeat(9);
-try{ var __st0=localStorage.getItem('ra_theme_v1'); if(__st0){   /* v487: 부팅 시 선택 테마 복원 — .sel 칩만 복원하던 결함(S.theme은 classic으로 시작 → 간헐적 클래식 바닥) */
+try{ var __st0=localStorage.getItem('ra_theme_v1'); if(__st0){   /* v488: 부팅 시 선택 테마 복원 — .sel 칩만 복원하던 결함(S.theme은 classic으로 시작 → 간헐적 클래식 바닥) */
     var __map={sky:'ice',tomb:'abyss',dusk:'lava',divine:'classic'}, __th=__map[__st0]||__st0;
     if(typeof THEMES!=='undefined'&&THEMES[__th]) S.theme=__th;
     document.querySelectorAll('.t-btn[data-theme]').forEach(function(x){ x.classList.toggle('sel',x.dataset.theme===__st0); });
