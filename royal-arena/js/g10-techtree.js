@@ -1,4 +1,4 @@
-/* g10-techtree.js — v478: 전술 연구소 테크트리 개편 · 유물 8종 확장 · 연구소/유물/도움말 모달 수복.
+/* g10-techtree.js — v479: 전술 연구소 테크트리 개편 · 유물 8종 확장 · 연구소/유물/도움말 모달 수복.
    마지막 로드 청크 — 함수 선언 오버라이드로 런타임 승자가 된다. SKILLS/RELICS const는 건드리지 않고
    본 청크의 TECHS/RELICS8 데이터 + 오버라이드 함수만 사용한다. */
 (function(){
@@ -57,7 +57,7 @@ window.applySkills=function(){
     S._sk=sk;
     var hb=1+0.10*skillLv('def1')+0.10*skillLv('def3');
     for(var i=0;i<towers.length;i++){ var t=towers[i]; if(t.team==='blue'){ t.maxHp=Math.round(t.maxHp*hb); t.hp=t.maxHp; } }
-    if(S.relic==='relic_ante'){ P.elixir=Math.min(ELX_MAX,P.elixir+2); try{ syncHUD(); }catch(e2){} }   /* v478: 개전의 나팔 */
+    if(S.relic==='relic_ante'){ P.elixir=Math.min(ELX_MAX,P.elixir+2); try{ syncHUD(); }catch(e2){} }   /* v479: 개전의 나팔 */
   }catch(e){}
 };
 
@@ -99,7 +99,7 @@ function injectCss(){
   var st=document.createElement('style'); st.id='tt-style';
   st.textContent=
    '.hico{width:20px;height:20px;vertical-align:-4px;margin-right:5px;border-radius:5px;box-shadow:0 0 0 1px rgba(255,179,0,.35)}'+
-   '#overlay-skill .rpanel,#overlay-relic .rpanel{max-height:88dvh;padding-bottom:64px;overflow-y:auto}' /* v478: verchip 여백 — 하단 잘림 수복 */+
+   '#overlay-skill .rpanel,#overlay-relic .rpanel{max-height:88dvh;padding-bottom:64px;overflow-y:auto}' /* v479: verchip 여백 — 하단 잘림 수복 */+
    '#sk-grid{display:flex;gap:8px;justify-content:center;flex-wrap:nowrap;max-width:660px;margin:10px auto 0}'+
    '.tk-col{flex:1;min-width:110px;display:flex;flex-direction:column;gap:0;position:relative}'+
    '.tk-head{display:flex;align-items:center;gap:6px;font-weight:800;font-size:13px;margin-bottom:6px;letter-spacing:1px}'+
@@ -127,15 +127,15 @@ function injectCss(){
    '#btn-skill-reset{border:1.5px solid #e64545;background:rgba(18,24,43,.85);color:#ff9d9d}'+
    '#btn-skill-close{border:1.5px solid #FFB300;background:rgba(18,24,43,.85);color:#FFD54F}'+
    /* 유물 카드 */
-   '#relic-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:560px;margin:10px auto}'+
-   '.rli{display:flex;align-items:center;gap:8px;padding:8px 9px;border:1.5px solid #3d4c73;border-radius:12px;background:rgba(18,24,43,.8);cursor:pointer;transition:border-color .15s,box-shadow .15s}'+
+   '#relic-list{display:grid;grid-template-columns:1fr;gap:7px;max-width:560px;margin:10px auto}'+
+   '.rli{display:flex;align-items:center;gap:10px;padding:9px 11px;border:1.5px solid #3d4c73;border-radius:12px;background:rgba(18,24,43,.8);cursor:pointer;transition:border-color .15s,box-shadow .15s}'+
    '.rli.on{border-color:#FFB300;box-shadow:0 0 10px rgba(255,179,0,.3)}'+
    '.rli.lock{opacity:.55;filter:saturate(.4)}'+
-   '.rli .ricon{width:36px;height:36px;border-radius:9px;flex:0 0 36px}'+
+   '.rli .ricon{width:40px;height:40px;border-radius:9px;flex:0 0 40px}'+
    '.rli .rmeta{flex:1;min-width:0}'+
-   '.rli .rmeta b{font-size:12.5px;display:block}'+
-   '.rli .rmeta small{color:#9fb0d0;font-size:10.5px;line-height:1.3;display:block}'+
-   '.rli .rbadge{font-size:10.5px;padding:4px 8px;border-radius:9px;border:1px solid #7f8fbb;color:#9fb0d0;white-space:nowrap}'+
+   '.rli .rmeta b{font-size:13px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}'+
+   '.rli .rmeta small{color:#9fb0d0;font-size:11px;line-height:1.3;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}'+
+   '.rli .rbadge{font-size:11px;padding:4px 9px;border-radius:9px;border:1px solid #7f8fbb;color:#9fb0d0;white-space:nowrap}'+
    '.rli .rbadge.eq{border-color:#FFB300;color:#FFD54F;font-weight:700}'+
    '.rli .rbadge.lk{border-color:#e64545;color:#ff9d9d}'+
    '';
@@ -184,7 +184,7 @@ window.renderSkillList=function(){
 
 window.ensureSkillUI=function(){
   injectCss();
-  var old=document.getElementById('overlay-skill'); if(old) old.remove();   /* v478: 구버전 UI 교체 — 조기리턴 폐기 */
+  var old=document.getElementById('overlay-skill'); if(old) old.remove();   /* v479: 구버전 UI 교체 — 조기리턴 폐기 */
   var ov=document.createElement('div'); ov.id='overlay-skill'; ov.className='overlay hidden';
   ov.innerHTML='<div class="rpanel"><h2><img class="hico" src="'+icoSrc('ra_rl_ui_lab')+'" alt="">전술 연구소</h2>'
     +'<p class="rsub">승리 보상 SP로 기술 연구 — 티어 2는 두 기술 중 하나를 선택(경로 확정) · 연쇄 환불 · 총 SP 보존</p>'
