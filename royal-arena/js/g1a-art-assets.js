@@ -651,7 +651,11 @@ const UMOT={_def:{},babyd:{flut:1},minions:{flut:1},cleric:{halo:1},boar:{dust:1
 const TRAIL={kingshot:'rgba(255,215,94,.9)',arrow:'rgba(232,226,200,.9)',bullet:'#ffe9a8',bomb:'#ffcf7a',wizfb:'#ffb14d',dragon:'#ff9d3c',ice:'#9cdcff',cannon:'#cfd6e0',bolt:'#e8f0fa'};   /* v332: 볼트 꼬리 추가 */
 const PROJ_SFX_LAUNCH={arrow:'bow',bullet:'musket',bolt:'xbow',wizfb:'firel',dragon:'firel',bomb:'toss',ice:'icel',cannon:'cannon'};   /* v321 */
 /* v324: 프린세스 타워 테마 스킨 게터 — 현재 테마 전용 아트(TSPR 자동 로딩) */
-function __towSkinImg(theme){ try{ if(!theme) return null; var s=TSPR['t_princess_'+theme]; return (s&&s.complete&&s.naturalWidth>0&&s.__valid!==false)?s:null; }catch(e){ return null; } }
+function __towSkinImg(theme,isKing,team){ try{
+  if(!theme) return null;
+  if(isKing){ var kk=window.__KT_IM&&window.__KT_IM[theme+'_'+(team||'n')]; return (kk&&kk.complete&&kk.naturalWidth>0)?kk:null; }
+  var s=TSPR['t_princess_'+theme]; return (s&&s.complete&&s.naturalWidth>0&&s.__valid!==false)?s:null; }catch(e){ return null; } }
+window.__KT_IM={};['ice','lava','wasteland','abyss'].forEach(function(th){['b','r','n'].forEach(function(tm){var im=new Image();im.src='assets/ra_kt_'+th+(tm==='n'?'':'_'+tm)+'.png?v=483';window.__KT_IM[th+'_'+tm]=im;});});   /* v483: 킹타워 테마 스킨 4지대×3톤 */
 /* v324: 원소 콤보 엔진 — 4초 내 이종 원소 재적중 보너스 */
 const ELEM_OF={wizard:'fire',babyd:'fire',flamer:'fire',bomber:'fire',prince:'fire',boar:'fire',boss:'fire',icem:'ice',golem:'ice',giant:'ice',musketeer:'thunder',sniper:'thunder',xbow:'thunder',minions:'thunder',lordknight:'thunder',greed:'poison',scarecrow:'poison',skarmy:'poison'};
 const RA_COMBOS={'fire|ice':['증발',0.25,'#ffd9a8','#ffb14d'],'ice|fire':['증발',0.25,'#ffd9a8','#ffb14d'],'fire|poison':['폭발',0.20,'#ffb14d','#ff8a3c'],'poison|fire':['폭발',0.20,'#ffb14d','#ff8a3c'],'thunder|ice':['감전',0.20,'#ffe95e','#fff2a8'],'ice|thunder':['감전',0.20,'#ffe95e','#fff2a8'],'ice|poison':['부식',0.10,'#a5e85c','#c8f09a'],'poison|ice':['부식',0.10,'#a5e85c','#c8f09a'],'thunder|poison':['격발',0.10,'#cf9dff','#ffe95e'],'poison|thunder':['격발',0.10,'#cf9dff','#ffe95e'],'thunder|fire':['융합',0.10,'#ffcf7a','#ffe08a'],'fire|thunder':['융합',0.10,'#ffcf7a','#ffe08a']};

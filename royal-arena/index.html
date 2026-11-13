@@ -1166,7 +1166,7 @@ html body #overlay-info>div{height:100% !important}
 html body #overlay-info .t-how,html body #overlay-info .t-note{padding-bottom:14px !important}
 html body #overlay-info #btn-info-close{position:sticky !important;bottom:calc(6px + env(safe-area-inset-bottom,0px)) !important;margin:10px auto 0 !important;flex-shrink:0 !important;z-index:7 !important;box-shadow:0 4px 14px rgba(0,0,0,.55) !important}
 html body #overlay-info{padding-bottom:env(safe-area-inset-bottom,0px) !important}
-</style><style id="ui-v453">/* v453: 연습게임 버튼 상단 우측 소형 배치 - 지도버튼보다 작음·겹침 방지(screen-audit 규약) */ #btn-practice{position:absolute!important;right:8px!important;left:auto!important;top:6px!important;bottom:auto!important;height:26px!important;min-height:0!important;min-width:0!important;width:auto!important;padding:0 9px!important;font-size:10px!important;border-radius:10px!important;z-index:60!important} #zoom-chip{max-width:calc(100% - 96px)!important}</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v482</div><div id="app">
+</style><style id="ui-v453">/* v453: 연습게임 버튼 상단 우측 소형 배치 - 지도버튼보다 작음·겹침 방지(screen-audit 규약) */ #btn-practice{position:absolute!important;right:8px!important;left:auto!important;top:6px!important;bottom:auto!important;height:26px!important;min-height:0!important;min-width:0!important;width:auto!important;padding:0 9px!important;font-size:10px!important;border-radius:10px!important;z-index:60!important} #zoom-chip{max-width:calc(100% - 96px)!important}</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v483</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1536,7 +1536,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 <script src="js/g2-sprite-assets.js?v=466"></script>
-<script id="ui-v482-js">/* v482: 승리 화면 — 다시 배틀 버튼을 다음 스테이지(다음 지도) 진입으로 전환. 패배/무승부·최종 지도 클리어 시 기존 다시 배틀 유지 */
+<script id="ui-v483-js">/* v483: 승리 화면 — 다시 배틀 버튼을 다음 스테이지(다음 지도) 진입으로 전환. 패배/무승부·최종 지도 클리어 시 기존 다시 배틀 유지 */
 (function(){
   function mlen(){ try{ return window.__raMAPS.length; }catch(e){ return 9; } }
   var __orig=showResult;
@@ -2353,15 +2353,15 @@ b.addEventListener('click',function(){ov.className='';last=performance.now();coo
 })();
 </script>
 <style id="ui-v456">/* v456: 덱1/덱2-메뉴행 간격 절반 압축(26px→13px) — deck-desc 라인 절반화, 난이도 노출 유지 */ html body #app #deck-desc{margin:0!important;line-height:10px!important;min-height:10px!important;font-size:9px!important} html body #app #title-actions{margin-top:0!important}</style>
-<style id="ui-v482">/* v482: 결과 화면 잘림·겹침 수복 — .r-box footer 핀 고정(버튼이 통계를 덮지 않음)+프레임 하단 침범 제거(rect 기계 판정, 실구조 fw-wrap+r-box) */ html body #overlay-result .r-box{display:flex!important;flex-direction:column!important;max-height:calc(100vh - 36px)!important;overflow:hidden!important;margin:18px auto!important;box-sizing:border-box!important} html body #overlay-result .r-box > *{flex-shrink:0!important} html body #overlay-result .r-box .r-actions,html body #overlay-result .r-box .r-btns,html body #overlay-result .r-box .r-btnrow,html body #overlay-result .r-box .rbtns{flex-shrink:0!important;margin-top:6px!important} html body #overlay-result .r-box .r-scroll,html body #overlay-result .r-box .r-stats,html body #overlay-result .r-box .rlist{flex:1 1 auto!important;overflow-y:auto!important;min-height:0!important} html body #overlay-result .r-box{padding-bottom:10px!important}</style>
-<style id="ui-v482">/* v482: 결과 박스 50px 상승(margin-bottom +100=상승 50)+통계 2열 grid 재적용(1297행 1fr 단일 열 복원보다 후순위) — 사용자 캡처 요청 */
+<style id="ui-v483">/* v483: 결과 화면 잘림·겹침 수복 — .r-box footer 핀 고정(버튼이 통계를 덮지 않음)+프레임 하단 침범 제거(rect 기계 판정, 실구조 fw-wrap+r-box) */ html body #overlay-result .r-box{display:flex!important;flex-direction:column!important;max-height:calc(100vh - 36px)!important;overflow:hidden!important;margin:18px auto!important;box-sizing:border-box!important} html body #overlay-result .r-box > *{flex-shrink:0!important} html body #overlay-result .r-box .r-actions,html body #overlay-result .r-box .r-btns,html body #overlay-result .r-box .r-btnrow,html body #overlay-result .r-box .rbtns{flex-shrink:0!important;margin-top:6px!important} html body #overlay-result .r-box .r-scroll,html body #overlay-result .r-box .r-stats,html body #overlay-result .r-box .rlist{flex:1 1 auto!important;overflow-y:auto!important;min-height:0!important} html body #overlay-result .r-box{padding-bottom:10px!important}</style>
+<style id="ui-v483">/* v483: 결과 박스 50px 상승(margin-bottom +100=상승 50)+통계 2열 grid 재적용(1297행 1fr 단일 열 복원보다 후순위) — 사용자 캡처 요청 */
 html body #overlay-result .r-box{margin:18px auto 118px!important;max-height:calc(100vh - 140px)!important}
 html body #overlay-result #rpane-score{display:grid!important;grid-template-columns:1fr 1fr!important;gap:2px 8px!important;flex:1 1 auto!important;overflow-y:auto!important;min-height:0!important}
 html body #overlay-result #rpane-score .rrow{display:flex!important;justify-content:space-between!important;align-items:baseline!important;gap:4px!important;font-size:10.5px!important;padding:2px 4px!important;margin:0!important}
 html body #overlay-result #rpane-score .rrow span{white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;min-width:0}
 html body #overlay-result #rpane-score .rrow b{flex:none!important;font-size:12px!important}
 html body #overlay-result #rpane-score .rrow.rsum{grid-column:1/-1!important} html body #overlay-result #r-art{width:84px!important;height:84px!important;margin:0 auto 6px!important} html body #overlay-result #r-sub{margin:2px 0 4px!important} html body #overlay-result #r-title{margin-bottom:2px!important} html body #overlay-result .r-tabs{margin:0 0 4px!important}</style>
-<style id="ui-v482">/* v482: 결과 박스 무스크롤 전체 노출 — 버튼 한 행 래핑+아트 72px+행 높이 압축(2열 유지·50px 상승 유지) */
+<style id="ui-v483">/* v483: 결과 박스 무스크롤 전체 노출 — 버튼 한 행 래핑+아트 72px+행 높이 압축(2열 유지·50px 상승 유지) */
 html body #overlay-result .r-box{margin:18px auto 118px!important;max-height:calc(100vh - 140px)!important}
 html body #overlay-result #r-art{width:60px!important;height:60px!important;margin:0 auto 3px!important}
 html body #overlay-result #r-title{font-size:20px!important;margin-bottom:1px!important}
@@ -2377,13 +2377,13 @@ html body #overlay-result #rpane-score .rrow.rsum{grid-column:1/-1!important}
 html body #overlay-result  #r-btnrow{display:flex!important;gap:8px!important;margin-top:3px!important;flex-shrink:0!important}
 html body #overlay-result #r-btnrow #btn-again{flex:1.4 1 0!important;width:auto!important;min-width:0!important;margin:0!important;padding:9px 10px!important;font-size:16px!important;height:auto!important}
 html body #overlay-result #r-btnrow #btn-home{flex:1 1 0!important;width:auto!important;min-width:0!important;margin:0!important;padding:9px 8px!important;font-size:13px!important;height:auto!important}</style>
-<style id="ui-v482">/* v482: 통계 창 내부 스크롤 제거 — g2 런타임 .rrow height:30px 무력화(height:auto)+pane 자연 높이+박스 스크롤 전환(sticky 버튼 행), 2열·50px 상승 유지 */
+<style id="ui-v483">/* v483: 통계 창 내부 스크롤 제거 — g2 런타임 .rrow height:30px 무력화(height:auto)+pane 자연 높이+박스 스크롤 전환(sticky 버튼 행), 2열·50px 상승 유지 */
 html body #overlay-result #rpane-score{flex:0 0 auto!important;overflow:visible!important;height:auto!important;min-height:0!important}
 html body #overlay-result #rpane-score .rrow{height:auto!important;min-height:0!important;font-size:10px!important;padding:2px 4px!important;line-height:1.25!important;margin:0!important}
 html body #overlay-result #rpane-score .rrow b{font-size:11px!important}
 html body #overlay-result .r-box{overflow-y:auto!important;max-height:calc(100vh - 140px)!important;overscroll-behavior:contain!important}
 html body #overlay-result #r-btnrow{position:sticky!important;bottom:0!important;z-index:2!important;background:linear-gradient(180deg,rgba(8,12,26,0),rgba(8,12,26,.9) 30%)!important;padding-top:4px!important}</style>
-<style id="ui-v482">/* v482: 패배 화면 수납 수복 — 사용자 캡처(최악조건 낮은 뷰포트에서 버튼이 마지막 통계를 덮음)+가독·디자인 개선. 2열·상승 유지 */
+<style id="ui-v483">/* v483: 패배 화면 수납 수복 — 사용자 캡처(최악조건 낮은 뷰포트에서 버튼이 마지막 통계를 덮음)+가독·디자인 개선. 2열·상승 유지 */
 html body #overlay-result .r-box{max-height:none!important;margin:14px auto 108px!important}
 html body #overlay-result #rpane-score{max-height:none!important;overflow:visible!important}
 html body #overlay-result #rpane-score .rrow{font-size:11.5px!important;padding:3px 5px!important;line-height:1.45!important}
@@ -2399,7 +2399,7 @@ html body #overlay-result #r-btnrow{padding-bottom:4px!important}</style>
 html body #overlay-result .ric{width:15px!important;height:15px!important;vertical-align:-3px!important;margin-right:3px!important;display:inline-block!important}
 html body #overlay-result .ric2{width:17px!important;height:17px!important;vertical-align:-4px!important;margin:0 1px!important}
 html body #overlay-result .rtab .ric{width:13px!important;height:13px!important;vertical-align:-2px!important}</style>
-<style id="ui-v482">/* v482: 도움말 모달 — 이모지→아이콘 칩·하단 버튼 잘림·verchip 겹침 수복 */
+<style id="ui-v483">/* v483: 도움말 모달 — 이모지→아이콘 칩·하단 버튼 잘림·verchip 겹침 수복 */
 .hico{width:20px;height:20px;vertical-align:-4px;margin-right:5px;border-radius:5px;box-shadow:0 0 0 1px rgba(255,179,0,.35)}
 .info-box{padding-bottom:56px}
 .info-box .t-spec{padding-left:0}
@@ -2408,17 +2408,17 @@ html body #overlay-result .rtab .ric{width:13px!important;height:13px!important;
 .info-box .t-spec li b{color:#ffd75e}
 .numb{display:inline-flex;width:19px;height:19px;border-radius:50%;background:linear-gradient(#ffd75e,#b8860b);color:#1a0e00;font-weight:800;font-size:12px;align-items:center;justify-content:center;margin:0 5px 0 0;flex:0 0 19px;vertical-align:-3px}
 #btn-info .hico{margin-right:6px}
-</style><style id="ui-v482">/* v482: 도움말 확인 버튼 핀(스크롤 중에도 가시)·패널 하단 여백 */
+</style><style id="ui-v483">/* v483: 도움말 확인 버튼 핀(스크롤 중에도 가시)·패널 하단 여백 */
 .info-box #btn-info-close{position:sticky;bottom:0;margin-top:10px;z-index:2;box-shadow:0 -10px 14px rgba(10,14,26,.92)}
-</style><style id="ui-v482">/* v482: 확인 버튼 대비 수복 — 금배경·다크문자(원본 .t-cta 충돌 제거) */
+</style><style id="ui-v483">/* v483: 확인 버튼 대비 수복 — 금배경·다크문자(원본 .t-cta 충돌 제거) */
 .info-box #btn-info-close{background:linear-gradient(#ffd75e,#b8860b) !important;color:#1a0e00 !important;font-size:15px !important;font-weight:800 !important;border:1.5px solid #8a6a00 !important;text-shadow:none !important}
-</style><style id="ui-v482">/* v482: 금테두리 고정 프레임(5px 전 화면 동일)+통계창(#rpane-score) 스크롤 수복+금빛 버튼 스킨(ra_btn_gilt) */
+</style><style id="ui-v483">/* v483: 금테두리 고정 프레임(5px 전 화면 동일)+통계창(#rpane-score) 스크롤 수복+금빛 버튼 스킨(ra_btn_gilt) */
 html body #overlay-result .r-box{border:5px solid #c89b3c!important;border-radius:20px!important;box-shadow:inset 0 0 0 1.5px #ffe08a,0 20px 60px rgba(0,0,0,.6)!important;padding:16px 16px 12px!important;max-width:360px!important}
 html body #overlay-result .r-box #rpane-score,html body #overlay-result .r-box #rpane-rank{flex:1 1 auto!important;overflow-y:auto!important;min-height:0!important}
 html body #overlay-result #r-btnrow #btn-again,html body #overlay-result #r-btnrow #btn-home{background:url(assets/ra_btn_gilt.png)!important;background-size:100% 100%!important;border:none!important;color:#2a1a00!important;text-shadow:0 1px 0 rgba(255,240,180,.6)!important}
-</style><style id="ui-v482">/* v482: 금테두리 원복(2px)+결과 박스 세로 30% 확장(min-height 84vh — 텍스트 가독) */
+</style><style id="ui-v483">/* v483: 금테두리 원복(2px)+결과 박스 세로 30% 확장(min-height 84vh — 텍스트 가독) */
 html body #overlay-result .r-box{border:2px solid var(--gold)!important;box-shadow:0 20px 60px rgba(0,0,0,.6)!important;min-height:84vh!important;margin:14px auto 14px!important}
-</style><style id="ui-v482">/* v482: 패배 화면 프레임 규칙 통일 — 상하 금테두리 동일 노출(max-height 제약+내부 스크롤, 하단 테두리 화면 밖 유출 제거) */
+</style><style id="ui-v483">/* v483: 패배 화면 프레임 규칙 통일 — 상하 금테두리 동일 노출(max-height 제약+내부 스크롤, 하단 테두리 화면 밖 유출 제거) */
 html body #overlay-result .r-box{max-height:calc(100vh - 28px)!important;margin:14px auto!important}
 </style></body>
 </html>

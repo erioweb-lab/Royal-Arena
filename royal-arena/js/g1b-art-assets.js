@@ -683,7 +683,7 @@ function towSkin(k,im){   /* v144: 타워 테마 스킨 — 용암/서리 틴트
 function drawTower(t){try{
       var __tc=(t.kind==='king'?'t_king':'t_princess')+(t.team==='blue'?'_b':'_r');
       var __im=(typeof TSPR!=='undefined')?TSPR[__tc]:null; if(__im) __im=towSkin(__tc,__im);   /* v144: 테마 스킨 적용 */
-      var __tsk=(t.kind!=='king')?__towSkinImg(S.theme):null; if(__tsk) __im=__tsk;   /* v324: 프린세스 타워 테마 스킨 */
+      var __tsk=__towSkinImg(S.theme,t.kind==='king',t.team); if(__tsk) __im=__tsk;   /* v324 → v483: 킹타워 포함 테마 스킨 */
       if(!(__im&&((__im.getContext)||(__im.complete&&__im.naturalWidth>0&&__im.__valid!==false)))){   /* v144: 틴트 캔버스 허용 */
         var x=t.x*TILE,y=t.y*TILE,king=t.kind==='king';
         var hs=king?128:100,ytop=Math.max(y+14-hs,6);
@@ -711,7 +711,7 @@ function drawTower(t){try{
     const hr=t.hp/t.maxHp, hs=king?128:100, ytop=Math.max(y+14-hs,6), by0=Math.max(ytop-18,10);
     ctx.fillStyle='rgba(0,0,0,.22)'; ctx.beginPath();
     ctx.ellipse(x,Math.min(y+10,ytop+hs-6),hs*0.42,hs*0.16,0,0,7); ctx.fill();
-    var __tsk2=(king?null:__towSkinImg(S.theme)); if(__tsk2) ctx.drawImage(__tsk2,x-hs/2,ytop,hs,hs); else ctx.drawImage(TSPR[tc],x-hs/2,ytop,hs,hs);   /* v324: 프린세스 타워 테마 스킨 */
+    var __tsk2=__towSkinImg(S.theme,king,t.team); if(__tsk2) ctx.drawImage(__tsk2,x-hs/2,ytop,hs,hs); else ctx.drawImage(TSPR[tc],x-hs/2,ytop,hs,hs);   /* v324 → v483: 킹타워 포함 테마 스킨 */
     if(hr<0.55){ ctx.strokeStyle='rgba(25,30,42,.7)'; ctx.lineWidth=2;
       ctx.beginPath(); ctx.moveTo(x-hs*0.2,ytop+hs*0.45); ctx.lineTo(x-hs*0.1,ytop+hs*0.62); ctx.lineTo(x-hs*0.17,ytop+hs*0.8); ctx.stroke(); }
     if(hr<0.25){ for(let i=0;i<3;i++){ const sy=((now*22+i*26)%50);
