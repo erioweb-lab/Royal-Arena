@@ -72,7 +72,10 @@ const THEMES={
     bush:'#6b6a2f',flower:'#d9c46b',stone:'#8f8574',stoneHi:'#ab9f8a',stoneEdge:'rgba(60,50,30,.55)',amb:null},
   abyss:{g1:'#2a2d4a',g2:'#343857',speck:'rgba(140,120,255,.10)',blade:'rgba(90,80,180,.28)',
     road:'rgba(120,110,200,.22)',riverA:'#453a8f',riverB:'#6a5ac9',spark:'rgba(180,160,255,.6)',
-    bush:'#3a3a6e',flower:'#9f8fff',stone:'#5a5f7d',stoneHi:'#767c9d',stoneEdge:'rgba(20,20,45,.6)',amb:null}
+    bush:'#3a3a6e',flower:'#9f8fff',stone:'#5a5f7d',stoneHi:'#767c9d',stoneEdge:'rgba(20,20,45,.6)',amb:null},
+  sky:{g1:'#bcd9e8',g2:'#cfe8f2',speck:'rgba(255,255,255,.45)',blade:'rgba(140,190,220,.30)',
+    road:'rgba(200,225,240,.50)',riverA:'#8fc4e0',riverB:'#b8e0f0',spark:'rgba(255,255,255,.70)',
+    bush:'#9fc4d4',flower:'#ffe9a8',stone:'#aab8c4',stoneHi:'#cdd9e2',stoneEdge:'rgba(80,105,125,.5)',amb:'snow'}   /* v495: 천공 정원 전용 지면 — sky→ice 자매 매핑 폐지, ground_sky.png 전용 텍스처 */
 };
 const RARC={c:['#8fa6bd','#4a5f85','#22304f'], r:['#e8b053','#916022','#4e2f10'], e:['#cf6df5','#7233a8','#2e1150']};
 const RKEY={giant:'r',musketeer:'r',wizard:'r',fireball:'r',sniper:'r',prince:'e',zap:'e',valk:'r',babyd:'r',cleric:'e',boar:'r',icem:'r'};

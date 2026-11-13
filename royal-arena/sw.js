@@ -1,4 +1,4 @@
-const CACHE = 'royal-arena-v492';
+const CACHE = 'royal-arena-v495';
 /* v449: 점진 캐싱 수복 — 구조 결함(install addAll 전량 실패) 제거.
    구버전: CORE 전량(330종·81MB) addAll → 자산 1개 실패 시 install reject → 기기가 구버전에 무기한 갇힘(v446 지연·미갱신 사고의 근원).
    신버전: ①install은 셸(html·js·아이콘, ~2MB)만 allSettled 선캐시 ②전체 assets는 activate 이후 백그라운드 프리페치(allSettled — 절대 reject 안 함)
