@@ -813,8 +813,8 @@ function drawUnit(u){try{
   const lunge=u.swing>0?u.swing*34:0;
   const cx0=px+Math.cos(la)*lunge, cy0=py+dy+Math.sin(la)*lunge*0.5;
   ctx.fillStyle='rgba(0,0,0,.28)'; ctx.beginPath(); ctx.ellipse(px,py+5,r*0.8,r*0.36,0,0,7); ctx.fill();
-  if(!fly&&u.c.spd>0&&parts.length<340&&Math.random()<0.14){ const __dl=0.45+Math.random()*0.3;   /* v491: 달리는 먼지 */ parts.push({x:px+(Math.random()*10-5),y:py+6,vx:-Math.cos(u.dir)*(22+Math.random()*22),vy:-10-Math.random()*12,t:__dl,max:__dl,col:'rgba(216,208,192,.55)',grav:0,r:2.5+Math.random()*2.5}); }
-    ctx.strokeStyle='rgba(244,240,225,.85)'; ctx.lineWidth=3.5; ctx.beginPath(); ctx.ellipse(px,py+5,r*0.95,r*0.45,0,0,7); ctx.stroke();   /* v491: 팀 색 링 폐지 — 중립 미광 링 통일 */
+  if(!fly&&u.c.spd>0&&parts.length<340&&Math.random()<0.14){ const __dl=0.45+Math.random()*0.3;   /* v492: 달리는 먼지 */ parts.push({x:px+(Math.random()*10-5),y:py+6,vx:-Math.cos(u.dir)*(22+Math.random()*22),vy:-10-Math.random()*12,t:__dl,max:__dl,col:'rgba(216,208,192,.55)',grav:0,r:2.5+Math.random()*2.5}); }
+    ctx.strokeStyle='rgba(244,240,225,.85)'; ctx.lineWidth=3.5; ctx.beginPath(); ctx.ellipse(px,py+5,r*0.95,r*0.45,0,0,7); ctx.stroke();   /* v492: 팀 색 링 폐지 — 중립 미광 링 통일 */
   if(fly){ ctx.strokeStyle='rgba(255,255,255,.35)'; ctx.setLineDash([3,3]); ctx.lineWidth=1.5;
     ctx.beginPath(); ctx.moveTo(px,py+2); ctx.lineTo(px,py+dy+r-2); ctx.stroke(); ctx.setLineDash([]); }
   if(u.charging){ ctx.strokeStyle='rgba(255,215,94,.9)'; ctx.lineWidth=2.5;
