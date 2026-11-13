@@ -540,7 +540,7 @@ function __raHudInline(){ try{   /* v202: HUD 4요소+DPS 인라인 !important �
   ['ks-btn','btn-kingshot','repair-btn','btn-repair'].forEach(function(id){ var el=q('#'+id); if(!el) return; st(el,'position','absolute'); st(el,'bottom','calc(12px + env(safe-area-inset-bottom,0px))'); st(el,'height','36px'); st(el,'border-radius','999px'); st(el,'padding','0 14px'); st(el,'background','rgba(12,22,42,.88)'); st(el,'border','1.5px solid rgba(255,202,40,.55)'); st(el,'color','#ffd54f'); st(el,'font-weight','700'); st(el,'font-size','13px'); });
   var ks=q('#ks-btn')||q('.kingshot-btn'); if(ks) st(ks,'left','14px');
   var rp=q('#repair-btn')||q('.repair-btn'); if(rp) st(rp,'right','14px');
-  var dp=q('#dpsw'); if(dp){ st(dp,'top','38%'); st(dp,'right','8px'); st(dp,'width','96px'); st(dp,'opacity','.7'); st(dp,'pointer-events','none'); }
+  var dp=q('#dpsw'); if(dp){ st(dp,'top','calc(38% - 100px)');   /* v487: 100px 상승 */ st(dp,'right','8px'); st(dp,'width','96px'); st(dp,'opacity','.7'); st(dp,'pointer-events','none'); }
 }catch(e){ } }
 function buildTowers(){
   towers=[
