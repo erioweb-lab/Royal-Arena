@@ -488,7 +488,7 @@ function render(){
   if(S.shake>0){ ctx.translate((Math.random()-0.5)*S.shake*14,(Math.random()-0.5)*S.shake*14); S.shake=Math.max(0,S.shake-0.02); }
   ctx.clearRect(-24,-24,VW+48,VH+48);
   try{ const T0=THEMES[S.theme]; ctx.fillStyle=T0?T0.g1:'#0b1220'; ctx.fillRect(0,0,VW,VH);   /* v393: 베이스 단색 — 배경 절대 노출 금지 */
-    const __bg2=window.GT_IM&&GT_IM[S.theme]; if(__bg2&&__bg2.complete&&__bg2.naturalWidth) ctx.drawImage(__bg2,0,0,VW,VH);   /* v396: 텍스처 연장 커버 복원 — bgc 결함 시에도 텍스처가 그 자리를 채움 */
+    const __bg2=(typeof GT_IM!=='undefined')&&GT_IM[S.theme]; if(__bg2&&__bg2.complete&&__bg2.naturalWidth) ctx.drawImage(__bg2,0,0,VW,VH);   /* v396: 텍스처 연장 커버 복원 — bgc 결함 시에도 텍스처가 그 자리를 채움 */
   }catch(__e){}
   { const cam=S.cam||{x:W/2,y:H/2,z:1};
     ctx.translate(VW/2,VH/2); ctx.scale(cam.z,cam.z); ctx.translate(-cam.x,-cam.y); }
