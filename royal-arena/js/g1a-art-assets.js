@@ -478,28 +478,11 @@ try{ setInterval(function(){ try{
     if(__de) __de.classList.toggle('ra-noelx', !!(__dc&&__dc.cost>P.elixir)); }
  }catch(e){} },300); }catch(e){}
 
-/* v212: 선택형 이벤트 노드 + 인런 렐릭(다음 배틀 1회) */
-try{ (function(){ var EV=[
- {t:'📦 보물 상자', d:'나무 상자가 반짝인다.', a:['안전 회수 — 금고','relic_hoard'], b:['도박 — 확률 강화','relic_gamble']},
- {t:'🧙 전술 상담', d:'노병이 전술서를 내민다.', a:['공세 중시','relic_frenzy'], b:['방벽 중시','relic_bulwark']},
- {t:'🏕️ 급행 훈련', d:'훈련관이 두 코스를 제안한다.', a:['기동 중시','relic_sprint'], b:['재생 중시','relic_mend']},
- {t:'💰 왕실 세금관', d:'세금관이 금화 자루를 내민다.', a:['재정 확충','relic_gravy'], b:['번영 계약','relic_boom']},
- {t:'❄️ 서리 주술사', d:'주술사가 룬을 내밀며 거래를 청한다.', a:['서리 계약','relic_frost'], b:['수호 룬','relic_guard']}];   /* v297: 신규 렐릭 노드 */
- var iv2=setInterval(function(){ var ov=document.getElementById('overlay-result'); if(!ov) return;
-  if(!ov.classList.contains('hidden')){ window.__raEvSeen=false; return; }   /* v401: 결과 카드(승리 화면) 표시 중엔 이벤트 보류 — 카드 가림 제거, 카드가 닫힌 뒤 타이틀에서 표시 */
-  if(window.__raEvSeen) return; window.__raEvSeen=true; var __ec=(window.S&&(S.theme==='abyss'||S.theme==='tomb'))?0.45:0.30;   /* v434: tomb(묘지) — abyss 체인 재사용 */ if(Math.random()>=__ec) return;   /* v220: 심연 테마 — 이벤트 확률 +15%p */
-  var ev=EV[Math.floor(Math.random()*EV.length)];
-  var m=document.createElement('div'); m.id='overlay-event'; m.style.cssText='position:fixed;inset:0;z-index:120;background:rgba(5,8,18,.9);display:flex;align-items:center;justify-content:center';
-  var box=document.createElement('div'); box.style.cssText='width:min(340px,88vw);background:linear-gradient(180deg,#152544,#0b1426);border:1.5px solid rgba(255,202,40,.65);border-radius:16px;padding:16px;text-align:center;font-family:Jua,sans-serif';
-  box.innerHTML='<div style="font-size:19px;color:#f7c531;margin-bottom:6px">'+ev.t+'</div><div style="font-size:12.5px;color:#c3d2f2;margin-bottom:10px">'+ev.d+'</div><div style="font-size:11px;color:#9fb3dd;margin-bottom:10px">선택 시 다음 배틀 1회에만 적용</div>';
-  [['a'],['b']].forEach(function(p){ var opt=ev[p[0]], btn=document.createElement('button'); btn.textContent=opt[0]; btn.className='dk-act'; btn.style.cssText='display:block;width:100%;margin:6px 0;font-family:Jua,sans-serif';
-   btn.onclick=function(){ if(opt[1]!=='null'){ try{ localStorage.setItem('ra_relic_inrun_v1',opt[1]); }catch(e){} toast('인런 렐릭: '+opt[0]); } sfx('tap'); m.remove(); }; box.appendChild(btn); });
-  m.appendChild(box); document.body.appendChild(m);
- },700); })(); }catch(e){}
+/* v496: 선택형 이벤트 노드(보물 상자·서리 주술사 등 오버레이 팝업) 폐기 — 사용자 요청. 인런 렐릭은 전술연구소 경로로만 */
 
 /* v208: 난이도 3단계(영구 저장) + P13 배치 구역 하이라이트 */
 try{ (function(){
-  window.__raDIFF={name:['보통','악몽','지옥'],col:['#67d98a','#e0a13c','#e05c6e'],hp:[1,1.25,1.55],dmg:[1,1.15,1.35],aelix:[1,1.12,1.28]};
+  window.__raDIFF={name:['보통','악몽','지옥'],col:['#67d98a','#e0a13c','#e05c6e'],hp:[1.10,1.30,1.60],dmg:[1.10,1.22,1.42],aelix:[1.18,1.22,1.35]};   /* v496: 노멀 무보정이 너무 쉬움 — 보통 hp1.10·dmg1.10·적엘릭서(스폰 속도)1.18 상향, 악몽·지옥 격차 유지 상향(사다리 단조) */
   window.__raMAPS=[{id:'royal',name:'로얄 클래식',boss:'왕국 성기사장',sprite:'assets/ra_boss_royal.png',mult:1,ult:null},{id:'frost',name:'서리 호수',boss:'서리 날개 군주',sprite:'assets/ra_boss_frost.png',mult:1.08,ult:'frost'},{id:'lava',name:'용암 협곡',boss:'화염 골렘',sprite:'assets/ra_boss_lava.png',mult:1.16,ult:'lava'},{id:'waste',name:'황야 유적',boss:'사암 미라 군주',sprite:'assets/ra_boss_waste.png',mult:1.24,ult:'waste'},{id:'abyss',name:'심연의 소굴',boss:'심연 군주',sprite:'assets/ra_boss_abyss.png',mult:1.32,ult:'abyss'},{id:'sky',name:'천공 정원',boss:'폭풍 정령왕',sprite:'assets/ra_boss_sky.png',mult:1.40,ult:'frost'},{id:'tomb',name:'봉인 묘지',boss:'백골 대군주',sprite:'assets/ra_boss_tomb.png',mult:1.42,ult:'abyss'},{id:'dusk',name:'황혼 신전',boss:'시간의 파수왕',sprite:'assets/ra_boss_dusk.png',mult:1.44,ult:'waste'},{id:'divine',name:'잠든 신계',boss:'왕좌 수호신',sprite:'assets/ra_boss_divine.png',mult:1.48,ult:'lava'}];   /* v434: 4맵 일괄 추가 — mult 오름차순 단계 사다리(맵-ladder-mapping 규약) */   /* v419: 지도 사다리 단일 진실원 — 스테이지 hp 배율·맵별 보스 스프라이트/이름/파멸기 효과 */
   window.__raMapIdx=function(){ try{ return Math.max(0,Math.min(__raMAPS.length-1,parseInt(localStorage.getItem('ra_map_v1')||'0',10)||0)); }catch(e){ return 0; } };
   window.__raMapHp=function(){ return __raMAPS[__raMapIdx()].mult; };   /* v419: 난이도 배율과 곱셈 결합 */   /* v402: 적 엘릭서 충전 배율 — 스폰 속도 레벨링(단일 진실원) */   /* v210: 단일 진실원 통합 */

@@ -914,7 +914,7 @@ function limbWings(u,shL){ try{
 }catch(e){} }
 
 function startMatch(){ try{ localStorage.setItem('ra_slot_used_v1',String(activeSlot())); }catch(e){}   /* v298: 사용 슬롯 기록 */
-  S.boss=null; S.bossSpawned=false; S.ks=false; S.ksCd=0; S.__bossWave=0; S.doom=0;   /* v495: 스테이지 시작 시 보스 상태 완전 리셋 — 잔여 90초 폴백이 이전 경기 상태 이어받아 갑자기 강림하지 않도록 */
+  S.boss=null; S.bossSpawned=false; S.ks=false; S.ksCd=0; S.__bossWave=0; S.doom=0;   /* v496: 스테이지 시작 시 보스 상태 완전 리셋 — 잔여 90초 폴백이 이전 경기 상태 이어받아 갑자기 강림하지 않도록 */
   try{ if(false&&typeof localStorage!=='undefined'&&localStorage.getItem('ra_tut_done')!=='1'&&!localStorage.getItem('ra_hist_v1')) tutBegin();   /* v176: 튜토리얼 모드 일단 제외 — 재활성 시 if(false&&) 제거 */ }catch(e){}   /* v147: 첫 실행(기록 없음)만 활성 */
   units=[];projs=[];fx=[];floats=[];parts=[];ambient=[];
   S.over=false;S.shown=false;S.winner=null;S.t=300;S.overtime=false;S.double=false;   /* v142: 경기 시간 5분 */
@@ -1127,7 +1127,7 @@ function __syncCodex(){ try{ var sig=JSON.stringify(CARDS); for(const k of DECK)
 window.__syncCodex=__syncCodex; window.__qaCodex=function(){ try{ return DECK.length+':'+document.querySelectorAll('#codex .cx').length; }catch(e){ return 'n/a'; } };
 $('#elixir-ticks').innerHTML='<i></i>'.repeat(9);
 try{ var __st0=localStorage.getItem('ra_theme_v1'); if(__st0){   /* v488: 부팅 시 선택 테마 복원 — .sel 칩만 복원하던 결함(S.theme은 classic으로 시작 → 간헐적 클래식 바닥) */
-    var __map={tomb:'abyss',dusk:'lava',divine:'classic'}, __th=(typeof THEMES!=='undefined'&&THEMES[__st0])?__st0:(__map[__st0]||__st0);   /* v495: sky 전용 지면 보유 — 부팅 sky→ice 강등 폐지 */
+    var __map={tomb:'abyss',dusk:'lava',divine:'classic'}, __th=(typeof THEMES!=='undefined'&&THEMES[__st0])?__st0:(__map[__st0]||__st0);   /* v496: sky 전용 지면 보유 — 부팅 sky→ice 강등 폐지 */
     if(typeof THEMES!=='undefined'&&THEMES[__th]) S.theme=__th;
     document.querySelectorAll('.t-btn[data-theme]').forEach(function(x){ x.classList.toggle('sel',x.dataset.theme===__st0); });
   } }catch(e){}
