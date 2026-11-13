@@ -434,7 +434,7 @@ function update(dt){
   if(S.repCd>0) S.repCd-=dt;   // v106 #12: 수리 쿨다운
   if(S.boss&&!S.boss.dead){ const b=S.boss; b.doom+=dt;
     if(b.doom>=12){ b.doom=0; const kt=towers.find(t=>t.team==='blue'&&t.kind==='king'&&!t.dead);
-      if(kt){ dealDamage(kt,500,'red'); fx.push({x:kt.x,y:kt.y,t:0,dur:0.7,kind:'boom'}); var __mu=__raMAPS[__raMapIdx()], __uz=__mu?__mu.ult:null, __ur=2.2; if(__uz==='lava'){ fx.push({x:kt.x,y:kt.y,t:0,dur:4.5,kind:'burnzone',r:__ur,team:'red'}); } else if(__uz==='frost'){ fx.push({x:kt.x,y:kt.y,t:0,dur:6,kind:'snowzone',r:__ur,team:'red'}); } else if(__uz==='abyss'){ fx.push({x:kt.x,y:kt.y,t:0,dur:6,kind:'venomzone',r:__ur,team:'red'}); } else if(__uz==='waste'){ fx.push({x:kt.x,y:kt.y,t:0,dur:8,kind:'crater',r:__ur,team:'red'}); } S.shake=0.6; banner('💥 파멸기 폭발!'+(__mu?' — '+__mu.boss:''),1800); } } }
+      if(kt){ var __dd=Math.round(500*0.3);   /* v497: 파멸기 피해 70% 감축(500→150), 대신 보조타워 포함 아군 타워 전체 + 유닛(반경 2.2)에 광역 적용 */ for(const __dt2 of towers){ if(__dt2.team==='blue'&&!__dt2.dead) dealDamage(__dt2,__dd,'red'); } for(const __du2 of units){ if(__du2.team==='blue'&&!__du2.dead&&Math.hypot(__du2.x-kt.x,__du2.y-kt.y)<=2.2) dealDamage(__du2,__dd,'red'); } fx.push({x:kt.x,y:kt.y,t:0,dur:0.7,kind:'boom'}); var __mu=__raMAPS[__raMapIdx()], __uz=__mu?__mu.ult:null, __ur=2.2; if(__uz==='lava'){ fx.push({x:kt.x,y:kt.y,t:0,dur:4.5,kind:'burnzone',r:__ur,team:'red'}); } else if(__uz==='frost'){ fx.push({x:kt.x,y:kt.y,t:0,dur:6,kind:'snowzone',r:__ur,team:'red'}); } else if(__uz==='abyss'){ fx.push({x:kt.x,y:kt.y,t:0,dur:6,kind:'venomzone',r:__ur,team:'red'}); } else if(__uz==='waste'){ fx.push({x:kt.x,y:kt.y,t:0,dur:8,kind:'crater',r:__ur,team:'red'}); } S.shake=0.6; banner('💥 파멸기 폭발!'+(__mu?' — '+__mu.boss:''),1800); } } }
   if(S.boss&&S.boss.dead){ S.kills.blue+=5; P.elixir=ELX_MAX; P._full=false;
     S.focus=null; S.focusGap=1.5;   // v116: 보스 격파 줌인 삭제(사용자 지정) — 즉시 해제 + 1.5s 신규 포커스 억제
     banner('💀 보스 토벌! 엘릭서 만땅 · 킬 +5',2200); sfx('crown');
@@ -813,8 +813,8 @@ function drawUnit(u){try{
   const lunge=u.swing>0?u.swing*34:0;
   const cx0=px+Math.cos(la)*lunge, cy0=py+dy+Math.sin(la)*lunge*0.5;
   ctx.fillStyle='rgba(0,0,0,.28)'; ctx.beginPath(); ctx.ellipse(px,py+5,r*0.8,r*0.36,0,0,7); ctx.fill();
-  if(!fly&&u.c.spd>0&&parts.length<340&&Math.random()<0.14){ const __dl=0.45+Math.random()*0.3;   /* v496: 달리는 먼지 */ parts.push({x:px+(Math.random()*10-5),y:py+6,vx:-Math.cos(u.dir)*(22+Math.random()*22),vy:-10-Math.random()*12,t:__dl,max:__dl,col:'rgba(216,208,192,.55)',grav:0,r:2.5+Math.random()*2.5}); }
-    ctx.strokeStyle='rgba(244,240,225,.85)'; ctx.lineWidth=3.5; ctx.beginPath(); ctx.ellipse(px,py+5,r*0.95,r*0.45,0,0,7); ctx.stroke();   /* v496: 팀 색 링 폐지 — 중립 미광 링 통일 */
+  if(!fly&&u.c.spd>0&&parts.length<340&&Math.random()<0.14){ const __dl=0.45+Math.random()*0.3;   /* v497: 달리는 먼지 */ parts.push({x:px+(Math.random()*10-5),y:py+6,vx:-Math.cos(u.dir)*(22+Math.random()*22),vy:-10-Math.random()*12,t:__dl,max:__dl,col:'rgba(216,208,192,.55)',grav:0,r:2.5+Math.random()*2.5}); }
+    ctx.strokeStyle='rgba(244,240,225,.85)'; ctx.lineWidth=3.5; ctx.beginPath(); ctx.ellipse(px,py+5,r*0.95,r*0.45,0,0,7); ctx.stroke();   /* v497: 팀 색 링 폐지 — 중립 미광 링 통일 */
   if(fly){ ctx.strokeStyle='rgba(255,255,255,.35)'; ctx.setLineDash([3,3]); ctx.lineWidth=1.5;
     ctx.beginPath(); ctx.moveTo(px,py+2); ctx.lineTo(px,py+dy+r-2); ctx.stroke(); ctx.setLineDash([]); }
   if(u.charging){ ctx.strokeStyle='rgba(255,215,94,.9)'; ctx.lineWidth=2.5;

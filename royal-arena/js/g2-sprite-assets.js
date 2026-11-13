@@ -48,7 +48,7 @@ function syncBossHud(){
   var __bn=S.__bossName||'부활한 왕'; if(w.__bn!==__bn){ w.__bn=__bn; var __nel=w.querySelector('.bh-name'); if(!__nel){ __nel=document.createElement('div'); __nel.className='bh-name'; __nel.style.cssText='font-size:11px;font-weight:700;color:#ffd54f;text-align:center;line-height:1.3'; w.insertBefore(__nel,w.firstChild); } __nel.textContent='💀 '+__bn; }   /* v429: 보스 HUD 라벨에 맵별 보스명 표기 */
   w.classList.toggle('danger',(b.doom||0)>=9);
   var kb=document.getElementById('ks-btn');
-  if(kb){ if(S.ksCd<=0&&!S.ks) kb.classList.add('ready'); else kb.classList.remove('ready'); }
+  if(kb){ if(S.ksCd<=0&&!S.ks&&P.elixir>=3) kb.classList.add('ready'); else kb.classList.remove('ready'); }
 }
 
 /* ---------- v105 #11: 트로피·아레나 등급 ---------- */

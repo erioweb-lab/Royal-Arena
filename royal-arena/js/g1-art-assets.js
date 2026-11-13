@@ -1176,7 +1176,7 @@ function update(dt){
   if(S.repCd>0) S.repCd-=dt;   // v106 #12: 수리 쿨다운
   if(S.boss&&!S.boss.dead){ const b=S.boss; b.doom+=dt;
     if(b.doom>=12){ b.doom=0; const kt=towers.find(t=>t.team==='blue'&&t.kind==='king'&&!t.dead);
-      if(kt){ dealDamage(kt,500,'red'); fx.push({x:kt.x,y:kt.y,t:0,dur:0.7,kind:'boom'}); var __mu=__raMAPS[__raMapIdx()], __uz=__mu?__mu.ult:null, __ur=2.2; if(__uz==='lava'){ fx.push({x:kt.x,y:kt.y,t:0,dur:4.5,kind:'burnzone',r:__ur,team:'red'}); } else if(__uz==='frost'){ fx.push({x:kt.x,y:kt.y,t:0,dur:6,kind:'snowzone',r:__ur,team:'red'}); } else if(__uz==='abyss'){ fx.push({x:kt.x,y:kt.y,t:0,dur:6,kind:'venomzone',r:__ur,team:'red'}); } else if(__uz==='waste'){ fx.push({x:kt.x,y:kt.y,t:0,dur:8,kind:'crater',r:__ur,team:'red'}); } S.shake=0.6; banner('💥 파멸기 폭발!'+(__mu?' — '+__mu.boss:''),1800); } } }
+      if(kt){ var __dd=Math.round(500*0.3);   /* v497: 파멸기 피해 70% 감축(500→150), 대신 보조타워 포함 아군 타워 전체 + 유닛(반경 2.2)에 광역 적용 */ for(const __dt2 of towers){ if(__dt2.team==='blue'&&!__dt2.dead) dealDamage(__dt2,__dd,'red'); } for(const __du2 of units){ if(__du2.team==='blue'&&!__du2.dead&&Math.hypot(__du2.x-kt.x,__du2.y-kt.y)<=2.2) dealDamage(__du2,__dd,'red'); } fx.push({x:kt.x,y:kt.y,t:0,dur:0.7,kind:'boom'}); var __mu=__raMAPS[__raMapIdx()], __uz=__mu?__mu.ult:null, __ur=2.2; if(__uz==='lava'){ fx.push({x:kt.x,y:kt.y,t:0,dur:4.5,kind:'burnzone',r:__ur,team:'red'}); } else if(__uz==='frost'){ fx.push({x:kt.x,y:kt.y,t:0,dur:6,kind:'snowzone',r:__ur,team:'red'}); } else if(__uz==='abyss'){ fx.push({x:kt.x,y:kt.y,t:0,dur:6,kind:'venomzone',r:__ur,team:'red'}); } else if(__uz==='waste'){ fx.push({x:kt.x,y:kt.y,t:0,dur:8,kind:'crater',r:__ur,team:'red'}); } S.shake=0.6; banner('💥 파멸기 폭발!'+(__mu?' — '+__mu.boss:''),1800); } } }
   if(S.boss&&S.boss.dead){ S.kills.blue+=5; P.elixir=ELX_MAX; P._full=false;
     S.focus=null; S.focusGap=1.5;   // v116: 보스 격파 줌인 삭제(사용자 지정) — 즉시 해제 + 1.5s 신규 포커스 억제
     banner('💀 보스 토벌! 엘릭서 만땅 · 킬 +5',2200); sfx('crown');
@@ -2316,8 +2316,8 @@ function syncHUD(){
   P._full=__full;
   const ksBtn=document.getElementById('ks-btn');
   if(ksBtn){ const bo=!!(S.boss&&!S.boss.dead);
-    ksBtn.classList.toggle('dim',!(bo&&S.ksCd<=0));   // v124: 보스 부재·쿨다운은 dim(비활성 표현)
-    if(bo) ksBtn.textContent=S.ks?'🎯 조준 중… 탭=발사':(S.ksCd>0?'🎯 킹샷 '+Math.ceil(S.ksCd)+'s':'🎯 킹샷 READY'); else ksBtn.textContent='🎯 킹샷'; }
+    ksBtn.classList.toggle('dim',!(bo&&P.elixir>=3));   // v497: 보스 부재·엘릭서 부족 dim — 쿨다운 폐지(엘릭서 3)
+    if(bo) ksBtn.textContent=S.ks?'🎯 조준 중… 탭=발사':(P.elixir>=3?'🎯 킹샷 3':'🎯 킹샷 3 (엘릭서 부족)'); else ksBtn.textContent='🎯 킹샷 3'; }
   $('#badge-double').classList.toggle('hidden',!S.double);
   try{ syncBossHud(); }catch(e){}   // v104: DOM 보스 상태 HUD
   try{ syncRepairBtn(); }catch(e){}   // v106: 수리 버튼 상태
@@ -2643,11 +2643,11 @@ function ensureKsBtn(){
   btn=document.createElement('button'); btn.id='ks-btn'; btn.className='';   // v124: 상시 버튼 — dim으로 활성/비활성 표현(나타났다 사라지지 않음)
   btn.textContent='🎯 킹샷';
   btn.style.cssText='position:absolute;left:calc(var(--fx,0px) + 16px) !important;bottom:16px !important;   /* v124e: body 후순위 시트의 !important(left:10px)를 인라인으로 제침 */z-index:56;font-family:var(--fd,\'Pretendard Variable\',\'Noto Sans KR\',sans-serif);font-size:15px;font-weight:800;padding:0 16px;height:44px;background:#4a2d7d;border:2px solid #c77dff;border-radius:14px;color:#fff;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.5)';
-  btn.onclick=function(){ ensureAudio(); if(S.boss&&!S.boss.dead&&S.ksCd<=0){ S.ks=!S.ks; toast(S.ks?'조준할 위치를 탭하세요':'조준 취소'); syncHUD(); } };
+  btn.onclick=function(){ ensureAudio(); if(S.boss&&!S.boss.dead){ if(S.ks){ S.ks=false; toast('조준 취소'); } else if(P.elixir<3){ toast('엘릭서 부족 — 킹샷은 3 필요'); } else { P.elixir-=3; S.ks=true; toast('조준할 위치를 탭하세요'); } syncHUD(); } };   /* v497: 킹샷 저지 — 쿨다운 폐지, 엘릭서 3으로 즉시 발동(파멸기 캔슬 수단) */
   var __aw=document.getElementById('arena-wrap'); if(__aw) __aw.appendChild(btn); else if(sc) sc.appendChild(btn);
 }
 function fireKingShot(p){
-  S.ks=false; S.ksCd=8; syncHUD();
+  S.ks=false; S.ksCd=0; syncHUD();   /* v497: 재사용 대기시간 폐지 — 엘릭서 비용으로 대체 */
   const kt=towers.find(t=>t.team==='blue'&&t.kind==='king'&&!t.dead)||{x:9,y:29};
   projs.push({kind:'kingshot',team:'blue',x:kt.x,y:kt.y-0.8,tx:clamp(p.x,0.7,COLS-0.7),ty:clamp(p.y,0.7,ROWS-0.7),spd:7,dmg:250,t:0,dur:0.4});
   sfx('cast'); toast('🎯 킹샷 발사');

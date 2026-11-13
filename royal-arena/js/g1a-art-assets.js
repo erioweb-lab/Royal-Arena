@@ -478,11 +478,11 @@ try{ setInterval(function(){ try{
     if(__de) __de.classList.toggle('ra-noelx', !!(__dc&&__dc.cost>P.elixir)); }
  }catch(e){} },300); }catch(e){}
 
-/* v496: 선택형 이벤트 노드(보물 상자·서리 주술사 등 오버레이 팝업) 폐기 — 사용자 요청. 인런 렐릭은 전술연구소 경로로만 */
+/* v497: 선택형 이벤트 노드(보물 상자·서리 주술사 등 오버레이 팝업) 폐기 — 사용자 요청. 인런 렐릭은 전술연구소 경로로만 */
 
 /* v208: 난이도 3단계(영구 저장) + P13 배치 구역 하이라이트 */
 try{ (function(){
-  window.__raDIFF={name:['보통','악몽','지옥'],col:['#67d98a','#e0a13c','#e05c6e'],hp:[1.10,1.30,1.60],dmg:[1.10,1.22,1.42],aelix:[1.18,1.22,1.35]};   /* v496: 노멀 무보정이 너무 쉬움 — 보통 hp1.10·dmg1.10·적엘릭서(스폰 속도)1.18 상향, 악몽·지옥 격차 유지 상향(사다리 단조) */
+  window.__raDIFF={name:['보통','악몽','지옥'],col:['#67d98a','#e0a13c','#e05c6e'],hp:[1.10,1.30,1.60],dmg:[1.10,1.22,1.42],aelix:[1.18,1.22,1.35]};   /* v497: 노멀 무보정이 너무 쉬움 — 보통 hp1.10·dmg1.10·적엘릭서(스폰 속도)1.18 상향, 악몽·지옥 격차 유지 상향(사다리 단조) */
   window.__raMAPS=[{id:'royal',name:'로얄 클래식',boss:'왕국 성기사장',sprite:'assets/ra_boss_royal.png',mult:1,ult:null},{id:'frost',name:'서리 호수',boss:'서리 날개 군주',sprite:'assets/ra_boss_frost.png',mult:1.08,ult:'frost'},{id:'lava',name:'용암 협곡',boss:'화염 골렘',sprite:'assets/ra_boss_lava.png',mult:1.16,ult:'lava'},{id:'waste',name:'황야 유적',boss:'사암 미라 군주',sprite:'assets/ra_boss_waste.png',mult:1.24,ult:'waste'},{id:'abyss',name:'심연의 소굴',boss:'심연 군주',sprite:'assets/ra_boss_abyss.png',mult:1.32,ult:'abyss'},{id:'sky',name:'천공 정원',boss:'폭풍 정령왕',sprite:'assets/ra_boss_sky.png',mult:1.40,ult:'frost'},{id:'tomb',name:'봉인 묘지',boss:'백골 대군주',sprite:'assets/ra_boss_tomb.png',mult:1.42,ult:'abyss'},{id:'dusk',name:'황혼 신전',boss:'시간의 파수왕',sprite:'assets/ra_boss_dusk.png',mult:1.44,ult:'waste'},{id:'divine',name:'잠든 신계',boss:'왕좌 수호신',sprite:'assets/ra_boss_divine.png',mult:1.48,ult:'lava'}];   /* v434: 4맵 일괄 추가 — mult 오름차순 단계 사다리(맵-ladder-mapping 규약) */   /* v419: 지도 사다리 단일 진실원 — 스테이지 hp 배율·맵별 보스 스프라이트/이름/파멸기 효과 */
   window.__raMapIdx=function(){ try{ return Math.max(0,Math.min(__raMAPS.length-1,parseInt(localStorage.getItem('ra_map_v1')||'0',10)||0)); }catch(e){ return 0; } };
   window.__raMapHp=function(){ return __raMAPS[__raMapIdx()].mult; };   /* v419: 난이도 배율과 곱셈 결합 */   /* v402: 적 엘릭서 충전 배율 — 스폰 속도 레벨링(단일 진실원) */   /* v210: 단일 진실원 통합 */
