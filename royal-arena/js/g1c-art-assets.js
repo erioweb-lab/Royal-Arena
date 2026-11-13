@@ -1125,7 +1125,11 @@ buildCodex();   /* v194: 스탯·레벨 변경 시 도감 강제 동기화 */
 function __syncCodex(){ try{ var sig=JSON.stringify(CARDS); for(const k of DECK) sig+='|'+k+':'+(window.__CARD_LV&&__CARD_LV[k]||0); if(window.__cxSig===sig) return; window.__cxSig=sig; var box=document.getElementById('codex'); if(box){ box.innerHTML=''; buildCodex(); } }catch(e){ } }
 window.__syncCodex=__syncCodex; window.__qaCodex=function(){ try{ return DECK.length+':'+document.querySelectorAll('#codex .cx').length; }catch(e){ return 'n/a'; } };
 $('#elixir-ticks').innerHTML='<i></i>'.repeat(9);
-try{ var __st0=localStorage.getItem('ra_theme_v1'); if(__st0) document.querySelectorAll('.t-btn[data-theme]').forEach(function(x){ x.classList.toggle('sel',x.dataset.theme===__st0); }); }catch(e){}
+try{ var __st0=localStorage.getItem('ra_theme_v1'); if(__st0){   /* v486: 부팅 시 선택 테마 복원 — .sel 칩만 복원하던 결함(S.theme은 classic으로 시작 → 간헐적 클래식 바닥) */
+    var __map={sky:'ice',tomb:'abyss',dusk:'lava',divine:'classic'}, __th=__map[__st0]||__st0;
+    if(typeof THEMES!=='undefined'&&THEMES[__th]) S.theme=__th;
+    document.querySelectorAll('.t-btn[data-theme]').forEach(function(x){ x.classList.toggle('sel',x.dataset.theme===__st0); });
+  } }catch(e){}
 document.querySelectorAll('.t-btn[data-theme]').forEach(b=>b.addEventListener('click',()=>{
   S.theme=b.dataset.theme; try{ drawStatic(); }catch(__te){ try{ var __old=S.theme; S.theme={sky:'ice',tomb:'abyss',dusk:'lava',divine:'classic'}[b.dataset.theme]||'classic'; drawStatic(); S.theme=__old; }catch(__te2){} }   /* v434d: 신규 테마 무케이스(THEMES.g1 조회 실패 실측) — 자매 팔레트로 재페인트 폴백, S.theme 원복(보너스 체인은 신규 키 유지) */
   document.querySelectorAll('.t-btn[data-theme]').forEach(x=>x.classList.toggle('sel',x===b)); try{ localStorage.setItem('ra_theme_v1',S.theme); }catch(e){}   /* v222 */
