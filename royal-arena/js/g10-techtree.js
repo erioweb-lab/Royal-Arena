@@ -187,7 +187,7 @@ window.ensureSkillUI=function(){
   var old=document.getElementById('overlay-skill'); if(old) old.remove();   /* v479: 구버전 UI 교체 — 조기리턴 폐기 */
   var ov=document.createElement('div'); ov.id='overlay-skill'; ov.className='overlay hidden';
   ov.innerHTML='<div class="rpanel"><h2><img class="hico" src="'+icoSrc('ra_rl_ui_lab')+'" alt="">전술 연구소</h2>'
-    +'<p class="rsub">승리 보상 SP로 기술 연구 — 티어 2는 두 기술 중 하나를 선택(경로 확정) · 연쇄 환불 · 총 SP 보존</p>'
+    +'<p class="rsub">지도 클리어 보상 SP로 기술 연구 — 티어 2는 두 기술 중 하나를 선택(경로 확정) · 연쇄 환불 · 총 SP 보존</p>'
     +'<div id="sk-sp"></div><div id="sk-grid"></div>'
     +'<div class="sk-foot"><button id="btn-skill-reset">전체 초기화</button><button id="btn-skill-close">닫기</button></div></div>';
   document.body.appendChild(ov);
