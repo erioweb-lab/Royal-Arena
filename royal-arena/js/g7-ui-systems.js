@@ -1886,9 +1886,9 @@ try{ relayoutHud(); }catch(e){}
 
 
 
-/* v502: SP 소급 — 신규 규칙(지도 1클리어=+1)을 기존 누적분에 반영(1회성): 보유·누적 = 지도 클리어 수(ra_wins_v1) */
-(function(){ var n=0; var tick=function(){ try{ if(localStorage.getItem('ra_sp_mig_v502')) return;
+/* v505: SP 소급 — 신규 규칙(지도 1클리어=+1)을 기존 누적분에 반영(1회성): 보유·누적 = 지도 클리어 수(ra_wins_v1) */
+(function(){ var n=0; var tick=function(){ try{ if(localStorage.getItem('ra_sp_mig_v505')) return;
   var w=parseInt(localStorage.getItem('ra_wins_v1')||'0',10)||0;
   if(typeof spState!=='function'){ if(++n<50) setTimeout(tick,200); return; }
   var st=spState(); var nw=Math.min(st.total,w); st.sp=nw; st.total=nw; spSave(st);
-  localStorage.setItem('ra_sp_mig_v502','1'); }catch(e){} }; tick(); })();
+  localStorage.setItem('ra_sp_mig_v505','1'); }catch(e){} }; tick(); })();

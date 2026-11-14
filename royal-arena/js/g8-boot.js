@@ -1348,12 +1348,25 @@ if('serviceWorker' in navigator){
 /* v59: 박격포 캐논 스프라이트(수직 포신·소형) — SPR.cannon 주입 */
 (function(){ var __c="assets/img_264.png"; var __im=new Image(); __im.src=__c; if(typeof SPR!=='undefined') SPR.cannon=__im; })();
 
-/* v502: 세로 550px 기준 자동 무스크롤 핏터 — 로비·전술연구소 오버레이가 넘치면 zoom으로 재배치 축소(구조 무관 보장) */
+/* v505: 로비 자동 핏터(zoom 재배치) */
 (function(){ var fit=function(){
   try{ var st=document.getElementById('screen-title');
-    if(st){ if(st.scrollHeight>st.clientHeight+1){ var z=parseFloat(st.style.zoom||'1')*(st.clientHeight/st.scrollHeight); st.style.zoom=Math.max(0.8,z).toFixed(3); } }
-    var sk=document.getElementById('overlay-skill');
-    if(sk&&sk.className.indexOf('hidden')<0){ var rp=sk.querySelector('.rpanel');
-      if(rp){ if(rp.scrollHeight>rp.clientHeight+2){ var z2=parseFloat(rp.style.zoom||'1')*(rp.clientHeight/rp.scrollHeight); rp.style.zoom=Math.max(0.55,z2).toFixed(3); } } }
+    if(st&&st.scrollHeight>st.clientHeight+1){ var z=parseFloat(st.style.zoom||'1')*(st.clientHeight/st.scrollHeight); st.style.zoom=Math.max(0.8,z).toFixed(3); }
   }catch(e){} };
-  setInterval(fit,400); })(); 
+  setInterval(fit,400); })();
+
+/* v505: 전술연구소 = 메인 화면 크기(뷰포트 전체) — 압축 규칙 무효화 오버라이드 시트(후순위 보장 재주입) */
+(function(){ var put=function(){
+  try{ var old=document.getElementById('v505-lab-full'); if(old) return;
+    var sk=document.getElementById('overlay-skill'); if(!sk) return;
+    var st=document.createElement('style'); st.id='v505-lab-full';
+    st.textContent="#overlay-skill{align-items:center!important;justify-content:center!important}"
+    +"#overlay-skill .rpanel{width:min(640px,100vw)!important;max-width:min(640px,100vw)!important;height:calc(100dvh - 12px)!important;max-height:calc(100dvh - 12px)!important;padding:10px 10px!important;border-radius:16px!important;overflow-y:auto!important;overflow-x:hidden!important}"
+    +"#overlay-skill h2{font-size:19px!important;margin:2px 0 3px!important}#overlay-skill .rsub{font-size:11.5px!important;margin:2px 0 4px!important}#overlay-skill #sk-sp{font-size:13px!important;margin:4px 0!important}"
+    +"#overlay-skill #sk-grid{gap:9px!important;margin:6px auto!important;max-width:660px!important}#overlay-skill #sk-grid > *{gap:6px!important;min-width:0!important;flex:1 1 0!important}"
+    +"#overlay-skill #sk-grid > * > *{padding:6px 34px 6px 8px!important;font-size:12.5px!important;line-height:1.3!important;overflow-wrap:break-word!important;word-break:break-word!important}"
+    +"#overlay-skill #sk-grid * small{font-size:10.5px!important;margin:2px 0 3px!important;line-height:1.25!important;overflow-wrap:break-word!important}"
+    +"#overlay-skill #sk-grid button,#overlay-skill .sk-item button{width:25px!important;height:25px!important;right:7px!important;font-size:14px!important}"
+    +"#overlay-skill #btn-skill-reset,#overlay-skill #btn-skill-close{margin:8px auto 0!important;padding:8px 0!important;font-size:13px!important;width:130px!important}";
+    document.body.appendChild(st); }catch(e){} };
+  setInterval(put,300); })();
