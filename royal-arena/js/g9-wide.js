@@ -1,5 +1,6 @@
 /* v382/v391: 와이드 아레나 — 캔버스=박스 풀핏(VW+VH)+다리 타워축 스냅+지면 재렌더 */
 const GT_IM={};['classic','lava','ice','wasteland','abyss','sky'].forEach(function(t){const im=new Image();im.onload=function(){try{drawStatic()}catch(e){}};   /* v397: 늦로딩 재도색 훅 — GT 도착 후 bgc 평탄 잔존(좌측 단색 띠) 차단, 훅을 src 설정 전에 부착해 캐시 즉시 로드 누락 방지 */im.src='assets/ground_'+t+'.png?v=505';GT_IM[t]=im;});
+/* v508: 전용 지면 없는 테마는 자매 텍스처 별칭 — 봉인묘지/황혼신전/잠든신계 */ GT_IM.tomb = GT_IM.abyss; GT_IM.dusk = GT_IM.lava; GT_IM.divine = GT_IM.classic;
 function __fitWide(){
   try{
     const r=canvas.getBoundingClientRect(); if(r.width<10||r.height<10) return;
