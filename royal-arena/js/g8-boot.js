@@ -1355,18 +1355,21 @@ if('serviceWorker' in navigator){
   }catch(e){} };
   setInterval(fit,400); })();
 
-/* v505: 전술연구소 = 메인 화면 크기(뷰포트 전체) — 압축 규칙 무효화 오버라이드 시트(후순위 보장 재주입) */
+/* v506: 전술연구소 = 메인 화면 크기(뷰포트 전체) — 압축 규칙 무효화 오버라이드 시트(후순위 보장 재주입)
+   v506 수복: 카드 우측 34px 패딩은 구 절대배치 버튼 잔재 — 인플로우 .tk-btns(±버튼)와 충돌해 LV 라벨 세로 줄바꿈·+버튼 카드 경계 침범. .tk-item에만 좌우 대칭 8px 패딩 + .tk-btns wrap 가드 */
 (function(){ var put=function(){
-  try{ var old=document.getElementById('v505-lab-full'); if(old) return;
+  try{ var old=document.getElementById('v506-lab-full'); if(old) return;
     var sk=document.getElementById('overlay-skill'); if(!sk) return;
-    var st=document.createElement('style'); st.id='v505-lab-full';
+    var st=document.createElement('style'); st.id='v506-lab-full';
     st.textContent="#overlay-skill{align-items:center!important;justify-content:center!important}"
     +"#overlay-skill .rpanel{width:min(640px,100vw)!important;max-width:min(640px,100vw)!important;height:calc(100dvh - 12px)!important;max-height:calc(100dvh - 12px)!important;padding:10px 10px!important;border-radius:16px!important;overflow-y:auto!important;overflow-x:hidden!important}"
     +"#overlay-skill h2{font-size:19px!important;margin:2px 0 3px!important}#overlay-skill .rsub{font-size:11.5px!important;margin:2px 0 4px!important}#overlay-skill #sk-sp{font-size:13px!important;margin:4px 0!important}"
     +"#overlay-skill #sk-grid{gap:9px!important;margin:6px auto!important;max-width:660px!important}#overlay-skill #sk-grid > *{gap:6px!important;min-width:0!important;flex:1 1 0!important}"
-    +"#overlay-skill #sk-grid > * > *{padding:6px 34px 6px 8px!important;font-size:12.5px!important;line-height:1.3!important;overflow-wrap:break-word!important;word-break:break-word!important}"
+    +"#overlay-skill #sk-grid .tk-item{padding:6px 8px!important;font-size:12.5px!important;line-height:1.3!important;overflow-wrap:break-word!important;word-break:break-word!important}"
+    +"#overlay-skill .tk-item b{white-space:normal!important;display:-webkit-box!important;-webkit-line-clamp:2!important;-webkit-box-orient:vertical!important;overflow:hidden!important;word-break:keep-all!important;line-height:1.25!important}"
+    +"#overlay-skill .tk-row{padding:0!important}#overlay-skill .tk-btns{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:4px!important;flex-wrap:wrap!important}#overlay-skill .tk-btns .sk-lv{white-space:nowrap!important}"
     +"#overlay-skill #sk-grid * small{font-size:10.5px!important;margin:2px 0 3px!important;line-height:1.25!important;overflow-wrap:break-word!important}"
-    +"#overlay-skill #sk-grid button,#overlay-skill .sk-item button{width:25px!important;height:25px!important;right:7px!important;font-size:14px!important}"
+    +"#overlay-skill #sk-grid button,#overlay-skill .tk-item button{width:25px!important;height:25px!important;flex:0 0 25px!important;font-size:14px!important}"
     +"#overlay-skill #btn-skill-reset,#overlay-skill #btn-skill-close{margin:8px auto 0!important;padding:8px 0!important;font-size:13px!important;width:130px!important}";
     document.body.appendChild(st); }catch(e){} };
   setInterval(put,300); })();

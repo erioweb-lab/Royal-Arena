@@ -108,13 +108,13 @@ function injectCss(){
    '.tk-row{display:flex;gap:6px}@media (max-width:420px){.tk-row{flex-direction:column;gap:6px}}.tk-item small{min-height:0}@media (max-width:420px){.tk-item .tk-ic{width:26px;height:26px}.tk-item{padding:6px 6px 6px 7px}}'+
    '.tk-item{position:relative;background:rgba(18,24,43,.92);border:1.5px solid #3d4c73;border-radius:12px;padding:7px 6px 7px 8px;color:#dfe8ff;text-align:left;font-size:12px;flex:1;transition:box-shadow .15s,border-color .15s}'+
    '.tk-item .tk-ic{width:32px;height:32px;border-radius:8px;display:block;margin-bottom:4px}'+
-   '.tk-item b{font-size:12.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}'+
+   '.tk-item b{font-size:12.5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;white-space:normal;word-break:keep-all;overflow-wrap:break-word;line-height:1.25}'+ /* v506: 말줄임 폐기 — 2행 랩으로 전체 제목 노출 */
    '.tk-item small{display:block;color:#9fb0d0;font-size:10.5px;margin:2px 0 4px;line-height:1.3;min-height:26px}'+
    '.tk-item .sk-lv{color:#FFD54F;font-weight:700;font-size:11px}'+
    '.tk-item button{width:25px;height:25px;border-radius:8px;border:1px solid #FFB300;background:rgba(18,24,43,.95);color:#FFD54F;font-weight:800;cursor:pointer;font-size:14px;line-height:1}'+
    '.tk-item button:disabled{opacity:.3;cursor:default}'+
    '.tk-item button.tk-minus{border-color:#7f8fbb;color:#9fb0d0}'+
-   '.tk-btns{display:flex;align-items:center;justify-content:space-between;margin-top:3px}.tk-item.on{border-color:#FFB300;box-shadow:0 0 8px rgba(255,179,0,.25)}'+
+    '.tk-btns{display:flex;align-items:center;justify-content:space-between;gap:4px;flex-wrap:wrap;margin-top:3px}.tk-item .sk-lv{white-space:nowrap}.tk-item.on{border-color:#FFB300;box-shadow:0 0 8px rgba(255,179,0,.25)}'+
    '.tk-item.max{border-color:#ffd75e;box-shadow:0 0 12px rgba(255,215,94,.45)}'+
    '.tk-item.lock{opacity:.55;filter:saturate(.4)}'+
    '.tk-item.t1{border-color:#8a97bd}.tk-item.t3{border-color:#c77dff}'+

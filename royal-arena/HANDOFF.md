@@ -267,3 +267,18 @@
 - (v497) 보스 파멸기 정가+킹샷 개편(사용자 요청): ①파멸기(doom 12s) 피해 500→150(-70%), 대신 아군 타워 전체(킹+보조 둘 다 실측 150 감소)와 유닛(왕 기준 반경 2.2)에 광역 적용 — g1b doom 블록 ②킹샷 저지: 재사용 대기 8s 폐지 → 엘릭서 3 소모 즉시 발동(부족 시 토스트·버튼 dim·라벨 '킹샷 3'), 발사 후 ksCd=0 — g1c 버튼/HUD·g2 ready 게이트. 맵별 파멸기 존 fx(burnzone 등)는 기존 유지. 게이트: 킹샷 무장(엘릭서 10→7)·해제·명중 시 그로기/파멸기 캔슬·파멸기 시 타워 3기 각 150 감소·doom 리셋·오류 0(로컬).
 - (v502) 상태 주의: 550px 무스크롤은 미완성 — 로컬 실측에서 연구소(360×550 sh>ch)·타이틀 3px 잔여가 CSS 압축(g2~g8 주입 스타일 직접 삽입)과 zoom 핏터(g8-boot 400ms 폴러)로도 해소 안 됨(원인 미규명 — 헤드리스 zoom/오버레이 인스턴스 의심). SP 소급 마이그레이션은 실측 PASS(41→12, ra_wins_v1 기준). 다음 세션: ①로컬 550px에서 .rpanel computed style·자식 클래스 덤프 후 실제 지배 규칙 특정 ②g10-techtree가 오버레이를 자체 마크업으로 다시 그리는지 확인(스킨 갱신 타이밍) ③zoom 미적용 시 수동 폰트/패딩 산출.
 - (v505) 연구소 3열 가로 클리핑 수정: 3열 최소폭 강제(150px→총470px)가 패널 340px 초과 → min-width 0·flex 균등 분할(101px×3)·overflow-x hidden·카드 word-break. 기계 검사: 겹침 0·잘림 0·패널 전체 크기(97%+). 잔여: 그리드 내용 12px 초과는 overflow-x hidden으로 클립(시각 판독으로 확인 요망), 360×550 타이틀 3px 잔여.
+
+### v506 (2026-11-14 — 현재)
+- 전술연구소 버튼 레이아웃 수복(사용자 캡처 — LV 라벨 세로 줄바꿈·±버튼 카드 경계 침범·T2 이중 압박): 근원=v505 오버라이드 시트의 구 절대배치 잔재 패딩(6px 34px)이 인플로우 .tk-btns를 질식. 수복=패딩 .tk-item 한정 좌우 8px·.tk-row 패딩 0·.tk-btns flex-wrap 가드+sk-lv nowrap·버튼 right 잔재 제거. g8 시트(v506-lab-full)+g10 기본 시트 이중 가드. 게이트: VM:OK·캡처 판독(아래). 프롬프트=dev-pipeline/references/skill-lab-button-layout-prompt.md.
+
+### v506 보강 (2026-11-14 2차)
+- 스킬 제목 말줄임 폐기(판독 지적 반영): .tk-item b 2행 랩(-webkit-line-clamp:2·word-break:keep-all) — g10 기본 시트+g8 v506 시트 이중 적용. 360×600 캡처 판독 4항목 전부 통과(제목 온전·LV 1행·버튼 카드 내·겹침/잘림 0). 라이브 칩 v505 확인 — 미배포 상태, 토큰 수령 후 푸시 필요.
+
+## 신규 세션 부팅 스킬 세트 (2026-11-14 등록 — 사이클 시작 시 최우선 로드)
+> 새 세션에서 이 저장소 작업을 시작할 때는 **본 HANDOFF.md를 첫 단계로 읽고**, 아래 스킬 세트를 로드한 뒤 작업한다. 스킬은 트리거 키워드로 자동 발동되지만, 누락 방지를 위해 dev-pipeline SKILL.md에 부팅 규칙으로도 고정했다.
+- **필수(모든 사이클)**: royal-arena-dev-pipeline(단위구현→단위검증→통합UI→빌드→푸시 게이트) · royal-arena-qa-gates(vm 컴파일·배너 토큰·회귀 게이트) · github-push(토큰 복구 마스킹 푸시)
+- **화면·UI 변경 시**: royal-arena-screen-audit(전화면 캡처 감사 — references/post-change-clip-audit-prompt.md) · self-check(완료 기준 실행 검증) · royal-arena-self-check(라이브 운영 URL 실측)
+- **그래픽·에셋 추가 시**: royal-arena-art-pipeline · royal-arena-unit-card-art · game-texture(지면 텍스처 3대 조건)
+- **밸런스 조정 시**: royal-arena-balance-map(원가치 공식·총데미지 맵)
+- **코드 배치·분할 시**: royal-arena-file-governance(g1 8분할·크기 예산)
+- **캡처 서비스 장애 시**: headless-render-verify(playwright 폴백 — 미검증 방치 금지)
