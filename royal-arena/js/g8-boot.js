@@ -1348,10 +1348,16 @@ if('serviceWorker' in navigator){
 /* v59: 박격포 캐논 스프라이트(수직 포신·소형) — SPR.cannon 주입 */
 (function(){ var __c="assets/img_264.png"; var __im=new Image(); __im.src=__c; if(typeof SPR!=='undefined') SPR.cannon=__im; })();
 
-/* v505: 로비 자동 핏터(zoom 재배치) */
+/* v507: 로비 자동 핏터 개정 — 급축소 근본 수복. 기존: 넘침 시 zoom을 무한 곤축(하한 0.8)해 도움말 닫은 뒤 메인이 확 줄어 보임. 개정: ①하한 0.93 ②틱당 최대 4% 보정(스텝 램프) ③수렴 후 재보정 억제 */
 (function(){ var fit=function(){
-  try{ var st=document.getElementById('screen-title');
-    if(st&&st.scrollHeight>st.clientHeight+1){ var z=parseFloat(st.style.zoom||'1')*(st.clientHeight/st.scrollHeight); st.style.zoom=Math.max(0.8,z).toFixed(3); }
+  try{ var st=document.getElementById('screen-title'); if(!st) return;
+    var over=st.scrollHeight-st.clientHeight;
+    if(over>2){
+      var cur=parseFloat(st.style.zoom||'1');
+      var target=cur*(st.clientHeight/st.scrollHeight);
+      target=Math.max(0.93, Math.max(target, cur-0.04));   /* 하한 0.93 + 틱당 -4% 램프 */
+      if(target<cur-0.0005) st.style.zoom=target.toFixed(3);
+    }
   }catch(e){} };
   setInterval(fit,400); })();
 
