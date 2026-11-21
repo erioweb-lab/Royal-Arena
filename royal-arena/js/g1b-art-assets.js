@@ -314,6 +314,7 @@ function showResult(){
   $('#r-sub').innerHTML = `최종 왕관 <b>${crowns} : ${crownR}</b>${S.overtime?' · 연장전':''}<br>총점 <b>${score}</b>`;
   /* v513: 세부집계 패널 삭제 — 제거된 요소 쓰기 전면 가드(미가드 시 showResult 예외로 결과 모달 미노출) */
   try{ var __t; if(__t=document.getElementById('rt-crown')) __t.textContent=crowns*300;
+  try{ var __rk=document.getElementById('rt-kill'); if(__rk) __rk.textContent=killsB; }catch(__e){}   /* v532 */
     if(__t=document.getElementById('rt-kill')) __t.textContent=killsB*15;
     if(__t=document.getElementById('rt-kd')) __t.textContent=killsB+' / '+((S.deaths&&S.deaths.blue)||0);
     if(__t=document.getElementById('rt-spell')) __t.textContent=((S.spells&&S.spells.blue)||0)+'회';
