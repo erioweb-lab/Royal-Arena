@@ -1069,6 +1069,7 @@ html,body{overflow:hidden !important;height:100%}
 #overlay-result .r-box{max-height:min(86dvh,880px) !important;overflow-y:auto !important;overscroll-behavior:contain}
 #overlay-result #r-actions{position:sticky;bottom:0;margin-top:10px;padding:10px 0 4px;background:linear-gradient(180deg,rgba(10,16,32,0),rgba(10,16,32,.96) 45%)}
 </style>
+<link rel="stylesheet" href="assets/camera.css?v=508">
 </head>
 <body>
 
@@ -1204,7 +1205,7 @@ html body .info-box #btn-info-close{
   z-index:2 !important}
 html body .info-box #btn-info-close,html body .info-box #btn-info-close *{color:#2b1c05 !important;text-shadow:none !important}
 </style><style id="ui-v507">/* v507: 타이틀 zoom 핏터 상한 — 도움말 닫기 후 메인이 0.8까지 눌리는 급축소 차단(최소 0.93·한 번에 최대 4% 보정) */
-</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v507</div><div id="app">
+</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v509</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1242,8 +1243,29 @@ html body .info-box #btn-info-close,html body .info-box #btn-info-close *{color:
     </header>
     <div id="arena-wrap"><canvas id="arena" width="540" height="960"></canvas>
       <div id="emote-bar"><button class="emote-btn" data-e="👑">👑</button><button class="emote-btn" data-e="👍">👍</button><button class="emote-btn" data-e="😂">😂</button><button class="emote-btn" data-e="😭">😭</button></div>
-      <div id="emote-bubble"></div></div>
+      <div id="emote-bubble"></div>
+      <aside id="camera-details" class="hidden" aria-label="카메라 설정">
+        <div class="camera-options"><label for="camera-intensity">자동 연출</label>
+        <select id="camera-intensity"><option value="low">약하게</option><option value="normal" selected>보통</option><option value="high">강하게</option></select>
+        <button id="camera-map-toggle" type="button" aria-pressed="false">미니맵 열기</button></div>
+        <div id="camera-map-wrap" class="hidden"><canvas id="camera-minimap" width="120" height="88" tabindex="0" role="button" aria-label="전장 미니맵. 원하는 위치를 눌러 이동. 방향키로도 이동할 수 있습니다."></canvas><p>누른 위치로 이동</p></div>
+      </aside></div>
     <div id="hud">
+      <!-- v508: 카메라 조작은 카드와 분리된 전용 행. 상태는 단일 RACamera API가 소유한다. -->
+      <nav id="camera-controls" aria-label="전투 카메라">
+        <div class="camera-modes" role="group" aria-label="카메라 모드">
+          <button id="camera-mode-auto" type="button" aria-pressed="true">자동 관전</button>
+          <button id="camera-mode-manual" type="button" aria-pressed="false">수동 고정</button>
+          <button id="camera-mode-overview" type="button" aria-pressed="false">전체 보기</button>
+        </div>
+        <div class="camera-tools">
+          <button id="camera-zoom-out" type="button" aria-label="카메라 축소">−</button>
+          <output id="camera-status" aria-label="현재 배율과 모드">1.0배 · 자동</output>
+          <button id="camera-alert" type="button" class="hidden" aria-label="화면 밖 피격 타워로 이동"></button>
+          <button id="camera-zoom-in" type="button" aria-label="카메라 확대">+</button>
+          <button id="camera-settings" type="button" aria-expanded="false" aria-controls="camera-details">설정</button>
+        </div>
+      </nav>
       <div id="hand-row">
         <div id="next-slot"><div id="next-card"></div><span class="next-label">다음</span></div>
         <div id="cards"></div>
@@ -1552,7 +1574,7 @@ document.querySelectorAll('.t-btn[data-theme]').forEach(function(b){
 var dt=b.getAttribute('data-theme');var img=CM[dt];if(!img)return;
 b.style.setProperty('background','linear-gradient(180deg,rgba(10,16,34,.10) 35%,rgba(8,13,28,.66)),url("assets/'+img+'.png") center/cover no-repeat','important');b.style.setProperty('border-style','solid','important');b.style.setProperty('border-color','transparent','important');b.style.setProperty('border-width','6px','important');b.style.setProperty('border-image-source','url("assets/ra_btn_mapframe.png")','important');b.style.setProperty('border-image-slice','44','important');b.style.setProperty('border-image-width','6px','important');b.style.setProperty('border-image-repeat','stretch','important');var __sw=b.querySelector('.sw'); if(__sw) __sw.style.setProperty('display','none','important');   /* v437: 공통 프레임 border-image+텍스트 가독 스크림 강화+스와치 은닉 */
 b.style.setProperty('background-size','auto,100% 100%','important');b.style.setProperty('transition','none','important');});
-document.querySelectorAll('#btn-hof-close,#btn-relic-close,#btn-info-close,#btn-skill-close,#btn-prf-close,#btn-skill-reset,#rtab-score,#rtab-rank,#overlay-profile .rpanel button,#btn-main').forEach(function(b){
+document.querySelectorAll('#btn-hof-close,#btn-relic-close,#btn-skill-close,#btn-prf-close,#btn-skill-reset,#rtab-score,#rtab-rank,#overlay-profile .rpanel button,#btn-main').forEach(function(b){
 b.style.setProperty('background','linear-gradient(180deg,rgba(14,24,46,.30),rgba(8,14,28,.42)),url("assets/ra_btn_small.png") center/cover no-repeat','important');
 b.style.setProperty('background-size','auto,100% 100%','important');b.style.setProperty('transition','none','important');});
 }catch(e){}},1200);
@@ -1561,7 +1583,7 @@ b.style.setProperty('background-size','auto,100% 100%','important');b.style.setP
 html body #rpane-score{overflow-y:auto !important;max-height:46vh !important;-webkit-overflow-scrolling:touch !important}
 html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;white-space:pre-line !important;word-break:keep-all !important;overflow-wrap:anywhere !important;text-align:right !important;max-width:200px !important;font-weight:600 !important}
 </style>
-<script src="js/g1a-art-assets.js?v=507"></script><script src="js/g1b-art-assets.js?v=507"></script><script src="js/g1c-art-assets.js?v=507"></script>
+<script src="js/g1a-art-assets.js?v=508"></script><script src="js/g1b-art-assets.js?v=508"></script><script src="js/g1c-art-assets.js?v=508"></script>
 
 
 
@@ -1573,7 +1595,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g2-sprite-assets.js?v=507"></script>
+<script src="js/g2-sprite-assets.js?v=508"></script>
 <script id="ui-v505-js">/* v505: 승리 화면 — 다시 배틀 버튼을 다음 스테이지(다음 지도) 진입으로 전환. 패배/무승부·최종 지도 클리어 시 기존 다시 배틀 유지 */
 (function(){
   function mlen(){ try{ return window.__raMAPS.length; }catch(e){ return 9; } }
@@ -1637,7 +1659,7 @@ setInterval(function(){
 
 
 
-<script src="js/g3-frame-assets.js?v=507"></script>
+<script src="js/g3-frame-assets.js?v=508"></script>
 
 
 
@@ -1648,7 +1670,7 @@ setInterval(function(){
 
 
 
-<script src="js/g4-ux-data.js?v=507"></script>
+<script src="js/g4-ux-data.js?v=508"></script>
 
 
 
@@ -1659,7 +1681,7 @@ setInterval(function(){
 
 
 
-<script src="js/g5-core.js?v=507"></script>
+<script src="js/g5-core.js?v=508"></script>
 
 
 
@@ -1670,19 +1692,7 @@ setInterval(function(){
 
 
 
-<script src="js/g6-battle.js?v=507"></script>
-
-
-
-
-
-
-
-
-
-
-
-<script src="js/g7-ui-systems.js?v=507"></script>
+<script src="js/g6-battle.js?v=508"></script>
 
 
 
@@ -1694,7 +1704,19 @@ setInterval(function(){
 
 
 
-<script src="js/g8-boot.js?v=507"></script><script src="js/g9-wide.js?v=507"></script><script src="js/g10-techtree.js?v=507"></script>
+<script src="js/g7-ui-systems.js?v=508"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script src="js/g8-boot.js?v=508"></script><script src="js/g9-wide.js?v=508"></script><script src="js/g10-techtree.js?v=508"></script><script src="js/g11-camera.js?v=508"></script><script src="js/g12-camera-ui.js?v=508"></script>
 
 
 
@@ -2434,5 +2456,40 @@ html body #dpsw:not(.hidden){top:calc(38% - 50px)!important}
 </style><script id="ui-v507-js">/* v507: 확인 버튼 라벨 진실화 — 리스타일러가 텍스트를 덮어도 500ms마다 복원 */
 (function(){ var fix=function(){ var b=document.getElementById('btn-info-close');
   if(b){ var t=(b.textContent||'').trim(); if(t!=='확인'){ b.textContent='확인'; } } };
-  setInterval(fix,500); })();</script></body>
+  setInterval(fix,500); })();</script>
+<style id="ui-v508-help-audit">
+/* v508: 실제 계산 스타일 기반. 높은 특이성 sticky와 플라크 재적용 분리. */
+html body #app #overlay-info .info-box{display:flex!important;flex-direction:column!important;gap:5px!important;box-sizing:border-box!important;width:min(94vw,420px)!important;min-height:0!important;height:auto!important;max-height:calc(100svh - 28px)!important;margin:14px auto!important;padding:12px!important;overflow-y:auto!important;text-align:left!important}
+html body #app #overlay-info .info-title{font-size:17px!important;line-height:1.3!important;margin:0!important;flex:none!important}
+html body #app #overlay-info .t-how{font-size:11.5px!important;line-height:1.45!important;margin:0!important;flex:none!important}
+html body #app #overlay-info .t-spec{display:block!important;margin:0!important;padding:0!important;flex:none!important;max-height:none!important;overflow:visible!important}
+html body #app #overlay-info .t-spec li{margin:5px 0!important;font-size:11px!important;line-height:1.4!important;flex:none!important}
+html body #app #overlay-info .t-note{margin:0!important;font-size:10px!important;line-height:1.3!important;flex:none!important}
+html body #app #overlay-info #btn-info-close{position:static!important;inset:auto!important;width:100%!important;min-height:38px!important;height:38px!important;max-height:none!important;flex:none!important;margin:5px 0 0!important;padding:8px!important;border:1px solid #ffe082!important;border-image:none!important;background:#f7c531!important;color:#211800!important;-webkit-text-fill-color:#211800!important;opacity:1!important;font:800 15px/1.2 var(--fd,sans-serif)!important;box-shadow:none!important;text-shadow:none!important}
+</style>
+<style id="ui-v508-panel-audit">
+/* 전 화면 감사: 스크롤 본문과 닫기행 분리. 버튼을 본문 위로 띄우지 않는다. */
+html body #overlay-skill .rpanel,html body #overlay-relic .rpanel{display:flex!important;flex-direction:column!important;gap:5px!important;max-height:calc(100svh - 20px)!important;height:calc(100svh - 20px)!important;margin:10px!important;padding:10px!important;overflow:hidden!important}
+html body #overlay-skill #sk-grid,html body #overlay-relic #relic-list{flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;margin:4px 0!important}
+html body #overlay-skill .sk-foot,html body #overlay-relic .sk-foot{position:static!important;display:flex!important;flex:none!important;gap:8px!important;margin:0!important;padding:4px 0 0!important}
+html body #overlay-skill .sk-foot button,html body #overlay-relic .sk-foot button{min-height:38px!important;height:38px!important;max-height:none!important;margin:0 auto!important;padding:6px!important}
+html body #overlay-skill #sk-grid .tk-col{min-width:0!important}
+html body #overlay-skill #sk-grid .tk-btns{display:grid!important;grid-template-columns:1fr 1fr!important;gap:4px!important}
+html body #overlay-skill #sk-grid .sk-lv{grid-column:1/-1!important;white-space:nowrap!important;text-align:center!important;line-height:14px!important}
+html body #overlay-skill #sk-grid .tk-btns button{min-width:0!important;width:100%!important;min-height:38px!important;height:38px!important;position:static!important;padding:0!important;line-height:1!important}
+<style id="ui-v509">
+/* v509: v508 진단 2건 수복(clip-summary.json 기계 판정 근거) — ①결과 통계 미러·열값 우측 클립: #ui-v186 nowrap이 미러 b를 539px 1행으로 만들어 1fr 트랙 min-content 304px 팽창(패널 295px) → minmax(0,1fr) 트랙+미러 전폭 pre-line. ②도움말 상단 안내(#ra-inote) 절대 툴팁 규칙(bottom:100%+8px)이 뷰포트 위(top:-35.8) 배치 → 문서 흐름 블록 복원. */
+html body #overlay-result #rpane-score{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important}
+html body #overlay-result #rpane-score .rrow{min-width:0!important;max-width:100%!important;overflow:hidden!important}
+html body #overlay-result #rpane-score .rrow span,html body #overlay-result #rpane-score .rrow b{min-width:0!important}
+html body #overlay-result #rpane-score .rrow-mirror{grid-column:1/-1!important}
+html body #overlay-result #rpane-score .rrow-mirror b{white-space:pre-line!important;width:auto!important;max-width:100%!important;flex:1 1 auto!important;min-width:0!important;text-align:right!important}
+html body #overlay-info{flex-direction:column!important;align-items:center!important;justify-content:center!important}
+html body #app #overlay-info .info-box{max-height:calc(100svh - 160px)!important}
+html body #overlay-info>*:not(#ra-inote){max-height:calc(100svh - 120px)!important;flex:0 1 auto!important;min-height:0!important;box-sizing:border-box!important}
+html body #app #overlay-info .info-box{overflow:hidden!important}
+html body #app #overlay-info .info-box .t-how,html body #app #overlay-info .info-box .t-note,html body #app #overlay-info .info-box .t-spec{flex:0 1 auto!important;min-height:0!important;overflow-y:auto!important}
+html body #overlay-info .info-box .t-cta{position:sticky!important;bottom:0!important;margin-top:auto!important}
+html body #app #overlay-info #ra-inote{position:static!important;inset:auto!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;transform:none!important;width:auto!important;max-width:min(88vw,340px)!important;margin:0 auto 6px!important;flex:none!important;pointer-events:auto!important;z-index:auto!important}
+</style></style></body>
 </html>
