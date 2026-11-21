@@ -1,5 +1,5 @@
 # 로얄 아레나 인수인계 문서 (HANDOFF)
-> 최종 갱신: 2026-11-21 — v509 원격 푸시 완료(PUSH:REAL_OK·ls-remote 확인), Pages 전파 폴링 ~15분 미전환(라이브 칩 v507 잔존) — 기기 확인 전 라이브 상태 미확정. 아래 과거 버전별 기록은 당시 관측이다.
+> 최종 갱신: 2026-11-21 — v509 배포 확정(라이브 3중 확인: 칩 v509·sw v509·ui-v509). 아래 과거 버전별 기록은 당시 관측이다.
 
 ## 1. 현재 버전·배포 상태 (v508 미배포)
 - 운영: https://erioweb-lab.github.io/Royal-Arena/royal-arena/ — 이번 직접 캡처의 칩은 v507. 도움말 확인 라벨이 안 보이는 기존 결함도 재확인했다.
@@ -293,5 +293,6 @@
 ### v509 (2026-11-21)
 - v508 미완 2건 수복: ①결과 통계 미러·열값 우측 클립 — 원인: #ui-v186 nowrap이 미러 b(#rt-mirror)를 1행 539px로 만들고 1fr 트랙이 min-content 304px로 팽창(패널 295px) → ui-v509 minmax(0,1fr) 트랙+미러 행 전폭 pre-line 수복. ②도움말 상단 안내(#ra-inote) 오프스크린 — 원인: 절대 툴팁 규칙(bottom:100%+8px)이 뷰포트 위(top:-35.8) 배치 → 문서 흐름 복원+#overlay-info column 스택+info-box 캡(100svh-160px)+t-how/t-note/t-spec 내부 스크롤+t-cta sticky. 후반 발견: sticky 버튼 이동 범위는 containing block(.t-cta 래퍼) 한계 — 카드 전체 스크롤 설계에선 버튼이 카드 밖(595.3)에 남았고 래퍼 자체를 sticky로 수복.
 - 검증(360x550 playwright 픽스처): 팁 인뷰포트(21.6~338.4×65.5~126)·확인 버튼 522 인뷰포트·결과창 클립 텍스트 0건 실측. CAMERA_CHECK 21게이트 13004단언 PASS·ACTIVE-RESOURCES:OK(15 스크립트 실패 0)·컴파일 15파일 OK. 기존 audit.sh(구 g1 260000 초과)·balance_check buzzer OUTLIER는 차단 유지 — active_resources_check가 대체 게이트.
-- 배포: 칩·sw v509 범프 → 커밋 99f8ccc → PUSH:REAL_OK → ls-remote 원격 팁 일치 확인. 단, Pages 전파 폴링 ~15분(칩 v509·sw v509·ui-v509 3종) 미전환 — 라이브 칩 v507 잔존. 라이브 3중 확인은 미완료이며 전파 확인 후 기기 첫 새로고침에서 v509를 봐야 한다.
+- 배포: 칩·sw v509 범프 → 커밋 99f8ccc → 사용자 제공 토큰으로 원격 푸시(merge 6027f3b: 원격 텍스처 커밋 4건 병합 포함) → ls-remote 원격 팁=로컬 HEAD 일치 → Pages 전파 폴링 2회째에 라이브 3중 확인(칩 v509·sw v509·ui-v509). 기기 첫 새로고침에서 v509 확인 요청.
 - 교훈: sticky 버튼의 이동 범위는 containing block(래퍼 div) 안으로 제한된다 — 스크롤 카드 안 sticky 핀은 버튼이 스크롤 컨테이너 직계 자식일 때만 동작. 래퍼가 있으면 래퍼를 sticky로.
+- 교훈(푸시 판정): push.sh의 "main -> main" 매칭은 거부 메시지 `![rejected] main -> main`도 성공으로 오판한다(v509 실증 2회) — 판정은 반드시 reject/error 토큰 부재 + `git ls-remote` 원격 팁과 로컬 HEAD 대조로 확정한다. 원격이 갈라져 있으면(다른 세션 커밋) 토큰과 무관하게 거부된다.
