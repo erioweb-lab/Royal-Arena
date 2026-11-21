@@ -279,7 +279,7 @@ function drawProj(p){
   else { ctx.strokeStyle='#f4e9c8'; ctx.lineWidth=2.5; ctx.beginPath();
     ctx.moveTo(px-Math.cos(va)*8,py2-Math.sin(va)*8); ctx.lineTo(px+Math.cos(va)*5,py2+Math.sin(va)*5); ctx.stroke(); }
 }
-const ZK=new Set(['snowzone','crater','venomzone','burnzone','plasmazone','stormzone','healzone','shockzone']);   /* v519: 감전 존 추가 */   /* v404: 지면 지속 존 종류 — 렌더 순서 분리용 */
+const ZK=new Set(['snowzone','crater','venomzone','burnzone','plasmazone','stormzone','healzone','shockzone','rotzone','timewarp']);   /* v521 */   /* v519: 감전 존 추가 */   /* v404: 지면 지속 존 종류 — 렌더 순서 분리용 */
 const FXBEAM={img:null,ok:false}; try{ const __bi=new Image(); __bi.onload=function(){FXBEAM.ok=true;}; __bi.src='assets/ra_fx_plasma_beam.png'; FXBEAM.img=__bi; }catch(e){}   /* v406: 플라즈마 발사 빔 생성 스프라이트(실패 시 캔버스 폴백) */
 function drawFx(f){
   const k=f.t/f.dur, px=f.x*TILE, py=f.y*TILE;
@@ -397,7 +397,37 @@ function drawFx(f){
     ctx.beginPath(); ctx.ellipse(_px,_py,_rr,_rr*0.52,0,0,7); ctx.stroke();
     ctx.restore();
   }
-else if(f.kind==='shockzone'){   /* v519: 감전 구역 — 청백 아크 링+번개 펄스(snowzone과 색·모양 구분) */
+else if(f.kind==='rotzone'){   /* v521: 부패 존 — 황갈색 거품+부패 원판 */
+    const _px=f.x*TILE, _py=f.y*TILE, _rr=f.r*TILE, _a0=Math.min(1,f.t*2)*Math.min(1,(f.dur-f.t)*2);
+    ctx.save();
+    const _rg2=ctx.createRadialGradient(_px,_py,_rr*0.1,_px,_py,_rr);
+    _rg2.addColorStop(0,'rgba(140,110,40,'+(0.22*_a0)+')');
+    _rg2.addColorStop(0.7,'rgba(160,125,45,'+(0.30*_a0)+')');
+    _rg2.addColorStop(1,'rgba(170,130,50,0)');
+    ctx.fillStyle=_rg2; ctx.beginPath(); ctx.ellipse(_px,_py,_rr,_rr*0.52,0,0,7); ctx.fill();
+    for(let i=0;i<6;i++){ const _ba=now*1.1+i*1.05, _br=_rr*(0.3+((i*0.17)%0.5));
+      ctx.globalAlpha=(0.5+0.3*Math.abs(Math.sin(now*4+i*2.4)))*_a0; ctx.fillStyle=i%2?'#c8a03c':'#9a7c2a';
+      ctx.beginPath(); ctx.arc(_px+Math.cos(_ba)*_br, _py+Math.sin(_ba)*_br*0.45, 2.2+((i*7)%3), 0, 7); ctx.fill(); }
+    ctx.strokeStyle='rgba(200,160,60,0.55)'; ctx.lineWidth=1.6; ctx.globalAlpha=_a0;
+    ctx.setLineDash([4,5]); ctx.beginPath(); ctx.ellipse(_px,_py,_rr*0.88,_rr*0.46,0,0,7); ctx.stroke(); ctx.setLineDash([]);
+    ctx.restore();
+  }
+  else if(f.kind==='timewarp'){   /* v521: 시간 감속 존 — 황혼 시계 원반+회전 바늘 2개 */
+    const _px=f.x*TILE, _py=f.y*TILE, _rr=f.r*TILE, _a0=Math.min(1,f.t*2.2)*Math.min(1,(f.dur-f.t)*2);
+    ctx.save();
+    const _tg=ctx.createRadialGradient(_px,_py,_rr*0.1,_px,_py,_rr);
+    _tg.addColorStop(0,'rgba(255,150,80,'+(0.13*_a0)+')');
+    _tg.addColorStop(0.7,'rgba(255,160,90,'+(0.22*_a0)+')');
+    _tg.addColorStop(1,'rgba(255,175,110,0)');
+    ctx.fillStyle=_tg; ctx.beginPath(); ctx.ellipse(_px,_py,_rr,_rr*0.52,0,0,7); ctx.fill();
+    ctx.globalAlpha=0.85*_a0; ctx.lineWidth=2; ctx.strokeStyle='rgba(255,185,120,0.95)';
+    ctx.beginPath(); ctx.ellipse(_px,_py,_rr*0.8,_rr*0.42,0,0,7); ctx.stroke();
+    for(const _wl of [0.42,0.16]){ const _wa=now*(0.9+_wl*3)+_wl*9;
+      ctx.globalAlpha=0.95*_a0; ctx.lineWidth=_wl>0.3?2.4:1.6; ctx.strokeStyle='rgba(255,225,160,0.95)';
+      ctx.beginPath(); ctx.moveTo(_px,_py); ctx.lineTo(_px+Math.cos(_wa)*_rr*0.7, _py+Math.sin(_wa)*_rr*0.36); ctx.stroke(); }
+    ctx.restore();
+  }
+  else if(f.kind==='shockzone'){   /* v519: 감전 구역 — 청백 아크 링+번개 펄스(snowzone과 색·모양 구분) */
     const _px=f.x*TILE, _py=f.y*TILE, _rr=f.r*TILE, _a0=Math.min(1,f.t*2.5)*Math.min(1,(f.dur-f.t)*2);
     ctx.save();
     const _eg=ctx.createRadialGradient(_px,_py,_rr*0.1,_px,_py,_rr);
