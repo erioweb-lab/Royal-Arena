@@ -1205,7 +1205,7 @@ html body .info-box #btn-info-close{
   z-index:2 !important}
 html body .info-box #btn-info-close,html body .info-box #btn-info-close *{color:#2b1c05 !important;text-shadow:none !important}
 </style><style id="ui-v507">/* v507: 타이틀 zoom 핏터 상한 — 도움말 닫기 후 메인이 0.8까지 눌리는 급축소 차단(최소 0.93·한 번에 최대 4% 보정) */
-</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v526</div><div id="app">
+</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v527</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1565,7 +1565,7 @@ b.style.setProperty('background-size','auto,100% 100%','important');b.style.setP
 html body #rpane-score{overflow-y:auto !important;max-height:46vh !important;-webkit-overflow-scrolling:touch !important}
 html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;white-space:pre-line !important;word-break:keep-all !important;overflow-wrap:anywhere !important;text-align:right !important;max-width:200px !important;font-weight:600 !important}
 </style>
-<script src="js/g1a-art-assets.js?v=526"></script><script src="js/g1b-art-assets.js?v=526"></script><script src="js/g1c-art-assets.js?v=526"></script>
+<script src="js/g1a-art-assets.js?v=527"></script><script src="js/g1b-art-assets.js?v=527"></script><script src="js/g1c-art-assets.js?v=527"></script>
 
 
 
@@ -1577,7 +1577,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g2-sprite-assets.js?v=526"></script>
+<script src="js/g2-sprite-assets.js?v=527"></script>
 <script id="ui-v510-js">/* v510: 지도·난이도 해금 단일 진실원 — 난이도별 맵 사다리 분리(단계별 해금). 악몽 해금=노멀 전맵 토벌(ra_map_clear_d0>=마지막 idx), 지옥=악몽 전맵 토벌(ra_map_clear_d1>=마지막 idx). 맵 해금은 현재 난이도 사다리에서 순차(clear_d+1). 표시순서≠사다리순서라 이름 매칭으로 사다리 idx 산출(v431 표시-idx 기록 버그 근본 수복). 기존 ra_map_clear_v1은 d0 마이그레이션 원천. */
 (function(){
  function MK(){ return {
@@ -1597,22 +1597,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 </script>
 <script id="ui-v516-js">/* v516: 관전 UI를 캔버스(#arena-wrap) 내부로 이동 — 별도 행 제거로 전장 원래 크기 복원(모드 하단 중앙·배율 상단 중앙은 ui-v516 CSS) */
 (function(){ try{ var iv=setInterval(function(){ try{ var n=document.getElementById('camera-controls'); var w=document.getElementById('arena-wrap'); if(n&&w&&n.parentElement!==w) w.appendChild(n); }catch(e){} },900); }catch(e){} })();
-(function(){ try{ function __hud526(){ try{
-  var T=document.getElementById('timer'); if(T){ var st=T.style;
-    st.setProperty('height','30px','important'); st.setProperty('line-height','1','important'); st.setProperty('padding','0 12px','important');
-    st.setProperty('font-size','14px','important'); st.setProperty('background','rgba(18,24,43,.62)','important');
-    st.setProperty('border','1px solid rgba(255,215,110,.5)','important'); st.setProperty('border-radius','999px','important');
-    st.setProperty('top','calc(8px + env(safe-area-inset-top,0px))','important'); st.setProperty('left','10px','important'); }
-  var S=document.getElementById('btn-sound'); if(S){ var st2=S.style;
-    st2.setProperty('width','30px','important'); st2.setProperty('height','30px','important'); st2.setProperty('min-width','30px','important');
-    st2.setProperty('padding','0','important'); st2.setProperty('font-size','13px','important');
-    st2.setProperty('background','rgba(18,24,43,.62)','important'); st2.setProperty('border','1px solid rgba(255,215,110,.5)','important');
-    st2.setProperty('border-radius','999px','important'); st2.setProperty('top','calc(8px + env(safe-area-inset-top,0px))','important'); st2.setProperty('right','10px','important'); }
-  var Q=document.getElementById('btn-quit'); if(Q){ var st3=Q.style;
-    st3.setProperty('height','30px','important'); st3.setProperty('padding','0 10px','important'); st3.setProperty('font-size','11.5px','important');
-    st3.setProperty('background','rgba(18,24,43,.62)','important'); st3.setProperty('border','1px solid rgba(255,215,110,.35)','important');
-    st3.setProperty('border-radius','999px','important'); st3.setProperty('top','calc(8px + env(safe-area-inset-top,0px))','important'); st3.setProperty('right','46px','important'); }
-}catch(e){} } __hud526(); var iv2=setInterval(__hud526,900); }catch(e){ } })();
+
 </script>
 <script id="ui-v505-js">/* v505: 승리 화면 — 다시 배틀 버튼을 다음 스테이지(다음 지도) 진입으로 전환. 패배/무승부·최종 지도 클리어 시 기존 다시 배틀 유지 */
 (function(){
@@ -1677,7 +1662,7 @@ setInterval(function(){
 
 
 
-<script src="js/g3-frame-assets.js?v=526"></script>
+<script src="js/g3-frame-assets.js?v=527"></script>
 
 
 
@@ -1688,7 +1673,7 @@ setInterval(function(){
 
 
 
-<script src="js/g4-ux-data.js?v=526"></script>
+<script src="js/g4-ux-data.js?v=527"></script>
 
 
 
@@ -1699,7 +1684,7 @@ setInterval(function(){
 
 
 
-<script src="js/g5-core.js?v=526"></script>
+<script src="js/g5-core.js?v=527"></script>
 
 
 
@@ -1710,19 +1695,7 @@ setInterval(function(){
 
 
 
-<script src="js/g6-battle.js?v=526"></script>
-
-
-
-
-
-
-
-
-
-
-
-<script src="js/g7-ui-systems.js?v=526"></script>
+<script src="js/g6-battle.js?v=527"></script>
 
 
 
@@ -1734,7 +1707,19 @@ setInterval(function(){
 
 
 
-<script src="js/g8-boot.js?v=526"></script><script src="js/g9-wide.js?v=526"></script><script src="js/g10-techtree.js?v=526"></script><script src="js/g11-camera.js?v=526"></script><script src="js/g12-camera-ui.js?v=526"></script>
+<script src="js/g7-ui-systems.js?v=527"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script src="js/g8-boot.js?v=527"></script><script src="js/g9-wide.js?v=527"></script><script src="js/g10-techtree.js?v=527"></script><script src="js/g11-camera.js?v=527"></script><script src="js/g12-camera-ui.js?v=527"></script>
 
 
 
@@ -2525,27 +2510,53 @@ html body #screen-battle #camera-controls button{width:auto!important;min-width:
 html body #screen-battle #camera-status{height:32px!important;min-height:32px!important;display:flex!important;align-items:center!important;padding:0 8px!important;font-size:11px!important}
 html body #screen-battle #camera-details{top:100px!important}
 html body #screen-battle #camera-details:has(#camera-map-wrap:not(.hidden)){top:100px!important}
-/* v523: 관전 UI 정렬 개편(2차) — 3-id 특이성 승격(#app)으로 선행 규칙 제압 + 모드 행 flex 균등 분할로 열 크기 통일 */
-html body #app #screen-battle .camera-modes{left:106px!important;right:106px!important;top:auto!important;bottom:calc(12px + env(safe-area-inset-bottom,0px))!important;transform:none!important;justify-content:center!important;align-items:center!important;gap:4px!important}
-html body #app #screen-battle .camera-tools{top:calc(52px + env(safe-area-inset-top,0px))!important;gap:5px!important}
-html body #app #screen-battle .camera-modes button,html body #app #screen-battle #ks-btn,html body #app #screen-battle #btn-kingshot,html body #app #screen-battle .kingshot-btn,html body #app #screen-battle #repair-btn,html body #app #screen-battle #btn-repair{height:34px!important;min-height:34px!important;max-height:34px!important;font-size:12px!important;line-height:1!important;display:flex!important;align-items:center!important;justify-content:center!important;border-radius:999px!important;white-space:nowrap!important;box-sizing:border-box!important}
-html body #app #screen-battle .camera-modes button{flex:1 1 0!important;min-width:0!important;width:auto!important;padding:2px 4px!important;font-size:10.5px!important;letter-spacing:-.3px!important;background:rgba(18,24,43,.62)!important;border:1px solid rgba(255,215,110,.5)!important;color:#ffe9b0!important;font-weight:700!important;box-shadow:0 2px 6px rgba(0,0,0,.35)!important;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
-html body #app #screen-battle .camera-modes button[aria-pressed="true"]{background:rgba(255,179,0,.72)!important;border-color:rgba(255,224,130,.9)!important;color:#231a05!important;font-weight:800!important}
-html body #app #screen-battle #ks-btn,html body #app #screen-battle #btn-kingshot,html body #app #screen-battle .kingshot-btn{left:12px!important;right:auto!important;bottom:calc(12px + env(safe-area-inset-bottom,0px))!important;padding:0 12px!important;background:linear-gradient(180deg,rgba(255,204,0,.72) 0%,rgba(255,157,0,.72) 100%)!important;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
-html body #app #screen-battle #repair-btn,html body #app #screen-battle #btn-repair{right:12px!important;left:auto!important;bottom:calc(12px + env(safe-area-inset-bottom,0px))!important;padding:0 12px!important;background:rgba(18,24,43,.62)!important;border:1px solid rgba(255,179,0,.7)!important;color:#FFD54F!important;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
-html body #app #screen-battle #camera-zoom-out,html body #app #screen-battle #camera-zoom-in{flex:0 0 32px!important;width:32px!important;min-width:32px!important;height:32px!important;min-height:32px!important;padding:0!important;font-size:15px!important;font-weight:800!important;border-radius:999px!important;background:rgba(18,24,43,.62)!important;border:1px solid rgba(255,215,110,.5)!important;color:#ffe9b0!important;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
-html body #app #screen-battle #camera-settings{height:32px!important;min-height:32px!important;padding:2px 10px!important;font-size:11px!important;font-weight:700!important;border-radius:999px!important;background:rgba(18,24,43,.62)!important;border:1px solid rgba(255,215,110,.5)!important;color:#ffe9b0!important;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
-html body #app #screen-battle #camera-status{height:32px!important;min-height:32px!important;min-width:76px!important;justify-content:center!important;font-size:11px!important;font-weight:700!important;border-radius:999px!important;background:rgba(18,24,43,.62)!important;border:1px solid rgba(255,215,110,.35)!important;color:#ffe9b0!important;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
-@media (max-width:400px){
-  html body #app #screen-battle .camera-modes{gap:3px!important}
-  html body #app #screen-battle .camera-modes button{font-size:9.5px!important;padding:2px 2px!important;overflow:hidden}
-}
-
-/* v525: 상단 바 정리 — 타이머·왕관·소리·기권 크기 통일(30px 필), 반투명+블러로 전장 가림 최소화, 모서리 밀착 완화 */
-html body #app #screen-battle #timer{display:flex!important;align-items:center!important;height:30px!important;padding:0 12px!important;font-size:14px!important;letter-spacing:1px!important;border-radius:999px!important;background:rgba(18,24,43,.62)!important;border:1px solid rgba(255,215,110,.5)!important;box-shadow:0 2px 6px rgba(0,0,0,.35)!important;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);top:calc(8px + env(safe-area-inset-top,0px))!important;left:10px!important;right:auto!important}
-html body #app #screen-battle .crown-chip{display:flex!important;align-items:center!important;height:30px!important;min-width:44px!important;padding:0 8px!important;font-size:13px!important;border-radius:999px!important;background:rgba(18,24,43,.62)!important;border:1px solid rgba(255,215,110,.35)!important;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
-html body #app #screen-battle #btn-sound{width:30px!important;height:30px!important;font-size:13px!important;border-radius:999px!important;background:rgba(18,24,43,.62)!important;border:1px solid rgba(255,215,110,.5)!important;color:#ffe9b0!important;top:calc(8px + env(safe-area-inset-top,0px))!important;right:10px!important;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
-html body #app #screen-battle #btn-quit{width:auto!important;height:30px!important;padding:0 10px!important;font-size:11.5px!important;font-weight:700!important;border-radius:999px!important;background:rgba(18,24,43,.62)!important;border:1px solid rgba(255,215,110,.35)!important;color:#cdd7ea!important;top:calc(8px + env(safe-area-inset-top,0px))!important;right:46px!important;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
-html body #app #screen-battle .camera-tools{top:calc(46px + env(safe-area-inset-top,0px))!important}
-</style></style></body>
+</style></style><script id="hud-layout-v1">
+/* v527: 전투 HUD 레이아웃 단일 관리 모듈 — 위치·크기·투명도 조정은 이 CONFIG 하나만 수정.
+   CSS 생성 + JS 인라인 강제가 같은 CONFIG에서 나오므로 다른 곳(vNNN 블록·JS 초기화 인라인)을 고칠 필요 없음. */
+(function(){
+var C={
+  alpha:.62,            /* 오버레이 공통 배경 알파 */
+  alphaActive:.72,      /* 활성(눌림) 버튼 알파 */
+  blur:3,               /* backdrop blur px */
+  top:{ h:30, fs:14, timerLeft:10, timerTop:8, soundRight:10, quitRight:46, chipMinW:44, chipFs:13 },
+  tools:{ top:46, zoom:32, statusMinW:76, fs:11 },
+  bottom:{ inset:12, h:34, fs:12, side:12, modesInset:106, modesGap:4, modesFs:10.5, narrowFs:9.5, narrowGap:3 }
+};
+window.RA_HUD=C;
+var P='html body #app #screen-battle', B='blur('+C.blur+'px)';
+function rgba(a){return 'rgba(18,24,43,'+a+')'}
+var css=
+ P+' .camera-modes{left:'+C.bottom.modesInset+'px!important;right:'+C.bottom.modesInset+'px!important;top:auto!important;bottom:calc('+C.bottom.inset+'px + env(safe-area-inset-bottom,0px))!important;transform:none!important;justify-content:center!important;align-items:center!important;gap:'+C.bottom.modesGap+'px!important}'+
+ P+' .camera-tools{top:calc('+C.tools.top+'px + env(safe-area-inset-top,0px))!important;gap:5px!important}'+
+ P+' .camera-modes button,'+P+' #ks-btn,'+P+' #btn-kingshot,'+P+' .kingshot-btn,'+P+' #repair-btn,'+P+' #btn-repair{height:'+C.bottom.h+'px!important;min-height:'+C.bottom.h+'px!important;max-height:'+C.bottom.h+'px!important;font-size:'+C.bottom.fs+'px!important;line-height:1!important;display:flex!important;align-items:center!important;justify-content:center!important;border-radius:999px!important;white-space:nowrap!important;box-sizing:border-box!important}'+
+ P+' .camera-modes button{flex:1 1 0!important;min-width:0!important;width:auto!important;padding:2px 4px!important;font-size:'+C.bottom.modesFs+'px!important;letter-spacing:-.3px!important;background:'+rgba(C.alpha)+'!important;border:1px solid rgba(255,215,110,.5)!important;color:#ffe9b0!important;font-weight:700!important;box-shadow:0 2px 6px rgba(0,0,0,.35)!important;backdrop-filter:'+B+';-webkit-backdrop-filter:'+B+'}'+
+ P+' .camera-modes button[aria-pressed="true"]{background:rgba(255,179,0,'+C.alphaActive+')!important;border-color:rgba(255,224,130,.9)!important;color:#231a05!important;font-weight:800!important}'+
+ P+' #ks-btn,'+P+' #btn-kingshot,'+P+' .kingshot-btn{left:'+C.bottom.side+'px!important;right:auto!important;bottom:calc('+C.bottom.inset+'px + env(safe-area-inset-bottom,0px))!important;padding:0 12px!important;background:linear-gradient(180deg,rgba(255,204,0,'+C.alphaActive+') 0%,rgba(255,157,0,'+C.alphaActive+') 100%)!important;backdrop-filter:'+B+';-webkit-backdrop-filter:'+B+'}'+
+ P+' #repair-btn,'+P+' #btn-repair{right:'+C.bottom.side+'px!important;left:auto!important;bottom:calc('+C.bottom.inset+'px + env(safe-area-inset-bottom,0px))!important;padding:0 12px!important;background:'+rgba(C.alpha)+'!important;border:1px solid rgba(255,179,0,.7)!important;color:#FFD54F!important;backdrop-filter:'+B+';-webkit-backdrop-filter:'+B+'}'+
+ P+' #camera-zoom-out,'+P+' #camera-zoom-in{flex:0 0 '+C.tools.zoom+'px!important;width:'+C.tools.zoom+'px!important;min-width:'+C.tools.zoom+'px!important;height:'+C.tools.zoom+'px!important;min-height:'+C.tools.zoom+'px!important;padding:0!important;font-size:15px!important;font-weight:800!important;border-radius:999px!important;background:'+rgba(C.alpha)+'!important;border:1px solid rgba(255,215,110,.5)!important;color:#ffe9b0!important;backdrop-filter:'+B+';-webkit-backdrop-filter:'+B+'}'+
+ P+' #camera-settings{height:'+C.tools.zoom+'px!important;min-height:'+C.tools.zoom+'px!important;padding:2px 10px!important;font-size:'+C.tools.fs+'px!important;font-weight:700!important;border-radius:999px!important;background:'+rgba(C.alpha)+'!important;border:1px solid rgba(255,215,110,.5)!important;color:#ffe9b0!important;backdrop-filter:'+B+';-webkit-backdrop-filter:'+B+'}'+
+ P+' #camera-status{height:'+C.tools.zoom+'px!important;min-height:'+C.tools.zoom+'px!important;min-width:'+C.tools.statusMinW+'px!important;justify-content:center!important;font-size:'+C.tools.fs+'px!important;font-weight:700!important;border-radius:999px!important;background:'+rgba(C.alpha)+'!important;border:1px solid rgba(255,215,110,.35)!important;color:#ffe9b0!important;backdrop-filter:'+B+';-webkit-backdrop-filter:'+B+'}'+
+ P+' #timer{display:flex!important;align-items:center!important;height:'+C.top.h+'px!important;padding:0 12px!important;font-size:'+C.top.fs+'px!important;letter-spacing:1px!important;border-radius:999px!important;background:'+rgba(C.alpha)+'!important;border:1px solid rgba(255,215,110,.5)!important;box-shadow:0 2px 6px rgba(0,0,0,.35)!important;backdrop-filter:'+B+';-webkit-backdrop-filter:'+B+';top:calc('+C.top.timerTop+'px + env(safe-area-inset-top,0px))!important;left:'+C.top.timerLeft+'px!important;right:auto!important}'+
+ P+' .crown-chip{display:flex!important;align-items:center!important;height:'+C.top.h+'px!important;min-width:'+C.top.chipMinW+'px!important;padding:0 8px!important;font-size:'+C.top.chipFs+'px!important;border-radius:999px!important;background:'+rgba(C.alpha)+'!important;border:1px solid rgba(255,215,110,.35)!important;backdrop-filter:'+B+';-webkit-backdrop-filter:'+B+'}'+
+ P+' #btn-sound{width:'+C.top.h+'px!important;height:'+C.top.h+'px!important;min-width:'+C.top.h+'px!important;font-size:13px!important;border-radius:999px!important;background:'+rgba(C.alpha)+'!important;border:1px solid rgba(255,215,110,.5)!important;color:#ffe9b0!important;top:calc('+C.top.timerTop+'px + env(safe-area-inset-top,0px))!important;right:'+C.top.soundRight+'px!important;backdrop-filter:'+B+';-webkit-backdrop-filter:'+B+'}'+
+ P+' #btn-quit{width:auto!important;height:'+C.top.h+'px!important;padding:0 10px!important;font-size:11.5px!important;font-weight:700!important;border-radius:999px!important;background:'+rgba(C.alpha)+'!important;border:1px solid rgba(255,215,110,.35)!important;color:#cdd7ea!important;top:calc('+C.top.timerTop+'px + env(safe-area-inset-top,0px))!important;right:'+C.top.quitRight+'px!important;backdrop-filter:'+B+';-webkit-backdrop-filter:'+B+'}'+
+ '@media (max-width:400px){'+P+' .camera-modes{gap:'+C.bottom.narrowGap+'px!important}'+P+' .camera-modes button{font-size:'+C.bottom.narrowFs+'px!important;padding:2px 2px!important;overflow:hidden}}';
+var st=document.createElement('style'); st.id='hud-layout-generated'; st.textContent=css; document.head.appendChild(st);
+/* 인라인 강제: 전투 초기화 JS가 인라인 !important로 덮어쓰는 요소(타이머·소리·기권·킹샷·수리)에 동일 CONFIG 값을 재적용 */
+function F(id,props){var e=document.getElementById(id); if(!e)return; for(var k in props){e.style.setProperty(k,props[k],'important');}}
+function force(){try{
+ var TOP='calc('+C.top.timerTop+'px + env(safe-area-inset-top,0px))';
+ var BOT='calc('+C.bottom.inset+'px + env(safe-area-inset-bottom,0px))';
+ F('timer',{top:TOP,left:C.top.timerLeft+'px',right:'auto',height:C.top.h+'px','line-height':'1',padding:'0 12px','font-size':C.top.fs+'px',background:rgba(C.alpha),border:'1px solid rgba(255,215,110,.5)','border-radius':'999px'});
+ F('btn-sound',{top:TOP,right:C.top.soundRight+'px',width:C.top.h+'px',height:C.top.h+'px','min-width':C.top.h+'px',padding:'0','font-size':'13px',background:rgba(C.alpha),border:'1px solid rgba(255,215,110,.5)','border-radius':'999px'});
+ F('btn-quit',{top:TOP,right:C.top.quitRight+'px',height:C.top.h+'px',padding:'0 10px','font-size':'11.5px',background:rgba(C.alpha),border:'1px solid rgba(255,215,110,.35)','border-radius':'999px'});
+ F('ks-btn',{left:C.bottom.side+'px',right:'auto',bottom:BOT,height:C.bottom.h+'px',padding:'0 12px','font-size':C.bottom.fs+'px','border-radius':'999px'});
+ if(!document.getElementById('ks-btn')){ var kk=document.getElementById('btn-kingshot')||document.querySelector('.kingshot-btn'); if(kk){F('btn-kingshot',{left:C.bottom.side+'px',right:'auto',bottom:BOT,height:C.bottom.h+'px',padding:'0 12px','border-radius':'999px'});} }
+ F('repair-btn',{right:C.bottom.side+'px',left:'auto',bottom:BOT,height:C.bottom.h+'px',padding:'0 12px','font-size':C.bottom.fs+'px','border-radius':'999px'});
+ if(!document.getElementById('repair-btn')){ var rr=document.getElementById('btn-repair'); if(rr){F('btn-repair',{right:C.bottom.side+'px',left:'auto',bottom:BOT,height:C.bottom.h+'px','border-radius':'999px'});} }
+}catch(e){}}
+force(); setInterval(force,900);
+})();
+</script>
+</body>
 </html>
