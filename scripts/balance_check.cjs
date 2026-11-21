@@ -1,6 +1,6 @@
 /* v211 헤드리스 밸런스 체크 — CARDS 파싱·코스트 효율 이상 감지 */
 const fs=require('fs');
-const src=fs.readFileSync(__dirname+'/../royal-arena/js/g1-art-assets.js','utf8');
+const src=fs.readFileSync(__dirname+'/../royal-arena/js/g1a-art-assets.js','utf8');
 const block=src.match(/const CARDS=\{([\s\S]*?)\n\};/);
 if(!block){ console.log('BALANCE:CARDS-NOT-FOUND'); process.exit(1); }
 const body=block[1], rows=[];

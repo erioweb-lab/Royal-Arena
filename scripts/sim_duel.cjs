@@ -1,6 +1,6 @@
 /* v212 밸런스 시뮬 1종 — 유닛 듀얼 TTK 매트릭스(정보 제공) */
 const fs=require('fs');
-const src=fs.readFileSync(__dirname+'/../royal-arena/js/g1-art-assets.js','utf8');
+const src=fs.readFileSync(__dirname+'/../royal-arena/js/g1a-art-assets.js','utf8');
 const body=src.match(/const CARDS=\{([\s\S]*?)\n\};/)[1];
 const units=[];
 for(const m of body.matchAll(/(\w+):\s*\{name:'([^']+)'/g)){
