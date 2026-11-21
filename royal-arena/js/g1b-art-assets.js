@@ -312,28 +312,26 @@ function showResult(){
   $('#r-art').src = w==='blue'? RART.win : w==='red'? RART.lose : RART.win;
   $('#r-crowns').innerHTML = '<img class="ric ric2" src="assets/ra_ic_crown.png?v=475" alt="">'.repeat(crowns)+' <img class="ric ric2" src="assets/ra_ic_swords.png?v=475" alt=""> '+'<img class="ric ric2" src="assets/ra_ic_crown.png?v=475" alt="">'.repeat(crownR);
   $('#r-sub').innerHTML = `최종 왕관 <b>${crowns} : ${crownR}</b>${S.overtime?' · 연장전':''}<br>총점 <b>${score}</b>`;
-  $('#rt-crown').textContent=crowns*300;
-  $('#rt-kill').textContent=killsB*15;
-  $('#rt-kd').textContent=killsB+' / '+((S.deaths&&S.deaths.blue)||0);
-  $('#rt-spell').textContent=((S.spells&&S.spells.blue)||0)+'회';
-  $('#rt-hp').textContent=tPct*2;
-  $('#rt-time').textContent=timeLeft;
+  /* v513: 세부집계 패널 삭제 — 제거된 요소 쓰기 전면 가드(미가드 시 showResult 예외로 결과 모달 미노출) */
+  try{ var __t; if(__t=document.getElementById('rt-crown')) __t.textContent=crowns*300;
+    if(__t=document.getElementById('rt-kill')) __t.textContent=killsB*15;
+    if(__t=document.getElementById('rt-kd')) __t.textContent=killsB+' / '+((S.deaths&&S.deaths.blue)||0);
+    if(__t=document.getElementById('rt-spell')) __t.textContent=((S.spells&&S.spells.blue)||0)+'회';
+    if(__t=document.getElementById('rt-hp')) __t.textContent=tPct*2;
+    if(__t=document.getElementById('rt-time')) __t.textContent=timeLeft; }catch(e){}
   try{ var __e1=document.getElementById('rt-sbest'); if(__e1) __e1.textContent=(localStorage.getItem('ra_streak_best_v1')||'0')+'연승'; }catch(e){}
   try{ var __td2=new Date().toISOString().slice(0,10); var __e2=document.getElementById('rt-first'); if(__e2) __e2.textContent=localStorage.getItem('ra_daily_v1')===__td2?'소진':'대기'; }catch(e){}
   try{ var __e3=document.getElementById('rt-xp'); var __xg3=localStorage.getItem('ra_xp_gain_v1'); if(__e3) __e3.textContent=__xg3?('+'+__xg3):'-'; }catch(e){}
   try{ var __e4=document.getElementById('rt-sp'); var __sg3=localStorage.getItem('ra_sp_gain_v1'); if(__e4) __e4.textContent=__sg3?('+'+__sg3):'-'; }catch(e){}
   try{ var __mirT=setInterval(function(){ try{ var __bar2=document.getElementById('ra-stats'); var __mir=document.getElementById('rt-mirror'); if(!__mir){ clearInterval(__mirT); return; } if(__bar2&&__bar2.textContent){ var __bt=__bar2.textContent.replace(/ · /g,'\n'); if(__bt&&__bt!==__mir.textContent) __mir.textContent=__bt; if(__bt) clearInterval(__mirT); } }catch(e){ try{ clearInterval(__mirT); }catch(e2){} } },200); setTimeout(function(){ try{ clearInterval(__mirT); }catch(e){} },8000); }catch(e){}
-  $('#rt-sum').textContent=score;
+  try{ var __es=document.getElementById('rt-sum'); if(__es) __es.textContent=score; }catch(e){}   /* v513: 세부집계 패널 삭제 — 요소 부재 가드 */
   try{ hofRecord(score); }catch(e){}
   if(!S._tp){ S._tp=1; try{ var __d=applyTrophyDelta(S.winner); var __te=document.getElementById('rt-trophy'); if(__te){ __te.textContent=(__d>=0?'+':'')+__d; __te.style.color=__d>=0?'#ffe08a':'#ff8f8f'; } }catch(e){} }   // v105 #11: 트로피 증감
   $('#rt-emblem').textContent=['👑SSS','🎖️SS','⚔️S','🛡️A','🔰B'][ri];
   const next=ranks[ri-1];
   $('#rt-barfill').style.width = next? Math.min(100,Math.round(score/next[1]*100))+'%' : '100%';
   $('#rt-brief').textContent = ['사령부 최고 전술 평가 — 완벽한 정복!','훌륭한 지휘! 조금만 더 다듬으면 SSS입니다.','정예 지휘관의 모습입니다.','무난한 승리 — 왕관을 더 빨리 뽑아보세요.','기본에 충실한 전투였습니다.'][ri];
-  if(!window.__rtabInit){ window.__rtabInit=1;
-    $('#rtab-score').addEventListener('click',function(){ $('#rpane-score').classList.remove('hidden'); $('#rpane-rank').classList.add('hidden'); $('#rtab-score').classList.add('on'); $('#rtab-rank').classList.remove('on'); });
-    $('#rtab-rank').addEventListener('click',function(){ $('#rpane-rank').classList.remove('hidden'); $('#rpane-score').classList.add('hidden'); $('#rtab-rank').classList.add('on'); $('#rtab-score').classList.remove('on'); });
-  }
+  /* v513: 탭 UI 삭제 — 랭크 평가 즉시 노출(전환 로직 제거) */
   $('#overlay-result').classList.toggle('lose',S.winner!=='blue');
   try{ var __sb=document.getElementById('screen-battle'); if(__sb) __sb.classList.add('ended'); }catch(e){}
   try{ var __dw=document.getElementById('dpsw'); if(__dw) __dw.classList.add('hidden'); }catch(e){} try{ window.__rFix(); }catch(e){} ambient=[]; parts=[];$('#overlay-result').classList.remove('hidden');   /* v151 결과모달 최적화: 결과 모달 위 위젯 충돌 제거 */
