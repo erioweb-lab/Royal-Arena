@@ -329,6 +329,11 @@
 - 검증: RUN_GATES:ALL_OK — 신규 E2E tests/test_status_icons.py(유닛 3기에 burn/slow/stun 부여 → 페이지 오류 0+캔버스 픽셀에서 아이콘 색 관측)+기존 6종. 컴파일 15파일·CAMERA_CHECK 21게이트/13004단언·ACTIVE-RESOURCES OK. 라이브 칩·sw v520 폴링 확인.
 - BOSS_FX_MAP 잔여 갭: 4번(시간감속·부패 신규 상태 — 밸런스 가치표 동반 별도 사이클)만 남음.
 
+### v521 (2026-11-22)
+- 신규 상태이상 2종·전용 존 2종(BOSS_FX_MAP.md 갭 4번 완결): ①황혼 시간 감속 — timewarp 존(무피해·warpT 0.7 갱신)·이동 0.7×(g1a sp 팩터)·crater 재사용 폐지, 황혼 주황 시계 원반+회전 바늘 렌더 ②묘지 부패 — rotzone 존(10dps 틱+rotT 2 갱신)·받는 피해 +10%(dealDamage 배율점)·venomzone 재사용 폐지, 황갈색 부패 원판+거품 렌더. g1a 맵 ult: tomb abyss→rot·dusk waste→warp. v520 아이콘 3벌에 warpT·rotT 추가. 밸런스 근거: 둔화 가치표 준수(warp=유틸리티 무피해, rot=중독 30dps 대비 약체화 중심).
+- 검증: RUN_GATES:ALL_OK — 신규 E2E tests/test_new_statuses.py(존 2종 주입 → 렌더 무오류·틱 가동·소멸·ult 배선 실측)+기존 7종. 컴파일 15파일·CAMERA_CHECK 21게이트/13004단언·ACTIVE-RESOURCES OK. 라이브 칩·sw v521 폴링 확인.
+- BOSS_FX_MAP 갭 전량 해소: atk 프레임(v517·518)·shockzone(v519)·상태 스택 아이콘(v520)·신규 상태(v521).
+
 ### v519 (2026-11-21)
 - shockzone 신설(BOSS_FX_MAP.md 갭 2번 해소): 천공 폭풍 정령왕 파멸기를 frost(snowzone) 재사용에서 감전 전용 존로 전환 — __raMAPS sky ult frost→shock, g1c 렌더 분기(청백 아크 회전 링 2겹+번개 아크 3개+원판 그라디언트·타원 스쿼시 0.52 공통 좌표계), g1b 틱(0.5s마다 6=12dps+아크 파편 파티클), ZK 집합 추가. 칩·sw v519, ?v=519.
 - 검증: RUN_GATES:ALL_OK — 신규 E2E tests/test_shockzone.py(존 fx 직접 주입 → 렌더 무오류·틱 가동·dur 소진 소멸·sky ult=shock 배선 실측)+기존 5종. 컴파일 15파일·CAMERA_CHECK 21게이트/13004단언·ACTIVE-RESOURCES OK. 라이브 칩·sw v519 폴링 확인. 참고: 파멸기 존은 보스 시전 시점(보스 강림 후 파멸기 게이지)에 생성 — E2E에서 왕 타워 즉사로는 트리거되지 않음(진단 기록).
