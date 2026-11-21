@@ -10,6 +10,7 @@ function __fitWide(){
   }catch(e){ return; }
   canvas.width=VW*BSCALE; canvas.height=VH*BSCALE; ctx.scale(BSCALE,BSCALE);
   bgc.width=VW*BSCALE; bgc.height=VH*BSCALE; vig=null;
+  if(window.RACamera) window.RACamera._resize();   /* v508-camera: VW/VH 원천 변경 직후 단일 경계 보정 */
   try{ drawStatic(); }catch(e){}
 }
 function __rollWide(){   /* v391: 다리=타워축 스냅 */
@@ -25,9 +26,7 @@ function __wideCheck(){
     const ax=r.width/r.height, cx=VW/VH;
     if(Math.abs(ax-cx)/cx>0.02){
       __fitWide();
-      if(S.cam){ const vw=VW/S.cam.z, vh=VH/S.cam.z;
-        S.cam.x=(vw>=W)?W/2:Math.min(Math.max(S.cam.x,vw/2),W-vw/2);
-        S.cam.y=(vh>=H)?H/2:Math.min(Math.max(S.cam.y,vh/2),H-vh/2); }
+      /* v508-camera: __fitWide가 카메라 경계를 처리; 중복 상태 writer 제거. */
       try{ relayoutHud(); }catch(e){}
     }
   }catch(e){}

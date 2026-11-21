@@ -224,7 +224,12 @@ function bake16(){
     PROJ16[k]=arr; }
   if(!pend) window.__p16=true;
 }
-function visAngle(p,px,py2){ let va; if(p._lx!=null&&(px!==p._lx||py2!==p._ly)) va=Math.atan2(py2-p._ly,px-p._lx); else va=Math.atan2(p.ty-p.y,p.tx-p.x); p._lx=px; p._ly=py2; return va; }
+function visAngle(p,px,py2){   /* v508: 일반 탄환 tx/ty·주문 탄환 x1/y1 모두 첫 프레임 방향 지원 */
+  let va;
+  if(Number.isFinite(p._lx)&&Number.isFinite(p._ly)&&(px!==p._lx||py2!==p._ly))va=Math.atan2(py2-p._ly,px-p._lx);
+  else{const tx=Number.isFinite(p.tx)?p.tx:p.x1,ty=Number.isFinite(p.ty)?p.ty:p.y1;va=Math.atan2(ty-p.y,tx-p.x);}
+  p._lx=px;p._ly=py2;return Number.isFinite(va)?va:0;
+}
 function drawProj(p){
   const px=p.x*TILE, py=p.y*TILE;
   if(p.kind==='plasmabolt'){ const _pl=Math.sin(Math.min(1,Math.max(0,p.t))*Math.PI)*12, _py3=py-_pl;   /* v380: 플라즈마탄 — 발광 코어+바이올렛 트레일 */
@@ -562,15 +567,15 @@ function render(){
 }
 
 /* ---------- 입력 ---------- */
-function evtPos(e){
-  const r=canvas.getBoundingClientRect();
-  let px=(e.clientX-r.left)*VW/Math.max(1,r.width), py=(e.clientY-r.top)*VH/Math.max(1,r.height);
-  const cam=S.cam||{x:W/2,y:H/2,z:1};
-  px=(px-VW/2)/cam.z+cam.x; py=(py-VH/2)/cam.z+cam.y;   // 컴뱃 캠 역변환
-  return {x:px/TILE, y:py/TILE};
+function evtPos(e){   /* v508-camera: 배치와 핀치가 동일 역변환 사용 */
+  if(window.RACamera) return window.RACamera._clientToWorld(e);
+  const r=canvas.getBoundingClientRect(), cam=S.cam||{x:W/2,y:H/2,z:1};
+  const z=Number.isFinite(cam.z)&&cam.z>0?cam.z:1;
+  const px=(e.clientX-r.left)*VW/Math.max(1,r.width), py=(e.clientY-r.top)*VH/Math.max(1,r.height);
+  return {x:((px-VW/2)/z+cam.x)/TILE,y:((py-VH/2)/z+cam.y)/TILE};
 }
 function tryDeploy(e){
-  if(S.scene!=='battle'||S.over) return;
+  if(S.scene!=='battle'||S.over||!Number.isFinite(e.clientX)||!Number.isFinite(e.clientY)) return;
   if(S.ks){ fireKingShot(evtPos(e)); return; }
   const p=evtPos(e);
   if(P.sel==null){ toast('아래 카드를 먼저 선택하세요'); return; }
@@ -580,27 +585,24 @@ function tryDeploy(e){
   playCard(P,P.sel,clamp(p.x,0.7,COLS-0.7), c.kind==='spell'?clamp(p.y,0.7,ROWS-0.7):Math.max(p.y,BLUE_DEPLOY_MIN));
   P.sel=null; dragFrom=-1; syncHand();
 }
-canvas.addEventListener('pointerdown',e=>{ ensureAudio(); S._pan={x:e.clientX,y:e.clientY,moved:false}; try{ if(canvas.setPointerCapture&&e.pointerId!=null) canvas.setPointerCapture(e.pointerId); }catch(err){} });   // v115: \ud3ec\uc778\ud130 \uce99\cc98 — \uc908\uc778 \uc0c1\ud0dc \ub4dc\ub798\uadf8 \ud3f0 \uc720\uc9c0
-window.addEventListener('pointermove',e=>{
-  if(!S._pan) return;
-  const dx=e.clientX-S._pan.x, dy=e.clientY-S._pan.y;
-  if(!S._pan.moved&&Math.hypot(dx,dy)>12&&S.cam&&S.cam.z>1.05) S._pan.moved=true;
-  if(S._pan.moved&&S.scene==='battle'){
-    const c=S.cam, vw=VW/c.z, vh=VH/c.z;
-    c.x=(vw>=W)?W/2:clamp(c.x-dx/c.z,vw/2,W-vw/2); c.y=(vh>=H)?H/2:clamp(c.y-dy/c.z,vh/2,H-vh/2);
-    if(S.focus){ S.focus.x=c.x; S.focus.y=c.y; S.focus.v=null; }   // v111: 팬 전환 시 추적 해제(고정 클로즈업 유지)
-    S._pan.x=e.clientX; S._pan.y=e.clientY;
-  }
-});
-let dragFrom=-1;
+/* v508-camera: 입력 소유권은 RACamera 하나. */
+canvas.style.touchAction='none';
+canvas.addEventListener('pointerdown',e=>{ try{ ensureAudio(); }catch(err){} if(window.RACamera) window.RACamera._pointerDown(e); });   // v115: \ud3ec\uc778\ud130 \uce99\cc98 — \uc908\uc778 \uc0c1\ud0dc \ub4dc\ub798\uadf8 \ud3f0 \uc720\uc9c0
+window.addEventListener('pointermove',e=>{ if(window.RACamera) window.RACamera._pointerMove(e); },{passive:false});
+let dragFrom=-1, dragPointerId=null;
 window.addEventListener('pointerup',e=>{
-  if(S._pan){ if(!S._pan.moved) tryDeploy(e); S._pan=null; return; }
-  if(dragFrom<0) return;
+  const camera=window.RACamera, result=camera?camera._pointerUp(e,false):null;
+  if(result){ dragFrom=-1; dragPointerId=null; if(result==='tap') tryDeploy(e); return; }
+  if(camera&&camera._blocksDeploy()){ dragFrom=-1; dragPointerId=null; return; }
+  if(dragFrom<0||e.pointerId!==dragPointerId) return;
   const r=canvas.getBoundingClientRect();
   const inside=e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom;
   if(inside&&P.sel!=null) tryDeploy(e);
-  dragFrom=-1;
+  dragFrom=-1; dragPointerId=null;
 });
+window.addEventListener('pointercancel',e=>{ if(window.RACamera) window.RACamera._pointerUp(e,true); dragFrom=-1; dragPointerId=null; });
+canvas.addEventListener('lostpointercapture',e=>{ if(window.RACamera) window.RACamera._pointerUp(e,true); });
+canvas.addEventListener('wheel',e=>{ if(window.RACamera) window.RACamera._wheel(e); },{passive:false});
 canvas.addEventListener('contextmenu',e=>{ e.preventDefault(); if(P.sel!=null){ P.sel=null; syncHand(); } });
 document.addEventListener('keydown',e=>{
   if(S.scene!=='battle') return;
@@ -629,7 +631,7 @@ function buildHandUI(){
       if(__idx<0||__idx>3) return;
       try{ ensureAudio(); }catch(e1){}
       if(S.over) return;
-      P.sel=__idx; dragFrom=__idx;
+      P.sel=__idx; dragFrom=__idx; dragPointerId=ev.pointerId;
       try{ syncHand(); }catch(e2){ try{ P.sel=__idx; }catch(e3){} }
       try{ tutCardTap(__idx); }catch(e4){}
     }catch(e){}
@@ -637,8 +639,8 @@ function buildHandUI(){
   for(let i=0;i<4;i++){
     const d=document.createElement('div'); d.className='card';
     d.innerHTML='<div class="cost"><span></span></div><div class="emoji"></div><div class="nm"></div>';
-    d.addEventListener('pointerdown',()=>{ try{ ensureAudio(); if(S.over) return; }catch(e){}
-      try{ P.sel=i; dragFrom=i; syncHand(); try{ tutCardTap(i); }catch(e){} }catch(e2){ P.sel=i; dragFrom=i; } });   /* v307: 선택 등록 무조건 보장 — 오버레이/오디오 예외가 탭을 죽이지 않는다 */
+    d.addEventListener('pointerdown',ev=>{ try{ ensureAudio(); if(S.over) return; }catch(e){}
+      try{ P.sel=i; dragFrom=i; dragPointerId=ev.pointerId; syncHand(); try{ tutCardTap(i); }catch(e){} }catch(e2){ P.sel=i; dragFrom=i; dragPointerId=ev.pointerId; } });   /* v307: 선택 등록 무조건 보장 — 오버레이/오디오 예외가 탭을 죽이지 않는다 */
     box.appendChild(d); cardEls.push(d);
   }
   setTimeout(function(){ try{ __raTierCards(); }catch(e){} },0);   /* v207: 등급 프레임 전투 손카드 확장 */
@@ -733,8 +735,25 @@ function tutSkip(){ tutFinish(); try{ toast('튜토리얼을 건너뛰었어요'
 /* v148 실시간 DPS 위젯(§4): 우상단 유닛별 누적 피해/경과 DPS·배치수 브리핑 — 펼침/접기 토글, 표시 전용(배치 영역 비침범) */
 const DPSW={acc:{},cnt:{},time:0,open:true,_c:0};
 function dpswEnsure(){ if(document.getElementById('dpsw')) return; const st=document.createElement('style'); st.id='dpswst'; st.textContent='#dpsw{position:fixed;right:8px;top:calc(64px + env(safe-area-inset-top,0px));z-index:1400;font-family:var(--fd);pointer-events:none;max-width:118px}#dpsw .dw-t{pointer-events:auto;background:rgba(13,27,46,.74);border:1px solid #f7c531;color:#f7c531;border-radius:10px;font:800 11px var(--fd);padding:4px 8px;box-shadow:0 3px 10px rgba(0,0,0,.4);width:100%;text-align:right}#dpsw .dw-b{margin-top:4px;background:rgba(13,27,46,.74);border:1px solid rgba(247,197,49,.45);border-radius:10px;padding:5px 7px;display:flex;flex-direction:column;gap:3px}#dpsw.hidden{display:none}#dpsw .dw-r{display:flex;align-items:center;gap:4px;color:#dfe8f5;font-size:10px;white-space:nowrap}#dpsw .dw-r b{color:#f7c531;font-size:10px}#dpsw .dw-r .dw-n{overflow:hidden;text-overflow:ellipsis;max-width:54px}'; document.head.appendChild(st); const w=document.createElement('div'); w.id='dpsw'; w.className='hidden'; w.innerHTML='<button class="dw-t">📊 DPS</button><div class="dw-b"></div>'; w.querySelector('.dw-t').addEventListener('pointerdown',function(e){ e.stopPropagation(); DPSW.open=!DPSW.open; dpswRender(); }); document.body.appendChild(w); }
+/* v508: DPS창은 기존 세로 위치를 선호하되 전장 하단 버튼·카메라 행 위에서 멈춘다. */
+function __raPlaceDps(){
+  const w=document.getElementById('dpsw'),arena=document.getElementById('arena-wrap');
+  if(!w||!arena||S.scene!=='battle'||S.over||w.classList.contains('hidden')) return;
+  let bottom=arena.getBoundingClientRect().bottom-8;
+  for(const id of ['repair-btn','ks-btn','camera-controls']){const e=document.getElementById(id);if(e){const r=e.getBoundingClientRect();if(r.width>0&&r.height>0)bottom=Math.min(bottom,r.top-8);}}
+  const top=Math.max(52,Math.min(innerHeight*.38-50,bottom-w.getBoundingClientRect().height));
+  const value=top.toFixed(2)+'px';if(w.style.getPropertyValue('--ra-dps-top')!==value)w.style.setProperty('--ra-dps-top',value);
+  __raPlaceBattleBanner();
+}
+function __raPlaceBattleBanner(){
+  const b=document.getElementById('banner'),arena=document.getElementById('arena-wrap'),controls=document.getElementById('camera-controls');
+  if(!b||!arena||!controls||S.scene!=='battle')return;
+  const ar=arena.getBoundingClientRect(),cr=controls.getBoundingClientRect();
+  const top=Math.max(52,Math.min(innerHeight*.34,ar.bottom-b.offsetHeight-8,cr.top-b.offsetHeight-8));
+  const value=top.toFixed(2)+'px';if(b.style.getPropertyValue('--ra-banner-top')!==value)b.style.setProperty('--ra-banner-top',value);
+}
 function dpswRender(){ try{ const w=document.getElementById('dpsw'); if(!w||typeof S==='undefined'||!S||S.pre!==0||S.over){ if(w) w.classList.add('hidden'); return; } w.classList.remove('hidden'); const ks=Object.keys(DPSW.cnt).filter(function(k){ return DPSW.cnt[k]>0; }); let tot=0; ks.forEach(function(k){ tot+=DPSW.acc[k]||0; }); const dps=tot/Math.max(1,DPSW.time); var __al=0; if(typeof units!=='undefined'){ for(var __ui=0;__ui<units.length;__ui++){ if(!units[__ui].dead&&units[__ui].team==='blue') __al++; } }   /* v210 P7: 생존 브리핑 */
-  w.querySelector('.dw-t').textContent=DPSW.open?('📊 DPS '+Math.round(dps)+' · 🛡 '+__al+' ▾'):'📊 DPS · 🛡 '+__al+' ▸'; const b=w.querySelector('.dw-b'); if(!DPSW.open){ b.style.display='none'; return; } b.style.display='flex'; b.innerHTML=ks.sort(function(a,c){ return (DPSW.acc[c]||0)-(DPSW.acc[a]||0); }).slice(0,5).map(function(k){ const c=CARDS[k]||{}; const d=Math.round((DPSW.acc[k]||0)/Math.max(1,DPSW.time)); return '<div class="dw-r"><b>'+d+'</b><span class="dw-n">'+(c.name||k)+'</span><span>×'+DPSW.cnt[k]+'</span></div>'; }).join('')||'<div class="dw-r"><span>배치 대기 중</span></div>'; }catch(e){} }
+  w.querySelector('.dw-t').textContent=DPSW.open?('📊 DPS '+Math.round(dps)+' · 🛡 '+__al+' ▾'):'📊 DPS · 🛡 '+__al+' ▸'; const b=w.querySelector('.dw-b'); if(!DPSW.open){ b.style.display='none'; __raPlaceDps(); return; } b.style.display='flex'; b.innerHTML=ks.sort(function(a,c){ return (DPSW.acc[c]||0)-(DPSW.acc[a]||0); }).slice(0,5).map(function(k){ const c=CARDS[k]||{}; const d=Math.round((DPSW.acc[k]||0)/Math.max(1,DPSW.time)); return '<div class="dw-r"><b>'+d+'</b><span class="dw-n">'+(c.name||k)+'</span><span>×'+DPSW.cnt[k]+'</span></div>'; }).join('')||'<div class="dw-r"><span>배치 대기 중</span></div>'; __raPlaceDps(); }catch(e){} }
 
 
 /* v149 캔버스 타일 하이라이트(§5-2): 카드 선택 중 배치 가능 타일 점선 회전+펄스 스케일 발광 — 배치 가이드·튜토리얼 겸용 */
@@ -927,6 +946,7 @@ function startMatch(){ try{ localStorage.setItem('ra_slot_used_v1',String(active
   buildTowers(); drawStatic();
   buildHandUI();
   show('battle');
+  if(window.RACamera) window.RACamera.reset();   /* v508-camera: 경기 경계에서 입력·추적·피격 알림 원천 리셋 */
   try{ __raHudInline(); setTimeout(__raHudInline,400); setTimeout(__raHudInline,1200); }catch(e){ }   /* v202: HUD 인라인 */
   bgmStart();
   S.pre=3.6;
@@ -947,7 +967,7 @@ function buildCodex(){
 }
 $('#btn-start').addEventListener('click',()=>{ ensureAudio(); startMatch(); });
 $('#btn-again').addEventListener('click',()=>{ $('#overlay-result').classList.add('hidden'); startMatch(); });
-document.addEventListener('pointerdown',function(ev){ try{ if(S.scene!=='battle') return; const cc=S.cam; if(!cc||!(cc.z>1.05)) return; if(S.focus||S.zHold>0){ S.zHold=0; S.focus=null; if(!(S.focusGap>0.4)) S.focusGap=0.8; S._hiAge=0; S._zSpot=null; } }catch(e){} },true);   /* v178: 줌 상태 클릭·터치 즉시 해제(원본 동작은 유지) */
+/* v508-camera: 전역 pointerdown 포커스 해제 폐지. 모드 변경·실제 제스처만 카메라를 전환한다. */
 window.__uiUp=function(){ try{   /* v178: 메인·게임 내 UI 업그레이드 — 텍스트 타깃·멱등 */
   if(document.getElementById('ui-v178')) return;
   var st=document.createElement('style'); st.id='ui-v178';
@@ -1073,42 +1093,15 @@ function renderHof(){ try{
 
 /* ---------- 메인 루프 ---------- */
 let last=performance.now();
-/* v130: 줌인 2.5배 */
-function raFocus(x,y,dur,v,force){   // v111: 카메라 포커스 단일 생성자 — x·y·t·dur·a·v 상시 보유(무좌표 포커스 원천 차단)
-  if(!force&&(S.focusGap>0||S.focus)) return;
-  S.focus={x:x||0,y:y||0,t:dur,dur:dur,a:0,v:(v&&!v.dead)?v:null};
+/* v508-camera: 기존 전역 진입점은 어댑터만 유지. UI 생성·3.5초 감시견 폐지. */
+function raFocus(x,y,dur,v,force){
+  return window.RACamera?window.RACamera._focus(x,y,dur,v,force):false;
 }
-function forceHomeCam(){   // v115: 초기 화면 상태 강제 복귀 — ⟲ 버튼·감시견 공용(즉시 스냅)
-  S.focus=null; S.focusGap=0.8; S._hiAge=0;
-  var hm=S._home||{x:W/2,y:H/2,z:1};
-  if(S.cam){ S.cam.x=hm.x; S.cam.y=hm.y; S.cam.z=hm.z; }
+function forceHomeCam(){
+  if(window.RACamera) return window.RACamera.setMode('overview');
 }
 function updateCam(dt){
-  const c=S.cam||(S.cam={x:W/2,y:H/2,z:1});
-  S._now=(S._now||0)+dt;
-  if(S.focus){ const f=S.focus; f.t-=dt; f.a=(f.a||0)+dt;
-    if(f.v){ if(f.v.dead){ f.v=null; } else { f.x=f.v.x*TILE; f.y=f.v.y*TILE; } }
-    const __clash=!!(f.v&&!f.v.dead&&f.v.target); if(__clash) f.t=Math.max(f.t,0.35);   /* v175 P2: 교전 지속 중 만료 억제 — f.t 갱신(연령캡 유예, 감시견 3.5s 캡 유지) */
-    if(f.t<=0||(!__clash&&f.a>(((f.dur)||1.6)+1.2))){ if(!(S.zHold>0)) S.zHold=1.0; S.zHold-=dt; if(S.zHold>0){ f.t=Math.max(f.t,0.0001); } else { S.zHold=0; S.focus=null; S.focusGap=2.2; } } }   // v111: 신 포커스 감시 — 단일 상태·전 필드 상시 보유·연령 하드캡(dur+1.2s) + v169: 복귀 전 줌 화면 1초 유지
-  if(S.focusGap>0) S.focusGap-=dt; if(S._zSpot&&S._now>S._zSpot.exp) S._zSpot=null;   /* v175 */   // v91: 쿨다운 동안 1배 유지
-  if(S.spellQuiet>0) S.spellQuiet-=dt;   // v118: 주문 진정 기간 감소
-  if(c.z>1.05){ S._hiAge=(S._hiAge||0)+dt; if(S._hiAge>3.5){ S.focus=null; S.focusGap=1.0; S._hiAge=0; S._zSpot={x:c.x,y:c.y,exp:S._now+6}; }   /* v175: 해제 지점 기억 — 동일 교전 재점화 6s 억제(캡 3.5s 유지) */ } else S._hiAge=0;   // v112: 고정 감시견 — 5s 초과 줌인 지속 강제 해제
-  const tgt=S.focus? {x:S.focus.x, y:S.focus.y, z:2.5} : {x:W/2,y:H/2,z:1};
-  const k=1-Math.exp(-5.0*dt), kz=1-Math.exp(-3.2*dt);
-  c.x=lerp(c.x,tgt.x,k); c.y=lerp(c.y,tgt.y,k); c.z=lerp(c.z,tgt.z,kz);
-  const vw=VW/c.z, vh=VH/c.z;
-  c.x=(vw>=W)?W/2:clamp(c.x,vw/2,W-vw/2); c.y=(vh>=H)?H/2:clamp(c.y,vh/2,H-vh/2);   // 아레나 밖 노출 방지
-  var zc=document.getElementById('zoom-chip');
-  if(!zc){ zc=document.createElement('div'); zc.id='zoom-chip';
-    zc.style.cssText="z-index:61;font-family:var(--fd,'Pretendard Variable','Noto Sans KR',sans-serif);font-size:14px;font-weight:700;letter-spacing:-.3px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.8);pointer-events:none;white-space:nowrap";
-    var __tb=document.getElementById('topbar'); if(__tb){ __tb.insertBefore(zc, document.getElementById('btn-sound')); } else { var __sc=document.getElementById('arena-wrap'); if(__sc) __sc.appendChild(zc); } } try{ relayoutHud(); }catch(e){}   // v122: 칩 생성 직후 기둥 배치 반영
-  var hb=document.getElementById('cam-home-btn');
-  if(!hb){ hb=document.createElement('button'); hb.id='cam-home-btn'; hb.textContent='\u27F2'; hb.title='\uc908 \ud574\uc81c\u00b7\ud654\uba74 \uc6d0\uc0c1\ud0dc \ubcf5\uadc0';
-    hb.style.cssText="z-index:61;font-family:var(--fd,'Pretendard Variable','Noto Sans KR',sans-serif);font-size:15px;font-weight:800;line-height:1;color:#FFD54F;background:rgba(18,24,43,.88);border:1px solid rgba(255,213,79,.55);border-radius:9px;padding:5px 9px;cursor:pointer;pointer-events:auto";
-    hb.addEventListener('click',function(){ ensureAudio(); forceHomeCam(); });
-    var __tb2=document.getElementById('topbar'); if(__tb2){ __tb2.insertBefore(hb, document.getElementById('btn-sound')); } else { var __aw2=document.getElementById('arena-wrap'); if(__aw2) __aw2.appendChild(hb); } }
-  hb.classList.toggle('hidden',!(c.z>1.05));   // v115: \uc908\uc778 \uc911\uc5d0\ub9cc \uc6d0\uc0c1\ubcf5\uadc0 \ubc84\ud2bc \ub178\ucd9c
-  if(zc.__v==null||Math.abs(zc.__v-c.z)>0.009){ zc.__v=c.z; zc.textContent='🔍 '+c.z.toFixed(2)+'x'+(S.focus?(S.focus.v?' · 추적':' · 주시'):''); }
+  if(window.RACamera) window.RACamera.update(dt);
 }
 function loop(t){
   let dt=Math.min(0.05,(t-last)/1000); last=t; now=t/1000;

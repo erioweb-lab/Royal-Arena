@@ -63,7 +63,7 @@ window.applySkills=function(){
 
 /* ---------- 피해 래퍼 (공성 술책·원소 침투·철벽 인장) ---------- */
 var __dd0=window.dealDamage;
-if(typeof __dd0==='function'){ window.dealDamage=function(e,dmg,fromTeam,fromSpell){
+if(typeof __dd0==='function'){ window.dealDamage=function(e,dmg,fromTeam,fromSpell,source){   /* v508-camera: 최종 피해 래퍼도 공격 출처 보존 */
   try{
     if(fromTeam==='blue'&&e){
       var sk=S._sk||{};
@@ -72,7 +72,7 @@ if(typeof __dd0==='function'){ window.dealDamage=function(e,dmg,fromTeam,fromSpe
     }
     if(fromTeam==='red'&&e&&e.team==='blue'&&!e.isTower&&S.relic==='relic_guard') dmg=Math.round(dmg*0.92);  /* 철벽 인장 */
   }catch(err){}
-  return __dd0(e,dmg,fromTeam,fromSpell); }; }
+  return __dd0(e,dmg,fromTeam,fromSpell,source); }; }
 
 /* ---------- 수리 오버라이드 (수리 조직·성벽 보수·기계공의 망치) ---------- */
 window.repairTower=function(){
