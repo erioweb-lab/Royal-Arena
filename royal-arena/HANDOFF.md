@@ -1,9 +1,11 @@
 # 로얄 아레나 인수인계 문서 (HANDOFF)
-> 최종 갱신: 2026-11-10 (v391 기준) — 이전 세션의 작업 결과·현재 상태·검증 절차를 담는다. 매 사이클 종료 시 갱신 의무(dev-pipeline G5).
+> 최종 갱신: 2026-11-21 — v509 원격 푸시 완료(PUSH:REAL_OK·ls-remote 확인), Pages 전파 폴링 ~15분 미전환(라이브 칩 v507 잔존) — 기기 확인 전 라이브 상태 미확정. 아래 과거 버전별 기록은 당시 관측이다.
 
-## 1. 현재 버전·배포 상태 (v382, 코드 게이트 통과·라이브 검증 진행)
-- 라이브: https://erioweb-lab.github.io/Royal-Arena/royal-arena/ — 칩 v381·sw 캐시 v381 동기화 확인.
-- 저장소: github.com/erioweb-lab/Royal-Arena (main) — 푸시는 사용자 제공 토큰으로만 가능(샌드박스 미보유). 사용 후 즉시 삭제, 세션마다 재수령.
+## 1. 현재 버전·배포 상태 (v508 미배포)
+- 운영: https://erioweb-lab.github.io/Royal-Arena/royal-arena/ — 이번 직접 캡처의 칩은 v507. 도움말 확인 라벨이 안 보이는 기존 결함도 재확인했다.
+- 저장소: github.com/erioweb-lab/Royal-Arena (main), 마지막 배포 기준 4800403. v508은 로컬 수정이며 커밋·푸시·운영 3중 검증을 하지 않았다.
+- 배포 차단: 기존 balance_check 자폭 벌레 OUTLIER 및 거버넌스의 미로드 구 g1 파일 크기 초과. 통과하는 active_resources_check가 기존 실패 게이트를 대체하지 않는다.
+- 인증 정보를 로그·문서·커밋에 넣지 않는다. 과거 인증 가능 여부 기록은 현재 권한을 증명하지 않으며, 실제 배포 직전에 허용된 연결로 확인한다.
 
 ## 2. 최근 사이클 요약 (v370~v380, 모두 라이브 실측 검증)
 - **v370~371** 버튼 텍스처 유성우·불티 파티클 제거: 결정적 인페인트(산발 파티클·화염 꼬리, 프레임 보호영역 0px) → 구체 장식은 v371 생성형 재생성(1728×576 유지).
@@ -13,7 +15,7 @@
 - **v380** BGM 제거(bgmStart/Stop no-op 호환)+타격음 신시사이저 playHit(type,isCritical) 6속성(physical·flame·frost·lightning·cannon·boss)+크리티컬 레이어, 근접 12지점 유닛별 연결. 25ms 타입 스로틀.
 
 ## 3. 핵심 아키텍처 (훼손 금지 — 감사 게이트가 지켜본다)
-- 오디오: js/g1-art-assets.js의 `__RA_AUDIO` 싱글턴 + playHit/sfx 이중 레이어. 발화 경로에 state 무시 게이트 재도입 금지(기기 영구 무음 재발 — v376 확정).
+- 오디오: 현재 로드 원천은 js/g1a-art-assets.js의 `__RA_AUDIO` 싱글턴 + playHit/sfx 이중 레이어다. js/g1-art-assets.js는 미로드 구 통합본이며 기존 balance_check가 읽는 입력이다. 발화 경로에 state 무시 게이트 재도입 금지(기기 영구 무음 재발 — v376 확정).
 - 버튼 문양: 셸 블록(ui-v3xx)+강제기(ui-v373-js, 1.2s) 공존 구조 — 강제기 삭제만으로는 리스타일러 되돌림이 일어난다.
 - 텍스처: assets/ra_btn_card.png(메뉴·무파티클)·ra_cta_card.png(CTA·불꽃 장식 의도 보존).
 
@@ -284,8 +286,12 @@
 - **캡처 서비스 장애 시**: headless-render-verify(playwright 폴백 — 미검증 방치 금지)
 
 ### v507 (2026-11-14 밤)
-- 게임방법 화면 정리+확인 버튼 라벨 소실 수복: 근원=ui-v351 금버튼 스킨이 .t-cta의 15px border-image 투명 프레임을 유지한 채 ui-v373-js 플라크 배경에 어둡게 재덮임 → 라벨 묻힘. 수복=ui-v507b 시트(border-image none·금배경 다크문자 최후순위)+ui-v507-js 라벨 가드(500ms "확인" 복원)+sticky 폐기(본문 흐름 배치 — 가림 원천 제거)+본문 밀도 정리. 로비 급축소 근본 수복: g8 v505 핏터가 넘침 시 zoom 0.8까지 곤축 → 하한 0.93·틱당 -4
-### v507 (2026-11-14 밤)
-- 게임방법 화면 정리+확인 버튼 라벨 소실 수복: 근원=ui-v351 금버튼 스킨이 .t-cta의 15px border-image 투명 프레임을 유지한 채 ui-v373-js 플라크 배경에 어둡게 재덮임 → 라벨 묻힘. 수복=ui-v507b 시트(border-image none·금배경 다크문자 최후순위)+ui-v507-js 라벨 가드(500ms "확인" 복원)+sticky 폐기(본문 흐름 배치 — 가림 원천 제거)+본문 밀도 정리.
-- 로비 급축소 근본 수복: g8 v505 핏터가 넘침 시 zoom 0.8까지 곤축 → 하한 0.93·틱당 -4% 램프로 개정.
-- 칩·sw·?v= v507, 커밋 0db2a0e PUSH:REAL_OK. CDN HTML 엣지 캐시 전파 지연(chip 폴링 2분 v505 잔존, sw·g8 sha는 v507 일치 — v279 사례) — 기기 강제갱신 후 확인 요망.
+- 당시 게임방법 화면 정리 시도: 시트·라벨 가드·sticky 폐기를 적용했지만, 이번 운영 v507 캡처에서도 확인 라벨은 비가시였다. 기존 '수복 완료' 표현은 정정한다. v508 실제 계산 스타일 조사에서 높은 특이성 sticky와 ui-v373-js 플라크 재적용이 여전히 승리함을 확인하여 원천 제외 및 최종 CSS 경로를 수정했다.
+- 당시 로비 축소 완화: g8 v505 핏터 하한을 0.93으로 제한했다. '근본 수복' 표기는 정정한다. 이번 실제 도움말 4회 개폐에서 zoom 0.968→0.93으로 여전히 축소되는 것을 재현했고, v508 작업 트리에서는 곱셈 폴러 자체를 제거했다.
+- 칩·sw·?v= v507, 커밋 0db2a0e PUSH:REAL_OK라는 당시 기록. 이번 운영 캡처 칩 v507을 직접 확인했다. 이전 v505 관측의 원인을 CDN 지연으로 확정하지 않는다.
+
+### v509 (2026-11-21)
+- v508 미완 2건 수복: ①결과 통계 미러·열값 우측 클립 — 원인: #ui-v186 nowrap이 미러 b(#rt-mirror)를 1행 539px로 만들고 1fr 트랙이 min-content 304px로 팽창(패널 295px) → ui-v509 minmax(0,1fr) 트랙+미러 행 전폭 pre-line 수복. ②도움말 상단 안내(#ra-inote) 오프스크린 — 원인: 절대 툴팁 규칙(bottom:100%+8px)이 뷰포트 위(top:-35.8) 배치 → 문서 흐름 복원+#overlay-info column 스택+info-box 캡(100svh-160px)+t-how/t-note/t-spec 내부 스크롤+t-cta sticky. 후반 발견: sticky 버튼 이동 범위는 containing block(.t-cta 래퍼) 한계 — 카드 전체 스크롤 설계에선 버튼이 카드 밖(595.3)에 남았고 래퍼 자체를 sticky로 수복.
+- 검증(360x550 playwright 픽스처): 팁 인뷰포트(21.6~338.4×65.5~126)·확인 버튼 522 인뷰포트·결과창 클립 텍스트 0건 실측. CAMERA_CHECK 21게이트 13004단언 PASS·ACTIVE-RESOURCES:OK(15 스크립트 실패 0)·컴파일 15파일 OK. 기존 audit.sh(구 g1 260000 초과)·balance_check buzzer OUTLIER는 차단 유지 — active_resources_check가 대체 게이트.
+- 배포: 칩·sw v509 범프 → 커밋 99f8ccc → PUSH:REAL_OK → ls-remote 원격 팁 일치 확인. 단, Pages 전파 폴링 ~15분(칩 v509·sw v509·ui-v509 3종) 미전환 — 라이브 칩 v507 잔존. 라이브 3중 확인은 미완료이며 전파 확인 후 기기 첫 새로고침에서 v509를 봐야 한다.
+- 교훈: sticky 버튼의 이동 범위는 containing block(래퍼 div) 안으로 제한된다 — 스크롤 카드 안 sticky 핀은 버튼이 스크롤 컨테이너 직계 자식일 때만 동작. 래퍼가 있으면 래퍼를 sticky로.
