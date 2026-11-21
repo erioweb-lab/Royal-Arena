@@ -328,6 +328,7 @@ function showResult(){
   try{ hofRecord(score); }catch(e){}
   if(!S._tp){ S._tp=1; try{ var __d=applyTrophyDelta(S.winner); var __te=document.getElementById('rt-trophy'); if(__te){ __te.textContent=(__d>=0?'+':'')+__d; __te.style.color=__d>=0?'#ffe08a':'#ff8f8f'; } }catch(e){} }   // v105 #11: 트로피 증감
   $('#rt-emblem').textContent=['👑SSS','🎖️SS','⚔️S','🛡️A','🔰B'][ri];
+  try{ var __rs=document.getElementById('rt-score'); if(__rs) __rs.textContent='총점 '+score+'점'; }catch(__e){}   /* v531 */
   const next=ranks[ri-1];
   $('#rt-barfill').style.width = next? Math.min(100,Math.round(score/next[1]*100))+'%' : '100%';
   $('#rt-brief').textContent = ['사령부 최고 전술 평가 — 완벽한 정복!','훌륭한 지휘! 조금만 더 다듬으면 SSS입니다.','정예 지휘관의 모습입니다.','무난한 승리 — 왕관을 더 빨리 뽑아보세요.','기본에 충실한 전투였습니다.'][ri];
