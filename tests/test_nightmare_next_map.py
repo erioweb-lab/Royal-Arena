@@ -15,7 +15,7 @@ async def main():
    states.append(s);await page.wait_for_timeout(400)
   uniq=set(states)
   # 클릭 선택 가능 검증: 서리(사다리1) 클릭 → ra_map_v1=1 기록
-  sel=await page.evaluate('''()=>{const bs=[...document.querySelectorAll('.theme-row .t-btn')];const f=bs.find(b=>b.textContent.includes('서리')||(b.getAttribute('data-theme')||'').includes('ice'));f.click();return localStorage.getItem('ra_map_v1')}''')
+  sel=await page.evaluate('''()=>{const bs=[...document.querySelectorAll('.theme-row .t-btn')];const f=bs.find(b=>b.textContent.includes('용암')||(b.getAttribute('data-theme')||'').includes('lava'));f.click();return localStorage.getItem('ra_map_v1')}''')
   first=states[0]; nlock=first.count('1')
   ok=True
   def chk(c,l):
@@ -24,6 +24,6 @@ async def main():
    if not c: ok=False
   chk(len(uniq)==1,f'8샘플 상태 불변(깜빡임 0): {len(uniq)}종'); chk(nlock==7,f'악몽 잠금 7개(로얄+서리 해금): {nlock}')
   chk(first[0]=='0-' and '1LG' in first[:6] or first[0:2]=='0-',f'로얄 클래식 해금 유지: {first[:2]}')
-  chk(sel=='1',f'서리 클릭 선택 기록(ra_map_v1): {sel}')
+  chk(sel=='1',f'용암 클릭 선택 기록(ra_map_v1·표시순서 다음): {sel}')
   await b.close(); raise SystemExit(0 if ok else 1)
 asyncio.run(main())
