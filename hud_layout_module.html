@@ -15,7 +15,8 @@ var P='html body #app #screen-battle', B='blur('+C.blur+'px)';
 function rgba(a){return 'rgba(18,24,43,'+a+')'}
 var css=
  P+' .camera-modes{left:'+C.bottom.modesInset+'px!important;right:'+C.bottom.modesInset+'px!important;top:auto!important;bottom:calc('+C.bottom.inset+'px + env(safe-area-inset-bottom,0px))!important;transform:none!important;justify-content:center!important;align-items:center!important;gap:'+C.bottom.modesGap+'px!important}'+
- P+' .camera-tools{top:calc('+C.tools.top+'px + env(safe-area-inset-top,0px))!important;gap:5px!important}'+
+ P+' .camera-tools{position:static!important;top:auto!important;left:auto!important;right:auto!important;transform:none!important;display:flex!important;align-items:center!important;gap:5px!important;margin:0 0 0 auto!important}'+
+ P+' #topbar{justify-content:flex-start!important;gap:6px!important}'+
  P+' .camera-modes button,'+P+' #ks-btn,'+P+' #btn-kingshot,'+P+' .kingshot-btn,'+P+' #repair-btn,'+P+' #btn-repair{height:'+C.bottom.h+'px!important;min-height:'+C.bottom.h+'px!important;max-height:'+C.bottom.h+'px!important;font-size:'+C.bottom.fs+'px!important;line-height:1!important;display:flex!important;align-items:center!important;justify-content:center!important;border-radius:999px!important;white-space:nowrap!important;box-sizing:border-box!important}'+
  P+' .camera-modes button{flex:1 1 0!important;min-width:0!important;width:auto!important;padding:2px 4px!important;font-size:'+C.bottom.modesFs+'px!important;letter-spacing:-.3px!important;background:'+rgba(C.alpha)+'!important;border:1px solid rgba(255,215,110,.5)!important;color:#ffe9b0!important;font-weight:700!important;box-shadow:0 2px 6px rgba(0,0,0,.35)!important;backdrop-filter:'+B+';-webkit-backdrop-filter:'+B+'}'+
  P+' .camera-modes button[aria-pressed="true"]{background:rgba(255,179,0,'+C.alphaActive+')!important;border-color:rgba(255,224,130,.9)!important;color:#231a05!important;font-weight:800!important}'+
@@ -35,6 +36,9 @@ var st=document.createElement('style'); st.id='hud-layout-generated'; st.textCon
 /* 인라인 강제: 전투 초기화 JS가 인라인 !important로 덮어쓰는 요소(타이머·소리·기권·킹샷·수리)에 동일 CONFIG 값을 재적용 */
 function F(id,props){var e=document.getElementById(id); if(!e)return; for(var k in props){e.style.setProperty(k,props[k],'important');}}
 function force(){try{
+ var TB=document.getElementById('topbar'), CT=document.querySelector('.camera-tools');
+ if(TB&&CT&&CT.parentElement!==TB){ var __ref=document.getElementById('btn-sound'); TB.insertBefore(CT,__ref); }
+ var __dp=document.getElementById('dpsw'); if(__dp) __dp.remove(); var __ds=document.getElementById('dpswst'); if(__ds) __ds.remove();
  var TOP='calc('+C.top.timerTop+'px + env(safe-area-inset-top,0px))';
  var BOT='calc('+C.bottom.inset+'px + env(safe-area-inset-bottom,0px))';
  F('timer',{position:'static',top:'auto',left:'auto',right:'auto',height:C.top.h+'px','line-height':'1',padding:'0 12px','font-size':C.top.fs+'px',background:rgba(C.alpha),border:'1px solid rgba(255,215,110,.5)','border-radius':'999px'});
