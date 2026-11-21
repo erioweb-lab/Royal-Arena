@@ -279,7 +279,7 @@ function drawProj(p){
   else { ctx.strokeStyle='#f4e9c8'; ctx.lineWidth=2.5; ctx.beginPath();
     ctx.moveTo(px-Math.cos(va)*8,py2-Math.sin(va)*8); ctx.lineTo(px+Math.cos(va)*5,py2+Math.sin(va)*5); ctx.stroke(); }
 }
-const ZK=new Set(['snowzone','crater','venomzone','burnzone','plasmazone','stormzone','healzone']);   /* v404: 지면 지속 존 종류 — 렌더 순서 분리용 */
+const ZK=new Set(['snowzone','crater','venomzone','burnzone','plasmazone','stormzone','healzone','shockzone']);   /* v519: 감전 존 추가 */   /* v404: 지면 지속 존 종류 — 렌더 순서 분리용 */
 const FXBEAM={img:null,ok:false}; try{ const __bi=new Image(); __bi.onload=function(){FXBEAM.ok=true;}; __bi.src='assets/ra_fx_plasma_beam.png'; FXBEAM.img=__bi; }catch(e){}   /* v406: 플라즈마 발사 빔 생성 스프라이트(실패 시 캔버스 폴백) */
 function drawFx(f){
   const k=f.t/f.dur, px=f.x*TILE, py=f.y*TILE;
@@ -395,6 +395,25 @@ function drawFx(f){
       ctx.beginPath(); ctx.arc(_px+Math.sin(i*4.1+_g*9)*_rr*0.6, _py-_gp*_rr*0.6, 1.7, 0, 7); ctx.fill(); }
     ctx.globalAlpha=0.5*_a0; ctx.strokeStyle='#d9c2ff'; ctx.lineWidth=1.4;
     ctx.beginPath(); ctx.ellipse(_px,_py,_rr,_rr*0.52,0,0,7); ctx.stroke();
+    ctx.restore();
+  }
+else if(f.kind==='shockzone'){   /* v519: 감전 구역 — 청백 아크 링+번개 펄스(snowzone과 색·모양 구분) */
+    const _px=f.x*TILE, _py=f.y*TILE, _rr=f.r*TILE, _a0=Math.min(1,f.t*2.5)*Math.min(1,(f.dur-f.t)*2);
+    ctx.save();
+    const _eg=ctx.createRadialGradient(_px,_py,_rr*0.1,_px,_py,_rr);
+    _eg.addColorStop(0,'rgba(150,215,255,'+(0.14*_a0)+')');
+    _eg.addColorStop(0.7,'rgba(170,225,255,'+(0.24*_a0)+')');
+    _eg.addColorStop(1,'rgba(200,240,255,0)');
+    ctx.fillStyle=_eg; ctx.beginPath(); ctx.ellipse(_px,_py,_rr,_rr*0.52,0,0,7); ctx.fill();
+    for(const _ph of [0,Math.PI/2]){ ctx.globalAlpha=(0.75-0.25*(_ph>0))*_a0; ctx.lineWidth=_ph?1.4:2.2;
+      ctx.strokeStyle=_ph?'rgba(255,244,180,0.9)':'rgba(185,238,255,0.95)'; ctx.beginPath();
+      for(let a=0;a<6.4;a+=0.22){ const _rad=_rr*(0.84+0.11*Math.sin(now*7.3+_ph+a*6)); const _X=_px+_rad*Math.cos(a+now*1.9+_ph), _Y=_py+_rad*Math.sin(a+now*1.9+_ph)*0.52; a?ctx.lineTo(_X,_Y):ctx.moveTo(_X,_Y); }
+      ctx.closePath(); ctx.stroke(); }
+    ctx.strokeStyle='rgba(245,252,255,0.95)'; ctx.lineWidth=1.6; ctx.globalAlpha=0.9*_a0;
+    for(let b2=0;b2<3;b2++){ const _a1=now*5.2+b2*2.1, _r1=_rr*0.25, _r2=_rr*0.82;
+      let _X=_px+_r1*Math.cos(_a1), _Y=_py+_r1*Math.sin(_a1)*0.5; ctx.beginPath(); ctx.moveTo(_X,_Y);
+      for(let s2=0;s2<3;s2++){ _X+=(_px+_r2*Math.cos(_a1)-_X)*0.4+(Math.random()*8-4); _Y+=(_py+_r2*Math.sin(_a1)*0.5-_Y)*0.4+(Math.random()*8-4); ctx.lineTo(_X,_Y); }
+      ctx.stroke(); }
     ctx.restore();
   }
   else if(f.kind==='crater'){   /* v327: 화염 분화구 — 게임 화풍(깊이 그라디언트+융기 림+발광 균열+상승 잔불·연기) */

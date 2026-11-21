@@ -384,7 +384,10 @@ function updateFx(dt){
   updateAmbient(dt);
   updateParts(dt);
   for(const f of fx){   /* v326: 지역 지속 이펙트 틱 */
-    if(f.kind==='snowzone'){ f._acc=(f._acc||0)+dt; const __zt=f._acc>=0.5; if(__zt) f._acc=0;   /* v407: 눈보라 냉기 틱 — 둔화 유지+10dps(0.5s마다 5) */
+if(f.kind==='shockzone'){ f._acc=(f._acc||0)+dt; if(f._acc>=0.5){ f._acc=0;   /* v519: 감전 존 틱 — 12dps+아크 파편 */
+      for(const u of units){ if(u.dead||u.isTower||u.team===f.team) continue; if(Math.hypot(u.x-f.x,u.y-f.y)<=f.r){ dealDamage(u,6,f.team); if(Math.random()<0.4) addParts(u.x,u.y-0.3,2,'#cfe9ff',1.6,0.35,80); } }
+    } }
+    else     if(f.kind==='snowzone'){ f._acc=(f._acc||0)+dt; const __zt=f._acc>=0.5; if(__zt) f._acc=0;   /* v407: 눈보라 냉기 틱 — 둔화 유지+10dps(0.5s마다 5) */
       for(const u of units){ if(u.dead||u.isTower||u.team===f.team) continue; if(Math.hypot(u.x-f.x,u.y-f.y)<=f.r){ u.slowT=Math.max(u.slowT||0,0.6); if(__zt){ dealDamage(u,spellDmg(5),f.team,true); if(Math.random()<0.35) floats.push({dx:(Math.random()*10-5),dy:0,x:u.x,y:u.y-1.1,txt:'❄',t:0.45,col:'#bfe4ff',big:false}); } } } }
     else if(f.kind==='plasmazone'||f.kind==='crater'){ f._acc=(f._acc||0)+dt; const __zt=f._acc>=0.5; if(__zt) f._acc=0;   /* v407: 존 틱 데미지 — 플라즈마 8dps·분화구 6dps(0.5s마다) */
       if(__zt) for(const u of units){ if(u.dead||u.isTower||u.team===f.team) continue; if(Math.hypot(u.x-f.x,u.y-f.y)<=f.r){ dealDamage(u,spellDmg(f.kind==='plasmazone'?4:3),f.team,true); if(Math.random()<0.35) floats.push({dx:(Math.random()*10-5),dy:0,x:u.x,y:u.y-1.1,txt:f.kind==='plasmazone'?'⚡':'🔥',t:0.45,col:f.kind==='plasmazone'?'#cf9dff':'#ff9d3c',big:false}); } } }
@@ -433,7 +436,7 @@ function update(dt){
   if(S.repCd>0) S.repCd-=dt;   // v106 #12: 수리 쿨다운
   if(S.boss&&!S.boss.dead){ const b=S.boss; b.doom+=dt;
     if(b.doom>=12){ b.doom=0; const kt=towers.find(t=>t.team==='blue'&&t.kind==='king'&&!t.dead);
-      if(kt){ var __dd=Math.round(500*0.3);   /* v505: 파멸기 피해 70% 감축(500→150), 대신 보조타워 포함 아군 타워 전체 + 유닛(반경 2.2)에 광역 적용 */ for(const __dt2 of towers){ if(__dt2.team==='blue'&&!__dt2.dead) dealDamage(__dt2,__dd,'red'); } for(const __du2 of units){ if(__du2.team==='blue'&&!__du2.dead&&Math.hypot(__du2.x-kt.x,__du2.y-kt.y)<=2.2) dealDamage(__du2,__dd,'red'); } fx.push({x:kt.x,y:kt.y,t:0,dur:0.7,kind:'boom'}); var __mu=__raMAPS[__raMapIdx()], __uz=__mu?__mu.ult:null, __ur=2.2; if(__uz==='lava'){ fx.push({x:kt.x,y:kt.y,t:0,dur:4.5,kind:'burnzone',r:__ur,team:'red'}); } else if(__uz==='frost'){ fx.push({x:kt.x,y:kt.y,t:0,dur:6,kind:'snowzone',r:__ur,team:'red'}); } else if(__uz==='abyss'){ fx.push({x:kt.x,y:kt.y,t:0,dur:6,kind:'venomzone',r:__ur,team:'red'}); } else if(__uz==='waste'){ fx.push({x:kt.x,y:kt.y,t:0,dur:8,kind:'crater',r:__ur,team:'red'}); } S.shake=0.6; banner('💥 파멸기 폭발!'+(__mu?' — '+__mu.boss:''),1800); } } }
+      if(kt){ var __dd=Math.round(500*0.3);   /* v505: 파멸기 피해 70% 감축(500→150), 대신 보조타워 포함 아군 타워 전체 + 유닛(반경 2.2)에 광역 적용 */ for(const __dt2 of towers){ if(__dt2.team==='blue'&&!__dt2.dead) dealDamage(__dt2,__dd,'red'); } for(const __du2 of units){ if(__du2.team==='blue'&&!__du2.dead&&Math.hypot(__du2.x-kt.x,__du2.y-kt.y)<=2.2) dealDamage(__du2,__dd,'red'); } fx.push({x:kt.x,y:kt.y,t:0,dur:0.7,kind:'boom'}); var __mu=__raMAPS[__raMapIdx()], __uz=__mu?__mu.ult:null, __ur=2.2; if(__uz==='lava'){ fx.push({x:kt.x,y:kt.y,t:0,dur:4.5,kind:'burnzone',r:__ur,team:'red'}); } else if(__uz==='frost'){ fx.push({x:kt.x,y:kt.y,t:0,dur:6,kind:'snowzone',r:__ur,team:'red'}); } else if(__uz==='abyss'){ fx.push({x:kt.x,y:kt.y,t:0,dur:6,kind:'venomzone',r:__ur,team:'red'}); } else if(__uz==='shock'){ fx.push({x:kt.x,y:kt.y,t:0,dur:6,kind:'shockzone',r:__ur,team:'red'}); }   /* v519: 천공 감전 전용 존 */ else if(__uz==='waste'){ fx.push({x:kt.x,y:kt.y,t:0,dur:8,kind:'crater',r:__ur,team:'red'}); } S.shake=0.6; banner('💥 파멸기 폭발!'+(__mu?' — '+__mu.boss:''),1800); } } }
   if(S.boss&&S.boss.dead){ S.kills.blue+=5; P.elixir=ELX_MAX; P._full=false;
     if(window.RACamera) window.RACamera._bossDefeated();   /* v508-camera: 보스 격파 줌인 금지 유지, 수동·전체보기 불간섭 */
     banner('💀 보스 토벌! 엘릭서 만땅 · 킬 +5',2200); sfx('crown');
