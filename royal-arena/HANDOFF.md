@@ -1,5 +1,5 @@
 # 로얄 아레나 인수인계 문서 (HANDOFF)
-> 최종 갱신: 2026-11-21 — v516 배포 확정(라이브 칩 v516·sw v516). 아래 과거 버전별 기록은 당시 관측이다.
+> 최종 갱신: 2026-11-21 — v517 배포 확정(라이브 칩 v517·sw v517·신규 atk 에셋 200). 아래 과거 버전별 기록은 당시 관측이다.
 
 ## 1. 현재 버전·배포 상태 (v508 미배포)
 - 운영: https://erioweb-lab.github.io/Royal-Arena/royal-arena/ — 이번 직접 캡처의 칩은 v507. 도움말 확인 라벨이 안 보이는 기존 결함도 재확인했다.
@@ -331,3 +331,8 @@
 - 관전 UI 캔버스 내부 이전(사용자 지시·기기 캡처 판독: 캔버스 세로 45~50% 압축): #camera-controls를 ui-v516-js가 900ms 멱등 스캔으로 #arena-wrap 내부로 이동+display:contents — 모드 버튼(자동 관전·수동 고정·전체 보기)은 캔버스 하단 중앙 필(수리·킹샷 급 32px), 배율 상태·줌 ±·설정·피격 안내는 캔버스 상단 중앙 행. 전용 행 제거로 전장 원래 세로 복원. camera-details는 top 100px로 하향(상단 행과 비겂침). 칩·sw v516, ?v=516.
 - 검증: RUN_GATES:ALL_OK — 신규 E2E tests/test_camera_layout.py(관전 UI 부모=arena-wrap·캔버스 세로 ≥60vh·모드 버튼 하단 내부·배율 상단·가로 무이탈)+기존 4종. 컴파일·CAMERA_CHECK 21게이트/13004단언·ACTIVE-RESOURCES OK. 라이브 칩·sw v516 폴링 확인.
 - 규약: 관전 UI는 캔버스 오버레이(arena-wrap 자식+display:contents 2행 분리) — 다시 별도 행으로 돌리면 전장 압축 재발. 카드 행·엘릭서 바는 흐름 유지.
+
+### v517 (2026-11-21)
+- 다양한 공격 효과음(사용자 지시): playHit 신규 합성 3종 — swing(근접 휘두름 후시: 밴드패스 상승→하강 스윕)·bow(활 플럭 트윙+에어 클릭)·magic(사인 스윕+소프트 샤머). 라우팅: 기사·왕자 검계=swing+physical 이중음(타격감 유지), 저격·머스켓=bow, 위저드·아이스맨=magic. 25ms 타입별 스로틀은 타입별이라 이중음 무관 정상.
+- 갭 4맵 보스 atk 3프레임 생성 등록(BOSS_FX_MAP.md 갭 1번): royal·frost·lava·waste 각 3장 — 기존 보스 스프라이트 -i 레퍼런스로 캐릭터 동일성 유지, 1:1 풀블리드 노텍스트. ART_FRAMES에 boss_<map>_atk1..3 등록(기존 sky 패턴 동일). 알파 히스토그램 검증 통과 후 등록.
+- 검증: RUN_GATES:ALL_OK — 컴파일 15파일·CAMERA_CHECK 21게이트/13004단언·ACTIVE-RESOURCES OK·E2E 5종. 라이브 칩·sw v517+신규 에셋 HTTP 200 폴링 확인.
