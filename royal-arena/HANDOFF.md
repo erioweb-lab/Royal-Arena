@@ -329,6 +329,10 @@
 - 검증: RUN_GATES:ALL_OK — 신규 E2E tests/test_status_icons.py(유닛 3기에 burn/slow/stun 부여 → 페이지 오류 0+캔버스 픽셀에서 아이콘 색 관측)+기존 6종. 컴파일 15파일·CAMERA_CHECK 21게이트/13004단언·ACTIVE-RESOURCES OK. 라이브 칩·sw v520 폴링 확인.
 - BOSS_FX_MAP 잔여 갭: 4번(시간감속·부패 신규 상태 — 밸런스 가치표 동반 별도 사이클)만 남음.
 
+### v522 (2026-11-22)
+- 관전 UI 정렬 개편(사용자 스크린샷 피드백: 킹샷-자동관전 겹침·버튼 크기 불균일): 하단 5버튼(킹샷·모드3·수리) 높이 34px·폰트 12px·필 형태 통일, 모드 행을 좌우 94px 인셋(≤400px 84px)으로 고정해 측면 버튼과 겹침 원천 제거(중앙 translateX 배치 폐지), 전투 오버레이 버튼 전반 반투명(α .62, 활성 .72)+backdrop blur 3px로 전장 가림 최소화, 상단 배율 행 −/+ 32px 원형·상태 필(min-width 76px) 통일. CSS 전용(behavior 변경 없음).
+- 검증: RUN_GATES:ALL_OK, 라이브 칩·sw v522 폴링 확인.
+
 ### v521 (2026-11-22)
 - 신규 상태이상 2종·전용 존 2종(BOSS_FX_MAP.md 갭 4번 완결): ①황혼 시간 감속 — timewarp 존(무피해·warpT 0.7 갱신)·이동 0.7×(g1a sp 팩터)·crater 재사용 폐지, 황혼 주황 시계 원반+회전 바늘 렌더 ②묘지 부패 — rotzone 존(10dps 틱+rotT 2 갱신)·받는 피해 +10%(dealDamage 배율점)·venomzone 재사용 폐지, 황갈색 부패 원판+거품 렌더. g1a 맵 ult: tomb abyss→rot·dusk waste→warp. v520 아이콘 3벌에 warpT·rotT 추가. 밸런스 근거: 둔화 가치표 준수(warp=유틸리티 무피해, rot=중독 30dps 대비 약체화 중심).
 - 검증: RUN_GATES:ALL_OK — 신규 E2E tests/test_new_statuses.py(존 2종 주입 → 렌더 무오류·틱 가동·소멸·ult 배선 실측)+기존 7종. 컴파일 15파일·CAMERA_CHECK 21게이트/13004단언·ACTIVE-RESOURCES OK. 라이브 칩·sw v521 폴링 확인.
