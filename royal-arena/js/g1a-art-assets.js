@@ -164,6 +164,9 @@ const ART_NEW={valk:"assets/img_045.jpg",bomber:"assets/img_046.jpg",babyd:"asse
 'use strict';
 const ART_SPR_NEW={valk:"assets/img_051.png",bomber:"assets/img_052.png",babyd:"assets/img_053.png",cleric:"assets/img_054.png",boar:"assets/img_055.png",icem:"assets/img_056.png",xbow:"assets/ra_spr_xbow.png",flamer:"assets/ra_spr_flamer.png",golem:"assets/ra_spr_golem.png",greed:"assets/ra_spr_greed.png",lordknight:"assets/ra_spr_lordknight.png",scarecrow:"assets/ra_spr_scarecrow.png",fort:"assets/ra_spr_fort.png",glass:"assets/ra_spr_glass.png"};   /* v304: 확장 유닛 필드 스프라이트 */
 for(const nk in ART_NEW) ART[nk]=ART_NEW[nk];
+/* v560: 신규 9종 카드 아트 */
+const ART_V560={campfire:"assets/ra_card_campfire.jpg",arrowrain:"assets/ra_card_arrowrain.jpg",nseed:"assets/ra_card_nseed.jpg",mtamer:"assets/ra_card_mtamer.jpg",slassin:"assets/ra_card_slassin.jpg",golemm:"assets/ra_card_golemm.jpg",phoenix:"assets/ra_card_phoenix.jpg",tover:"assets/ra_card_tover.jpg"};
+for(const nk in ART_V560) ART[nk]=ART_V560[nk];
 for(const nk in ART_SPR_NEW) ART_SPR[nk]=ART_SPR_NEW[nk];
 const GRASS_B64="assets/img_057.jpg";
 
