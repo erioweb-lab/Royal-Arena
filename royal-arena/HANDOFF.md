@@ -448,3 +448,7 @@
 - RUN_GATES:ALL_OK, 라이브 칩 v560+phoenix 아트 HTTP 200 확인.
 - v561: 덱 편성 미보유 비활성 수복(v560 패치 0건 누락 정정 — 문자열 끝 따옴표 불일치 원인, 정확 매칭 후 data-add 조건부 래핑). RUN_GATES:ALL_OK, 라이브 칩·sw v561 확인.
 - v562 수정: 첫 게이트 실패 원인 ART_FRAMES 병합 TDZ(선언 앞 삽입) → 선언 직후 이동+헤드리스 pageerror 0 실측 후 RUN_GATES:ALL_OK. 라이브 칩 v562+golemm 스프라이트 200 확인.
+
+### v563 (2026-11-23) 공격 포즈 프레임+도감 Lv 배지
+- 신규 유닛 5종 atk 프레임(야영지는 건물이라 제외) — idle 스프라이트 -i로 동일 캐릭터 공격 포즈 생성·키잉·알파 검증·ART_FRAMES <k>_atk 등록(swing 자동 스왑). 도감 카드에 골드 Lv 배지(스윕 실시간 갱신).
+- RUN_GATES:ALL_OK, 헤드리스 부팅 pageerror 0, 라이브 칩 v563+phoenix atk 200 확인.
