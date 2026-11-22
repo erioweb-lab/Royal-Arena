@@ -77,16 +77,14 @@ window.__deckPick=function(){ try{
     ta.parentNode.insertBefore(box,ta); }
   var cur=activeSlot(); var d0=loadDeckSlot(0)||DECK, d1=loadDeckSlot(1)||DECK;
   var sig=cur+'|'+d0.join(',')+'|'+d1.join(','); if(window.__dpSig===sig) return; window.__dpSig=sig;   /* v233 */
-  try{ if(box&&box.parentNode) box.parentNode.removeChild(box); }catch(e){}
-  box=document.createElement('div'); box.id='deck-pick';
-  box.style.cssText='display:flex;gap:10px;justify-content:center;width:100%;max-width:560px;margin:2px auto 0';
-  ta.parentNode.insertBefore(box,ta);   /* v227: 덱 버튼 완전 재생성 — 기존 노드(ui-patch 인라인 스타일·가드 잔여 포함) 제거 후 신규 생성 */
+  if(!box){ box=document.createElement('div'); box.id='deck-pick'; box.style.cssText='display:flex;gap:10px;justify-content:center;width:100%;max-width:560px;margin:10px auto 0'; }
+  if(!box.parentNode||box.parentNode!==ta.parentNode){ ta.parentNode.insertBefore(box,ta); }   /* v538: 박스 재생성 제거 — 토글 시 주변 레이아웃 흔들림 방지 */   /* v227: 덱 버튼 완전 재생성 — 기존 노드(ui-patch 인라인 스타일·가드 잔여 포함) 제거 후 신규 생성 */
   var html='';
   [d0,d1].forEach(function(dk,n){
     var avg=Math.round(dk.reduce(function(a,k){return a+(CARDS[k]?CARDS[k].cost||0:0);},0)/Math.max(1,dk.length)*10)/10;
     var on=(n===cur);
-    html+='<button class="dkpick'+(on?' on':'')+'" data-slot="'+n+'" style="flex:1;cursor:pointer;background:'+(on?'linear-gradient(180deg,rgba(247,197,49,.22),rgba(13,22,40,.92))':'rgba(13,22,40,.78)')+';border:2px solid '+(on?'rgba(247,197,49,.95)':'rgba(120,140,180,.45)')+';border-radius:14px;padding:8px 6px;min-height:56px;text-align:center;box-shadow:'+(on?'0 0 14px rgba(247,197,49,.35)':'none')+'">'   /* v233 */
-      +'<div style="font-family:Jua,sans-serif;font-size:14.5px;color:'+(on?'#ffe08a':'#cfd8ea')+'">'+(n===0?'🅰 덱 1':'🅱 덱 2')+(on?' · 선택됨':'')+'</div>'
+    html+='<button class="dkpick'+(on?' on':'')+'" data-slot="'+n+'" style="flex:1;cursor:pointer;background:'+(on?'linear-gradient(180deg,rgba(247,197,49,.22),rgba(13,22,40,.92))':'rgba(13,22,40,.78)')+';border:2px solid '+(on?'rgba(247,197,49,.95)':'rgba(120,140,180,.45)')+';border-radius:14px;padding:4px 6px;height:58px;min-height:58px;text-align:center;box-shadow:'+(on?'0 0 14px rgba(247,197,49,.35)':'none')+';display:flex;flex-direction:column;align-items:center;justify-content:center;box-sizing:border-box'+(on?'0 0 14px rgba(247,197,49,.35)':'none')+'">'   /* v233 */
+      +'<div style="font-family:Jua,sans-serif;font-size:14.5px;color:'+(on?'#ffe08a':'#cfd8ea')+'">'+(n===0?'🅰 덱 1':'🅱 덱 2')+'<span style="font-size:11.5px;visibility:'+(on?'visible':'hidden')+'">· 선택됨</span>'+'</div>'
       +'<div style="font-size:9.5px;color:#9fb0cc;margin-top:1px">평균 '+avg+'</div>'   /* v233: 설명은 선택 덱만 하단 단일 표시 */
       +'</button>';
   });
@@ -95,6 +93,7 @@ window.__deckPick=function(){ try{
     b.onclick=function(){ try{ localStorage.setItem('ra_deck_active',b.getAttribute('data-slot')); }catch(e){} window.__deckPick(); };
   });
   var __dd=document.getElementById('deck-desc'); if(!__dd&&ta&&ta.parentNode){ __dd=document.createElement('div'); __dd.id='deck-desc'; ta.parentNode.insertBefore(__dd,ta); }
+  if(__dd){ __dd.style.cssText='font-size:10.5px;color:#ffd77a;text-align:center;margin:6px auto 0;max-width:560px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:14px;max-height:14px;line-height:14px'; }   /* v538: 고정 1줄 — 하단 버튼열 밀림 방지 */
   if(__dd){ var dc=dk[cur]||d0; var av=Math.round(dc.reduce(function(a2,k){return a2+(CARDS[k]?CARDS[k].cost||0:0);},0)/Math.max(1,dc.length)*10)/10; __dd.textContent='선택: 덱 '+(cur+1)+' — 평균 '+av+' · '+dc.slice(0,6).map(function(k){return (CARDS[k]&&CARDS[k].name)||k;}).join('·'); }
 }catch(e){} };   /* v233 */
 window.__deckPick(); document.addEventListener('visibilitychange',function(){ try{ window.__deckPick(); }catch(e){} }); document.addEventListener('pointerdown',function(){ try{ window.__deckPick(); }catch(e){} },true); window.addEventListener('storage',function(e){ try{ if(!e||!e.key||e.key.indexOf('ra_deck')===0) window.__deckPick(); }catch(e2){} });   /* v224: 1.5s 블라인드 폴링 제거 — 재빌드×ui-patch 250ms 경합으로 '평균 엘릭서' 텍스트가 주기적으로 변조되는 현상 제거(실기기 증거). 이벤트 시점에만 갱신 */
