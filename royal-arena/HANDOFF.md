@@ -433,3 +433,6 @@
 
 ### v556 (2026-11-22)
 - 유저 재캡처(v555)에서 divine 보스 흰 박스 잔존 — 로컬 에셋은 RGBA+투명 판독 확인(정상) → 원인 기기 캐시(SW/CDN)로 판정. 보스 스프라이트 로드 URL 전체(맵 정의 9종·idle 교체·atk 배열·SW 캐시 목록)에 ?v=556 캐시버스트 부여해 강제 갱신. RUN_GATES:ALL_OK, 라이브 칩 v556+divine?v=556 RGBA 확인.
+
+### v557 (2026-11-22)
+- AOE 카드 공격력 3배(사용자 요청): CARDS 정의 직후 전역 순회 — splash 보유 카드 12종+광역 주문(kind=spell+radius+dmg) 7종 dmg×3. 회복 주문 제외. RUN_GATES:ALL_OK, 라이브 칩·sw v557 확인.
