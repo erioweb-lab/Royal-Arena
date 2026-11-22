@@ -61,7 +61,8 @@ function harness({width=306,height=544,vw=612,vh=1088,bitmap=2,map=true}={}){
     emit(type,e){ (type==='pointerdown'||type==='wheel'||type==='lostpointercapture'?cv:win).emit(type,e); },
     tick(dt=1/60){ stamp+=Number.isFinite(dt)&&dt>=0?dt:0; context.updateCam(dt); },
     wait(seconds){ stamp+=seconds; },now:()=>stamp,
-    run(seconds,fn){ const n=Math.round(seconds*60); for(let i=0;i<n;i++){ if(fn)fn(i); stamp+=1/60; context.updateCam(1/60); } },
+    run(seconds,fn){ const n=Math.round(seconds*60); for(let i=0;i<n;i++){ if(fn)fn(i); stamp+=1/60; if(this.api&&this.api.snapshot().mode==='manual') this.api.setMode('manual');   /* v535 게이트 갱신: 수동 유지 시나리오는 '조작 있음'(idle 리셋)으로 규정 */ context.updateCam(1/60); } },
+    runRaw(seconds){ const n=Math.round(seconds*60); for(let i=0;i<n;i++){ stamp+=1/60; context.updateCam(1/60); } },   /* v535: 조작 리셋 없는 순수 시간 진행 — 자동 복귀 검증용 */
     rect(value){rect={...rect,...value};rect.right=rect.left+rect.width;rect.bottom=rect.top+rect.height;},
     loadFinish(){
       // 자연 finish의 기존 보상/결과 연출 타이머만 기록한다. 카메라 모듈 자체의 타이머 금지 검사는 별도 유지.
@@ -358,5 +359,12 @@ gate('투사체 첫 프레임·정지 유성 방향 회귀',()=>{
   }
   near(run({x:2,y:2,tx:5,ty:2}),0);near(run({x:2,y:2,tx:2,ty:6}),Math.PI/2);
   eq(run({x:2,y:2}),0,'좌표 스키마 부재는 프레임 0 안전 방향');
+});
+
+gate('1.9 수동관전 3초 무조작 자동 복귀(v535 사용자 지시)',()=>{
+  const h=harness(),a=h.api;
+  a.setMode('manual');a.zoomBy(2);h.runRaw(2.9);eq(a.snapshot().mode,'manual','2.9초 무조작은 수동 유지');
+  h.runRaw(0.2);eq(a.snapshot().mode,'auto','누적 3.1초 무조작 시 자동관전 복귀');
+  a.setMode('manual');h.runRaw(2.9);eq(a.snapshot().mode,'manual','재진입 시 타이머 리셋 확인');
 });
 console.log(`CAMERA_CHECK:PASS gates=${groups} assertions=${checks}`);

@@ -30,7 +30,7 @@
   }
   const state={mode:'auto',intensity:'normal',mapOpen:false,targetX:W/2,targetY:H/2,targetZ:1,
     time:0,focus:null,pending:null,quietUntil:0,hits:new Map(),lastStamp:null,mapStamp:-Infinity,
-    cam:null,active:false,manualZ:1.6,points:new Map(),gesture:null,suppressed:false};
+    cam:null,active:false,manualZ:1.6,points:new Map(),gesture:null,suppressed:false,manualIdle:0};   // v535: manualIdle — 수동관전 무조작 경과(3초 후 자동 복귀)
   const profile=()=>profiles[state.intensity];
   const active=()=>S.scene==='battle'&&!S.over&&!document.hidden;
   function limits(z,x,y){
@@ -80,7 +80,7 @@
     if(!['auto','manual','overview'].includes(mode)) return snapshot();
     const c=camera();
     if(state.mode==='manual') state.manualZ=c.z;
-    clearFocus(); state.mode=mode;
+    clearFocus(); state.mode=mode; state.manualIdle=0;   // v535
     if(mode==='overview'){ c.z=1; c.x=W/2; c.y=H/2; }
     else if(mode==='auto'){ c.z=bound(c.z,1,profile().max); }
     else c.z=bound(c.z,1,3);
@@ -90,6 +90,7 @@
   }
   function zoomBy(factor){
     if(!finite(factor)||factor<=0) return snapshot();
+    state.manualIdle=0;   // v535
     if(state.mode!=='manual') setMode('manual');
     const c=camera(); c.z=bound(c.z*factor,1,3);
     const p=limits(c.z,c.x,c.y); c.x=p.x; c.y=p.y;
@@ -257,6 +258,7 @@
     if(raw>0.5||gap>1||gap<0){ clearFocus(); cancelInput(); state.hits.clear(); dt=0; }
     else dt=Math.min(raw,0.05);
     state.time+=dt; S._now=(finite(S._now)?S._now:0)+dt;
+    if(state.mode==='manual'&&state.active){ if(state.points.size) state.manualIdle=0; else{ state.manualIdle+=dt; if(state.manualIdle>=3) setMode('auto'); } }   // v535: 수동관전 3초 무조작 시 자동관전 복귀(사용자 지시)
     if(S.focusGap>0) S.focusGap=Math.max(0,S.focusGap-dt);
     if(S.spellQuiet>0) S.spellQuiet=Math.max(0,S.spellQuiet-dt);
     S.focus=null;
@@ -300,7 +302,7 @@
   function inside(e){ const r=canvas.getBoundingClientRect(); return e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom; }
   function pointerDown(e){
     if(!active()||(e.button!=null&&e.button!==0)||!finite(e.clientX)||!finite(e.clientY)) return;
-    if(state.points.size===0){ state.suppressed=false; state.gesture=null; }
+    if(state.points.size===0){ state.suppressed=false; state.gesture=null; } state.manualIdle=0;   // v535
     state.points.set(e.pointerId,{x:e.clientX,y:e.clientY,startX:e.clientX,startY:e.clientY,moved:false});
     try{ canvas.setPointerCapture(e.pointerId); }catch(err){}
     if(state.points.size>=2){ beginPinch(); e.preventDefault(); }
@@ -310,7 +312,7 @@
     if(!finite(e.clientX)||!finite(e.clientY)){ state.suppressed=true; cancelCardDrag(); return; }
     if(!active()){ cancelInput(); return; }
     const dx=e.clientX-p.x,dy=e.clientY-p.y;
-    p.x=e.clientX; p.y=e.clientY;
+    p.x=e.clientX; p.y=e.clientY; state.manualIdle=0;   // v535
     if(state.points.size>=2){
       if(!state.gesture) beginPinch();
       const mid=midpoint(),old=state.gesture;
