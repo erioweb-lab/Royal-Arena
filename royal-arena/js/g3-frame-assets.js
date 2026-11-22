@@ -1663,7 +1663,7 @@ var SKILLS_LEGACY=[
  {id:'mag2',col:'🧪',tier:2,name:'광역 술영',desc:'주문 피해 +10%'},
  {id:'mag3',col:'🧪',tier:3,name:'마나 급류',desc:'엘릭서 회복 추가 +6%'}];
 function skillLv(k){ try{ var o=JSON.parse(localStorage.getItem('ra_skills_v1')||'{}'); return o[k]||0; }catch(e){ return 0; } }
-function spState(){ try{ var s=JSON.parse(localStorage.getItem('ra_sp_v1')||'{"sp":0,"total":0}'); if(typeof s.sp!=='number') s={sp:0,total:0}; return s; }catch(e){ return {sp:0,total:0}; } }
+function spState(){ try{ if(!localStorage.getItem('ra_sp_mig_v2')){ localStorage.setItem('ra_sp_mig_v2','1'); try{ var __tk=(typeof THEMES==='object'&&THEMES)?Object.keys(THEMES):[]; var __cl={}; __tk.forEach(function(k){ __cl['0:'+k]=1; }); __tk.slice(0,3).forEach(function(k){ __cl['1:'+k]=1; });   /* v540: 노멀 전지도+악몽 서리왕국까지(사용자 진행) 시드 */ localStorage.setItem('ra_sp_cleared_v1',JSON.stringify(__cl)); }catch(__e){} localStorage.setItem('ra_sp_v1',JSON.stringify({sp:12,total:12})); return {sp:12,total:12}; }   /* v540: 최초클리어 규칙 전환 보정 — 노멀 9지도+악몽 3지도=12(사용자 지시 "9+3 적정") */ var s=JSON.parse(localStorage.getItem('ra_sp_v1')||'{"sp":0,"total":0}'); if(typeof s.sp!=='number') s={sp:0,total:0}; return s; }catch(e){ return {sp:0,total:0}; } }
 function spSave(st){ try{ localStorage.setItem('ra_sp_v1', JSON.stringify(st)); }catch(e){} try{ profSync(); }catch(e){} }   // v120: SP 변경 프로필 미러
 function skillsObj(){ try{ return JSON.parse(localStorage.getItem('ra_skills_v1')||'{}'); }catch(e){ return {}; } }
 function skillsSave(o){ try{ localStorage.setItem('ra_skills_v1', JSON.stringify(o)); }catch(e){} try{ profSync(); }catch(e){} }   // v120: 스킬 변경 프로필 미러
