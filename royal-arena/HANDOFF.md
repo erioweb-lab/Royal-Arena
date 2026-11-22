@@ -1,3 +1,6 @@
+### v546 (2026-11-22)
+- 업그레이드 2차(P3 완결): ①보스 공격 보간 프레임 atk_mid 8종 생성(ra_boss_<테마>_atk_mid.png — atk2 -i 파생, 키잉+idle 기준 스케일 정규화) + 4단 스윙 인덱싱(g1b __fiB 4구간, ATK3.boss.length>=4 하위호환) — 보스 공격모션 뚝뚝 끊김 개선 ②dusk(황혼 신전) 보스 공격 프레임 3종 신규 생성(기존 atk1~3 전무 → 캔버스 폴백이던 것 수복, idle -i 파생) ③보스 프레임 스케일 정규화 5종 수정(frost_atk1 0.88→0.90·waste_atk1 1.08→0.93·sky_atk2 0.90→0.99·tomb_atk2 0.91→1.00·tomb_atk3 0.83→1.00 — 캡처 지적 크기 이질감). walk 감사 결과 이동 가능 유닛 전종 이미 커버(비행·건물·보스 제외 규약) — P2 완결. P4 투사체 감사는 RAW 파서 개선 후 재실행 과제. RUN_GATES:ALL_OK, 라이브 칩·sw v546 확인.
+
 ### v545 (2026-11-22)
 - 그래픽 업그레이드 계획(art_upgrade_plan_v1.md) 1차 적용: ①미보유 존 스프라이트 3종 생성(ra_fx_warp/storm/burn.png 512px, 코너 플러드필 키잉+알파 밴드 검증 BANDOK) → g1c drawFx 진입부 선표현 오버라이드(stormzone/burnzone/warpzone, 스프라이트 부재 시 기존 캔버스 폴백 유지) ②보스 연출 2종(bossgate=강림 시 kt 좌표 fx push+drawFx 브랜치, doomaura=doom>8s 오라 렌더) + 병합 로더(__FXIMG 키 병합, 폴백 __valid 게이트) ③근접 3종 walk 프레임(knight/prince/valk — idle img_151/153/155 -i 파생, 알파 bbox 높이 정규화 0.965~0.988·발바닥 정렬, ART_FRAMES 등록) — 과정: ART_FRAMES 삽입 첫 시도에서 중첩 객체 경계 오탈(Unexpected token ,) → 객체 시작부 등록으로 수복. P4 투사체 감사는 1차 시도에서 ART_PROJ 정의 파싱 미완(정규식 한계) → 후속 감사 과제로 기록. RUN_GATES:ALL_OK, 라이브 칩·sw v545 확인.
 
