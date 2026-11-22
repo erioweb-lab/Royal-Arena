@@ -1,3 +1,9 @@
+### v535 (2026-11-22)
+- 결과 화면 세부집계: 사용자 첨부 v511 참조 스크린샷의 항목·아이콘 그대로 복원 — 각 행 선두 이모지 아이콘(👑왕관 획득 🗡️유닛 킬 🏰잔존 타워 체력 ⏱️남은 시간 ⚔️킬/데스 ✨주문 사용 🥇최고 연승 🔥첫승 보너스 ⭐XP 획득 🎓SP 획득) + 킬/데스(rt-kd)·주문 사용(rt-spell) 행 추가(셋터는 기존 g1b:318-319 재사용, 집계원 S.kills/S.deaths/S.spells). 아이콘 스타일 ui-v535-det 블록(3-id 특이성).
+- 수동관전 복귀: g11-camera state.manualIdle 도입 — setMode('manual')·pointerDown/Move·wheel·zoomBy 조작마다 리셋, update(dt)에서 무조작 3초 경과 시 setMode('auto') 자동 복귀(포인터 접촉 중 리셋 유지). 사용자 지시 "수동관전모드는 3초정도후 자동관전으로 변경".
+- 과정: 첫 커밋(67ae871)에서 g11-camera 앵커 불일치로 카메라 로직·sw 범프 누락 → 보완 커밋에서 적용. CAMERA 게이트(camera_check.cjs)가 구 스펙 "수동 무기한 유지"로 실패 → 게이트 갱신: harness run()에 수동 모드 조작 리셋 규정 반영 + 신규 게이트 1.9(3초 무조작 자동 복귀·재진입 리셋 검증). CAMERA_CHECK:PASS gates=22 assertions=13007.
+- RUN_GATES:ALL_OK, 라이브 칩·sw v535 확인(최종 커밋 기준).
+
 # 로얄 아레나 인수인계 문서 (HANDOFF)
 > 최종 갱신: 2026-11-21 — v518 배포 확정(라이브 칩 v518·sw v518). 아래 과거 버전별 기록은 당시 관측이다.
 
