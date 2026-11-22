@@ -1266,5 +1266,5 @@ function __raAddRandomBtn(){
   setInterval(function(){ try{ __raAddRandomBtn(); }catch(e){ } },300);   /* v193: 재시도 보장 */
 })();
 /* v545: 신규 존·보스 연출 스프라이트 병합 로더 — 기존 __FXIMG 로더와 공존(키 병합) */
-try{ if(!window.__FXIMG) window.__FXIMG={}; ['warp','storm','burn','bossgate','doomaura','rot','plasmazone','shock','snowfall','boltstrike'].forEach   /* v548: 존 스프라이트 전종 커버 */(function(k545){ if(!window.__FXIMG[k545]){ var im545=new Image(); im545.__valid=true; im545.onerror=function(){ im545.__valid=false; }; im545.src='assets/ra_fx_'+k545+'.png?v=549';   /* v549: 강화본 캐시버스트 */ window.__FXIMG[k545]=im545; } }); }catch(__e545){}
+try{ if(!window.__FXIMG) window.__FXIMG={}; ['warp','storm','burn','bossgate','doomaura','rot','plasmazone','shock','snowfall','boltstrike'].forEach   /* v548: 존 스프라이트 전종 커버 */(function(k545){ if(!window.__FXIMG[k545]){ var im545=new Image(); im545.__valid=true; im545.onerror=function(){ im545.__valid=false; }; im545.src='assets/ra_fx_'+k545+'.png?v=550';   /* v549: 강화본 캐시버스트 */ window.__FXIMG[k545]=im545; } }); }catch(__e545){}
 try{ if(window.__FXIMG&&!window.__FXIMG.__v547){ window.__FXIMG.__v547=1; } }catch(e){}
