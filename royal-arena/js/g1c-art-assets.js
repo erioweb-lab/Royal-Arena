@@ -333,6 +333,14 @@ function drawFx(f){
     ctx.save();
     var __fim=(window.__FXIMG&&window.__FXIMG.frost&&window.__FXIMG.frost.complete&&window.__FXIMG.frost.naturalWidth>0&&window.__FXIMG.frost.__valid!==false)?window.__FXIMG.frost:null;
     if(__fim){ ctx.globalAlpha=0.95*_a0; ctx.drawImage(__fim,_px-_rr*1.02,_py-_rr*0.55,_rr*2.04,_rr*1.1); }   /* v328: 서리 스프라이트 */
+    var __sf549=window.__FXIMG&&window.__FXIMG.snowfall;   /* v550: 낙설 아트 시트 — 2장 세로 스크롤 루프 */
+    if(__sf549&&__sf549.complete&&__sf549.naturalWidth>0&&__sf549.__valid!==false){
+      var _sw=_rr*1.7, _sh=_sw*(__sf549.naturalHeight/__sf549.naturalWidth), _cyc=(f.t*0.55)%1, _cx549=Math.max(0,Math.min(1,(f.dur-f.t)*2));
+      ctx.globalAlpha=0.85*_a0*_cx549;
+      var _oy=_cyc*_sh*2-_sh;
+      ctx.drawImage(__sf549,_px-_sw/2,_py-_rr*0.75+_oy,_sw,_sh);
+      ctx.drawImage(__sf549,_px-_sw/2,_py-_rr*0.75+_oy+_sh,_sw,_sh);
+    }
     const _gr=ctx.createRadialGradient(_px,_py,_rr*0.1,_px,_py,_rr);
     _gr.addColorStop(0,'rgba(228,243,255,'+((__fim?0.16:0.44)*_a0)+')');
     _gr.addColorStop(0.65,'rgba(206,231,252,'+(0.27*_a0)+')');
@@ -366,6 +374,15 @@ function drawFx(f){
     const _sg=ctx.createRadialGradient(_sx,_sy,_sr*0.05,_sx,_sy,_sr);
     _sg.addColorStop(0,'rgba(70,50,110,0.55)'); _sg.addColorStop(0.65,'rgba(45,32,80,0.42)'); _sg.addColorStop(1,'rgba(80,60,140,0)');
     ctx.globalAlpha=_sa0; ctx.fillStyle=_sg; ctx.beginPath(); ctx.arc(_sx,_sy,_sr,0,7); ctx.fill();
+    var _bt549=window.__FXIMG&&window.__FXIMG.boltstrike;   /* v550: 낙뢰 아트 스트라이크 — 위상 펄스 */
+    if(_bt549&&_bt549.complete&&_bt549.naturalWidth>0&&_bt549.__valid!==false){
+      for(let _bi=0;_bi<3;_bi++){
+        var _bp=(now*0.9+_bi*1.37)%3; if(_bp>0.55) continue;
+        var _ba=Math.min(1,(0.55-_bp)*4)*_sa0, _bx=_sx+Math.cos(now*1.9+_bi*2.09)*_sr*0.5, _bs=_sr*1.15;
+        ctx.save(); ctx.globalAlpha=_ba; ctx.shadowColor='#aee2ff'; ctx.shadowBlur=18;
+        ctx.drawImage(_bt549,_bx-_bs*0.16,_sy-_sr*0.95,_bs*0.32,_bs); ctx.restore();
+      }
+    }
     ctx.shadowColor='#ffe95e'; ctx.shadowBlur=14;
     for(let i=0;i<3;i++){   /* 낙뢰 지그재그 — 위상 오프셋 페이즈 */
       const _ph=now*1.9+i*2.09, _lx=_sx+Math.cos(_ph)*_sr*0.5, _ly=_sy+Math.sin(_ph)*_sr*0.28;
@@ -1249,5 +1266,5 @@ function __raAddRandomBtn(){
   setInterval(function(){ try{ __raAddRandomBtn(); }catch(e){ } },300);   /* v193: 재시도 보장 */
 })();
 /* v545: 신규 존·보스 연출 스프라이트 병합 로더 — 기존 __FXIMG 로더와 공존(키 병합) */
-try{ if(!window.__FXIMG) window.__FXIMG={}; ['warp','storm','burn','bossgate','doomaura','rot','plasmazone','shock'].forEach   /* v548: 존 스프라이트 전종 커버 */(function(k545){ if(!window.__FXIMG[k545]){ var im545=new Image(); im545.__valid=true; im545.onerror=function(){ im545.__valid=false; }; im545.src='assets/ra_fx_'+k545+'.png?v=549';   /* v549: 강화본 캐시버스트 */ window.__FXIMG[k545]=im545; } }); }catch(__e545){}
+try{ if(!window.__FXIMG) window.__FXIMG={}; ['warp','storm','burn','bossgate','doomaura','rot','plasmazone','shock','snowfall','boltstrike'].forEach   /* v548: 존 스프라이트 전종 커버 */(function(k545){ if(!window.__FXIMG[k545]){ var im545=new Image(); im545.__valid=true; im545.onerror=function(){ im545.__valid=false; }; im545.src='assets/ra_fx_'+k545+'.png?v=549';   /* v549: 강화본 캐시버스트 */ window.__FXIMG[k545]=im545; } }); }catch(__e545){}
 try{ if(window.__FXIMG&&!window.__FXIMG.__v547){ window.__FXIMG.__v547=1; } }catch(e){}
