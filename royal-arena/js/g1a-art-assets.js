@@ -85,6 +85,12 @@ for(var __ck in CARDS){ var __cc=CARDS[__ck], __cd=__DIFFG[__cc.grade];
   __cc.cost=Math.max(__cd.min,Math.min(__cd.max,__cd.base+tier));
 }
 try{ var __col=JSON.parse(localStorage.getItem('ra_collection_v1')||'null'); if(!__col){ __col={owned:__STARTER.slice()}; localStorage.setItem('ra_collection_v1',JSON.stringify(__col)); } }catch(e){}
+try{ __raSanitizeDecks(); }catch(e){}   /* v564 */
+function __raSanitizeDecks(){ try{   /* v564: 구버전 저장 덱에서 미보유 카드 제거 */
+  ['ra_deck_slot1','ra_deck_slot2'].forEach(function(sk){ var d=JSON.parse(localStorage.getItem(sk)||'null'); if(!Array.isArray(d)) return;
+    var f=d.filter(function(k){ return CARDS[k]&&__raOwned(k); });
+    if(f.length!==d.length){ while(f.length<10&&f.length<DECK.length){ var cand=DECK.filter(function(k){return __raOwned(k)&&f.indexOf(k)<0;})[0]; if(!cand)break; f.push(cand); } localStorage.setItem(sk,JSON.stringify(f)); } });
+}catch(e){} }
 function __raOwned(k){ try{ var m=JSON.parse(localStorage.getItem('ra_collection_v1')||'{"owned":__STARTER}'); return m.owned.indexOf(k)>=0; }catch(e){ return true; } }
 function __raAddXp(k,amt){ try{ var m=JSON.parse(localStorage.getItem('ra_cardxp_v1')||'{}'); m[k]=(m[k]||0)+amt; localStorage.setItem('ra_cardxp_v1',JSON.stringify(m)); }catch(e){ } }
 function __raApplyLv(){ for(var k in CARDS){ if(!__raOwned(k)) continue; var c=CARDS[k], lv=__raLv(k); if(c.__lvStamp===lv) continue;
@@ -94,7 +100,7 @@ var __GDROPC={normal:['#8fa6bd','#22304f'],rare:['#e8b053','#4e2f10'],unique:['#
 var __DP_EXCL={0:['campfire','arrowrain'],1:['nseed'],2:['golemm']};
 function __raDropRoll(){   /* 지도 클리어 드롭 — §3.3 */
   var diff=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0, mi=(typeof __raMapIdx==='function')?__raMapIdx():0;
-  var fl='ra_map_clear_d'+diff, first=!localStorage.getItem(fl);
+  var fl='ra_map_clear_d'+diff+'_m'+((typeof __raMapIdx==='function')?__raMapIdx():0), first=!localStorage.getItem(fl);   /* v564: 맵별 첫 클리어 플래그(기존 난이도당 1회 → 9맵×3난이도 각각 100%) */
   if(!first&&Math.random()>=0.35) return;
   var pn=72,pr=23,pu=5; if(diff===1){pr+=15;} if(diff===2){pr+=15;pu+=10;}
   pr+=Math.min(mi*2,10); pu+=Math.min(mi*2,10); pn=Math.max(5,100-pr-pu);
