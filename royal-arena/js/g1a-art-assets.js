@@ -53,6 +53,8 @@ const CARDS={
   batqueen: {name:'박쥐 여왕',   emoji:'🦇', cost:5, count:1, hp:2400, dmg:80,  hs:1.6, range:0.9, spd:0.9, flying:false, hitsAir:false, targets:'any', r:0.60, desc:'5초마다 아기 박쥐 소환(최대 3)'},
   catapult: {name:'투석 수레',   emoji:'🎪', cost:4, kind:'building', count:1, hp:850, dmg:150, hs:2.4, range:6.5, hitsAir:false, targets:'ground', r:0.72, life:30, splash:1.6, desc:'최장 사거리 투석 · 지상 광역'},
 };
+/* v557: AOE(광역) 카드 공격력 3배 — splash 유닛·건물 12종 + 광역 주문(radius 보유) 8종 */
+for(const __k3x in CARDS){ var __c3x=CARDS[__k3x]; if(__c3x.splash||(__c3x.kind==='spell'&&__c3x.radius&&__c3x.dmg)) __c3x.dmg=Math.round(__c3x.dmg*3); }
 const DECK=['knight','archers','giant','minions','musketeer','fireball','skarmy','cannon','wizard','sniper','prince','zap','valk','bomber','babyd','cleric','boar','icem','meteor','blizzard','greed','glass','fort','lordknight','xbow','healwind','flamer','golem','scarecrow','plasma','venom','shock','netter','buzzer','batqueen','catapult'];   /* v411: 신규 4종 — 그물·자폭·소환사·투석 */   /* v214: 29종 — 화염방사병·수정 골렘·허수아비 */   /* v324: 주문 3종 추가 — 32종 */
 const __ch2=document.getElementById('cards-h2'); if(__ch2) __ch2.textContent='🃏 카드 도감 ('+DECK.length+'종)';
 const __cs=document.getElementById('cards-sub'); if(__cs) __cs.textContent=DECK.length+'종 카드로 승부하는 실시간 아레나 배틀';
