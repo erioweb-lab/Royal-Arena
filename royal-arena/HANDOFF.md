@@ -436,3 +436,4 @@
 
 ### v557 (2026-11-22)
 - AOE 카드 공격력 3배(사용자 요청): CARDS 정의 직후 전역 순회 — splash 보유 카드 12종+광역 주문(kind=spell+radius+dmg) 7종 dmg×3. 회복 주문 제외. RUN_GATES:ALL_OK, 라이브 칩·sw v557 확인.
+- v558 수정: 첫 배포가 게이트 실패(E2E 2건·캔버스 0/600) — 원인 P1 블록이 const DECK 선언 전에 DECK.push(TDZ ReferenceError) → forEach를 DECK 선언 직후로 이동 후 RUN_GATES:ALL_OK.
