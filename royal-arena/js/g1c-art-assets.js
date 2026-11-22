@@ -1156,9 +1156,15 @@ function loop(t){
   let dt=Math.min(0.05,(t-last)/1000); last=t; now=t/1000;
   const real=dt;
   if(S.slow>0){ S.slow-=real; dt=real*0.42; }   // 하이라이트 슬로모션
-  try{ update(dt); }catch(e){}
+  /* v534: 유닛 터치 후 유닛 소실·블랙 필드 방어 — ①카메라/포커스 비정상 값 즉시 복구 ②연속 렌더 예외 시 배경 재도색(검은 전장 차단) ③원인 추적 버퍼 */
+  try{
+    if(S.focus){ var __fv=S.focus.v; if((__fv&&__fv.dead)||(__fv&&(!isFinite(__fv.x)||!isFinite(__fv.y)))||(S.focus.x!=null&&!isFinite(S.focus.x))||(S.focus.y!=null&&!isFinite(S.focus.y))){ S.focus=null; S.focusGap=Math.max(S.focusGap||0,0.6); } }
+    if(S.cam&&(!isFinite(S.cam.x)||!isFinite(S.cam.y)||!isFinite(S.cam.z)||S.cam.z<=0)){ S.cam.x=W/2; S.cam.y=H/2; S.cam.z=1; S.focus=null; window.__raCamFix=(window.__raCamFix||0)+1; }
+  }catch(__ge){}
+  try{ update(dt); }catch(__e534){ try{ (window.__raUpdErrs=window.__raUpdErrs||[]).push(String(__e534&&__e534.stack||__e534).slice(0,240)); }catch(__e2){} }
   try{ updateCam(real); }catch(e){}   // v112: 카메라 예외 격리 — 루프 사망·프레임 영구 동결 차단
-  try{ render(); }catch(e){}
+  try{ render(); if(window.__raRendBad) window.__raRendBad=0; }
+  catch(__e534){ try{ (window.__raRendErrs=window.__raRendErrs||[]).push(String(__e534&&__e534.stack||__e534).slice(0,240)); window.__raRendBad=(window.__raRendBad||0)+1; if(window.__raRendBad<=2&&typeof drawStatic==='function') drawStatic(); }catch(__e2){} }
   try{ ctx.setTransform(BSCALE,0,0,BSCALE,0,0); }catch(e){}   // v117: 프레임 말미 절대 변환 고정 — 렌더 예외로 save/restore 불균형이 남아도 누적되지 않음
   try{ syncHUD(); }catch(e){}   // v112: HUD 예외 격리
 
