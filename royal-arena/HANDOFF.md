@@ -1,3 +1,6 @@
+### v538 (2026-11-22)
+- 덱1/덱2 토글 시 버튼 레이아웃 변동 제거(사용자 보고+캡처 2장): 원인 3종 — ①__deckPick이 토글마다 #deck-pick 박스를 removeChild 후 재생성·재삽입(주변 흔들림) ②선택 버튼에만 '· 선택됨' 텍스트 추가(폭 변동) ③deck-desc 설명 길이가 덱마다 달라 하단 버튼열 밀림. 수정: ①박스 신규 생성은 최초 1회, 이후 parentNode 불일치 시에만 재삽입하고 내부 HTML만 갱신 ②버튼 고정 높이 58px+flex 중앙 정렬(padding 4px), '· 선택됨'은 visibility 예약(미선택도 공간 유지) ③deck-desc 고정 1줄(14px, nowrap+말줄임). ui-v538 스타일 블록(#deck-pick margin 10px·gap 10px 균등). RUN_GATES:ALL_OK, 라이브 칩·sw v538 확인.
+
 ### v537 (2026-11-22)
 - 배틀 시작 버튼 아이콘 후속 수복(사용자 보고: 흰 배경 잔존+버튼 벗어남): ra_ic_swords.png 48px 원본의 흰 배경이 투명화 안 됨을 확인 → 가장자리 연결 흰 픽셀만 플러드 필 투명화(검 본체 내부 하이라이트 보존)+여백 트리밍(46x48). 크기는 기존 .ric 규칙이 #overlay-result 한정이라 로비 버튼에서 48px 원본 크기 그대로 렌더된 것이 범어남 원인 → ui-v537 블록으로 #screen-title #btn-start .ric 14px·vertical-align -2px·margin 4px 고정. 아이콘 캐시 갱신 ?v=537. RUN_GATES:ALL_OK, 라이브 칩·sw v537 확인, 라이브 PNG 투명 픽셀 비율 재확인.
 
