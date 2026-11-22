@@ -437,3 +437,7 @@
 ### v557 (2026-11-22)
 - AOE 카드 공격력 3배(사용자 요청): CARDS 정의 직후 전역 순회 — splash 보유 카드 12종+광역 주문(kind=spell+radius+dmg) 7종 dmg×3. 회복 주문 제외. RUN_GATES:ALL_OK, 라이브 칩·sw v557 확인.
 - v558 수정: 첫 배포가 게이트 실패(E2E 2건·캔버스 0/600) — 원인 P1 블록이 const DECK 선언 전에 DECK.push(TDZ ReferenceError) → forEach를 DECK 선언 직후로 이동 후 RUN_GATES:ALL_OK.
+
+### v559 (2026-11-23) 신규 카드 특성 로직 연결
+- 야영지: 유닛 틱에서 반경 2.5 아군 +3/0.5s 회복(잎 파티클) · 화살비: 기존 광역 주문 파이프 사용 · 악몽 종자: 적중 시 rotT=2 부여(+부패 파편) · 그림자 암살자: 첫 타격 dmg×3(_fx3) · 마그마 골렘: killUnit 진입 시 crater+burnzone 4s 생성 · 불사조: killUnit 1회 부활(hp 50%·boom·반경1.8 적 150 피해·배너) · 시간 지배자: playCard 즉발 — 반경 2.4 아군 _hasteT=4, cd 감속 2배(3지점 일괄).
+- 잔여: 신규 9종 전용 아트(폴백 렌더 유지), 덱 편성 보유 제한. RUN_GATES:ALL_OK, 라이브 칩·sw v559 확인.
