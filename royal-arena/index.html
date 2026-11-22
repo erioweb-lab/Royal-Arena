@@ -1070,6 +1070,16 @@ html,body{overflow:hidden !important;height:100%}
 #overlay-result #r-actions{position:sticky;bottom:0;margin-top:10px;padding:10px 0 4px;background:linear-gradient(180deg,rgba(10,16,32,0),rgba(10,16,32,.96) 45%)}
 </style>
 <link rel="stylesheet" href="assets/camera.css?v=508">
+<style id="ui-v554">/* v554: 게임 방법 폰트 효과 — 골드 배지·글로우 타이틀·단계 행 그라디언트 */
+html body #overlay-info .t-how{display:flex !important;flex-direction:column !important;gap:7px !important}
+html body #overlay-info .step{display:flex;align-items:flex-start;gap:9px;background:linear-gradient(90deg,rgba(255,205,0,.12),rgba(255,205,0,0) 75%);border-left:3px solid #ffcc00;border-radius:6px;padding:6px 8px 6px 7px}
+html body #overlay-info .numb{flex:none;width:24px;height:24px;border-radius:50%;background:linear-gradient(180deg,#ffe27a,#ffb400);color:#2b1c05;font-family:'Jua','Noto Sans KR',sans-serif;font-size:14px;line-height:24px;text-align:center;box-shadow:0 0 9px rgba(255,190,0,.55),inset 0 -2px 3px rgba(0,0,0,.25);margin-top:1px}
+html body #overlay-info .step .d{font-size:12.5px;line-height:1.55;color:#dbe7ff}
+html body #overlay-info .step b{color:#ffd75e;font-family:'Jua','Noto Sans KR',sans-serif;font-size:14px;font-weight:400;letter-spacing:.5px;text-shadow:0 0 9px rgba(255,215,94,.5)}
+html body #overlay-info .step:nth-child(odd) .step-x{},html body #overlay-info .info-title{text-shadow:0 0 12px rgba(255,205,0,.45),0 1px 0 rgba(0,0,0,.6)}
+html body #overlay-info .t-note{color:#cfe0ff !important;font-style:italic;letter-spacing:.2px}
+html body #overlay-info .t-note::before{content:"💡 ";font-style:normal}
+html body #overlay-info .step .d em{color:#9fd4ff;font-style:normal}</style>
 </head>
 <body>
 
@@ -1205,7 +1215,7 @@ html body .info-box #btn-info-close{
   z-index:2 !important}
 html body .info-box #btn-info-close,html body .info-box #btn-info-close *{color:#2b1c05 !important;text-shadow:none !important}
 </style><style id="ui-v507">/* v507: 타이틀 zoom 핏터 상한 — 도움말 닫기 후 메인이 0.8까지 눌리는 급축소 차단(최소 0.93·한 번에 최대 4% 보정) */
-</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v553</div><div id="app">
+</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v554</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1285,13 +1295,7 @@ html body .info-box #btn-info-close,html body .info-box #btn-info-close *{color:
   <div id="overlay-info" class="overlay hidden">
     <div class="r-box info-box">
       <h2 class="info-title"><img class="hico" src="assets/ra_rl_ui_book.png?v=476" alt="">게임 방법</h2>
-      <p class="t-how"><span class="numb">1</span> <b>덱 편성</b> — 카드 8장으로 덱을 만드세요 (덱1·덱2 두 개 저장)<br>
-        <span class="numb">2</span> <b>덱 선택</b> — 배틀 전 덱1 또는 덱2를 고르세요<br>
-        <span class="numb">3</span> <b>지도 선택</b> — 아레나 테마를 고르세요 (테마마다 보너스: 용암=공격·서리=체력 등)<br>
-        <span class="numb">4</span> <b>배틀 시작</b> — 난이도를 고르고 시작!<br>
-        <span class="numb">5</span> <b>전투</b> — 엘릭서가 차면 카드를 탭해 선택(키 1~4) → 아군 진영을 눌러 배치. 주문(파이어볼·번개)은 아무 데나 시전<br>
-        <span class="numb">6</span> <b>승리</b> — 다리를 건너 진군, 상대 타워를 부숴 왕관을 모으세요 (킹타워 파괴 = 즉시 승리)<br>
-        <span class="numb">7</span> <b>업그레이드</b> — 배틀에서 모은 XP로 카드 레벨 상승 → 체력·공격력 강화</p>
+      <div class="t-how"><div class="step"><span class="numb">1</span><span class="d"><b>덱 편성</b> — 카드 8장으로 덱을 만드세요 (덱1·덱2 두 개 저장)</span></div><div class="step"><span class="numb">2</span><span class="d"><b>덱 선택</b> — 배틀 전 덱1 또는 덱2를 고르세요</span></div><div class="step"><span class="numb">3</span><span class="d"><b>지도 선택</b> — 아레나 테마를 고르세요 (테마마다 보너스: 용암=공격·서리=체력 등)</span></div><div class="step"><span class="numb">4</span><span class="d"><b>배틀 시작</b> — 난이도를 고르고 시작!</span></div><div class="step"><span class="numb">5</span><span class="d"><b>전투</b> — 엘릭서가 차면 카드를 탭해 선택(키 1~4) → 아군 진영을 눌러 배치. 주문(파이어볼·번개)은 아무 데나 시전</span></div><div class="step"><span class="numb">6</span><span class="d"><b>승리</b> — 다리를 건너 진군, 상대 타워를 부숴 왕관을 모으세요 (킹타워 파괴 = 즉시 승리)</span></div><div class="step"><span class="numb">7</span><span class="d"><b>업그레이드</b> — 배틀에서 모은 XP로 카드 레벨 상승 → 체력·공격력 강화</span></div></div>
       <p class="t-note">팁: 공중 유닛은 대공 유닛만 요격 · 자이언트는 건물만 타격</p>
       <p class="t-note">학습 목적으로 직접 만든 무료 팬 게임입니다.</p>
       <button id="btn-info-close" class="t-cta">확인</button>
@@ -1586,7 +1590,7 @@ b.style.setProperty('background-size','auto,100% 100%','important');b.style.setP
 html body #rpane-score{overflow-y:auto !important;max-height:46vh !important;-webkit-overflow-scrolling:touch !important}
 html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;white-space:pre-line !important;word-break:keep-all !important;overflow-wrap:anywhere !important;text-align:right !important;max-width:200px !important;font-weight:600 !important}
 </style>
-<script src="js/g1a-art-assets.js?v=553"></script><script src="js/g1b-art-assets.js?v=553"></script><script src="js/g1c-art-assets.js?v=553"></script>
+<script src="js/g1a-art-assets.js?v=554"></script><script src="js/g1b-art-assets.js?v=554"></script><script src="js/g1c-art-assets.js?v=554"></script>
 
 
 
@@ -1598,7 +1602,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g2-sprite-assets.js?v=553"></script>
+<script src="js/g2-sprite-assets.js?v=554"></script>
 <script id="ui-v510-js">/* v510: 지도·난이도 해금 단일 진실원 — 난이도별 맵 사다리 분리(단계별 해금). 악몽 해금=노멀 전맵 토벌(ra_map_clear_d0>=마지막 idx), 지옥=악몽 전맵 토벌(ra_map_clear_d1>=마지막 idx). 맵 해금은 현재 난이도 사다리에서 순차(clear_d+1). 표시순서≠사다리순서라 이름 매칭으로 사다리 idx 산출(v431 표시-idx 기록 버그 근본 수복). 기존 ra_map_clear_v1은 d0 마이그레이션 원천. */
 (function(){
  function MK(){ return {
@@ -1683,7 +1687,7 @@ setInterval(function(){
 
 
 
-<script src="js/g3-frame-assets.js?v=553"></script>
+<script src="js/g3-frame-assets.js?v=554"></script>
 
 
 
@@ -1694,7 +1698,7 @@ setInterval(function(){
 
 
 
-<script src="js/g4-ux-data.js?v=553"></script>
+<script src="js/g4-ux-data.js?v=554"></script>
 
 
 
@@ -1705,7 +1709,7 @@ setInterval(function(){
 
 
 
-<script src="js/g5-core.js?v=553"></script>
+<script src="js/g5-core.js?v=554"></script>
 
 
 
@@ -1716,19 +1720,7 @@ setInterval(function(){
 
 
 
-<script src="js/g6-battle.js?v=553"></script>
-
-
-
-
-
-
-
-
-
-
-
-<script src="js/g7-ui-systems.js?v=553"></script>
+<script src="js/g6-battle.js?v=554"></script>
 
 
 
@@ -1740,7 +1732,19 @@ setInterval(function(){
 
 
 
-<script src="js/g8-boot.js?v=553"></script><script src="js/g9-wide.js?v=553"></script><script src="js/g10-techtree.js?v=553"></script><script src="js/g11-camera.js?v=553"></script><script src="js/g12-camera-ui.js?v=553"></script>
+<script src="js/g7-ui-systems.js?v=554"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script src="js/g8-boot.js?v=554"></script><script src="js/g9-wide.js?v=554"></script><script src="js/g10-techtree.js?v=554"></script><script src="js/g11-camera.js?v=554"></script><script src="js/g12-camera-ui.js?v=554"></script>
 
 
 
