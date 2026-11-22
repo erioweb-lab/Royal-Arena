@@ -1,3 +1,6 @@
+### v548 (2026-11-22)
+- 이펙트 확장(cast-fx-audit 전수 절차 준수): drawFx 30분기·push 20종 전수 대조 → 스프라이트/캔버스 분류. 갭 확정: ①rotzone(부패)·plasmazone(플라즈마) — 질감형 존인데 캔버스 드로잉 → ra_fx_rot/plasmazone.png 신규 생성(plasma_beam -i 파생·키잉·투명 검증) ②shockzone — ra_fx_shock.png 파일은 존재하나 로더·분기 미연결이던 갭 → 연결. beam은 v406 FXBEAM 스프라이트 이미 적용 확인(갭 아님), 번쩍임류(ring/flash/zap/die 등)는 v328 원칙대로 캔버스 유지. drawFx 진입 오버라이드 맵 3종 확장+로더 8키 확장(존 스프라이트 전종 커버 완결), 폴백 유지. RUN_GATES:ALL_OK, 라이브 칩·sw v548 확인.
+
 ### v547 (2026-11-22)
 - 업그레이드 3차 — P4 투사체 완결: 재감사에서 fireball·meteorbit는 PSPR.fireball(img_071) 기존 보유로 판정(이전 정규식 감사 오탈 정정), 진짜 미보유는 plasmabolt 단일. 플라즈마탄 스프라이트 생성(ra_proj_plasma.png — ra_fx_plasma_beam -i 파생·코너 플러드필·128px·투명 0.15+ 검증) → ART_PROJ 등록 + PROJ_BASE.plasmabolt:0 + drawProj plasmabolt 분기에 16방향 베이크 스프라이트 적용(기존 그라디언트 코어는 폴백 유지). RUN_GATES:ALL_OK, 라이브 칩·sw v547 확인.
 
