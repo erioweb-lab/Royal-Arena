@@ -180,7 +180,7 @@ function drawBody(u,r,la){
   }
 }
 const FIREARC={kingshot:30,arrow:10,bullet:3,wizfb:18,dragon:14,ice:16,bomb:34,cannon:46};
-const PROJ_BASE={net:0,stone:0,arrow:2.3562,bomb:0,bullet:0,cannon:3.1416,dragon:1.5708,fireball:0,ice:1.5708,kingshot:0,wizfb:2.3562,zap:0};
+const PROJ_BASE={net:0,stone:0,arrow:2.3562,bomb:0,bullet:0,cannon:3.1416,dragon:1.5708,fireball:0,ice:1.5708,kingshot:0,wizfb:2.3562,zap:0,plasmabolt:0};   /* v547 */
 const PROJ16={};
 function cv16(fn){ const c=document.createElement('canvas'); c.width=64; c.height=64; fn(c.getContext('2d')); return c; }
 function pArrow(g){
@@ -239,6 +239,8 @@ function drawProj(p){
     const _pg=ctx.createRadialGradient(px,_py3,1,px,_py3,22); _pg.addColorStop(0,'rgba(230,210,255,.85)'); _pg.addColorStop(0.5,'rgba(175,120,255,.45)'); _pg.addColorStop(1,'rgba(175,120,255,0)');
     ctx.fillStyle=_pg; ctx.beginPath(); ctx.arc(px,_py3,22,0,7); ctx.fill();
     ctx.fillStyle='#f4ecff'; ctx.beginPath(); ctx.arc(px,_py3,4.6,0,7); ctx.fill();
+    var _pbm=(typeof PSPR!=='undefined')?PSPR.plasmabolt:null;
+    if(_pbm&&_pbm.complete&&_pbm.naturalWidth>0){ try{ bake16(); var _pf=PROJ16.plasmabolt; if(_pf){ var _pva=visAngle(p,px,_py3), _pi=((Math.round(_pva/(Math.PI/8))%16)+16)%16; var _psz=44; ctx.drawImage(_pf[_pi],px-_psz/2,_py3-_psz/2,_psz,_psz); } }catch(__pe547){} }   /* v547: 플라즈마탄 16방향 스프라이트 — 폴백(그라디언트 코어) 유지 */
     return; }
   if(p.kind==='fireball'||p.kind==='meteorbit'){
     const lift=Math.sin(Math.min(1,Math.max(0,p.t))*Math.PI)*(p.kind==='meteorbit'?10:14), sz=p.kind==='meteorbit'?36:54, _gr2=p.kind==='meteorbit'?22:36;   /* v380: 파편 유성 — 소형 계열 */
@@ -1248,3 +1250,4 @@ function __raAddRandomBtn(){
 })();
 /* v545: 신규 존·보스 연출 스프라이트 병합 로더 — 기존 __FXIMG 로더와 공존(키 병합) */
 try{ if(!window.__FXIMG) window.__FXIMG={}; ['warp','storm','burn','bossgate','doomaura'].forEach(function(k545){ if(!window.__FXIMG[k545]){ var im545=new Image(); im545.__valid=true; im545.onerror=function(){ im545.__valid=false; }; im545.src='assets/ra_fx_'+k545+'.png'; window.__FXIMG[k545]=im545; } }); }catch(__e545){}
+try{ if(window.__FXIMG&&!window.__FXIMG.__v547){ window.__FXIMG.__v547=1; } }catch(e){}

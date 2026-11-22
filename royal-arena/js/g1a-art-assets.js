@@ -118,7 +118,7 @@ const BANB_IM=new Image();BANB_IM.src="assets/img_068.png";
 const HPFR_IM=new Image();HPFR_IM.src="assets/img_069.png";
 const WALL_IM=new Image();WALL_IM.onload=()=>{try{drawStatic()}catch(e){}};WALL_IM.src="assets/img_070.jpg";
 const GRASS_IM=new Image();GRASS_IM.onload=()=>{try{drawStatic()}catch(e){}};GRASS_IM.src=GRASS_B64;
-const ART_PROJ={fireball:"assets/img_071.png",zap:"assets/img_072.png","arrow":"assets/img_073.png","bullet":"assets/img_074.png","bomb":"assets/img_075.png","wizfb":"assets/img_076.png","dragon":"assets/img_077.png","ice":"assets/img_078.png","cannon":"assets/img_079.png",bolt:"assets/ra_proj_bolt.png",kingshot:"assets/ra_proj_kingshot.png",net:"assets/ra_proj_net.png?v=468",stone:"assets/ra_proj_stone.png?v=469"};   /* v334: 석궁 볼트·킹샷 스프라이트 — 캔버스 폴백 해소(화풍 통일) */
+const ART_PROJ={fireball:"assets/img_071.png",zap:"assets/img_072.png","arrow":"assets/img_073.png","bullet":"assets/img_074.png","bomb":"assets/img_075.png","wizfb":"assets/img_076.png","dragon":"assets/img_077.png","ice":"assets/img_078.png","cannon":"assets/img_079.png",bolt:"assets/ra_proj_bolt.png",kingshot:"assets/ra_proj_kingshot.png",net:"assets/ra_proj_net.png?v=468",plasmabolt:"assets/ra_proj_plasma.png?v=547"   /* v546→547: 플라즈마탄 스프라이트 — 캔버스 폴백 해소(P4) */,stone:"assets/ra_proj_stone.png?v=469"};   /* v334: 석궁 볼트·킹샷 스프라이트 — 캔버스 폴백 해소(화풍 통일) */
 
 
 'use strict';
