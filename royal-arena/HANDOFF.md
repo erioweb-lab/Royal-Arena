@@ -1,3 +1,6 @@
+### v545 (2026-11-22)
+- 그래픽 업그레이드 계획(art_upgrade_plan_v1.md) 1차 적용: ①미보유 존 스프라이트 3종 생성(ra_fx_warp/storm/burn.png 512px, 코너 플러드필 키잉+알파 밴드 검증 BANDOK) → g1c drawFx 진입부 선표현 오버라이드(stormzone/burnzone/warpzone, 스프라이트 부재 시 기존 캔버스 폴백 유지) ②보스 연출 2종(bossgate=강림 시 kt 좌표 fx push+drawFx 브랜치, doomaura=doom>8s 오라 렌더) + 병합 로더(__FXIMG 키 병합, 폴백 __valid 게이트) ③근접 3종 walk 프레임(knight/prince/valk — idle img_151/153/155 -i 파생, 알파 bbox 높이 정규화 0.965~0.988·발바닥 정렬, ART_FRAMES 등록) — 과정: ART_FRAMES 삽입 첫 시도에서 중첩 객체 경계 오탈(Unexpected token ,) → 객체 시작부 등록으로 수복. P4 투사체 감사는 1차 시도에서 ART_PROJ 정의 파싱 미완(정규식 한계) → 후속 감사 과제로 기록. RUN_GATES:ALL_OK, 라이브 칩·sw v545 확인.
+
 ### v544 (2026-11-22)
 - v543 보스 형상 교체 무효 수복(사용자 재보고+캡처 판독: 뿔 달린 해골 투구·대검 흑기사 — 사암 미라 군주(황금 파라오 미라)·타 보스 9종 어느 것과도 불일치 → 공용 프레임 그대로): 원인 — FRAMES·ATK3가 청크 내 const 전역(window 속성 아님)이라 v543의 window.FRAMES/window.ATK3 게이트가 무음 스킵. 수정: typeof 게이트로 직접 참조(g1a). 교훈: 전역 객체 조작 시 window 속성 가정 금지. RUN_GATES:ALL_OK, 라이브 칩·sw v544 확인.
 
