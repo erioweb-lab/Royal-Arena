@@ -16,13 +16,15 @@ function updateUnit(u,dt){
         floats.push({dx:(Math.random()*14-7),dy:(Math.random()*6-3),x:u.x+(Math.random()-0.5)*0.5,y:u.y-0.9,txt:__vd,t:0.55,col:'#a5e85c',big:false});
         if(u.hp<=0){ u.hp=0; u.dead=true; killUnit(u,false); return; } } } }
   if(u.slowT>0) u.slowT-=dt; if(u.warpT>0) u.warpT-=dt; if(u.rotT>0) u.rotT-=dt;   /* v521 */
-  if(u.healer&&!u.dead&&u.hp<u.maxHp) u.hp=Math.min(u.maxHp,u.hp+10*dt);   /* v209: 힐러 특성 — 자가 재생 10/s */
+  if(u.healer&&!u.dead&&u.hp<u.maxHp) u.hp=Math.min(u.maxHp,u.hp+10*dt);
+  if(u.key==='campfire'&&!u.dead){ u._hacc=(u._hacc||0)+dt; if(u._hacc>=0.5){ u._hacc=0;   /* v559: 야영지 — 반경 2.5 아군 +3/0.5s */
+    for(const a2 of units){ if(a2.dead||a2.isTower||a2.team!==u.team) continue; if(Math.hypot(a2.x-u.x,a2.y-u.y)<=2.5){ a2.hp=Math.min(a2.maxHp,a2.hp+3); if(Math.random()<0.4) addParts(a2.x,a2.y-0.3,2,'#a8f0c0',1.2,0.5,55); } } } }   /* v209: 힐러 특성 — 자가 재생 10/s */
   if(u.team==='blue'&&S.__rin==='relic_mend'&&!u.dead&&u.hp<u.maxHp) u.hp=Math.min(u.maxHp,u.hp+2*(S.__rinMul||1)*dt);   /* v218 증폭 */   /* v212: 재생의 인장 */
   if(u.stun>0){ u.stun-=dt; u.swing=0; return; }
   if(u.frozenT>0){ u.frozenT-=dt; u.swing=0; if(Math.random()<0.15) addParts(u.x,u.y-0.3,1,'#b4ebff',1.0,0.5,-15);   /* v195: 빙결 파편 */ return; }   /* v138: 빙결 — 이동·공격 불가, 콤보 원소 1로 계수 */
   if(u.building){ // 캐논(건물): 고정, 수명 있음
     u.life-=dt; if(u.life<=0){ killUnit(u,true); return; }
-    u.cd-=dt; u.swing=Math.max(0,u.swing-dt);
+    u.cd-=dt*((u._hasteT>0)?2:1); if(u._hasteT)u._hasteT-=dt; u.swing=Math.max(0,u.swing-dt);
     if(!u.target||u.target.dead){ u.target=null; let nbd=1e9;
       for(const e2 of units){ if(e2.dead||e2.team===u.team||e2.c.flying) continue;
         const nd=Math.hypot(e2.x-u.x,e2.y-u.y); if(nd<=u.c.range+0.3&&nd<nbd){ nbd=nd; u.target=e2; } } }
@@ -35,7 +37,7 @@ function updateUnit(u,dt){
     if(__w&&__wm<0.92&&dist(u,__w)>1.6){ u.x+=Math.sign(__w.x-u.x)*u.c.spd*dt*0.55; u.y+=Math.sign(__w.y-u.y)*u.c.spd*dt*0.55; }
     else if(__wm>=0.999){ u.y+=(u.team==='blue'?-1:1)*u.c.spd*dt*0.45; }
     u.x=Math.max(0.7,Math.min(COLS-0.7,u.x)); u.y=Math.max(0.7,Math.min(ROWS-0.7,u.y));
-    u.cd-=dt;
+    u.cd-=dt*((u._hasteT>0)?2:1); if(u._hasteT)u._hasteT-=dt;
     if(u.cd<=0){ u.cd=1.4; let healed=false;
       for(const a2 of units){ if(a2.dead||a2.team!==u.team||a2.hp>=a2.maxHp) continue;
         if(Math.hypot(a2.x-u.x,a2.y-u.y)<=2.5){ a2.hp=Math.min(a2.maxHp,a2.hp+u.c.heal); healed=true;
@@ -50,9 +52,9 @@ function updateUnit(u,dt){
   }
   const d=dist(u,u.target);
   if(d<=u.c.range+(u.target.r||((u.target.c&&u.target.c.r)||0.5))){
-    u.cd-=dt;
+    u.cd-=dt*((u._hasteT>0)?2:1); if(u._hasteT)u._hasteT-=dt;
     if(u.cd<=0){ u.cd=u.c.hs; u.swing=(u.c.range>1.6?0.3:0.45); u._swd=u.swing;
-      hitTarget(u,u.target, u.charging? u.c.dmg*2 : u.c.dmg);
+      hitTarget(u,u.target,(u.c.firstx3&&!u._fx3)?u.c.dmg*3:(u.charging?u.c.dmg*2:u.c.dmg)); if(u.c.firstx3)u._fx3=1; if(u.c.rot&&u.target&&!u.target.dead&&!u.target.isTower){ u.target.rotT=2; if(Math.random()<0.5) addParts(u.target.x,u.target.y-0.3,2,'#c8a03c',1.5,0.4,-30); }
       u.chargeT=0; u.charging=false; }
   } else {
     if(u.c.charge){ u.chargeT+=dt; u.charging=u.chargeT>1.1;
@@ -244,6 +246,12 @@ function dealDamage(e,dmg,fromTeam,fromSpell,source){   /* v508-camera: 출처�
     if(e.isTower) destroyTower(e,fromTeam); else killUnit(e,false); }
 }
 function killUnit(u,expire){
+  if(u.key==='phoenix'&&!u.__rev&&!S.over){ u.__rev=1; u.dead=false; u.hp=u.maxHp*0.5;   /* v559: 불사조 — 1회 부활(50%)+폭발 150 */
+    fx.push({x:u.x,y:u.y,t:0,dur:0.7,kind:'boom'}); addParts(u.x,u.y,18,'#ffb46a',3.4,0.6,50);
+    for(const e2 of units){ if(e2.dead||e2.isTower||e2.team===u.team) continue; if(Math.hypot(e2.x-u.x,e2.y-u.y)<=1.8) dealDamage(e2,150,u.team); }
+    try{ banner('🔥 불사조 부활!',1500); }catch(e){} return; }
+  if(u.key==='golemm'&&!u.__dlv){ u.__dlv=1;   /* v559: 마그마 골렘 — 사망 시 용암 잔열 존 4s */
+    fx.push({x:u.x,y:u.y,t:0,dur:4,kind:'crater',r:2,team:u.team}); fx.push({x:u.x,y:u.y,t:0,dur:3,kind:'burnzone',r:2,team:u.team}); }
   u.dead=true;
   fx.push({x:u.x,y:u.y,t:0,dur:0.4,kind:'poof'});
   if(DIESPR[u.key]) fx.push({x:u.x,y:u.y,t:0,dur:0.55,kind:'die',key:u.key,team:u.team});
@@ -550,6 +558,9 @@ function playCard(side,idx,x,y){
   const c=CARDS[key]; if(c.cost>side.elixir) return false;
   side.elixir-=c.cost; try{ __raApplyLv(); }catch(e){}
   spawnCard(key, side===P?'blue':'red', x, y);
+  if(key==='tover'){ var __tt=side===P?'blue':'red';   /* v559: 시간 지배자 — 반경 2.4 아군 공속 2배 4s */
+    for(const a2 of units){ if(!a2.dead&&!a2.isTower&&a2.team===__tt&&Math.hypot(a2.x-x,a2.y-y)<=2.4) a2._hasteT=4; }
+    fx.push({x,y,t:0,dur:0.6,kind:'ring',col:'rgba(255,215,94,.9)'}); sfx('cast'); }
   side.hand[idx]=side.queue.shift(); side.queue.push(key);
   if(side===P) syncHand();
   sfx('deploy');
