@@ -1,3 +1,6 @@
+### v544 (2026-11-22)
+- v543 보스 형상 교체 무효 수복(사용자 재보고+캡처 판독: 뿔 달린 해골 투구·대검 흑기사 — 사암 미라 군주(황금 파라오 미라)·타 보스 9종 어느 것과도 불일치 → 공용 프레임 그대로): 원인 — FRAMES·ATK3가 청크 내 const 전역(window 속성 아님)이라 v543의 window.FRAMES/window.ATK3 게이트가 무음 스킵. 수정: typeof 게이트로 직접 참조(g1a). 교훈: 전역 객체 조작 시 window 속성 가정 금지. RUN_GATES:ALL_OK, 라이브 칩·sw v544 확인.
+
 ### v543 (2026-11-22)
 - 지도별 보스 형상 교체(사용자 보고 "모든 보스 형상 동일"): 실측 — ra_boss_<테마> 9종 idle+atk1~3 에셋 전부 존재, spawnBossNow가 SPR.boss.src만 교체하지만 실제 그리기는 공용 FRAMES.boss_idle·ATK3.boss가 승재(naturalWidth>0 우선)해 지도별 교체 미반영. 수정: 강림 시 스프라이트 경에서 테마 키 추출 → FRAMES['boss_idle']=ra_boss_<테마>.png, ATK3.boss=[atk1,atk2,atk3] 지도 전용 이미지 로드(g1a). 보스 9종: 왕국 성기사장·서리 날개 군주·화염 골렘·사암 미라 군주·심연 군주·폭풍 정령왕·백골 대군주·시간의 파수왕·왕좌 수호신. RUN_GATES:ALL_OK, 라이브 칩·sw v543 확인.
 
