@@ -287,7 +287,7 @@ function drawFx(f){
   /* v545: 존·보스 연출 스프라이트 선표현 — 있으면 대체, 없으면 기존 캔버스 폴백 */
   try{
     if(f.kind==='bossgate'){ var __bg545=window.__FXIMG&&window.__FXIMG.bossgate; if(__bg545&&__bg545.complete&&__bg545.naturalWidth>0&&__bg545.__valid!==false){ var _kg=f.t/f.dur,_gs=(1.2+1.4*Math.min(1,_kg*2))*TILE; ctx.save(); ctx.globalAlpha=Math.min(1,(f.dur-f.t)*2); ctx.drawImage(__bg545,f.x*TILE-_gs/2,f.y*TILE-_gs*0.62,_gs,_gs); ctx.restore(); return; } }
-    var __z545={stormzone:'storm',burnzone:'burn',warpzone:'warp'}[f.kind];
+    var __z545={stormzone:'storm',burnzone:'burn',warpzone:'warp',rotzone:'rot',plasmazone:'plasmazone',shockzone:'shock'}[f.kind];   /* v548: 갭 보완 존 3종 추가 */
     if(__z545){ var __i545=window.__FXIMG&&window.__FXIMG[__z545]; if(__i545&&__i545.complete&&__i545.naturalWidth>0&&__i545.__valid!==false){ var _r545=f.r*TILE,_p545=f.x*TILE,_q545=f.y*TILE,_a545=Math.min(1,f.t*2)*Math.min(1,(f.dur-f.t)*2); ctx.save(); ctx.globalAlpha=0.95*_a545; ctx.drawImage(__i545,_p545-_r545*1.02,_q545-_r545*0.55,_r545*2.04,_r545*1.1); ctx.restore(); return; } }
   }catch(__ze){}
 
@@ -1249,5 +1249,5 @@ function __raAddRandomBtn(){
   setInterval(function(){ try{ __raAddRandomBtn(); }catch(e){ } },300);   /* v193: 재시도 보장 */
 })();
 /* v545: 신규 존·보스 연출 스프라이트 병합 로더 — 기존 __FXIMG 로더와 공존(키 병합) */
-try{ if(!window.__FXIMG) window.__FXIMG={}; ['warp','storm','burn','bossgate','doomaura'].forEach(function(k545){ if(!window.__FXIMG[k545]){ var im545=new Image(); im545.__valid=true; im545.onerror=function(){ im545.__valid=false; }; im545.src='assets/ra_fx_'+k545+'.png'; window.__FXIMG[k545]=im545; } }); }catch(__e545){}
+try{ if(!window.__FXIMG) window.__FXIMG={}; ['warp','storm','burn','bossgate','doomaura','rot','plasmazone','shock'].forEach   /* v548: 존 스프라이트 전종 커버 */(function(k545){ if(!window.__FXIMG[k545]){ var im545=new Image(); im545.__valid=true; im545.onerror=function(){ im545.__valid=false; }; im545.src='assets/ra_fx_'+k545+'.png'; window.__FXIMG[k545]=im545; } }); }catch(__e545){}
 try{ if(window.__FXIMG&&!window.__FXIMG.__v547){ window.__FXIMG.__v547=1; } }catch(e){}
