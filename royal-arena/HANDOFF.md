@@ -1,3 +1,6 @@
+### v549 (2026-11-22)
+- 눈보라·번개 존 그래픽 강화(사용자 지시): ra_fx_frost·storm을 기존 스프라이트 -i 파생 고디테일로 재생성(frost=결정 빙살·회오리 눈송이·청백 림, storm=분기 번개 3-4발·폭풍 구름·테스라 필라멘트), 키잉·512px·투명 검증 후 교체, 로더 src 캐시버스트 ?v=549(라이브 교체 확인). RUN_GATES:ALL_OK, 라이브 칩·sw v549 확인.
+
 ### v548 (2026-11-22)
 - 이펙트 확장(cast-fx-audit 전수 절차 준수): drawFx 30분기·push 20종 전수 대조 → 스프라이트/캔버스 분류. 갭 확정: ①rotzone(부패)·plasmazone(플라즈마) — 질감형 존인데 캔버스 드로잉 → ra_fx_rot/plasmazone.png 신규 생성(plasma_beam -i 파생·키잉·투명 검증) ②shockzone — ra_fx_shock.png 파일은 존재하나 로더·분기 미연결이던 갭 → 연결. beam은 v406 FXBEAM 스프라이트 이미 적용 확인(갭 아님), 번쩍임류(ring/flash/zap/die 등)는 v328 원칙대로 캔버스 유지. drawFx 진입 오버라이드 맵 3종 확장+로더 8키 확장(존 스프라이트 전종 커버 완결), 폴백 유지. RUN_GATES:ALL_OK, 라이브 칩·sw v548 확인.
 
