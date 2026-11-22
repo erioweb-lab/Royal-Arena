@@ -1,3 +1,6 @@
+### v547 (2026-11-22)
+- 업그레이드 3차 — P4 투사체 완결: 재감사에서 fireball·meteorbit는 PSPR.fireball(img_071) 기존 보유로 판정(이전 정규식 감사 오탈 정정), 진짜 미보유는 plasmabolt 단일. 플라즈마탄 스프라이트 생성(ra_proj_plasma.png — ra_fx_plasma_beam -i 파생·코너 플러드필·128px·투명 0.15+ 검증) → ART_PROJ 등록 + PROJ_BASE.plasmabolt:0 + drawProj plasmabolt 분기에 16방향 베이크 스프라이트 적용(기존 그라디언트 코어는 폴백 유지). RUN_GATES:ALL_OK, 라이브 칩·sw v547 확인.
+
 ### v546 (2026-11-22)
 - 업그레이드 2차(P3 완결): ①보스 공격 보간 프레임 atk_mid 8종 생성(ra_boss_<테마>_atk_mid.png — atk2 -i 파생, 키잉+idle 기준 스케일 정규화) + 4단 스윙 인덱싱(g1b __fiB 4구간, ATK3.boss.length>=4 하위호환) — 보스 공격모션 뚝뚝 끊김 개선 ②dusk(황혼 신전) 보스 공격 프레임 3종 신규 생성(기존 atk1~3 전무 → 캔버스 폴백이던 것 수복, idle -i 파생) ③보스 프레임 스케일 정규화 5종 수정(frost_atk1 0.88→0.90·waste_atk1 1.08→0.93·sky_atk2 0.90→0.99·tomb_atk2 0.91→1.00·tomb_atk3 0.83→1.00 — 캡처 지적 크기 이질감). walk 감사 결과 이동 가능 유닛 전종 이미 커버(비행·건물·보스 제외 규약) — P2 완결. P4 투사체 감사는 RAW 파서 개선 후 재실행 과제. RUN_GATES:ALL_OK, 라이브 칩·sw v546 확인.
 
