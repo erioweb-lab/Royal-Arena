@@ -55,7 +55,74 @@ const CARDS={
 };
 /* v557: AOE(광역) 카드 공격력 3배 — splash 유닛·건물 12종 + 광역 주문(radius 보유) 8종 */
 for(const __k3x in CARDS){ var __c3x=CARDS[__k3x]; if(__c3x.splash||(__c3x.kind==='spell'&&__c3x.radius&&__c3x.dmg)) __c3x.dmg=Math.round(__c3x.dmg*3); }
+/* ===== v558 카드 획득·성장 시스템 (deck_acquisition_plan_v1 §3~§10) ===== */
+Object.assign(CARDS,{
+ campfire:{name:'야영지',emoji:'🏕️',cost:3,kind:'building',count:1,hp:900,dmg:0,hs:1.5,range:0,hitsAir:false,targets:'any',r:0.70,life:18,heal:6,desc:'난이도 전용 — 아군 지속 회복'},
+ arrowrain:{name:'화살비',emoji:'🏹',cost:3,kind:'spell',dmg:120,towerDmg:40,radius:2.0,desc:'난이도 전용 — 소형 광역 사격'},
+ nseed:{name:'악몽 종자',emoji:'👻',cost:5,count:1,hp:957,dmg:61,hs:1.3,range:0.9,spd:1.2,flying:false,hitsAir:false,targets:'any',r:0.45,rot:2,desc:'난이도 전용 — 적중 시 부패 2초'},
+ mtamer:{name:'폭풍 조련사',emoji:'🌪️',cost:6,count:1,hp:1130,dmg:78,hs:1.4,range:4.5,spd:1.0,flying:false,hitsAir:true,targets:'any',r:0.48,splash:1.8,desc:'광역 폭풍 원거리'},
+ slassin:{name:'그림자 암살자',emoji:'🌑',cost:4,count:1,hp:609,dmg:183,hs:1.8,range:0.8,spd:1.6,flying:false,hitsAir:false,targets:'any',r:0.40,firstx3:true,desc:'첫 타격 3배 — 후방 암살'},
+ golemm:{name:'마그마 골렘',emoji:'🌋',cost:9,count:1,hp:2769,dmg:154,hs:1.5,range:1.0,spd:0.7,flying:false,hitsAir:false,targets:'any',r:0.70,splash:1.5,deathlava:true,desc:'난이도 전용 — 사망 시 용암 잔열 존'},
+ phoenix:{name:'불사조',emoji:'🔥',cost:8,count:1,hp:2154,dmg:185,hs:1.5,range:1.0,spd:1.2,flying:true,hitsAir:true,targets:'any',r:0.55,revive1:true,desc:'사망 시 1회 부활(HP 50%)+폭발 150'},
+ tover:{name:'시간 지배자',emoji:'⏳',cost:9,kind:'spell',haste:4,radius:2.4,desc:'아군 공속 2배·이속+40% 4초'},
+});
+var __GRADE={knight:'normal',archers:'normal',giant:'rare',minions:'normal',musketeer:'normal',fireball:'normal',skarmy:'normal',cannon:'normal',wizard:'rare',sniper:'rare',prince:'rare',zap:'normal',valk:'normal',bomber:'normal',babyd:'rare',cleric:'normal',boar:'rare',icem:'rare',meteor:'unique',blizzard:'rare',greed:'normal',glass:'rare',fort:'unique',lordknight:'unique',xbow:'normal',healwind:'rare',flamer:'rare',golem:'unique',scarecrow:'normal',plasma:'unique',venom:'rare',shock:'unique',netter:'normal',buzzer:'normal',batqueen:'unique',catapult:'rare',campfire:'normal',arrowrain:'normal',nseed:'rare',mtamer:'rare',slassin:'rare',golemm:'unique',phoenix:'unique',tover:'unique'};
+var __STARTER=['knight','archers','giant','minions','musketeer','fireball','skarmy','cannon','wizard','prince','zap','valk','bomber','babyd','blizzard','flamer'];
+var __DIFFG={normal:{hp:1.00,dmg:1.00,base:1,min:1,max:5},rare:{hp:1.15,dmg:1.15,base:4,min:4,max:7},unique:{hp:1.30,dmg:1.30,base:7,min:7,max:10}};
+for(var __gk in CARDS){ var __gc=CARDS[__gk], __gd=__DIFFG[__GRADE[__gk]||'normal']; __gc.grade=__GRADE[__gk]||'normal';
+  __gc.hp=Math.round(__gc.hp*__gd.hp); if(__gc.dmg) __gc.dmg=Math.round(__gc.dmg*__gd.dmg);
+  if(__gc.towerDmg) __gc.towerDmg=Math.round(__gc.towerDmg*(1+(__gd.dmg-1)/2));
+}
+var __raDps=function(c){ if(c.kind==='spell') return c.dmg?c.dmg/3:0; return (c.dmg||0)/(c.hs||1)*(c.count||1); };
+var __arr=Object.keys(CARDS).map(function(k){return __raDps(CARDS[k]);}).sort(function(a,b){return a-b;});
+var __q=function(p){ return __arr[Math.floor(__arr.length*p)]; };
+var __LXP={normal:[100,220,400,700],rare:[130,290,520,910],unique:[160,350,640,1120]};
+function __raLv(k){ try{ var m=JSON.parse(localStorage.getItem('ra_cardxp_v1')||'{}'); var x=m[k]||0, t=__LXP[CARDS[k].grade]||__LXP.normal, lv=1; for(var i=0;i<t.length;i++){ if(x>=t[i]) lv=i+2; } return lv; }catch(e){ return 1; } }
+function __raLvMul(k){ return Math.pow(1.06, __raLv(k)-1); }
+for(var __ck in CARDS){ var __cc=CARDS[__ck], __cd=__DIFFG[__cc.grade];
+  var dps=__raDps(__cc), tier=0; if(dps>0){ tier=1; if(dps>=__q(.25))tier=2; if(dps>=__q(.5))tier=3; if(dps>=__q(.75))tier=4; }
+  if(!__cc.dmg && !__cc.heal) tier=0;
+  __cc.cost=Math.max(__cd.min,Math.min(__cd.max,__cd.base+tier));
+}
+try{ var __col=JSON.parse(localStorage.getItem('ra_collection_v1')||'null'); if(!__col){ __col={owned:__STARTER.slice()}; localStorage.setItem('ra_collection_v1',JSON.stringify(__col)); } }catch(e){}
+function __raOwned(k){ try{ var m=JSON.parse(localStorage.getItem('ra_collection_v1')||'{"owned":__STARTER}'); return m.owned.indexOf(k)>=0; }catch(e){ return true; } }
+function __raAddXp(k,amt){ try{ var m=JSON.parse(localStorage.getItem('ra_cardxp_v1')||'{}'); m[k]=(m[k]||0)+amt; localStorage.setItem('ra_cardxp_v1',JSON.stringify(m)); }catch(e){ } }
+function __raApplyLv(){ for(var k in CARDS){ if(!__raOwned(k)) continue; var c=CARDS[k], lv=__raLv(k); if(c.__lvStamp===lv) continue;
+  if(c.__baseHp===undefined){ c.__baseHp=c.hp; c.__baseDmg=c.dmg; c.__baseHeal=c.heal; }
+  var m=__raLvMul(k); c.hp=Math.round(c.__baseHp*m); if(c.__baseDmg) c.dmg=Math.round(c.__baseDmg*m); if(c.__baseHeal) c.heal=Math.round(c.__baseHeal*m); c.__lvStamp=lv; } }
+var __GDROPC={normal:['#8fa6bd','#22304f'],rare:['#e8b053','#4e2f10'],unique:['#cf6df5','#2e1150']};
+var __DP_EXCL={0:['campfire','arrowrain'],1:['nseed'],2:['golemm']};
+function __raDropRoll(){   /* 지도 클리어 드롭 — §3.3 */
+  var diff=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0, mi=(typeof __raMapIdx==='function')?__raMapIdx():0;
+  var fl='ra_map_clear_d'+diff, first=!localStorage.getItem(fl);
+  if(!first&&Math.random()>=0.35) return;
+  var pn=72,pr=23,pu=5; if(diff===1){pr+=15;} if(diff===2){pr+=15;pu+=10;}
+  pr+=Math.min(mi*2,10); pu+=Math.min(mi*2,10); pn=Math.max(5,100-pr-pu);
+  var r=Math.random()*100, g=r<pn?'normal':(r<pn+pr?'rare':'unique');
+  var pool=Object.keys(CARDS).filter(function(k){return CARDS[k].grade===g;}).filter(function(k){return ( __DP_EXCL[diff]||[]).indexOf(k)>=0 || ['campfire','arrowrain','nseed','golemm'].indexOf(k)<0;});
+  if(g==='normal'&&diff===0) pool=pool.concat(['campfire','arrowrain']); if(g==='rare'&&diff===1) pool=pool.concat(['nseed']); if(g==='unique'&&diff===2) pool=pool.concat(['golemm']);
+  var own=pool.filter(function(k){return !__raOwned(k);}), dupe=pool.filter(function(k){return __raOwned(k);});
+  var pick, isNew=false;
+  if(own.length&&Math.random()<0.7){ pick=own[Math.floor(Math.random()*own.length)]; isNew=true; }
+  else if(dupe.length){ pick=dupe[Math.floor(Math.random()*dupe.length)]; }
+  else if(own.length){ pick=own[Math.floor(Math.random()*own.length)]; isNew=true; }
+  else return;
+  var gain={normal:30,rare:60,unique:120}[g];
+  try{ var m=JSON.parse(localStorage.getItem('ra_collection_v1')||'{"owned":[]}'); if(m.owned.indexOf(pick)<0){ m.owned.push(pick); localStorage.setItem('ra_collection_v1',JSON.stringify(m)); } }catch(e){}
+  if(!isNew) __raAddXp(pick,gain);
+  try{ var col=__GDROPC[g][0]; var d=document.createElement('div');
+  d.style.cssText='position:fixed;left:50%;top:16%;transform:translateX(-50%);z-index:9999;background:linear-gradient(180deg,rgba(10,16,30,.96),rgba(6,10,20,.96));border:2px solid '+col+';border-radius:14px;padding:14px 26px;text-align:center;box-shadow:0 0 30px '+col+'55;font-family:Jua,sans-serif;color:#fff';
+  d.innerHTML='<div style="font-size:12px;letter-spacing:2px;color:'+col+'">'+(g==='normal'?'노멀':g==='rare'?'레어':'유니크')+' 카드 획득!</div><div style="font-size:34px;margin:4px 0">'+CARDS[pick].emoji+'</div><div style="font-size:16px">'+CARDS[pick].name+'</div><div style="font-size:11px;color:#9fb4d8;margin-top:3px">'+(isNew?'신규 획득! 덱에 편성 가능':'중복 → 재료 XP +'+gain)+'</div><div style="font-size:10px;color:#5c6e8c;margin-top:6px">탭하여 닫기</div>';
+  d.onclick=function(){ d.remove(); }; document.body.appendChild(d); setTimeout(function(){ try{d.remove();}catch(e){} },6000);
+  banner('🃏 '+(isNew?'신규':'중복')+' 카드: '+CARDS[pick].name+'!',2200); sfx('win'); }catch(e){}
+}
+function __raBattleXp(win){   /* 사용 카드 육성 XP — §6.3 */
+  try{ var used=S.__used||{}; var cb=parseInt((document.getElementById('crowns-blue')||{}).textContent||'0',10)||0;
+    for(var k in used){ if(!used[k]) continue; __raAddXp(k,(win?10:4)+cb*3); }
+  }catch(e){}
+}
 const DECK=['knight','archers','giant','minions','musketeer','fireball','skarmy','cannon','wizard','sniper','prince','zap','valk','bomber','babyd','cleric','boar','icem','meteor','blizzard','greed','glass','fort','lordknight','xbow','healwind','flamer','golem','scarecrow','plasma','venom','shock','netter','buzzer','batqueen','catapult'];   /* v411: 신규 4종 — 그물·자폭·소환사·투석 */   /* v214: 29종 — 화염방사병·수정 골렘·허수아비 */   /* v324: 주문 3종 추가 — 32종 */
+['campfire','arrowrain','nseed','mtamer','slassin','golemm','phoenix','tover'].forEach(function(k){ if(DECK.indexOf(k)<0) DECK.push(k); });
 const __ch2=document.getElementById('cards-h2'); if(__ch2) __ch2.textContent='🃏 카드 도감 ('+DECK.length+'종)';
 const __cs=document.getElementById('cards-sub'); if(__cs) __cs.textContent=DECK.length+'종 카드로 승부하는 실시간 아레나 배틀';
 /* ---------- 아레나 테마 (레퍼런스: 클래시 로얄 스토어 스크린샷) ---------- */
