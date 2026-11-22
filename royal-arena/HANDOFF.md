@@ -429,3 +429,4 @@
 
 ### v555 (2026-11-22)
 - divine 보스 투명화 수복(사용자 캡처 지적): ra_boss_divine.png·_atk1~3가 P 모드(알파 없음)로 저장돼 흰 사각 박스 노출 → 코너 플러드필(임계 30) 재키잉. 전 보스 에셋 알파 일괄 감사 병행. RUN_GATES:ALL_OK, 라이브 칩·sw v555 확인.
+- v555 정정: 이전 감사가 잘못된 workdir(상위 royal-arena)에서 실행돼 재키잉이 누락됐었음 → 본 커밋에서 ra_boss_divine idle·atk1~3 실제 재키잉 완료(라이브 에셋 RGBA 확인).
