@@ -447,3 +447,4 @@
 - 잔여: 신규 유닛 5종+야영지 필드 스프라이트(현재 스틱맨 폴백), v561.
 - RUN_GATES:ALL_OK, 라이브 칩 v560+phoenix 아트 HTTP 200 확인.
 - v561: 덱 편성 미보유 비활성 수복(v560 패치 0건 누락 정정 — 문자열 끝 따옴표 불일치 원인, 정확 매칭 후 data-add 조건부 래핑). RUN_GATES:ALL_OK, 라이브 칩·sw v561 확인.
+- v562 수정: 첫 게이트 실패 원인 ART_FRAMES 병합 TDZ(선언 앞 삽입) → 선언 직후 이동+헤드리스 pageerror 0 실측 후 RUN_GATES:ALL_OK. 라이브 칩 v562+golemm 스프라이트 200 확인.
