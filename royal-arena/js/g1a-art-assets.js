@@ -463,7 +463,7 @@ try{ (function(){ var iv4=setInterval(function(){
     d1.textContent='🥇 최고 '+__sb+'연승 · 🏆 '+__w+'승 '+__l+'패'; hw.insertBefore(d1, hw.firstChild); }
   var iw=document.getElementById('overlay-info'); if(iw&&!iw.classList.contains('hidden')&&!document.getElementById('ra-inote')){
     var d2=document.createElement('div'); d2.id='ra-inote'; d2.style.cssText='margin:6px auto;padding:6px 10px;border-radius:10px;background:rgba(18,24,43,.85);border:1px solid rgba(255,179,0,.4);font-size:11.5px;color:#ffd54f;font-weight:700;text-align:center;max-width:340px';
-    d2.textContent='🆕 난이도 3단계(토벌 해금) · 인런 렐릭(승리 후 이벤트 보상·다음 배틀 1회) · 연승·첫승 보너스 · 테마별 보너스(용암 공격/서리 체력/황야 XP/심연 이벤트)';
+    d2.textContent='';
     iw.insertBefore(d2, iw.firstChild); }
   if(hw&&hw.classList.contains('hidden')){ var x1=document.getElementById('ra-hstats'); if(x1) x1.remove(); }
   if(iw&&iw.classList.contains('hidden')){ var x2=document.getElementById('ra-inote'); if(x2) x2.remove(); }
