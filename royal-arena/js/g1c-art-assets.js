@@ -282,6 +282,13 @@ function drawProj(p){
 const ZK=new Set(['snowzone','crater','venomzone','burnzone','plasmazone','stormzone','healzone','shockzone','rotzone','timewarp']);   /* v521 */   /* v519: 감전 존 추가 */   /* v404: 지면 지속 존 종류 — 렌더 순서 분리용 */
 const FXBEAM={img:null,ok:false}; try{ const __bi=new Image(); __bi.onload=function(){FXBEAM.ok=true;}; __bi.src='assets/ra_fx_plasma_beam.png'; FXBEAM.img=__bi; }catch(e){}   /* v406: 플라즈마 발사 빔 생성 스프라이트(실패 시 캔버스 폴백) */
 function drawFx(f){
+  /* v545: 존·보스 연출 스프라이트 선표현 — 있으면 대체, 없으면 기존 캔버스 폴백 */
+  try{
+    if(f.kind==='bossgate'){ var __bg545=window.__FXIMG&&window.__FXIMG.bossgate; if(__bg545&&__bg545.complete&&__bg545.naturalWidth>0&&__bg545.__valid!==false){ var _kg=f.t/f.dur,_gs=(1.2+1.4*Math.min(1,_kg*2))*TILE; ctx.save(); ctx.globalAlpha=Math.min(1,(f.dur-f.t)*2); ctx.drawImage(__bg545,f.x*TILE-_gs/2,f.y*TILE-_gs*0.62,_gs,_gs); ctx.restore(); return; } }
+    var __z545={stormzone:'storm',burnzone:'burn',warpzone:'warp'}[f.kind];
+    if(__z545){ var __i545=window.__FXIMG&&window.__FXIMG[__z545]; if(__i545&&__i545.complete&&__i545.naturalWidth>0&&__i545.__valid!==false){ var _r545=f.r*TILE,_p545=f.x*TILE,_q545=f.y*TILE,_a545=Math.min(1,f.t*2)*Math.min(1,(f.dur-f.t)*2); ctx.save(); ctx.globalAlpha=0.95*_a545; ctx.drawImage(__i545,_p545-_r545*1.02,_q545-_r545*0.55,_r545*2.04,_r545*1.1); ctx.restore(); return; } }
+  }catch(__ze){}
+
   const k=f.t/f.dur, px=f.x*TILE, py=f.y*TILE;
   ctx.globalAlpha=Math.max(0,1-k);
   if(f.kind==='beam'){   /* v406: 플라즈마 타워 발사 빔 — 생성 스프라이트 신축(폴백 그라디언트 내장) */
@@ -583,6 +590,7 @@ function render(){
     ctx.strokeStyle='rgba(255,255,255,.5)'; ctx.setLineDash([10,7]); ctx.lineWidth=2;
     ctx.beginPath(); ctx.moveTo(-BAND,BLUE_DEPLOY_MIN*TILE); ctx.lineTo(VW-BAND,BLUE_DEPLOY_MIN*TILE); ctx.stroke(); ctx.setLineDash([]);
   }
+  try{ if(S.boss&&!S.boss.dead&&S.boss.doom>8&&window.__FXIMG&&window.__FXIMG.doomaura&&window.__FXIMG.doomaura.complete&&window.__FXIMG.doomaura.naturalWidth>0&&window.__FXIMG.doomaura.__valid!==false){ var _dr545=(2.4+0.6*((S.boss.doom-8)/4))*TILE,_pu545=0.5+0.25*Math.sin(now*6); ctx.save(); ctx.globalAlpha=_pu545; ctx.drawImage(window.__FXIMG.doomaura,S.boss.x*TILE-_dr545/2,S.boss.y*TILE-_dr545*0.55,_dr545,_dr545); ctx.restore(); } }catch(__ae545){}   /* v545: 파멸기 충전 오라 */
   try{for(const t of towers) if(t.dead) drawRubble(t);}catch(__e){window.__skip=(window.__skip||0)+1;console.warn("draw-skip",__e.message);}
   try{for(const t of towers) if(!t.dead) drawTower(t);}catch(__e){window.__skip=(window.__skip||0)+1;console.warn("draw-skip",__e.message);}
   try{for(const u of [...units].sort((a,b)=>a.y-b.y)) drawUnit(u);}catch(__e){window.__skip=(window.__skip||0)+1;console.warn("draw-skip",__e.message);}
@@ -1238,3 +1246,5 @@ function __raAddRandomBtn(){
   openDeckEditor=function(){ var r=orig.apply(this,arguments); try{ setTimeout(__raAddRandomBtn,40); }catch(e){ } return r; };
   setInterval(function(){ try{ __raAddRandomBtn(); }catch(e){ } },300);   /* v193: 재시도 보장 */
 })();
+/* v545: 신규 존·보스 연출 스프라이트 병합 로더 — 기존 __FXIMG 로더와 공존(키 병합) */
+try{ if(!window.__FXIMG) window.__FXIMG={}; ['warp','storm','burn','bossgate','doomaura'].forEach(function(k545){ if(!window.__FXIMG[k545]){ var im545=new Image(); im545.__valid=true; im545.onerror=function(){ im545.__valid=false; }; im545.src='assets/ra_fx_'+k545+'.png'; window.__FXIMG[k545]=im545; } }); }catch(__e545){}
