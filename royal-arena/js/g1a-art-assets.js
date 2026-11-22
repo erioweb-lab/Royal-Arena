@@ -527,7 +527,11 @@ function mkTower(team,kind,x,y){
 }
 function spawnBossNow(){ if(S.bossSpawned||S.over) return; S.bossSpawned=true;
     const kt=towers.find(t=>t.team==='blue'&&t.kind==='king'&&!t.dead);
-    if(kt){ var __mp=__raMAPS[__raMapIdx()]; try{ if(__mp&&SPR.boss&&__mp.sprite) SPR.boss.src=__mp.sprite;try{var __th=(__mp&&__mp.sprite&&(__mp.sprite.match(/ra_boss_(\w+)\.png/)||[])[1])||null;var __AF=(typeof ART_FRAMES!=='undefined')&&ART_FRAMES;if(__th&&__AF&&__AF.boss_atk&&__AF.boss_atk.src!==undefined)__AF.boss_atk.src='assets/ra_boss_'+__th+'_atk1.png';}catch(e){} }catch(e){} try{ S.__bossName=__mp?__mp.boss:null; }catch(e){} var __bw=(S.__bossWave||0), __bh=Math.round(BOSS_STATS.hp*__raDiffHp()*__raMapHp()*(1+0.35*__bw)), __bs2=Object.assign({},BOSS_STATS,{dmg:Math.round(BOSS_STATS.dmg*(1+0.15*__bw))}); const BU={key:'boss',team:'red',x:9,y:3.2,c:__bs2,hp:__bh,maxHp:__bh,shield:900,cd:1.2,dir:Math.PI/2,dead:false,swing:0,bob:1,spawnFx:0.45,doom:0,chargeT:0};
+    if(kt){ var __mp=__raMAPS[__raMapIdx()]; try{ if(__mp&&SPR.boss&&__mp.sprite) SPR.boss.src=__mp.sprite;
+      var __bm=(__mp.sprite.match(/ra_boss_(\w+)\.png/)||[])[1];
+      if(__bm){   /* v543: 지도별 보스 형상 — idle·공격 프레임을 지도 전용 에셋으로 교체(기존엔 공용 프레임이 항상 승재해 모든 보스가 동일 형상) */
+        try{ if(window.FRAMES){ var __bi=new Image(); __bi.src='assets/ra_boss_'+__bm+'.png'; FRAMES['boss_idle']=__bi; } }catch(__e1){}
+        try{ if(window.ATK3){ var __mk=['atk1','atk2','atk3'], __arr=[]; for(var __ai=0;__ai<3;__ai++){ var __im=new Image(); __im.src='assets/ra_boss_'+__bm+'_'+__mk[__ai]+'.png'; __arr.push(__im); } ATK3.boss=__arr; } }catch(__e2){} }try{var __th=(__mp&&__mp.sprite&&(__mp.sprite.match(/ra_boss_(\w+)\.png/)||[])[1])||null;var __AF=(typeof ART_FRAMES!=='undefined')&&ART_FRAMES;if(__th&&__AF&&__AF.boss_atk&&__AF.boss_atk.src!==undefined)__AF.boss_atk.src='assets/ra_boss_'+__th+'_atk1.png';}catch(e){} }catch(e){} try{ S.__bossName=__mp?__mp.boss:null; }catch(e){} var __bw=(S.__bossWave||0), __bh=Math.round(BOSS_STATS.hp*__raDiffHp()*__raMapHp()*(1+0.35*__bw)), __bs2=Object.assign({},BOSS_STATS,{dmg:Math.round(BOSS_STATS.dmg*(1+0.15*__bw))}); const BU={key:'boss',team:'red',x:9,y:3.2,c:__bs2,hp:__bh,maxHp:__bh,shield:900,cd:1.2,dir:Math.PI/2,dead:false,swing:0,bob:1,spawnFx:0.45,doom:0,chargeT:0};
       BU.target=kt; units.push(BU); S.boss=BU; ensureKsBtn(); banner('💀 부활한 왕이 강림했다!',2200); sfx('boomL'); } }   /* v192: 보스 강림(최상위 — 타워 파괴·타이머 폴백 공용) */
 
 
