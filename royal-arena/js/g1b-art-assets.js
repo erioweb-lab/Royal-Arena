@@ -865,7 +865,7 @@ function drawUnit(u){try{
     if(!moving&&!u.c.flying){ const br=1+Math.sin(now*2.6+u.bob)*0.018; ctx.scale(br,2-br); }
     const punch=u.swing>0?1+Math.sin(u.swing*Math.PI)*0.16:1;
     ctx.save(); ctx.scale(punch,punch);
-    if(aimF&&u.key==='boss'&&ATK3.boss&&ATK3.boss[0]&&ATK3.boss[0].complete&&ATK3.boss[0].naturalWidth>0){ var __pB=1-u.swing/(u._swd||0.45), __fiB=__pB<0.33?0:(__pB<0.66?1:2), __bf=ATK3.boss[__fiB]; ctx.drawImage(raTint(__bf,u.team,u.key),-sh/2,-sh*0.82-hop,sh,sh); if(u.hurt>0){ ctx.globalCompositeOperation='lighter'; ctx.globalAlpha=Math.min(1,u.hurt/0.09)*0.75; ctx.drawImage(raTint(__bf,u.team,u.key),-sh/2,-sh*0.82-hop,sh,sh); ctx.globalCompositeOperation='source-over'; ctx.globalAlpha=1; } } else if(aimF){ var __IM=SPR[u.key], __AU=ASPR[u.key], __wy=-sh*0.30-hop;
+    if(aimF&&u.key==='boss'&&ATK3.boss&&ATK3.boss[0]&&ATK3.boss[0].complete&&ATK3.boss[0].naturalWidth>0){ var __pB=1-u.swing/(u._swd||0.45), __fiB=(ATK3.boss.length>=4)?(__pB<0.25?0:(__pB<0.5?1:(__pB<0.75?2:3))):(__pB<0.33?0:(__pB<0.66?1:2)), __bf=ATK3.boss[__fiB];   /* v546: 4프레임 보간 지원(하위호환 3프레임) */ ctx.drawImage(raTint(__bf,u.team,u.key),-sh/2,-sh*0.82-hop,sh,sh); if(u.hurt>0){ ctx.globalCompositeOperation='lighter'; ctx.globalAlpha=Math.min(1,u.hurt/0.09)*0.75; ctx.drawImage(raTint(__bf,u.team,u.key),-sh/2,-sh*0.82-hop,sh,sh); ctx.globalCompositeOperation='source-over'; ctx.globalAlpha=1; } } else if(aimF){ var __IM=SPR[u.key], __AU=ASPR[u.key], __wy=-sh*0.30-hop;
       ctx.drawImage(__IM,0,__IM.naturalHeight*0.44,__IM.naturalWidth,__IM.naturalHeight*0.56,-sh/2,-sh*0.38-hop,sh,sh*0.56);
       ctx.translate(0,__wy);
       var __p=1-u.swing/(u._swd||0.45), __fr=ATK3[u.key], __imU=__AU, __crop=true;
