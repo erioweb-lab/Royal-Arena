@@ -127,6 +127,11 @@ function castMeteor(team,x,y){ const c=CARDS.meteor, et=enemyOf(team);
   for(const t of towers){ if(t.dead||t.team!==et) continue; if(Math.hypot(t.x-x,t.y-y)<=c.radius+0.5) dealDamage(t,spellDmg(c.towerDmg),team); } }
 /* v208: 눈보라 — 광역 둔화 3초 */
 function castBlizzard(team,x,y){ const c=CARDS.blizzard, et=enemyOf(team);
+  try{   /* v542: 전투와 무관한 곳에 눈보라 발동 금지 — 반경 내 적 유닛이 없으면 가장 가까운 적 유닛 위치로 재중앙화(사용자 보고) */
+    var __es=units.filter(function(u){ return !u.dead&&!u.isTower&&u.team===et; });
+    if(__es.length){ var __bt=null,__bd=1e9; for(var __i=0;__i<__es.length;__i++){ var __d=Math.hypot(__es[__i].x-x,__es[__i].y-y); if(__d<__bd){ __bd=__d; __bt=__es[__i]; } }
+      if(__bt&&__bd>c.radius){ x=clamp(__bt.x,0.5,COLS-0.5); y=clamp(__bt.y,0.5,ROWS-0.5); } }
+  }catch(__be){}
   fx.push({x,y,t:0,dur:0.6,kind:'zap'}); fx.push({x,y,t:0,dur:0.5,kind:'ring',col:'rgba(160,220,255,.9)'}); addParts(x,y,16,'#bfe4ff',2.8,0.55,40); addParts(x,y,10,'#ffffff',2.2,0.7,-55); sfx('cast'); S.spellQuiet=1.6; fx.push({x,y,t:0,dur:6,kind:'snowzone',r:c.radius,team:team});   /* v326: 지속 눈 지역 — 6초간 반경 내 적 둔화 유지 */
   for(const u of units){ if(u.dead||u.team!==et) continue; if(Math.hypot(u.x-x,u.y-y)<=c.radius){ u.slowT=Math.max(u.slowT||0,c.slow); dealDamage(u,spellDmg(c.dmg),team,true); } }
   for(const t of towers){ if(t.dead||t.team!==et) continue; if(Math.hypot(t.x-x,t.y-y)<=c.radius+0.4) dealDamage(t,spellDmg(c.towerDmg),team); } }
