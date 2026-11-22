@@ -1165,6 +1165,29 @@ function loop(t){
   try{ updateCam(real); }catch(e){}   // v112: 카메라 예외 격리 — 루프 사망·프레임 영구 동결 차단
   try{ render(); if(window.__raRendBad) window.__raRendBad=0; }
   catch(__e534){ try{ (window.__raRendErrs=window.__raRendErrs||[]).push(String(__e534&&__e534.stack||__e534).slice(0,240)); window.__raRendBad=(window.__raRendBad||0)+1; if(window.__raRendBad<=2&&typeof drawStatic==='function') drawStatic(); }catch(__e2){} }
+  /* v539: 필드 블랙아웃 자가 진단·복구 워치독 — UI 정상·캔버스만 검정(별 파티클만 보임) 증상 대응(사용자 재보고) */
+  try{
+    if(!window.__raWD) window.__raWD={t:0,bad:0,fix:0,last:-9};
+    if(S.scene==='battle'&&!S.over&&now-window.__raWD.t>=2.5){
+      window.__raWD.t=now;
+      var __br=-1;
+      try{
+        var __cw=ctx.canvas.width,__ch=ctx.canvas.height; __br=0;
+        for(var __i=0;__i<25;__i++){ var __sx=((__i%5)+0.5)*__cw/5,__sy=(Math.floor(__i/5)+0.5)*__ch/5; var __d=ctx.getImageData(__sx,__sy,1,1).data; if(__d[3]>0&&Math.max(__d[0],__d[1],__d[2])>60) __br++; }
+      }catch(__se){ __br=-1; }   /* 픽셀 판독 불가(taint 등)면 판정 보류 — 오복구 방지 */
+      try{
+        window.__raFieldDiag={t:Math.round(now),bright:__br,cam:S.cam?{x:Math.round(S.cam.x||0),y:Math.round(S.cam.y||0),z:Math.round((S.cam.z||0)*100)/100}:null,theme:S.theme||null,units:(typeof units!=='undefined'&&units)?units.length:-1,towers:(typeof towers!=='undefined'&&towers)?towers.length:-1,gtOk:!!(typeof GT_IM!=='undefined'&&GT_IM&&GT_IM[S.theme]&&GT_IM[S.theme].complete&&GT_IM[S.theme].naturalWidth)};
+      }catch(__de2){}
+      if(__br>=0&&__br<2&&now>6){ window.__raWD.bad++; } else if(__br>=2){ window.__raWD.bad=0; }
+      if(window.__raWD.bad>=2&&now-window.__raWD.last>10){
+        window.__raWD.last=now; window.__raWD.bad=1; window.__raWD.fix++;
+        try{ S.focus=null; S.focusGap=Math.max(S.focusGap||0,0.5); if(S.cam&&(!isFinite(S.cam.x)||!isFinite(S.cam.y)||!isFinite(S.cam.z)||S.cam.z>3.2)){ S.cam.x=W/2; S.cam.y=H/2; S.cam.z=1; } }catch(__re){}
+        try{ if(typeof drawStatic==='function') drawStatic(); }catch(__fe){}
+        try{ if(typeof GT_IM!=='undefined'&&GT_IM&&GT_IM[S.theme]&&(!GT_IM[S.theme].complete||!GT_IM[S.theme].naturalWidth)){ GT_IM[S.theme].src=GT_IM[S.theme].src.split('?__r')[0]+'?__r'+Math.floor(now); } }catch(__te){}
+        window.__raFieldFix=window.__raWD.fix;
+      }
+    }
+  }catch(__wde){}
   try{ ctx.setTransform(BSCALE,0,0,BSCALE,0,0); }catch(e){}   // v117: 프레임 말미 절대 변환 고정 — 렌더 예외로 save/restore 불균형이 남아도 누적되지 않음
   try{ syncHUD(); }catch(e){}   // v112: HUD 예외 격리
 
