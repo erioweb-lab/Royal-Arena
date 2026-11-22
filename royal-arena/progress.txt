@@ -46,3 +46,4 @@ v547 (2026-11-22): P4 완결 — 플라즈마탄 스프라이트 16방향 적용
 v548 (2026-11-22): 이펙트 확장 — rot/plasmazone 신규+shock 연결, 존 스프라이트 전종 커버. RUN_GATES:ALL_OK, 라이브 v548 확인.
 v548 실화면 검증 (2026-11-22): 헤드리스 로드(pageerror 0) — 신규 존 스프라이트 8종 전부 OK(warp/storm/burn/bossgate/doomaura/rot/plasmazone/shock), frost/crater 기존분 OK, venom은 venomfog 키로 정상 등록 확인, PROJ16.plasmabolt 16방향 베이크 OK, 전투 캔버스 정상 렌더. art_upgrade_plan 전체 완결.
 v549 (2026-11-22): 눈보라·번개 존 그래픽 강화 교체. RUN_GATES:ALL_OK, 라이브 v549 확인.
+v550 (2026-11-22): 눈보라 낙설 시트·번개 낙뢰 스트라이크 오버레이 아트 적용. RUN_GATES:ALL_OK, 라이브 v550 확인.
