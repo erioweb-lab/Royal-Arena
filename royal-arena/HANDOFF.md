@@ -466,3 +466,8 @@
 ### v566 (2026-11-23) 로비 레이아웃+난이도 선택 팝 효과(사용자 요청)
 - ①난이도 행(#diff-row) grid-column 전폭+하단 마진 18px — 최하단 네비바 맞닿음 해소, 위로 이동. ②#title-actions>button margin 0 강제 — 3열 그리드 gap 8px 균등 간격. ③선택 하이라이트 팝 효과: @keyframes raDiffPop(scale 1→1.18→0.96→1.04, 0.5s 스프링 곡선) — .ra-sel 부여 시 재생, 기존 골드 링+원색 활성(v565)과 결합.
 - RUN_GATES:ALL_OK, 라이브 칩·sw v566 확인.
+
+### v567 (2026-11-23) 배틀시작 아래 버튼 높이·간극 통일(사용자 요청)
+- 캡처 판독: 덱1/덱2 행이 2줄 내용이라 메뉴행보다 높고, 덱행↔메뉴행 간격(deck-desc 14px+title-actions 상단 12px 마진)이 그리드 gap 8px보다 넓음.
+- 수복: 배틀시작 아래 전 버튼(덱픽 2·메뉴 8·난이도 3) height 42px 통일(.dkpick flex 센터링), deck-pick gap 8px·margin 6px, deck-desc 12px 압축·margin 0, title-actions margin-top 8px — 전 세로 리듬 8px 등폭.
+- RUN_GATES:ALL_OK, 라이브 칩·sw v567 확인.
