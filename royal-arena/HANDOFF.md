@@ -471,3 +471,8 @@
 - 캡처 판독: 덱1/덱2 행이 2줄 내용이라 메뉴행보다 높고, 덱행↔메뉴행 간격(deck-desc 14px+title-actions 상단 12px 마진)이 그리드 gap 8px보다 넓음.
 - 수복: 배틀시작 아래 전 버튼(덱픽 2·메뉴 8·난이도 3) height 42px 통일(.dkpick flex 센터링), deck-pick gap 8px·margin 6px, deck-desc 12px 압축·margin 0, title-actions margin-top 8px — 전 세로 리듬 8px 등폭.
 - RUN_GATES:ALL_OK, 라이브 칩·sw v567 확인.
+
+### v568 (2026-11-23) 덱행-메뉴행 간격 불일치 원인 확인·제거(사용자 질의)
+- 원인: 덱1/덱2 행과 게임 방법 행 사이에 #deck-desc('선택: 덱 N — 평균…' 설명 줄)이 min-height 12px로 공간 점유(+덱행 하단 6px·메뉴행 상단 8px 마진) → 게임 방법↔유물 행의 grid gap 8px와 상이. 캡처 실측 40px vs 22px(물리px).
+- 수복: deck-desc display:none — 내용은 덱 버튼 내 '선택됨'·'평균' 라벨과 중복되므로 정보 손실 없음. 간격 등폭.
+- RUN_GATES:ALL_OK, 라이브 칩·sw v568 확인.
