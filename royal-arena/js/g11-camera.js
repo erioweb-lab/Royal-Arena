@@ -43,6 +43,7 @@
     c.z=bound(finite(c.z)?c.z:1,1,3);
     const p=limits(c.z,finite(c.x)?c.x:W/2,finite(c.y)?c.y:H/2);
     c.x=p.x; c.y=p.y;
+    c.__outZ=(c.z*2.5>3)?3:c.z*2.5;   /* v588: 자동전투 줌 배율 2.5배(사용자 요청) — 출력 z에만 승수, 내부 로직·게이트 불변 */
     return c;
   }
   function clearFocus(){ state.focus=null; state.pending=null; S.focus=null; }
@@ -348,7 +349,8 @@
     state.suppressed=state.points.size>0; cancelCardDrag();
     anchorZoom(Math.exp(bound(-e.deltaY*unit*0.0015,-0.5,0.5)),anchor,e); e.preventDefault();
   }
-  window.RACamera=Object.freeze({setMode,zoomBy,setIntensity,toggleMap,jumpTo,snapshot,reset,update,subscribe,
+  window.ZOOMAUTO=2.5;   /* v588: 자동전투 줌 배율 2.5배(사용자 요청) — 렌더 전용 승수, 카메라 상태·게이트 무영향 */
+window.RACamera=Object.freeze({setMode,zoomBy,setIntensity,toggleMap,jumpTo,snapshot,reset,update,subscribe,
     // 엔진 전용 어댑터. UI는 위 공개 메서드 + snapshot만 사용한다.
     _onDamage:onDamage,_focus:legacyFocus,_bossDefeated:bossDefeated,_matchEnd:matchEnd,_resize:resize,
     _clientToWorld:clientToWorld,_pointerDown:pointerDown,_pointerMove:pointerMove,_pointerUp:pointerUp,
