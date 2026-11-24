@@ -101,7 +101,7 @@ var __DP_EXCL={0:['campfire','arrowrain'],1:['nseed'],2:['golemm']};
 function __raDropRoll(){   /* 지도 클리어 드롭 — §3.3 */
   var diff=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0, mi=(typeof __raMapIdx==='function')?__raMapIdx():0;
   var fl='ra_map_clear_d'+diff+'_m'+((typeof __raMapIdx==='function')?__raMapIdx():0), seen=(function(){try{return JSON.parse(localStorage.getItem('ra_map_seen_v1')||'{}')}catch(e){return {}}})(), first=!seen[fl];   /* v591: 플래그 저장은 팝업 표시 성공 후로 이동 — v564 맵별 첫 클리어(기존 난이도당 1회 → 맵×난이도 각각 100%) */
-  if(!first&&Math.random()>=0.35) return;
+  if(!first&&Math.random()>=0.35){ try{ if(typeof banner==='function'){ banner('🃏 카드 획득 실패 — 확률 미달 (35%) · 다음 승리를 노려보세요!',2600); sfx('lose'); } }catch(e){} return; }   /* v592: 미드롭 시 안내 배너 */
   var pn=72,pr=23,pu=5; if(diff===1){pr+=15;} if(diff===2){pr+=15;pu+=10;}
   pr+=Math.min(mi*2,10); pu+=Math.min(mi*2,10); pn=Math.max(5,100-pr-pu);
   var r=Math.random()*100, g=r<pn?'normal':(r<pn+pr?'rare':'unique');
@@ -112,7 +112,7 @@ function __raDropRoll(){   /* 지도 클리어 드롭 — §3.3 */
   if(own.length&&Math.random()<0.7){ pick=own[Math.floor(Math.random()*own.length)]; isNew=true; }
   else if(dupe.length){ pick=dupe[Math.floor(Math.random()*dupe.length)]; }
   else if(own.length){ pick=own[Math.floor(Math.random()*own.length)]; isNew=true; }
-  else return;
+  else { try{ if(typeof banner==='function'){ banner('🃏 카드 획득 실패 — 획득 가능한 카드가 없음',2600); sfx('lose'); } }catch(e){} return; }
   var gain={normal:30,rare:60,unique:120}[g];
   try{ var m=JSON.parse(localStorage.getItem('ra_collection_v1')||'{"owned":[]}'); if(m.owned.indexOf(pick)<0){ m.owned.push(pick); localStorage.setItem('ra_collection_v1',JSON.stringify(m)); } }catch(e){}
   if(!isNew) __raAddXp(pick,gain);
