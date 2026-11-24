@@ -583,3 +583,8 @@
 - ① v588 ZOOMAUTO 렌더 승수 제거 → 기본 배율 원복(g1c 575행 복원, ZOOMAUTO 상수 삭제).
 - ② 전투(교전 추적) 시 줌만 1.8→2.5: normal profile max 상향(g11 6행) — auto 대기 targetZ=1 불변, 교전 진입 시에만 2.5로 확대. 카메라 게이트 표 2곳(160행 강도 튜플·214행 range 표) 동기 갱신.
 - RUN_GATES:ALL_OK, 라이브 칩 v589+max:2.5+ZOOMAUTO 부재 확인.
+
+### v590 (2026-11-25) 결과 화면 하단 잘림 근본 수복(사용자 요청: 버튼·테두리 30px 상향)
+- 정정: v588의 94dvh 축소가 #overlay-info(게임 방법)에 적용되어 있었고 결과 화면(#overlay-result .r-box)은 미적용 — 실제 원본 누락.
+- ui-v590 신설: #overlay-result에 padding-bottom:calc(30px + env(safe-area-inset-bottom)) — 패널 전체(금테두리+버튼) 30px 상향+기기 안전영역 자동 대응. .r-box max-height 86dvh-30px 동기 — 상단 오버플로 방지. 고정 dvh 추정식 대신 safe-area 앵커로 동적 툴바 변동 근본 대응.
+- RUN_GATES:ALL_OK, 라이브 칩 v590+ui-v590 확인.
