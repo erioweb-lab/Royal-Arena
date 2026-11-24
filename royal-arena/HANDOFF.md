@@ -510,3 +510,7 @@
 - 드롭 팝업(__raDropRoll) 등급별 스타일: 노멀 #8fa6bd 강철 테두리+펄스(raGlowN 2.2s) · 레어 #e8b053 골드+광택 스윕(raShine 1.8s ::after) · 유니크 #cf6df5 회전 그라디언트 border-box(300% 배경)+반짝임(raSparkle)+'✨ 최고 등급 ✨' 배지.
 - 공통: raDropIn 팝인 바운스 .45s, 이모지 raEmoji 펄스, rd-g/rd-e 클래스화, 스타일 #ra-drop-style 1회 주입.
 - RUN_GATES:ALL_OK, 라이브 칩·sw v575 확인.
+
+### v576 (2026-11-24) 카드 획득 팝업 하단 잘림 수복(사용자 요청)
+- .ra-drop top 16%→10% 상향(팝업 전체를 위로 이동), 패딩 16px 30px→12px 24px 축소, max-width 86vw+box-sizing:border-box로 좌우 안전 확보 — 하단 금색(레어) 테두리 잘림 방지.
+- RUN_GATES:ALL_OK, 라이브 칩·sw v576 확인.
