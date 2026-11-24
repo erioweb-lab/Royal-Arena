@@ -100,7 +100,7 @@ var __GDROPC={normal:['#8fa6bd','#22304f'],rare:['#e8b053','#4e2f10'],unique:['#
 var __DP_EXCL={0:['campfire','arrowrain'],1:['nseed'],2:['golemm']};
 function __raDropRoll(){   /* 지도 클리어 드롭 — §3.3 */
   var diff=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0, mi=(typeof __raMapIdx==='function')?__raMapIdx():0;
-  var fl='ra_map_clear_d'+diff+'_m'+((typeof __raMapIdx==='function')?__raMapIdx():0), seen=(function(){try{return JSON.parse(localStorage.getItem('ra_map_seen_v1')||'{}')}catch(e){return {}}})(), first=!seen[fl]; if(first){ seen[fl]=1; try{ localStorage.setItem('ra_map_seen_v1',JSON.stringify(seen)) }catch(e){} }   /* v564: 맵별 첫 클리어 플래그(기존 난이도당 1회 → 9맵×3난이도 각각 100%) */
+  var fl='ra_map_clear_d'+diff+'_m'+((typeof __raMapIdx==='function')?__raMapIdx():0), seen=(function(){try{return JSON.parse(localStorage.getItem('ra_map_seen_v1')||'{}')}catch(e){return {}}})(), first=!seen[fl];   /* v591: 플래그 저장은 팝업 표시 성공 후로 이동 — v564 맵별 첫 클리어(기존 난이도당 1회 → 맵×난이도 각각 100%) */
   if(!first&&Math.random()>=0.35) return;
   var pn=72,pr=23,pu=5; if(diff===1){pr+=15;} if(diff===2){pr+=15;pu+=10;}
   pr+=Math.min(mi*2,10); pu+=Math.min(mi*2,10); pn=Math.max(5,100-pr-pu);
@@ -135,7 +135,7 @@ function __raDropRoll(){   /* 지도 클리어 드롭 — §3.3 */
   var gname=g==='normal'?'노멀':g==='rare'?'레어':'유니크';
   var d=document.createElement('div'); d.className='ra-drop '+g;
   d.innerHTML='<div class="rd-g" style="color:'+col+'">'+gname+' 카드 획득!</div><div class="rd-e">'+CARDS[pick].emoji+'</div><div style="font-size:16px">'+CARDS[pick].name+'</div>'+(g==='unique'?'<div style="font-size:10px;color:#e6c0ff;margin-top:2px">✨ 최고 등급 ✨</div>':'');
-  d.onclick=function(){ d.remove(); }; document.body.appendChild(d); setTimeout(function(){ try{d.remove();}catch(e){} },6000);
+  d.onclick=function(){ d.remove(); }; document.body.appendChild(d); try{ if(first){ seen[fl]=1; localStorage.setItem('ra_map_seen_v1',JSON.stringify(seen)) } }catch(e){}   /* v591: 팝업 실제 표시 성공 후 첫클리어 확정 — 실패 시 다음 승리에서 재시도 */ setTimeout(function(){ try{d.remove();}catch(e){} },6000);
   banner('🃏 '+(isNew?'신규':'중복')+' 카드: '+CARDS[pick].name+'!',2200); sfx('win'); }catch(e){}
 }
 function __raBattleXp(win){   /* 사용 카드 육성 XP — §6.3 */
