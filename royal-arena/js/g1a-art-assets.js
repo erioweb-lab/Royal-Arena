@@ -116,9 +116,25 @@ function __raDropRoll(){   /* 지도 클리어 드롭 — §3.3 */
   var gain={normal:30,rare:60,unique:120}[g];
   try{ var m=JSON.parse(localStorage.getItem('ra_collection_v1')||'{"owned":[]}'); if(m.owned.indexOf(pick)<0){ m.owned.push(pick); localStorage.setItem('ra_collection_v1',JSON.stringify(m)); } }catch(e){}
   if(!isNew) __raAddXp(pick,gain);
-  try{ var col=__GDROPC[g][0]; var d=document.createElement('div');
-  d.style.cssText='position:fixed;left:50%;top:16%;transform:translateX(-50%);z-index:9999;background:linear-gradient(180deg,rgba(10,16,30,.96),rgba(6,10,20,.96));border:2px solid '+col+';border-radius:14px;padding:14px 26px;text-align:center;box-shadow:0 0 30px '+col+'55;font-family:Jua,sans-serif;color:#fff';
-  d.innerHTML='<div style="font-size:12px;letter-spacing:2px;color:'+col+'">'+(g==='normal'?'노멀':g==='rare'?'레어':'유니크')+' 카드 획득!</div><div style="font-size:34px;margin:4px 0">'+CARDS[pick].emoji+'</div><div style="font-size:16px">'+CARDS[pick].name+'</div><div style="font-size:11px;color:#9fb4d8;margin-top:3px">'+(isNew?'신규 획득! 덱에 편성 가능':'중복 → 재료 XP +'+gain)+'</div><div style="font-size:10px;color:#5c6e8c;margin-top:6px">탭하여 닫기</div>';
+  try{ if(!document.getElementById('ra-drop-style')){ var st=document.createElement('style'); st.id='ra-drop-style';
+  st.textContent=".ra-drop{position:fixed;left:50%;top:16%;transform:translateX(-50%);z-index:9999;background:linear-gradient(180deg,rgba(10,16,30,.97),rgba(6,10,20,.97));border-radius:16px;padding:16px 30px;text-align:center;font-family:Jua,sans-serif;color:#fff;animation:raDropIn .45s cubic-bezier(.2,1.6,.4,1) both;overflow:hidden}"
+  +".ra-drop.normal{border:2px solid #8fa6bd;box-shadow:0 0 24px rgba(143,166,189,.4),inset 0 0 18px rgba(143,166,189,.12);animation:raDropIn .45s cubic-bezier(.2,1.6,.4,1) both,raGlowN 2.2s ease-in-out .45s infinite}"
+  +".ra-drop.rare{border:2px solid #e8b053;box-shadow:0 0 30px rgba(232,176,83,.5),inset 0 0 18px rgba(232,176,83,.14);animation:raDropIn .45s cubic-bezier(.2,1.6,.4,1) both,raGlowR 1.6s ease-in-out .45s infinite}"
+  +".ra-drop.rare::after{content:'';position:absolute;inset:0;border-radius:14px;background:linear-gradient(105deg,transparent 40%,rgba(255,236,180,.35) 50%,transparent 60%);background-size:250% 100%;animation:raShine 1.8s ease-in-out .6s infinite;pointer-events:none}"
+  +".ra-drop.unique{border:3px solid transparent;background:linear-gradient(180deg,rgba(10,16,30,.97),rgba(6,10,20,.97)) padding-box,linear-gradient(120deg,#cf6df5,#7a4dff,#e05ce0,#cf6df5) border-box;background-size:auto,300% 300%;box-shadow:0 0 36px rgba(207,109,245,.6),inset 0 0 20px rgba(207,109,245,.18);animation:raDropIn .45s cubic-bezier(.2,1.6,.4,1) both,raGlowU 1.2s ease-in-out .45s infinite}"
+  +".ra-drop.unique::after{content:'';position:absolute;inset:0;border-radius:13px;background:radial-gradient(circle at 18% 22%,rgba(255,190,255,.5) 0,transparent 3px),radial-gradient(circle at 78% 14%,rgba(255,220,255,.5) 0,transparent 2.5px),radial-gradient(circle at 62% 84%,rgba(210,150,255,.5) 0,transparent 3px);animation:raSparkle 1.4s linear infinite;pointer-events:none}"
+  +".ra-drop .rd-g{font-size:12px;letter-spacing:2px}"
+  +".ra-drop .rd-e{font-size:40px;margin:4px 0;display:inline-block;animation:raEmoji 1s ease-in-out .45s infinite}"
+  +"@keyframes raDropIn{0%{opacity:0;transform:translateX(-50%) scale(.55)}100%{opacity:1;transform:translateX(-50%) scale(1)}}"
+  +"@keyframes raGlowN{0%,100%{box-shadow:0 0 18px rgba(143,166,189,.3)}50%{box-shadow:0 0 34px rgba(143,166,189,.55)}}"
+  +"@keyframes raGlowR{0%,100%{box-shadow:0 0 24px rgba(232,176,83,.4)}50%{box-shadow:0 0 46px rgba(232,176,83,.7)}}"
+  +"@keyframes raGlowU{0%,100%{box-shadow:0 0 30px rgba(207,109,245,.5)}50%{box-shadow:0 0 56px rgba(207,109,245,.85)}}"
+  +"@keyframes raShine{0%{background-position:130% 0}55%,100%{background-position:-130% 0}}"
+  +"@keyframes raSparkle{0%,100%{opacity:.25}50%{opacity:1}}"
+  +"@keyframes raEmoji{0%,100%{transform:scale(1)}50%{transform:scale(1.12) rotate(2deg)}}"; document.head.appendChild(st); }
+  var gname=g==='normal'?'노멀':g==='rare'?'레어':'유니크';
+  var d=document.createElement('div'); d.className='ra-drop '+g;
+  d.innerHTML='<div class="rd-g" style="color:'+col+'">'+gname+' 카드 획득!</div><div class="rd-e">'+CARDS[pick].emoji+'</div><div style="font-size:16px">'+CARDS[pick].name+'</div>'+(g==='unique'?'<div style="font-size:10px;color:#e6c0ff;margin-top:2px">✨ 최고 등급 ✨</div>':'');
   d.onclick=function(){ d.remove(); }; document.body.appendChild(d); setTimeout(function(){ try{d.remove();}catch(e){} },6000);
   banner('🃏 '+(isNew?'신규':'중복')+' 카드: '+CARDS[pick].name+'!',2200); sfx('win'); }catch(e){}
 }
