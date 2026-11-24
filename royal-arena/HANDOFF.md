@@ -524,3 +524,8 @@
 - 근접 5종(knight·prince·valk·skarmy·lordknight)+boss: 기존 idle 스프라이트 -i 참조로 7포즈 시트(가드→위유업→만류→스윙시작→임팩트→팔로우스루→리커버리) gpt-image-2 21:9 생성 6장 → 7분할·마젠타 키잉(임계96)·바운딩 크롭·256px 정규화 42장, 전 프레임 알파>40 검증 통과.
 - ATK7 등록(assets/ra_frame_<u>_atk0~6.png), 기존 _atk 단일 프레임 폴백 유지. 스왑 로직 확장은 v579.
 - RUN_GATES:ALL_OK, 라이브 칩·sw v578+프레임 200 확인.
+
+### v579 (2026-11-24) 7단 공격 프레임 재생 로직(1차 완성)
+- g1b 렌더: ATK7 6종(knight·prince·valk·skarmy·lordknight·boss) swing 타이머(근접 0.45s·원거리 0.3s)를 7등분해 atk0(가드)→atk4(임팩트)→atk6(리커버리) 순차 표시. 전 프레임 로드 실패 시 기존 단일 _atk 폴백(__seqOn).
+- 데미지 판정·cd=hs 타이밍 무변경 — 밸런스 영향 없음.
+- RUN_GATES:ALL_OK, 라이브 칩·sw v579+seq 로직 확인.
