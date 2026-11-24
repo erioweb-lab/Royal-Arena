@@ -132,11 +132,12 @@ function __raDropRoll(){   /* 지도 클리어 드롭 — §3.3 */
   +"@keyframes raShine{0%{background-position:130% 0}55%,100%{background-position:-130% 0}}"
   +"@keyframes raSparkle{0%,100%{opacity:.25}50%{opacity:1}}"
   +"@keyframes raEmoji{0%,100%{transform:scale(1)}50%{transform:scale(1.12) rotate(2deg)}}"; document.head.appendChild(st); }
+  var col=(window.__GDROPC&&__GDROPC[g])?__GDROPC[g][0]:'#e8b053';   /* v594: 미정의 col(ReferenceError→무음 catch 소실→팝업 항상 미표시) 근본 수복 */
   var gname=g==='normal'?'노멀':g==='rare'?'레어':'유니크';
   var d=document.createElement('div'); d.className='ra-drop '+g;
   d.innerHTML='<div class="rd-g" style="color:'+col+'">'+gname+' 카드 획득!</div><div class="rd-e">'+CARDS[pick].emoji+'</div><div style="font-size:16px">'+CARDS[pick].name+'</div>'+(g==='unique'?'<div style="font-size:10px;color:#e6c0ff;margin-top:2px">✨ 최고 등급 ✨</div>':'');
   d.onclick=function(){ d.remove(); }; document.body.appendChild(d); try{ if(first){ seen[fl]=1; localStorage.setItem('ra_map_seen_v1',JSON.stringify(seen)) } }catch(e){}   /* v591: 팝업 실제 표시 성공 후 첫클리어 확정 — 실패 시 다음 승리에서 재시도 */ setTimeout(function(){ try{d.remove();}catch(e){} },6000);
-  banner('🃏 '+(isNew?'신규':'중복')+' 카드: '+CARDS[pick].name+'!',2200); sfx('win'); }catch(e){}
+  banner('🃏 '+(isNew?'신규':'중복')+' 카드: '+CARDS[pick].name+'!',2200); sfx('win'); }catch(__rdErr){ try{ console.error('[ra-drop]',__rdErr); }catch(_e){} try{ if(typeof banner==='function'){ banner('⚠ 카드 획득 표시 오류 — 재접속 필요',2400); } }catch(_e){} }   /* v594: 무음 catch 금지 — 오류 가시화(재발방지) */
 }
 function __raBattleXp(win){   /* 사용 카드 육성 XP — §6.3 */
   try{ var used=S.__used||{}; var cb=parseInt((document.getElementById('crowns-blue')||{}).textContent||'0',10)||0;

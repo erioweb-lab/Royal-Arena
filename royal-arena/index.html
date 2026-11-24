@@ -1088,6 +1088,10 @@ html body #overlay-info .step .d em{color:#9fd4ff;font-style:normal}</style>
 #overlay-result{padding:calc(env(safe-area-inset-top,0px) + 10px) 10px calc(env(safe-area-inset-bottom,0px) + 10px)!important;box-sizing:border-box!important}
 html body #overlay-result .r-box{max-height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 44px)!important;margin:0 auto!important}
 </style>
+<style id="ui-result-final">/* v593: 승패 화면 레이아웃 통합(파일 최후 배치로 선행 규칙 일괄 우선) — ①vh→dvh(모바일 하단 툴바 영역 제외 뷰포트) ②safe-area 상하 패딩 ③테두리+버튼 하단 44px 여유 확보. 선행 v505/v412b/v590/v335 등 레이아웃 규칙은 본 블록이 덮음 */
+#overlay-result{padding:calc(env(safe-area-inset-top,0px) + 10px) 10px calc(env(safe-area-inset-bottom,0px) + 10px)!important;box-sizing:border-box!important}
+html body #overlay-result .r-box{max-height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 44px)!important;margin:0 auto!important}
+</style>
 </head>
 <body>
 
@@ -1223,7 +1227,7 @@ html body .info-box #btn-info-close{
   z-index:2 !important}
 html body .info-box #btn-info-close,html body .info-box #btn-info-close *{color:#2b1c05 !important;text-shadow:none !important}
 </style><style id="ui-v507">/* v507: 타이틀 zoom 핏터 상한 — 도움말 닫기 후 메인이 0.8까지 눌리는 급축소 차단(최소 0.93·한 번에 최대 4% 보정) */
-</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v593</div><div id="app">
+</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v594</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1599,7 +1603,7 @@ b.style.setProperty('background-size','auto,100% 100%','important');b.style.setP
 html body #rpane-score{overflow-y:auto !important;max-height:46vh !important;-webkit-overflow-scrolling:touch !important}
 html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;white-space:pre-line !important;word-break:keep-all !important;overflow-wrap:anywhere !important;text-align:right !important;max-width:200px !important;font-weight:600 !important}
 </style>
-<script src="js/g1a-art-assets.js?v=593"></script><script src="js/g1b-art-assets.js?v=593"></script><script src="js/g1c-art-assets.js?v=593"></script>
+<script src="js/g1a-art-assets.js?v=594"></script><script src="js/g1b-art-assets.js?v=594"></script><script src="js/g1c-art-assets.js?v=594"></script>
 
 
 
@@ -1611,7 +1615,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g2-sprite-assets.js?v=593"></script>
+<script src="js/g2-sprite-assets.js?v=594"></script>
 <script id="ui-v510-js">/* v510: 지도·난이도 해금 단일 진실원 — 난이도별 맵 사다리 분리(단계별 해금). 악몽 해금=노멀 전맵 토벌(ra_map_clear_d0>=마지막 idx), 지옥=악몽 전맵 토벌(ra_map_clear_d1>=마지막 idx). 맵 해금은 현재 난이도 사다리에서 순차(clear_d+1). 표시순서≠사다리순서라 이름 매칭으로 사다리 idx 산출(v431 표시-idx 기록 버그 근본 수복). 기존 ra_map_clear_v1은 d0 마이그레이션 원천. */
 (function(){
  function MK(){ return {
@@ -1696,7 +1700,7 @@ setInterval(function(){
 
 
 
-<script src="js/g3-frame-assets.js?v=593"></script>
+<script src="js/g3-frame-assets.js?v=594"></script>
 
 
 
@@ -1707,7 +1711,7 @@ setInterval(function(){
 
 
 
-<script src="js/g4-ux-data.js?v=593"></script>
+<script src="js/g4-ux-data.js?v=594"></script>
 
 
 
@@ -1718,7 +1722,7 @@ setInterval(function(){
 
 
 
-<script src="js/g5-core.js?v=593"></script>
+<script src="js/g5-core.js?v=594"></script>
 
 
 
@@ -1729,19 +1733,7 @@ setInterval(function(){
 
 
 
-<script src="js/g6-battle.js?v=593"></script>
-
-
-
-
-
-
-
-
-
-
-
-<script src="js/g7-ui-systems.js?v=593"></script>
+<script src="js/g6-battle.js?v=594"></script>
 
 
 
@@ -1753,7 +1745,19 @@ setInterval(function(){
 
 
 
-<script src="js/g8-boot.js?v=593"></script><script src="js/g9-wide.js?v=593"></script><script src="js/g10-techtree.js?v=593"></script><script src="js/g11-camera.js?v=593"></script><script src="js/g12-camera-ui.js?v=593"></script>
+<script src="js/g7-ui-systems.js?v=594"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script src="js/g8-boot.js?v=594"></script><script src="js/g9-wide.js?v=594"></script><script src="js/g10-techtree.js?v=594"></script><script src="js/g11-camera.js?v=594"></script><script src="js/g12-camera-ui.js?v=594"></script>
 
 
 
