@@ -539,3 +539,8 @@
 - 근본 원인: v578 ATK7 등록은 FRAMES preload onload의 __valid 마킹을 통과하지 않아 __ok7의 im.__valid!==false가 항상 false → seq 스킵, v546 폴백(atk2/atk3 2프레임 보간)이 계속 재생. v580의 0.55s 확장은 무효였음.
 - 수복: __ok7을 로드 완료(complete·naturalWidth)만 확인하도록 교정. 60fps 모의실행 시퀀스 [1,2,3,4,5,6] 전구간 재생 확인.
 - RUN_GATES:ALL_OK, 라이브 칩·sw v581 확인.
+
+### v582 (2026-11-24) 공격모션 일원화(제보 3회차 — 흩어진 분기 통합)
+- 점검 결과: 공격모션 코드가 4곳에 흩어져 상호 충돌 — ①v579 ATK7 시퀀스 ②v546 atk2/atk3 보간(폴백) ③ATK3 3프레임 aimF 분기(g1b 883~896행, ATK3.knight·prince 등 img_211~219) ④boss 전용 ATK3.boss 분기. aimF 분기가 ATK7보다 먼저 그려져 3프레임 시트(img_211~213)가 7프레임을 덮었음 — '2프레임처럼 보임'의 실제 원인.
+- 수복: aimF 정의에 게이트 추가 — ATK7 7장 전부 로드된 유닛은 aimF 분기 자체를 우회 → 시퀀스 단일 경로. 기존 3프레임 시트·폴백은 ATK7 미보유 유닛(giant 등)에만 유지.
+- RUN_GATES:ALL_OK, 라이브 칩·sw v582 확인.
