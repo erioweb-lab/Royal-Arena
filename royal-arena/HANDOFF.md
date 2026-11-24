@@ -602,3 +602,10 @@
 - 사용자 기기 실측(캡처 판독): 상단 주소창 ~260px·하단 툴바+내비게이션 ~300px/2400px — 가시 영역 77%. 기존 결함: 후반 블록(2491행) max-height:calc(100vh - 28px)이 v590을 덮어씀 — vh는 하단 툴바 영역 포함 값이라 테두리가 툴바 뒤로 넘어감.
 - ui-result-final 신설(파일 최후 배치 → 선행 v505/v412b/v590/v335 레이아웃 규칙 일괄 우선): ①overlay 패딩 safe-area 상하+10px ②r-box max-height=100dvh - safe-area상하 - 44px(vh→dvh 근본 교정) ③margin 0 auto(선행 margin:…118px/108px 상충 제거).
 - playwright 실측 3뷰포트(360x640·360x740·412x915): r-box 하단 여유 +51~73px, 넘침 0. 스크린샷 판독으로 테두리 하단 완결 확인. RUN_GATES:ALL_OK, 라이브 칩 v593.
+
+### v594 (2026-11-25) 카드획득 미표시 근본 원인 수복+재발방지(사용자 제보: 첫 완료 지도 팝업 없음)
+- 진단(playwright 재현): 첫클리어 강제 10회 → 팝업 표시 0/10, 플래그 미저장. 원인: __raDropRoll 내 .rd-g 색상 변수 col이 정의 없이 참조(87행 __col은 별개) → ReferenceError → 함수 전체 무음 catch(e){}가 소실 → 배너·팝업·플래그 전부 미실행. 과거 '재클리어 35% 확률' 설명과 무관하게 팝업이 원래 거의 안 뜨던 결함이었음(v577·v591 제보 동일 근원).
+- 수정: ①var col=__GDROPC[g][0] 정의 삽입 ②무음 catch → console.error('[ra-drop]')+배너('⚠ 카드 획득 표시 오류') 가시화.
+- 재발방지: tests/test_card_drop.py 신설(첫클리어 20회 강제 → 팝업 20/20+플래그 저장 단언) — run_gates에 편입, 미표시 재발 시 게이트 FAIL.
+- 사용자 지적 '다른 코드' 확인: g1-art-assets.js(구버전)는 로드 체인에 없음(g1a/b/c만 로드) — showResult 중복은 g1b+index.html v505-js 래퍼 2계층 정상. v593 레이아웃 블록도 유지.
+- RUN_GATES:ALL_OK, 라이브 칩 v594+col fix 확인.
