@@ -529,11 +529,14 @@ function aiTick(dt){
   if(threats.length){
     let main=threats[0]; for(const t of threats) if(t.hp>main.hp) main=t;
     const anyFly=threats.some(t=>t.c.flying), tank=main.hp>=900;
-    const prio= anyFly?['musketeer','wizard','babyd','sniper','archers','minions']
+    const __sp=firstIn(hand,['meteor','plasma']);   /* v570: 적군 AOE 주문이 아군에게 시전되지 않던 현상 수복 — 위협군에 유성우·플라즈마 조준 추가(탱커 or 3기 이상) */
+    if(__sp&&(tank||threats.length>=3)){ pick=__sp; px=clamp(main.x,1.5,16.5); py=clamp(main.y,2.5,15.5); }
+    else{    const prio= anyFly?['musketeer','wizard','babyd','sniper','archers','minions']
              : tank?['skarmy','minions','cannon','valk','boar','bomber','wizard','knight','archers']
              :['knight','valk','archers','skarmy','musketeer','bomber','icem','cleric','wizard','minions'];
     pick=firstIn(hand,prio);
     px=clamp(main.x,2,16); py=clamp(main.y-3.2,2.5,14.5);
+    }
     if(pick==='cannon') py=clamp(main.y-5,3,12);
   } else {
     const cl=bestCluster(units.filter(u=>u.team==='blue'),1.9);
