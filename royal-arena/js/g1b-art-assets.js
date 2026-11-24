@@ -854,7 +854,7 @@ function drawUnit(u){try{
    const __fI=(typeof FRAMES!=='undefined')?FRAMES[u.key+'_idle']:null;const __fA=(typeof FRAMES!=='undefined')?FRAMES[u.key+'_atk']:null;const fOK=__fI&&__fI.complete&&__fI.naturalWidth>0&&__fI.__valid!==false;   /* v174: C안 전신 프레임 */var __ff=(u.swing>0)?__fA:__fI; var __seqOn=false;
   try{ var __S7=(typeof ATK7!=='undefined')?ATK7[u.key]:null;   /* v579: 7단 공격 프레임 시퀀스 */
   if(__S7&&u.swing>0){ var __ok7=__S7.every(function(im){return im&&im.complete&&im.naturalWidth>0&&im.__valid!==false;});
-    if(__ok7){ var __sw=(u.c.range>1.6?0.3:0.45), __ph=1-Math.min(1,u.swing/__sw);   /* swing 타이머 실제값(0.3/0.45s) 기준 */   /* swing: 남은 시간 — 0(히트)→1(시작) */
+    if(__ok7){ var __swc=Math.max((u.c.range>1.6?0.3:0.45),0.55), __ph=1-Math.min(1,u.swing/__swc);   /* swing 타이머 실제값(0.3/0.45s) 기준 */   /* swing: 남은 시간 — 0(히트)→1(시작) */
       var __fi=Math.min(6,Math.floor(__ph*7)); __ff=__S7[__fi]; __seqOn=true; } } }catch(e){}
   try{ if(!__seqOn&&u.swing>0&&u.key!=='boss'){ var __s2=FRAMES[u.key+'_atk2'], __s3=FRAMES[u.key+'_atk3']; var __ok2=__s2&&__s2.complete&&__s2.naturalWidth>0&&__s2.__valid!==false, __ok3=__s3&&__s3.complete&&__s3.naturalWidth>0&&__s3.__valid!==false; if(__ok2||__ok3){ __seqOn=true; var __pS=1-u.swing/(u._swd||0.3); __ff=__pS<0.34?(__ok2?__s2:__fI):(__pS<0.67?((__fA&&__fA.complete&&__fA.naturalWidth>0&&__fA.__valid!==false)?__fA:__fI):(__ok3?__s3:__fI)); } } }catch(e){} try{ if(!__seqOn&&!u.swing&&u.key!=='boss'){ var __w1=FRAMES[u.key+'_walk'], __mw=(!u.c.flying&&u.target&&dist(u,u.target)>u.c.range+u.target.r); if(__mw&&__w1&&__w1.complete&&__w1.naturalWidth>0&&__w1.__valid!==false) __ff=__w1; } }catch(e){}   /* v303: 이동 포즈 — 공격 중 우선, 부재분 idle 폴백 */
   ctx.save(); ctx.translate(cx0,cy0);
