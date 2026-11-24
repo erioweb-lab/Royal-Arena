@@ -481,3 +481,8 @@
 - 캡처 판독: ①하단 잘림 없음(다음 스테이지·메인으로 버튼 온전 표시 — r-box max-height 게이트 정상) ②결과 오버레이 뒤 전투 화면 인터페이스(숫자·텍스트)가 반투명하게 비침 — '화면이 하나 실행 후 전환되는' 이중 화면 느낌의 원인.
 - 수복: #overlay-result:not(.hidden) 배경 rgba(6,10,20,.94)+backdrop-blur 6px, ::before 배경이미지 투명도 42→30%.
 - RUN_GATES:ALL_OK, 라이브 칩·sw v569 확인.
+
+### v570 (2026-11-24) 기사 공격모션 교체+적군 AOE 시전 수복(사용자 요청)
+- ①기사(knight)·기사단장(lordknight) 공격모션: 기존 knight_atk는 구형 img_152, lordknight는 atk 프레임 부재 → ra_spr_lordknight.png -i 참조로 칼 휘두르기 포즈 생성(gpt-image-2), 코너 플러드필 키잉(투명 57.5/60.8%), 256px → knight_atk 교체+lordknight_atk 신규 등록.
+- ②적군 AOE 미시전 원인: AI 조준 로직에 유성우·플라즈마가 유닛 우선순위에 없음(fireball/zap만 bestCluster 조건부) → 위협군 존재 시(탱커 hp>=900 또는 3기 이상) 손에 있으면 main 위협 위치에 조준하는 분기 추가.
+- RUN_GATES:ALL_OK, 라이브 칩·sw·프레임 에셋 200 확인.
