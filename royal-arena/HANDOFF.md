@@ -534,3 +534,8 @@
 - 원인: v579가 swing 타이머 실제값(근접 0.45s·원거리 0.3s)을 7등분 → 프레임당 43~64ms로 육안에 1~2프레임만 인지.
 - 수복: 시퀀스 전용 지속 __swc=max(swing,0.55s) → 프레임당 79ms(60fps 약 5프레임), atk0~6 전부 보임. 데미지 판정·cd=hs 무변경.
 - RUN_GATES:ALL_OK, 라이브 칩·sw v580 확인.
+
+### v581 (2026-11-24) 7프레임 시퀀스 미적용 근본 원인 수복(제보 2회차 — 모의실행 확인)
+- 근본 원인: v578 ATK7 등록은 FRAMES preload onload의 __valid 마킹을 통과하지 않아 __ok7의 im.__valid!==false가 항상 false → seq 스킵, v546 폴백(atk2/atk3 2프레임 보간)이 계속 재생. v580의 0.55s 확장은 무효였음.
+- 수복: __ok7을 로드 완료(complete·naturalWidth)만 확인하도록 교정. 60fps 모의실행 시퀀스 [1,2,3,4,5,6] 전구간 재생 확인.
+- RUN_GATES:ALL_OK, 라이브 칩·sw v581 확인.
