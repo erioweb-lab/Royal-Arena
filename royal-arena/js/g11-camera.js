@@ -43,7 +43,6 @@
     c.z=bound(finite(c.z)?c.z:1,1,3);
     const p=limits(c.z,finite(c.x)?c.x:W/2,finite(c.y)?c.y:H/2);
     c.x=p.x; c.y=p.y;
-    c.__outZ=(c.z*2.5>3)?3:c.z*2.5;   /* v588: 자동전투 줌 배율 2.5배(사용자 요청) — 출력 z에만 승수, 내부 로직·게이트 불변 */
     return c;
   }
   function clearFocus(){ state.focus=null; state.pending=null; S.focus=null; }
@@ -168,7 +167,14 @@
     if(!active()||!e||!finite(dmg)||dmg<=0) return;
     const p=entityPoint(e);
     if(e.isTower&&e.team==='blue'&&fromTeam==='red'&&p) state.hits.set(e,{x:p.x,y:p.y,until:clock()+2});
-    if(state.mode!=='auto'||fromSpell===true||boss(e)||boss(source)) return;
+    if(state.mode!=='auto'||fromSpell===true) return;
+    if(boss(e)||boss(source)){   /* v595: 보스 교전 줌인(사용자 요청) — 보스 전용 고점수 이벤트로 추적 */
+      const bE=boss(e)?e:source, other=boss(e)?(source||(e.target&&e.target.team!==e.team&&!e.target.dead?e.target:null)):(e&&!e.dead?e:null);
+      const pe=entityPoint(bE); if(!pe) return;
+      const po=other?entityPoint(other):null;
+      offer({a:bE,b:other||bE,x:po?(pe.x+po.x)/2:pe.x,y:po?(pe.y+po.y)/2:pe.y,score:3.2+Math.min(dmg,300)/150,lastHit:state.time,expires:state.time+1.6});
+      return;
+    }
     // 실제 근접/투사체 출처 우선. 출처 없는 오래된 호출은 반격 대상만 사용한다.
     const attacker=source||(e.target&&e.target.team===fromTeam?e.target:null);
     if(!attacker||attacker.team===e.team||boss(attacker)) return;
@@ -304,6 +310,7 @@
   function pointerDown(e){
     if(!active()||(e.button!=null&&e.button!==0)||!finite(e.clientX)||!finite(e.clientY)) return;
     if(state.points.size===0){ state.suppressed=false; state.gesture=null; } state.manualIdle=0;   // v535
+    if(state.mode==='auto'&&state.focus&&state.points.size===0){ clearFocus(); state.pending=null; state.quietUntil=state.time+0.4; aim(W/2,H/2,1); }   /* v595: 줌 추적 중 화면 터치 → 1.0배 복귀(사용자 요청) */
     state.points.set(e.pointerId,{x:e.clientX,y:e.clientY,startX:e.clientX,startY:e.clientY,moved:false});
     try{ canvas.setPointerCapture(e.pointerId); }catch(err){}
     if(state.points.size>=2){ beginPinch(); e.preventDefault(); }

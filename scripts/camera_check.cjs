@@ -113,8 +113,8 @@ gate('1.2 실제 evtPos·단일 탭·카드 드래그 원점',()=>{
   h.eval('dragFrom=0;dragPointerId=7;P.sel=0;');
   h.emit('pointerup',{...h.client(9,21),pointerId:8});eq(h.c.deploys.length,1,'다른 포인터가 카드 드래그 배치 불가');
   h.emit('pointerup',{...h.client(9,21),pointerId:7});eq(h.c.deploys.length,2,'기존 카드→전장 드래그 배치 유지');
-  const a=harness(),p2=pair();strike(a,p2);const since=a.api.snapshot().trackingSince;
-  a.emit('pointerdown',a.client(9,20));eq(a.api.snapshot().trackingSince,since);eq(a.api.snapshot().mode,'auto');
+  const a=harness(),p2=pair();strike(a,p2);eq(a.api.snapshot().tracking,true);
+  a.emit('pointerdown',a.client(9,20));eq(a.api.snapshot().tracking,false);near(a.api.snapshot().targetZ,1);eq(a.api.snapshot().mode,'auto');   /* v595: 줌 추적 중 터치 → 1.0배 복귀 */
 });
 gate('1.3 드래그 CSS 배율·취소·휠·잔여 손가락 배치 차단',()=>{
   for(const bitmap of [1,2,3]){
@@ -151,9 +151,10 @@ gate('2.1 자동 중요도 임계값·주문·보스 제외',()=>{
   const h=harness(),p=pair();h.api.setIntensity('low');strike(h,p,10);eq(h.api.snapshot().tracking,false);
   strike(h,p,120);eq(h.api.snapshot().tracking,true);
   h.api.reset();h.api._onDamage(p[1],300,'blue',true,p[0]);eq(h.api.snapshot().tracking,false);
-  h.c.S.boss=p[1];strike(h,p);h.c.raFocus(100,100,2,p[1],true);eq(h.api.snapshot().tracking,false);
-  h.c.S.boss=p[0];strike(h,p);eq(h.api.snapshot().tracking,false);
-  h.c.S.boss=null;h.c.S.spellQuiet=.2;strike(h,p);eq(h.api.snapshot().tracking,false);h.run(.3);strike(h,p);eq(h.api.snapshot().tracking,true);
+  h.c.S.boss=p[1];strike(h,p);eq(h.api.snapshot().tracking,true);   /* v595: 보스 교전 줌인(사용자 요청) */
+  h.c.raFocus(100,100,2,p[1],true);   /* v595: 강제 포커스는 여전히 보스 정책 우회 금지 */
+  h.c.S.boss=p[0];strike(h,p);eq(h.api.snapshot().tracking,true);
+  h.c.S.boss=null;h.c.S.spellQuiet=.2;strike(h,p);h.run(.3);strike(h,p);eq(h.api.snapshot().tracking,true);
 });
 let minDwell=Infinity,maxSpeed=0;
 gate('2.2 가변 줌·bounding·deadzone·속도 상한·감시견 제거',()=>{
