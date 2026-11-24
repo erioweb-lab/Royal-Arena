@@ -100,7 +100,7 @@ var __GDROPC={normal:['#8fa6bd','#22304f'],rare:['#e8b053','#4e2f10'],unique:['#
 var __DP_EXCL={0:['campfire','arrowrain'],1:['nseed'],2:['golemm']};
 function __raDropRoll(){   /* 지도 클리어 드롭 — §3.3 */
   var diff=parseInt(localStorage.getItem('ra_diff_v1')||'0',10)||0, mi=(typeof __raMapIdx==='function')?__raMapIdx():0;
-  var fl='ra_map_clear_d'+diff+'_m'+((typeof __raMapIdx==='function')?__raMapIdx():0), first=!localStorage.getItem(fl);   /* v564: 맵별 첫 클리어 플래그(기존 난이도당 1회 → 9맵×3난이도 각각 100%) */
+  var fl='ra_map_clear_d'+diff+'_m'+((typeof __raMapIdx==='function')?__raMapIdx():0), seen=(function(){try{return JSON.parse(localStorage.getItem('ra_map_seen_v1')||'{}')}catch(e){return {}}})(), first=!seen[fl]; if(first){ seen[fl]=1; try{ localStorage.setItem('ra_map_seen_v1',JSON.stringify(seen)) }catch(e){} }   /* v564: 맵별 첫 클리어 플래그(기존 난이도당 1회 → 9맵×3난이도 각각 100%) */
   if(!first&&Math.random()>=0.35) return;
   var pn=72,pr=23,pu=5; if(diff===1){pr+=15;} if(diff===2){pr+=15;pu+=10;}
   pr+=Math.min(mi*2,10); pu+=Math.min(mi*2,10); pn=Math.max(5,100-pr-pu);
