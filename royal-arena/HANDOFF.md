@@ -588,3 +588,8 @@
 - 정정: v588의 94dvh 축소가 #overlay-info(게임 방법)에 적용되어 있었고 결과 화면(#overlay-result .r-box)은 미적용 — 실제 원본 누락.
 - ui-v590 신설: #overlay-result에 padding-bottom:calc(30px + env(safe-area-inset-bottom)) — 패널 전체(금테두리+버튼) 30px 상향+기기 안전영역 자동 대응. .r-box max-height 86dvh-30px 동기 — 상단 오버플로 방지. 고정 dvh 추정식 대신 safe-area 앵커로 동적 툴바 변동 근본 대응.
 - RUN_GATES:ALL_OK, 라이브 칩 v590+ui-v590 확인.
+
+### v591 (2026-11-25) 카드획득 팝업 미표시 원인 확인+첫클리어 플래그 결함 수복(사용자 제보)
+- 원인 1(설계): 재클리어는 65% 확률로 드롭 자체가 없음(g1a 104행 Math.random()>=0.35 return) — 배너·팝업 모두 정상 부재.
+- 원인 2(결함, 수정): 첫클리어 플래그(seen[fl]=1)가 롤 직전 무조건 저장됨 — 이후 풀 비심/예외로 팝업 표시가 실패해도 플래그가 소실되어 해당 맵이 영구히 '재클리어'(35%)로 강등됨. v591: 플래그 저장을 document.body.appendChild(d) 성공 직후로 이동 — 표시 실패 시 다음 승리에서 첫클리어 재시도.
+- RUN_GATES:ALL_OK, 라이브 칩 v591+플래그 이동 확인.
