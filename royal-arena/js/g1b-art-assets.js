@@ -880,7 +880,7 @@ function drawUnit(u){try{
   if(moving){ ctx.rotate(step*0.06); ctx.scale(1,1-Math.abs(step)*0.035); }
   { const shL=r*(u.key==='cannon'?2.55:3.6); if(!fOK) limbLegs(u,moving,shL); }   /* v157: 다리 스윙 — 스프라이트 뒤 */
   const hop=(!u.c.flying&&u.target&&dist(u,u.target)>u.c.range+u.target.r)?Math.abs(Math.sin(now*7.5+u.bob))*2.6:0;
-  if(sprOK){ const sh=r*(u.key==='cannon'?2.55:3.6), __rig=(typeof PARTS!=='undefined')&&(PARTS[u.key+'_arm']&&PARTS[u.key+'_arm'].__valid!==false||PARTS[u.key+'_leg']&&PARTS[u.key+'_leg'].__valid!==false), aimF=(!__rig)&&(u.swing>0)&&ASPR[u.key]&&ASPR[u.key].complete;
+  if(sprOK){ const sh=r*(u.key==='cannon'?2.55:3.6), __rig=(typeof PARTS!=='undefined')&&(PARTS[u.key+'_arm']&&PARTS[u.key+'_arm'].__valid!==false||PARTS[u.key+'_leg']&&PARTS[u.key+'_leg'].__valid!==false), aimF=(!__rig)&&(u.swing>0)&&ASPR[u.key]&&ASPR[u.key].complete&&!(typeof ATK7!=='undefined'&&ATK7[u.key]&&ATK7[u.key].every(function(im){return im&&im.complete&&im.naturalWidth>0;}));   /* v582: ATK7 7프레임 보유 유닛은 3프레임 aimF 분기 미사용 — 공격모션 일원화 */
     if(!moving&&!u.c.flying){ const br=1+Math.sin(now*2.6+u.bob)*0.018; ctx.scale(br,2-br); }
     const punch=u.swing>0?1+Math.sin(u.swing*Math.PI)*0.16:1;
     ctx.save(); ctx.scale(punch,punch);
