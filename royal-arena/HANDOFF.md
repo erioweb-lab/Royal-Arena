@@ -609,3 +609,10 @@
 - 재발방지: tests/test_card_drop.py 신설(첫클리어 20회 강제 → 팝업 20/20+플래그 저장 단언) — run_gates에 편입, 미표시 재발 시 게이트 FAIL.
 - 사용자 지적 '다른 코드' 확인: g1-art-assets.js(구버전)는 로드 체인에 없음(g1a/b/c만 로드) — showResult 중복은 g1b+index.html v505-js 래퍼 2계층 정상. v593 레이아웃 블록도 유지.
 - RUN_GATES:ALL_OK, 라이브 칩 v594+col fix 확인.
+
+### v595 (2026-11-25) 줌 중 터치 1.0배 복귀+보스 교전 줌인(사용자 요청)
+- ① 터치 복귀: pointerDown에서 auto 모드·교전 추적(state.focus) 중 첫 터치 시 clearFocus+quietUntil 0.4s+aim(W/2,H/2,1) — 카메라가 1.0배 전체 보기로 복귀. 팬·핀치 기존 수동 전환 로직 불변. 게이트 1.2 터치 정책 갱신(추적 유지→1.0 복귀 단언).
+- ② 보스 줌인: 기존 정책은 보스 관련 피격 이벤트를 추적에서 완전 제외(eventFrame null·onDamage return) → onDamage에 보스 전용 분기 신설: boss(e)/boss(source) 피격 시 score 3.2+dmg/150 고점수 이벤트로 offer — 보스 교전 시 profile.max(노멀 2.5)까지 줌인. 보스 처치 시 기존 _bossDefeated로 1.0 복귀.
+- ③ 카메라 게이트 보스 정책 갱신(154~156행): 보스 교전 추적 false→true 단언, 강제 포커스(raFocus) 보스 우회 금지 유지.
+- ④ v588 잔여 __outZ 사死 코드 제거, ui-result-final 중복 블록 정리.
+- RUN_GATES:ALL_OK, 라이브 칩 v595+카메라 갱신 확인.

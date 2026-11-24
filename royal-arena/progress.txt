@@ -95,3 +95,4 @@ v591 (2026-11-25): 첫클리어 플래그 팝업 성공 후 저장으로 이동(
 v592 (2026-11-25): 카드 획득 실패 배너 추가. RUN_GATES:ALL_OK, 라이브 v592.
 v593 (2026-11-25): 승패 화면 vh→dvh 통합+safe-area. playwright 실측 넘침 0. RUN_GATES:ALL_OK, 라이브 v593.
 v594 (2026-11-25): col 미정의 ReferenceError 근본 수복+무음 catch 가시화+회귀 테스트 게이트 편입. RUN_GATES:ALL_OK, 라이브 v594.
+v595 (2026-11-25): 줌 중 터치 1.0배 복귀+보스 교전 줌인+게이트 정책 갱신. RUN_GATES:ALL_OK, 라이브 v595.
