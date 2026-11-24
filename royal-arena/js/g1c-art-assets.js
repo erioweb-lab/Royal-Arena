@@ -572,7 +572,7 @@ function render(){
     const __bg2=(typeof GT_IM!=='undefined')&&GT_IM[S.theme]; if(__bg2&&__bg2.complete&&__bg2.naturalWidth) ctx.drawImage(__bg2,0,0,VW,VH);   /* v396: 텍스처 연장 커버 복원 — bgc 결함 시에도 텍스처가 그 자리를 채움 */
   }catch(__e){}
   { const cam=S.cam||{x:W/2,y:H/2,z:1};
-    var __zo=(cam.z||1)*(window.ZOOMAUTO||1); __zo=Math.min(__zo,3); ctx.translate(VW/2,VH/2); ctx.scale(__zo,__zo); ctx.translate(-cam.x,-cam.y); }   /* v588: 자동전투 줌 배율 2.5배(ZOOMAUTO) */
+    ctx.translate(VW/2,VH/2); ctx.scale(cam.z,cam.z); ctx.translate(-cam.x,-cam.y); }
   ctx.drawImage(bgc,-BAND,0,VW,VH); try{for(const f of fx) if(ZK.has(f.kind)) drawFx(f);}catch(__e){} tilehlDraw(ctx);   /* v404: 지면 존(눈보라·분화구·맹독 등)은 유닛·타워·보스 아래에서 렌더 — 가림 제거 */   /* v399: 합성 dest x=-BAND — bgc 내부 +BAND 쉬프트 상쇄(지면+2BAND 우편위 해소), 화면 0..BAND 언더레이어 노출(좌측 밝은 올리브 띠) 제거 */   /* v149 */
   const T=THEMES[S.theme];
   ctx.strokeStyle=T.spark; ctx.lineWidth=S.theme==='lava'?3:2;

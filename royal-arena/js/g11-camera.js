@@ -3,7 +3,7 @@
   'use strict';
   const profiles={
     low:{min:1.2,max:1.5,speed:2.5,zoom:0.35,threshold:1.65},
-    normal:{min:1.3,max:1.8,speed:4,zoom:0.5,threshold:1.35},
+    normal:{min:1.3,max:2.5,speed:4,zoom:0.5,threshold:1.35},   /* v589: 교전 추적 줌 1.8→2.5(사용자 요청) — 기본 배경 targetZ=1은 불변 */
     high:{min:1.4,max:2,speed:5.5,zoom:0.7,threshold:1.2}
   };
   const finite=Number.isFinite, bound=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -349,8 +349,7 @@
     state.suppressed=state.points.size>0; cancelCardDrag();
     anchorZoom(Math.exp(bound(-e.deltaY*unit*0.0015,-0.5,0.5)),anchor,e); e.preventDefault();
   }
-  window.ZOOMAUTO=2.5;   /* v588: 자동전투 줌 배율 2.5배(사용자 요청) — 렌더 전용 승수, 카메라 상태·게이트 무영향 */
-window.RACamera=Object.freeze({setMode,zoomBy,setIntensity,toggleMap,jumpTo,snapshot,reset,update,subscribe,
+  window.RACamera=Object.freeze({setMode,zoomBy,setIntensity,toggleMap,jumpTo,snapshot,reset,update,subscribe,
     // 엔진 전용 어댑터. UI는 위 공개 메서드 + snapshot만 사용한다.
     _onDamage:onDamage,_focus:legacyFocus,_bossDefeated:bossDefeated,_matchEnd:matchEnd,_resize:resize,
     _clientToWorld:clientToWorld,_pointerDown:pointerDown,_pointerMove:pointerMove,_pointerUp:pointerUp,

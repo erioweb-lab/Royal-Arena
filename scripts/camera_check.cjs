@@ -157,7 +157,7 @@ gate('2.1 자동 중요도 임계값·주문·보스 제외',()=>{
 });
 let minDwell=Infinity,maxSpeed=0;
 gate('2.2 가변 줌·bounding·deadzone·속도 상한·감시견 제거',()=>{
-  for(const [intensity,min,max,speed] of [['low',1.2,1.5,85],['normal',1.3,1.8,136],['high',1.4,2,187]]){
+  for(const [intensity,min,max,speed] of [['low',1.2,1.5,85],['normal',1.3,2.5,136],['high',1.4,2,187]]){
     const h=harness(),p=pair(9,8,1);h.api.setIntensity(intensity);
     let prev=h.api.snapshot();h.run(8,i=>{
       if(i%20===0)strike(h,p,120);
@@ -212,7 +212,7 @@ gate('2.6 자동 idle/reset 1배·교전 범위·강도 세션 유지',()=>{
   for(const intensity of ['low','normal','high']){
     h.api.setIntensity(intensity);h.api.reset();h.run(4);
     eq(h.api.snapshot().mode,'auto');near(h.api.snapshot().z,1);near(h.api.snapshot().targetZ,1);eq(h.api.snapshot().intensity,intensity);
-    strike(h,pair(),120);h.tick();const range={low:[1.2,1.5],normal:[1.3,1.8],high:[1.4,2]}[intensity];
+    strike(h,pair(),120);h.tick();const range={low:[1.2,1.5],normal:[1.3,2.5],high:[1.4,2]}[intensity];
     ok(h.api.snapshot().targetZ>=range[0]&&h.api.snapshot().targetZ<=range[1],'교전 targetZ만 강도 범위');
     h.api.setMode('manual');h.api.zoomBy(2);h.api.toggleMap();h.loadStart();
     eq(h.api.snapshot().mode,'auto');near(h.api.snapshot().z,1);near(h.api.snapshot().targetZ,1);eq(h.api.snapshot().mapOpen,false);eq(h.api.snapshot().intensity,intensity);
