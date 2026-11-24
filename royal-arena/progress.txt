@@ -93,3 +93,4 @@ v589 (2026-11-25): 기본 배율 원복+교전 추적 줌 1.8→2.5. RUN_GATES:A
 v590 (2026-11-25): 결과 화면 패널 30px 상향+safe-area 패딩. RUN_GATES:ALL_OK, 라이브 v590.
 v591 (2026-11-25): 첫클리어 플래그 팝업 성공 후 저장으로 이동(미표시 결함 수복). RUN_GATES:ALL_OK, 라이브 v591.
 v592 (2026-11-25): 카드 획득 실패 배너 추가. RUN_GATES:ALL_OK, 라이브 v592.
+v593 (2026-11-25): 승패 화면 vh→dvh 통합+safe-area. playwright 실측 넘침 0. RUN_GATES:ALL_OK, 라이브 v593.
