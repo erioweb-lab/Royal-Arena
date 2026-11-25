@@ -1088,10 +1088,19 @@ html body #overlay-info .step .d em{color:#9fd4ff;font-style:normal}</style>
 #overlay-result{padding:calc(env(safe-area-inset-top,0px) + 10px) 10px calc(env(safe-area-inset-bottom,0px) + 10px)!important;box-sizing:border-box!important}
 html body #overlay-result .r-box{max-height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 44px)!important;margin:0 auto!important}
 </style>
-<style id="ui-result-final">/* v593: 승패 화면 레이아웃 통합(파일 최후 배치로 선행 규칙 일괄 우선) — ①vh→dvh(모바일 하단 툴바 영역 제외 뷰포트) ②safe-area 상하 패딩 ③테두리+버튼 하단 44px 여유 확보. 선행 v505/v412b/v590/v335 등 레이아웃 규칙은 본 블록이 덮음 */
+<style id="ui-result-final">/* v597: 승패 화면 재생성 통합 스타일(파일 최후 배치·선행 규칙 일괄 우선) — vh→dvh·safe-area·금테두리 프레임·버튼 행 */
 #overlay-result{padding:calc(env(safe-area-inset-top,0px) + 10px) 10px calc(env(safe-area-inset-bottom,0px) + 10px)!important;box-sizing:border-box!important}
-html body #overlay-result .r-box{max-height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 44px)!important;margin:0 auto!important}
+html body #overlay-result .r-box{width:min(92vw,340px)!important;max-height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 44px)!important;margin:0 auto!important;padding:16px 14px 12px!important;background:linear-gradient(180deg,rgba(8,12,26,.72),rgba(8,12,26,.86))!important;border:2px solid var(--gold)!important;border-radius:18px!important;box-shadow:0 20px 60px rgba(0,0,0,.6),inset 0 0 0 1.5px rgba(247,197,49,.25)!important;display:flex!important;flex-direction:column!important;box-sizing:border-box!important;overflow-y:auto!important;overscroll-behavior:contain!important}
+html body #overlay-result #r-art{width:96px!important;height:96px!important;border-radius:14px!important;object-fit:cover!important;margin:0 auto 8px!important;display:block!important;box-shadow:0 0 0 3px rgba(247,197,49,.5),0 8px 20px rgba(0,0,0,.5)!important}
+html body #overlay-result #r-title{text-align:center!important}
+html body #overlay-result #r-crowns{text-align:center!important}
+html body #overlay-result #r-sub{text-align:center!important}
+html body #overlay-result #rpane-rank{flex:0 1 auto!important;min-height:0!important;overflow-y:visible!important}
+html body #overlay-result #r-btnrow{position:sticky!important;bottom:-12px!important;display:flex!important;gap:8px!important;width:100%!important;margin-top:8px!important;padding:10px 0 2px!important;flex-shrink:0!important}
+html body #overlay-result #btn-again{flex:1.4 1 0%!important;width:auto!important;min-width:0!important;box-sizing:border-box!important}
+html body #overlay-result #btn-home{flex:1 1 0%!important;width:auto!important;min-width:0!important;margin-left:0!important;box-sizing:border-box!important}
 </style>
+
 </head>
 <body>
 
@@ -1227,7 +1236,7 @@ html body .info-box #btn-info-close{
   z-index:2 !important}
 html body .info-box #btn-info-close,html body .info-box #btn-info-close *{color:#2b1c05 !important;text-shadow:none !important}
 </style><style id="ui-v507">/* v507: 타이틀 zoom 핏터 상한 — 도움말 닫기 후 메인이 0.8까지 눌리는 급축소 차단(최소 0.93·한 번에 최대 4% 보정) */
-</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v596</div><div id="app">
+</style><div id="verchip" style="position:fixed;left:6px;bottom:2px;z-index:99990;background:rgba(0,0,0,.55);color:#ffd75e;font:700 10px monospace;padding:2px 6px;opacity:.62;border-radius:8px;pointer-events:none">v597</div><div id="app">
 
   <!-- ===== 타이틀 ===== -->
   <section id="screen-title">
@@ -1324,49 +1333,44 @@ html body .info-box #btn-info-close,html body .info-box #btn-info-close *{color:
   </div>
 </div>
 <div id="overlay-result" class="overlay hidden">
-    <div id="fw-wrap" class="fw-wrap"></div>
-    <div class="r-box">
-      <div id="crown-drop" class="crown-drop hidden">👑</div>
-      <img id="r-art" alt="" style="width:120px;height:120px;border-radius:14px;box-shadow:0 0 0 3px rgba(247,197,49,.5),0 8px 20px rgba(0,0,0,.5);margin:0 auto 10px;display:block">
-      <div id="r-title" class="r-title"></div>
-      <div id="r-crowns" class="r-crowns"></div>
-      <p id="r-sub"></p>
-
-      <!-- v513: 세부집계 탭 삭제 — 랭크 평가 즉시 노출 -->
-      <div id="rpane-rank" class="rpane">   <!-- v513: 탭 없이 즉시 노출 -->
-        <div id="rt-emblem" class="rt-emblem">🔰B</div>
-        <div id="rt-score" class="rt-score"></div>
-        <div class="rt-bar"><div id="rt-barfill"></div></div>
-        <p id="rt-brief"></p>
-        <div id="rt-detail" class="rt-detail">   <!-- v535: v511 참조 아이콘+항목 그대로(킬/데스·주문 사용 복원, 셋터는 기존 rt-kd/rt-spell) -->
-          <div class="rt-drow"><span><i class="rt-di">👑</i>왕관 획득</span><b id="rt-crown"></b></div>
-          <div class="rt-drow"><span><i class="rt-di">🗡️</i>유닛 킬</span><b id="rt-kill"></b></div>
-          <div class="rt-drow"><span><i class="rt-di">🏰</i>잔존 타워 체력</span><b id="rt-hp"></b></div>
-          <div class="rt-drow"><span><i class="rt-di">⏱️</i>남은 시간</span><b id="rt-time"></b></div>
-          <div class="rt-drow"><span><i class="rt-di">⚔️</i>킬 / 데스</span><b id="rt-kd"></b></div>
-          <div class="rt-drow"><span><i class="rt-di">✨</i>주문 사용</span><b id="rt-spell"></b></div>
-          <div class="rt-drow"><span><i class="rt-di">🥇</i>최고 연승</span><b id="rt-sbest"></b></div>
-          <div class="rt-drow"><span><i class="rt-di">🔥</i>첫승 보너스</span><b id="rt-first"></b></div>
-          <div class="rt-drow"><span><i class="rt-di">⭐</i>XP 획득</span><b id="rt-xp"></b></div>
-          <div class="rt-drow"><span><i class="rt-di">🎓</i>SP 획득</span><b id="rt-sp"></b></div>
-        </div>
-        <style id="ui-v537">/* v537: 배틀 시작 버튼 아이콘 축소+정렬 — 흰 배경 제거된 PNG가 버튼 높이를 침범하지 않도록 14px 고정 */
-html body #screen-title #btn-start .ric{width:14px !important;height:14px !important;vertical-align:-2px !important;margin-right:4px !important;display:inline-block !important}
-</style>
-<style id="ui-v538">/* v538: 덱 선택 버튼 레이아웃 고정 — 토글 시 변동 없음 + 세로 간극 균등(사용자 지시) */
-#deck-pick{margin:10px auto 0 !important;gap:10px !important}
-#deck-pick .dkpick{height:58px !important;min-height:58px !important;max-height:58px !important;display:flex !important;flex-direction:column !important;align-items:center !important;justify-content:center !important;box-sizing:border-box !important}
-#deck-desc{margin:6px auto 0 !important;white-space:nowrap !important;overflow:hidden !important;text-overflow:ellipsis !important;min-height:14px !important;max-height:14px !important;line-height:14px !important}
-</style>
-<style id="ui-v535-det">/* v535: 세부집계 아이콘 스타일 */
-        html body #overlay-result #rt-detail .rt-di{font-style:normal !important;font-size:11px !important;margin-right:4px !important;vertical-align:-1px !important;filter:saturate(.92) !important}
-        </style>
+  <div id="fw-wrap" class="fw-wrap"></div>
+  <div class="r-box">
+    <div id="crown-drop" class="crown-drop hidden">👑</div>
+    <img id="r-art" alt="">
+    <div id="r-title" class="r-title"></div>
+    <div id="r-crowns" class="r-crowns"></div>
+    <p id="r-sub"></p>
+    <div id="rpane-rank" class="rpane">
+      <div id="rt-emblem" class="rt-emblem">🔰B</div>
+      <div id="rt-score" class="rt-score"></div>
+      <div class="rt-bar"><div id="rt-barfill"></div></div>
+      <p id="rt-brief"></p>
+      <div id="rt-detail" class="rt-detail">
+        <div class="rt-drow"><span><i class="rt-di">👑</i>왕관 획득</span><b id="rt-crown"></b></div>
+        <div class="rt-drow"><span><i class="rt-di">🗡️</i>유닛 킬</span><b id="rt-kill"></b></div>
+        <div class="rt-drow"><span><i class="rt-di">🏰</i>잔존 타워 체력</span><b id="rt-hp"></b></div>
+        <div class="rt-drow"><span><i class="rt-di">⏱️</i>남은 시간</span><b id="rt-time"></b></div>
+        <div class="rt-drow"><span><i class="rt-di">⚔️</i>킬 / 데스</span><b id="rt-kd"></b></div>
+        <div class="rt-drow"><span><i class="rt-di">✨</i>주문 사용</span><b id="rt-spell"></b></div>
+        <div class="rt-drow"><span><i class="rt-di">🥇</i>최고 연승</span><b id="rt-sbest"></b></div>
+        <div class="rt-drow"><span><i class="rt-di">🔥</i>첫승 보너스</span><b id="rt-first"></b></div>
+        <div class="rt-drow"><span><i class="rt-di">⭐</i>XP 획득</span><b id="rt-xp"></b></div>
+        <div class="rt-drow"><span><i class="rt-di">🎓</i>SP 획득</span><b id="rt-sp"></b></div>
       </div>
-      <div id="r-btnrow"><button id="btn-again" class="t-cta"><img class="ric" src="assets/ra_ic_refresh.png?v=475" alt=""> 다시 배틀</button><button id="btn-home" class="r-home">메인으로</button></div>
     </div>
+    <div id="r-btnrow"><button id="btn-again" class="t-cta"><img class="ric" src="assets/ra_ic_refresh.png?v=475" alt=""> 다시 배틀</button><button id="btn-home" class="r-home">메인으로</button></div>
   </div>
 </div>
 
+<style id="ui-v537">/* v537: 배틀 시작 버튼 아이콘 축소+정렬 — 흰 배경 제거된 PNG가 버튼 높이를 침범하지 않도록 14px 고정 */
+html body #screen-title #btn-start .ric{width:14px !important;height:14px !important;vertical-align:-2px !important;margin-right:4px !important;display:inline-block !important}
+</style><style id="ui-v538">/* v538: 덱 선택 버튼 레이아웃 고정 — 토글 시 변동 없음 + 세로 간극 균등(사용자 지시) */
+#deck-pick{margin:10px auto 0 !important;gap:10px !important}
+#deck-pick .dkpick{height:58px !important;min-height:58px !important;max-height:58px !important;display:flex !important;flex-direction:column !important;align-items:center !important;justify-content:center !important;box-sizing:border-box !important}
+#deck-desc{margin:6px auto 0 !important;white-space:nowrap !important;overflow:hidden !important;text-overflow:ellipsis !important;min-height:14px !important;max-height:14px !important;line-height:14px !important}
+</style><style id="ui-v535-det">/* v535: 세부집계 아이콘 스타일 */
+        html body #overlay-result #rt-detail .rt-di{font-style:normal !important;font-size:11px !important;margin-right:4px !important;vertical-align:-1px !important;filter:saturate(.92) !important}
+        </style>
 <style id="ui-v325">/* v325: 결과 모달 360px 수복 — 실화면 검증(스킬 self-check 항목 13) 발견 즉시 수복. 2열 grid 압축 잘림 + ui-v179 %폭 버튼 행 오버플로우 해소 */
 @media (max-width:420px){
 html body #overlay-result:not(.hidden){display:flex !important;flex-direction:column !important;justify-content:center !important;align-items:center !important}
@@ -1603,7 +1607,7 @@ b.style.setProperty('background-size','auto,100% 100%','important');b.style.setP
 html body #rpane-score{overflow-y:auto !important;max-height:46vh !important;-webkit-overflow-scrolling:touch !important}
 html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;white-space:pre-line !important;word-break:keep-all !important;overflow-wrap:anywhere !important;text-align:right !important;max-width:200px !important;font-weight:600 !important}
 </style>
-<script src="js/g1a-art-assets.js?v=596"></script><script src="js/g1b-art-assets.js?v=596"></script><script src="js/g1c-art-assets.js?v=596"></script>
+<script src="js/g1a-art-assets.js?v=597"></script><script src="js/g1b-art-assets.js?v=597"></script><script src="js/g1c-art-assets.js?v=597"></script>
 
 
 
@@ -1615,7 +1619,7 @@ html body .rrow-mirror b{font-size:11px !important;line-height:1.5 !important;wh
 
 
 
-<script src="js/g2-sprite-assets.js?v=596"></script>
+<script src="js/g2-sprite-assets.js?v=597"></script>
 <script id="ui-v510-js">/* v510: 지도·난이도 해금 단일 진실원 — 난이도별 맵 사다리 분리(단계별 해금). 악몽 해금=노멀 전맵 토벌(ra_map_clear_d0>=마지막 idx), 지옥=악몽 전맵 토벌(ra_map_clear_d1>=마지막 idx). 맵 해금은 현재 난이도 사다리에서 순차(clear_d+1). 표시순서≠사다리순서라 이름 매칭으로 사다리 idx 산출(v431 표시-idx 기록 버그 근본 수복). 기존 ra_map_clear_v1은 d0 마이그레이션 원천. */
 (function(){
  function MK(){ return {
@@ -1700,7 +1704,7 @@ setInterval(function(){
 
 
 
-<script src="js/g3-frame-assets.js?v=596"></script>
+<script src="js/g3-frame-assets.js?v=597"></script>
 
 
 
@@ -1711,7 +1715,7 @@ setInterval(function(){
 
 
 
-<script src="js/g4-ux-data.js?v=596"></script>
+<script src="js/g4-ux-data.js?v=597"></script>
 
 
 
@@ -1722,7 +1726,7 @@ setInterval(function(){
 
 
 
-<script src="js/g5-core.js?v=596"></script>
+<script src="js/g5-core.js?v=597"></script>
 
 
 
@@ -1733,19 +1737,7 @@ setInterval(function(){
 
 
 
-<script src="js/g6-battle.js?v=596"></script>
-
-
-
-
-
-
-
-
-
-
-
-<script src="js/g7-ui-systems.js?v=596"></script>
+<script src="js/g6-battle.js?v=597"></script>
 
 
 
@@ -1757,7 +1749,19 @@ setInterval(function(){
 
 
 
-<script src="js/g8-boot.js?v=596"></script><script src="js/g9-wide.js?v=596"></script><script src="js/g10-techtree.js?v=596"></script><script src="js/g11-camera.js?v=596"></script><script src="js/g12-camera-ui.js?v=596"></script>
+<script src="js/g7-ui-systems.js?v=597"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script src="js/g8-boot.js?v=597"></script><script src="js/g9-wide.js?v=597"></script><script src="js/g10-techtree.js?v=597"></script><script src="js/g11-camera.js?v=597"></script><script src="js/g12-camera-ui.js?v=597"></script>
 
 
 

@@ -125,6 +125,7 @@ function __raDropRoll(){   /* 지도 클리어 드롭 — §3.3 */
   +".ra-drop.unique::after{content:'';position:absolute;inset:0;border-radius:13px;background:radial-gradient(circle at 18% 22%,rgba(255,190,255,.5) 0,transparent 3px),radial-gradient(circle at 78% 14%,rgba(255,220,255,.5) 0,transparent 2.5px),radial-gradient(circle at 62% 84%,rgba(210,150,255,.5) 0,transparent 3px);animation:raSparkle 1.4s linear infinite;pointer-events:none}"
   +".ra-drop .rd-g{font-size:12px;letter-spacing:2px}"
   +".ra-drop .rd-e{font-size:40px;margin:4px 0;display:inline-block;animation:raEmoji 1s ease-in-out .45s infinite}"
+  +".ra-drop .rd-img{width:88px;height:88px;border-radius:12px;object-fit:cover;display:inline-block;margin:6px 0 2px;box-shadow:0 4px 14px rgba(0,0,0,.5)}"
   +"@keyframes raDropIn{0%{opacity:0;transform:translateX(-50%) scale(.55)}100%{opacity:1;transform:translateX(-50%) scale(1)}}"
   +"@keyframes raGlowN{0%,100%{box-shadow:0 0 18px rgba(143,166,189,.3)}50%{box-shadow:0 0 34px rgba(143,166,189,.55)}}"
   +"@keyframes raGlowR{0%,100%{box-shadow:0 0 24px rgba(232,176,83,.4)}50%{box-shadow:0 0 46px rgba(232,176,83,.7)}}"
@@ -135,7 +136,8 @@ function __raDropRoll(){   /* 지도 클리어 드롭 — §3.3 */
   var col=(window.__GDROPC&&__GDROPC[g])?__GDROPC[g][0]:'#e8b053';   /* v594: 미정의 col(ReferenceError→무음 catch 소실→팝업 항상 미표시) 근본 수복 */
   var gname=g==='normal'?'노멀':g==='rare'?'레어':'유니크';
   var d=document.createElement('div'); d.className='ra-drop '+g;
-  d.innerHTML='<div class="rd-g" style="color:'+col+'">'+gname+' 카드 획득!</div><div class="rd-e">'+CARDS[pick].emoji+'</div><div style="font-size:16px">'+CARDS[pick].name+'</div>'+(g==='unique'?'<div style="font-size:10px;color:#e6c0ff;margin-top:2px">✨ 최고 등급 ✨</div>':'');
+  var __iurl=ART_V560[pick]||ART_NEW[pick]||ART[pick]||('assets/ra_card_'+pick+'.jpg');   /* v597: 실카드 아트(이모지→카드 일러스트) */
+  d.innerHTML='<div class="rd-g" style="color:'+col+'">'+gname+' 카드 획득!</div><div class="rd-e" style="display:none">'+CARDS[pick].emoji+'</div><img class="rd-img" src="'+__iurl+'" alt="" onerror="this.previousElementSibling.style.display=\'inline-block\';this.remove()"><div style="font-size:16px">'+CARDS[pick].name+'</div>'+(g==='unique'?'<div style="font-size:10px;color:#e6c0ff;margin-top:2px">✨ 최고 등급 ✨</div>':'');
   d.onclick=function(){ d.remove(); }; document.body.appendChild(d); try{ if(first){ seen[fl]=1; localStorage.setItem('ra_map_seen_v1',JSON.stringify(seen)) } }catch(e){}   /* v591: 팝업 실제 표시 성공 후 첫클리어 확정 — 실패 시 다음 승리에서 재시도 */ setTimeout(function(){ try{d.remove();}catch(e){} },6000);
   banner('🃏 '+(isNew?'신규':'중복')+' 카드: '+CARDS[pick].name+'!',2200); sfx('win'); }catch(__rdErr){ try{ console.error('[ra-drop]',__rdErr); }catch(_e){} try{ if(typeof banner==='function'){ banner('⚠ 카드 획득 표시 오류 — 재접속 필요',2400); } }catch(_e){} }   /* v594: 무음 catch 금지 — 오류 가시화(재발방지) */
 }
