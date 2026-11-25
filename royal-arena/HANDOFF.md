@@ -633,3 +633,11 @@
 - pointerUp 탭(이동 없는 단일 포인터 해제, P.sel==null): 수동 줌(z>1.05) → 수동 유지+c.z=1 직접 스냅(즉시) / auto 교전 추적 → clearFocus+setMode('manual')+c.z=1 즉시. 두 경로 통합.
 - pointerDown 스냅 없음 — 핀치/팬 시작·카드 배치 탭의 좌표 기준 보존(게이트 배치 원점·경계 테스트 통과로 검증). 수동 무조작 3초 자동 복귀(v535) 유지.
 - 게이트 1.2 터치 단언 갱신(탭 후 manual+z=1). RUN_GATES:ALL_OK, 라이브 칩 v598.
+
+### v599 (2026-11-25) 폭풍 조련사 전용 탄환 — 폭풍 회오리+순간멈춤(사용자 지시)
+- mtamer 발사 탄환을 제네릭 bolt → 전용 kind 'tornado'로 교체: 전용 아트(assets/ra_fx_tornado.png, gpt-image-2+bria-rmbg 128px) 회전 렌더+크기 펄스, 벡터 깔때기 폴백, 비산 먼지 트레일. drawProj는 g1c 청크에 존재(legacy g1 아님).
+- 적중 시 스플래시 반경(p.splash 1.8) 내 적 유닛 순간멈춤 0.6s(stun 갱신+'멈춤' 플로터) — p.hitsAir 필터 준수. 탄속 1.5(전용 저속).
+- 재발방지: jsdom 게이트 컨텍스트엔 Image 전역이 없다 — art 청크 최상위 new Image() 금지, typeof Image 가드 필수(CAMERA_CHECK:FAIL 실증).
+- 탄환 스킬 점검: 나머지 원거리 전원(bullet/arrow/bolt/bomb/wizfb·dragon 화염지속/ice 감속/cannon·stone/net/kingshot) 고유 이펙트 보유 — 추가 변경 불요 판정.
+- 7프레임 미적용 유닛 13종 확인(cannon·flamer·golem·scarecrow·netter·buzzer·batqueen·catapult·nseed·mtamer·slassin·golemm·phoenix) — 7프레임 확장은 별도 버전으로 단계 적용 예정.
+- RUN_GATES:ALL_OK, 라이브 칩 v599.
