@@ -627,3 +627,8 @@
 - ② ui-result-final 통합 재작성: v593 실측 레이아웃(dvh·safe-area·하단 44px) 유지+패널 프레임·r-art 96px·버튼 행 sticky 정리.
 - ③ 카드획득 팝업: 이모지 → 실카드 아트(ART_V560→ART_NEW→ART→ra_card_<key>.jpg 폴백, onerror 시 이모지 대체 표시). .rd-img 88px 스타일 추가.
 - RUN_GATES:ALL_OK, playwright 실측(팝업 img 로드·패널 하단), 라이브 칩 v597.
+
+### v598 (2026-11-25) 터치 탭 → 수동 관전 전환+즉시 1.0배(사용자 지시 — v595/v596 자동 복귀 방식 교체)
+- pointerUp 탭(이동 없는 단일 포인터 해제, P.sel==null): 수동 줌(z>1.05) → 수동 유지+c.z=1 직접 스냅(즉시) / auto 교전 추적 → clearFocus+setMode('manual')+c.z=1 즉시. 두 경로 통합.
+- pointerDown 스냅 없음 — 핀치/팬 시작·카드 배치 탭의 좌표 기준 보존(게이트 배치 원점·경계 테스트 통과로 검증). 수동 무조작 3초 자동 복귀(v535) 유지.
+- 게이트 1.2 터치 단언 갱신(탭 후 manual+z=1). RUN_GATES:ALL_OK, 라이브 칩 v598.
