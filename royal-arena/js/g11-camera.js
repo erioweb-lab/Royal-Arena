@@ -310,7 +310,6 @@
   function pointerDown(e){
     if(!active()||(e.button!=null&&e.button!==0)||!finite(e.clientX)||!finite(e.clientY)) return;
     if(state.points.size===0){ state.suppressed=false; state.gesture=null; } state.manualIdle=0;   // v535
-    if(state.mode==='auto'&&state.focus&&state.points.size===0){ clearFocus(); state.pending=null; state.quietUntil=state.time+0.4; aim(W/2,H/2,1); }   /* v595: 줌 추적 중 화면 터치 → 1.0배 복귀(사용자 요청) */
     state.points.set(e.pointerId,{x:e.clientX,y:e.clientY,startX:e.clientX,startY:e.clientY,moved:false});
     try{ canvas.setPointerCapture(e.pointerId); }catch(err){}
     if(state.points.size>=2){ beginPinch(); e.preventDefault(); }
@@ -341,7 +340,10 @@
     const tap=!cancelled&&!state.suppressed&&!p.moved&&state.points.size===1&&inside(e)&&active()&&Math.hypot(e.clientX-p.startX,e.clientY-p.startY)<=8;
     if(cancelled){ state.suppressed=true; cancelCardDrag(); }
     /* v596: 수동 모드 줼 상태 탭 → 1.0배+자동 관전 복귀(사용자 제보 — v595는 auto 추적 중만 커버). 카드 선택 탭 배치는 제외 */
-    if(!cancelled&&!p.moved&&state.points.size===1&&state.mode==='manual'){ const c=camera(); if(c.z>1.05&&!(typeof P!=='undefined'&&P&&P.sel!=null)) setMode('auto'); }   /* v596b: inside 의존 제거 — 이동 없는 탭이면 복귀 */
+    if(!cancelled&&!p.moved&&state.points.size===1&&!(typeof P!=='undefined'&&P&&P.sel!=null)){
+      if(state.mode==='manual'&&camera().z>1.05){ const c=camera(); c.z=1; const q=limits(1,c.x,c.y); c.x=q.x; c.y=q.y; aim(c.x,c.y,1); }   /* v598: 수동 줌 탭 → 수동 유지+즉시 1.0 */
+      else if(state.mode==='auto'&&state.focus){ clearFocus(); state.pending=null; state.quietUntil=state.time+0.4; setMode('manual'); const c=camera(); c.z=1; const q=limits(1,c.x,c.y); c.x=q.x; c.y=q.y; aim(c.x,c.y,1); }   /* v598: 추적 탭 → 수동 전환+즉시 1.0 */
+    }
     state.points.delete(e.pointerId);
     try{ if(canvas.hasPointerCapture&&canvas.hasPointerCapture(e.pointerId)) canvas.releasePointerCapture(e.pointerId); }catch(err){}
     if(state.points.size>=2) beginPinch();
