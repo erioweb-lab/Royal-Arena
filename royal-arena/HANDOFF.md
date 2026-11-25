@@ -641,3 +641,9 @@
 - 탄환 스킬 점검: 나머지 원거리 전원(bullet/arrow/bolt/bomb/wizfb·dragon 화염지속/ice 감속/cannon·stone/net/kingshot) 고유 이펙트 보유 — 추가 변경 불요 판정.
 - 7프레임 미적용 유닛 13종 확인(cannon·flamer·golem·scarecrow·netter·buzzer·batqueen·catapult·nseed·mtamer·slassin·golemm·phoenix) — 7프레임 확장은 별도 버전으로 단계 적용 예정.
 - RUN_GATES:ALL_OK, 라이브 칩 v599.
+
+### v600 (2026-11-25) 7프레임 공격모션 배치1 — 박쥐여왕·투석기·화염방사병·골렘(사용자 승인 gpt-image-2 무료할당)
+- 기존 스프라이트(ra_spr_*)를 -i 레퍼런스로 포즈 7컷 생성 → bria-rmbg 배경제거 → 256px 저장(assets/ra_frame_<u>_atk0..6.png) → ART_FRAMES_V578 4종 등록(ATK7 로더 자동 편입 — v579 게이트가 프레임 완결성 판정).
+- 포즈 설계: atk0~2 와인드업 → atk3~4 타격 → atk5~6 후속·회복. 유닛별 무기 동작 반영(박쥐여왕 돌진 베기·투석기 팔 발사·화염방사병 화염 제트·골렘 주먹 강타).
+- 남은 배치: v601(v557 신규 5종 nseed·mtamer·slassin·golemm·phoenix), v602(scarecrow·netter·buzzer·cannon).
+- RUN_GATES:ALL_OK, 라이브 칩 v600.
