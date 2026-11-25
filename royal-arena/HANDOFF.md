@@ -647,3 +647,10 @@
 - 포즈 설계: atk0~2 와인드업 → atk3~4 타격 → atk5~6 후속·회복. 유닛별 무기 동작 반영(박쥐여왕 돌진 베기·투석기 팔 발사·화염방사병 화염 제트·골렘 주먹 강타).
 - 남은 배치: v601(v557 신규 5종 nseed·mtamer·slassin·golemm·phoenix), v602(scarecrow·netter·buzzer·cannon).
 - RUN_GATES:ALL_OK, 라이브 칩 v600.
+
+### v600 (2026-11-25) 7프레임 공격모션 배치1 — 박쥐여왕·투석기·화염방사병·골렘(사용자 승인 gpt-image-2 무료할당)
+- 기존 스프라이트(ra_spr_*)를 -i 레퍼런스로 포즈 7컷 생성 → bria-rmbg 배경제거 → 256px 저장(assets/ra_frame_<u>_atk0..6.png, 전 28장 알파 검증 통과) → ART_FRAMES_V578 4종 등록(ATK7 로더 자동 편입 — v579 게이트가 프레임 완결성 판정).
+- 포즈 설계: atk0~2 와인드업 → atk3~4 타격 → atk5~6 후속·회복. 유닛별 무기 동작 반영(박쥐여왕 돌진 베기·투석기 팔 발사·화염방사병 화염 제트·골렘 주먹 강타).
+- 재발방지: '''.join에 포맷인자 개수(플레이스홀더 8 vs 인자 7) 불일치 — 등록은 됐으나 칩 bump가 건너뛰어져 v599 칩+미등록 에셋이 먼저 푸시됨(v600-fix로 수복). 포맷 문자열 인자 수 자동 단언 필요.
+- 남은 배치: v601(v557 신규 5종 nseed·mtamer·slassin·golemm·phoenix), v602(scarecrow·netter·buzzer·cannon).
+- RUN_GATES:ALL_OK, 라이브 칩 v600.
