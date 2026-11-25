@@ -340,6 +340,8 @@
     if(!p) return state.points.size? 'suppress':null;
     const tap=!cancelled&&!state.suppressed&&!p.moved&&state.points.size===1&&inside(e)&&active()&&Math.hypot(e.clientX-p.startX,e.clientY-p.startY)<=8;
     if(cancelled){ state.suppressed=true; cancelCardDrag(); }
+    /* v596: 수동 모드 줼 상태 탭 → 1.0배+자동 관전 복귀(사용자 제보 — v595는 auto 추적 중만 커버). 카드 선택 탭 배치는 제외 */
+    if(!cancelled&&!p.moved&&state.points.size===1&&state.mode==='manual'){ const c=camera(); if(c.z>1.05&&!(typeof P!=='undefined'&&P&&P.sel!=null)) setMode('auto'); }   /* v596b: inside 의존 제거 — 이동 없는 탭이면 복귀 */
     state.points.delete(e.pointerId);
     try{ if(canvas.hasPointerCapture&&canvas.hasPointerCapture(e.pointerId)) canvas.releasePointerCapture(e.pointerId); }catch(err){}
     if(state.points.size>=2) beginPinch();

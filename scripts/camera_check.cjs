@@ -115,6 +115,8 @@ gate('1.2 실제 evtPos·단일 탭·카드 드래그 원점',()=>{
   h.emit('pointerup',{...h.client(9,21),pointerId:7});eq(h.c.deploys.length,2,'기존 카드→전장 드래그 배치 유지');
   const a=harness(),p2=pair();strike(a,p2);eq(a.api.snapshot().tracking,true);
   a.emit('pointerdown',a.client(9,20));eq(a.api.snapshot().tracking,false);near(a.api.snapshot().targetZ,1);eq(a.api.snapshot().mode,'auto');   /* v595: 줌 추적 중 터치 → 1.0배 복귀 */
+  a.emit('pointerup',{...a.client(9,20)});   /* v596: 잔여 포인터 정리 — 미해제 down이 size 2로 탭 판정 무효화 */
+  a.api.setMode('manual');a.api.zoomBy(2);a.emit('pointerdown',{...a.client(9,20),pointerId:5});a.emit('pointerup',{...a.client(9,20),pointerId:5});eq(a.api.snapshot().mode,'auto');near(a.api.snapshot().targetZ,1);   /* v596: 수동 모드 줼 상태 탭 → 1.0 복귀 */
 });
 gate('1.3 드래그 CSS 배율·취소·휠·잔여 손가락 배치 차단',()=>{
   for(const bitmap of [1,2,3]){
