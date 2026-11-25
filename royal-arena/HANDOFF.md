@@ -621,3 +621,9 @@
 - 원인: v595 복귀는 auto 모드+교전 추적 중만 발동 — 핀치/팬으로 진입한 수동 고정 모드 미커버(캡처 판독: 수동 고정 활성+2.4배·고정).
 - 수정: pointerUp 이동 없는 단일 포인터 해제 시 manual&&z>1.05 → setMode('auto'). P.sel!=null(카드 탭 배치) 제외. tap inside(e) 의존 제거(헤드리스 rect 0 빈틈, v596b). 게이트 1.2: 수동 탭 복귀 단언 추가+117행 미해제 pointerdown 정리(잔여 포인터가 size 2로 탭 판정 무효화).
 - auto 추적 터치 복귀(v595)와 병행 — 줌 상태 터치 시 항상 1.0 복귀. RUN_GATES:ALL_OK, 라이브 칩 v596.
+
+### v597 (2026-11-25) 승패 화면 마크업 재생성+카드획득 실카드 아트(사용자 요청)
+- ① #overlay-result 마크업 통째로 재생성 — 깨진 인라인(img 태그 미닫힘)·매몰된 스타일 블록(ui-v537/538/535-det) 정리·외부 보존. JS 연동 ID 전부 유지(r-art·rt-*·r-btnrow 등).
+- ② ui-result-final 통합 재작성: v593 실측 레이아웃(dvh·safe-area·하단 44px) 유지+패널 프레임·r-art 96px·버튼 행 sticky 정리.
+- ③ 카드획득 팝업: 이모지 → 실카드 아트(ART_V560→ART_NEW→ART→ra_card_<key>.jpg 폴백, onerror 시 이모지 대체 표시). .rd-img 88px 스타일 추가.
+- RUN_GATES:ALL_OK, playwright 실측(팝업 img 로드·패널 하단), 라이브 칩 v597.

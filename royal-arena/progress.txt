@@ -97,3 +97,4 @@ v593 (2026-11-25): 승패 화면 vh→dvh 통합+safe-area. playwright 실측 �
 v594 (2026-11-25): col 미정의 ReferenceError 근본 수복+무음 catch 가시화+회귀 테스트 게이트 편입. RUN_GATES:ALL_OK, 라이브 v594.
 v595 (2026-11-25): 줌 중 터치 1.0배 복귀+보스 교전 줌인+게이트 정책 갱신. RUN_GATES:ALL_OK, 라이브 v595.
 v596 (2026-11-25): 수동 모드 줌 탭 1.0 복귀(v595 빈틈 수복). RUN_GATES:ALL_OK, 라이브 v596.
+v597 (2026-11-25): 승패 화면 재생성+팝업 실카드 아트. RUN_GATES:ALL_OK, 라이브 v597.
