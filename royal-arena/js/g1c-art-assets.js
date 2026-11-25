@@ -233,6 +233,11 @@ function visAngle(p,px,py2){   /* v508: 일반 탄환 tx/ty·주문 탄환 x1/y1
 function drawProj(p){
   const px=p.x*TILE, py=p.y*TILE;
   if(p.kind==='plasmabolt'){ const _pl=Math.sin(Math.min(1,Math.max(0,p.t))*Math.PI)*12, _py3=py-_pl;   /* v380: 플라즈마탄 — 발광 코어+바이올렛 트레일 */
+if(p.kind==='tornado'){ var __tz=(typeof __raTornadoImg!=='undefined'&&__raTornadoImg&&__raTornadoImg.complete&&__raTornadoImg.naturalWidth>0)?__raTornadoImg:null;
+    var __tp=Math.min(1,Math.max(0,p.t/(p.dur||1))), __tx=px, __ty=py-Math.sin(__tp*Math.PI)*10;
+    if(__tz){ var __tsz=52+Math.sin((p.t||0)*14)*6; ctx.save(); ctx.translate(__tx,__ty); ctx.rotate((p.t||0)*9); ctx.globalAlpha=0.95; ctx.drawImage(__tz,-__tsz/2,-__tsz/2,__tsz,__tsz); ctx.restore(); }
+    else{ ctx.save(); ctx.strokeStyle='rgba(140,226,214,.9)'; ctx.lineWidth=3; for(var __i=0;__i<3;__i++){ var __rr=8+__i*7, __ph=(p.t||0)*10+__i*2.1; ctx.beginPath(); ctx.ellipse(__tx,__ty-__i*7,__rr,__rr*0.45,__ph,0,7); ctx.stroke(); } ctx.restore(); }
+    return; }   /* v599: 폭풍 회오리 탄환 — 전용 아트 회전 렌더(폴백 벡터 깔때기) */
     const _pa=Math.atan2(p.y1-p.y0,p.x1-p.x0), _tsx=px-Math.cos(_pa)*26, _tsy=_py3-Math.sin(_pa)*26;
     const _tg=ctx.createLinearGradient(_tsx,_tsy,px,_py3); _tg.addColorStop(0,'rgba(207,157,255,0)'); _tg.addColorStop(1,'rgba(230,210,255,.95)');
     ctx.strokeStyle=_tg; ctx.lineWidth=3.2; ctx.beginPath(); ctx.moveTo(_tsx,_tsy); ctx.lineTo(px,_py3); ctx.stroke();

@@ -803,6 +803,7 @@ window.__FXIMG={frost:(function(){var im=new Image(); im.src='assets/ra_fx_frost
 Object.assign(window.__FXIMG,{hitburst:(function(){var im=new Image(); im.src='assets/ra_fx_hit.png'; im.onload=function(){ im.__valid=true; }; im.onerror=function(){ im.__valid=false; }; return im; })(),boom:(function(){var im=new Image(); im.src='assets/ra_fx_boom.png'; im.onload=function(){ im.__valid=true; }; im.onerror=function(){ im.__valid=false; }; return im; })(),slash:(function(){var im=new Image(); im.src='assets/ra_fx_slash.png'; im.onload=function(){ im.__valid=true; }; im.onerror=function(){ im.__valid=false; }; return im; })(),shockring:(function(){var im=new Image(); im.src='assets/ra_fx_shock.png'; im.onload=function(){ im.__valid=true; }; im.onerror=function(){ im.__valid=false; }; return im; })(),heal:(function(){var im=new Image(); im.src='assets/ra_fx_heal.png'; im.onload=function(){ im.__valid=true; }; im.onerror=function(){ im.__valid=false; }; return im; })(),venomfog:(function(){var im=new Image(); im.src='assets/ra_fx_venom.png'; im.onload=function(){ im.__valid=true; }; im.onerror=function(){ im.__valid=false; }; return im; })()});   /* v329: 공격·광역 이펙트 스프라이트 */
 function impactProj(p,tgt){
   try{ if(p.elem&&tgt&&!tgt.dead&&tgt.key&&!tgt.isTower) window.__raCombo(p.elem,tgt,p.dmg,p.team); }catch(__ec){}   /* v324: 원거리 원소 콤보 */
+  if(p.kind==='tornado'){ fx.push({x:p.tx,y:p.ty,t:0,dur:0.55,kind:'ring',col:'rgba(126,222,212,.8)'}); addParts(p.tx,p.ty,10,'#9fe8dc',2.6,0.5,20); sfx('thudL'); var __et=enemyOf(p.team); for(var __ui=0;__ui<units.length;__ui++){ var __tu=units[__ui]; if(!__tu||__tu.dead||__tu.team!==__et) continue; if(!p.hitsAir&&__tu.flying) continue; if(Math.hypot(__tu.x-p.tx,__tu.y-p.y)<=(p.splash||0.1)+0.35){ __tu.stun=Math.max(__tu.stun||0,0.6); floats.push({dx:0,dy:0,x:__tu.x,y:__tu.y-1.1,txt:'\U0001F32A 멈춤',t:0.6,col:'#9fe8dc',big:false}); } } }   /* v599: 폭풍 회오리 적중 — 스플래시 순간멈춤 0.6s */
   if(p.kind==='kingshot'){ fx.push({x:p.tx,y:p.ty,t:0,dur:0.35,kind:'flash'}); fx.push({x:p.tx,y:p.ty,t:0,dur:0.5,kind:'ring',col:'rgba(255,215,94,.95)'}); fx.push({x:p.tx,y:p.ty,t:0,dur:0.45,kind:'boom'}); addParts(p.tx,p.ty,14,'#ffe08a',3,0.5,40); sfx('boomL');
     const bs=S.boss;
     if(bs&&!bs.dead&&Math.hypot(bs.x-p.tx,bs.y-p.ty)<=1.3){ bs.doom=0; bs.stun=3; bs.shield=(bs.shield||0)*0.4; dealDamage(bs,250,'blue'); banner('🎯 킹샷 명중! 파멸기 캔슬 · 그로기 3s',1700); }
@@ -820,8 +821,9 @@ function impactProj(p,tgt){
 }
 function shoot(src,tgt,dmg,kind,splash){
   kind=kind||'arrow';
+  if(src&&!src.isTower&&src.key==='mtamer') kind='tornado';   /* v599: 폭풍 조련사 전용 탄환 — 폭풍 회오리 */
   const d0=Math.hypot(tgt.x-src.x,tgt.y-src.y);
-  const v=kind==='bullet'?2.75:(kind==='bolt'?3.0:(kind==='bomb'?1.45:2.25));   /* v321: 볼트 최속 */
+  const v=kind==='bullet'?2.75:(kind==='bolt'?3.0:(kind==='bomb'?1.45:(kind==='tornado'?1.5:2.25)));   /* v321: 볼트 최속 */
   try{ fx.push({x:src.x+(tgt.x-src.x)*0.3,y:src.y+(tgt.y-src.y)*0.3,t:0,dur:0.16,kind:'star',col:'#ffd754',n:5}); }catch(e){ }   /* v195: 포구 방향 오프셋 */
   projs.push({x:src.x, y:src.y-(src.isTower?0.8:0.3), target:tgt, tx:tgt.x, ty:tgt.y,
               spd:v, dmg, source:src, team:src.team, kind, splash:splash||0,   /* v508-camera: 투사체 출처 보존 */ slow:src.c?src.c.slow:0, hitsAir:src.c?!!src.c.hitsAir:true, fromTower:!!src.isTower,   /* v405: 탄환 스플래시 비행 필터용 — 발사자 대공 여부 적재 */ elem:ELEM_OF[src.key]||null,
@@ -867,3 +869,5 @@ function hitTarget(u,t,dm){ try{ if(u&&u.team==='blue'&&u.key) DPSW.acc[u.key]=(
       if(Math.hypot(s2.x-t.x,s2.y-t.y)<=u.c.splash) dealDamage(s2,Math.round(dm*0.6),u.team,false,u); } } }
     if(u.key==='buzzer'){ fx.push({x:u.x,y:u.y,t:0,dur:0.4,kind:'boom'}); fx.push({x:u.x,y:u.y,t:0,dur:0.35,kind:'ring',col:'rgba(170,255,120,.8)'}); addParts(u.x,u.y,10,'#b6ff6e',2.6,0.4,40); S.shake=0.15; sfx('boom'); for(const s3 of units){ if(s3.dead||s3.team===u.team||s3===t) continue; if(Math.hypot(s3.x-u.x,s3.y-u.y)<=1.6) dealDamage(s3,Math.round(dm*0.5),u.team,false,u); } killUnit(u,true); }   /* v411: 자폭 벌레 — 최초 타격 시 광역 폭발·소멸(직격 100%+주변 50%) */
 }
+
+try{ if(typeof Image!=='undefined'){ window.__raTornadoImg=new Image(); window.__raTornadoImg.src='assets/ra_fx_tornado.png?v=599'; } }catch(e){}   /* v599: 폭풍 회오리 전용 아트(jsdom 게이트 Image 가드) */

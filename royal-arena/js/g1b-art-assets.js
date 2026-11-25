@@ -82,7 +82,7 @@ function muzzleStar(t,tg){   // v136 P14: 타워 포구 스타 버스트 머즐 
     addParts(bx,by,3,'#ffe08a',2.0,0.25,0); }catch(e){}
 }
 function updateProjs(dt){
-  for(const p of projs){
+  for(const p of projs){if(p.kind==='tornado'&&Math.random()<0.5) addParts(p.x,p.y,1,'#9fe8dc',0.9,0.35,0);   /* v599: 회오리 비산 먼지 트레일 */
     if(p.kind==='meteorbit'){ if(p.delay>0){ p.delay-=dt; continue; } p.t+=dt/p.T; const _k2=Math.min(1,Math.max(0,p.t)); p.x=lerp(p.x0,p.x1,_k2); p.y=lerp(p.y0,p.y1,_k2); if(Math.random()<0.7) addParts(p.x,p.y,1,'#ff9d3c',0.8,0.3,0); if(_k2>=1){ p.done=true; explodeMeteorBit(p); } continue; }   /* v380: 파편 유성 비행 */
     if(p.kind==='plasmabolt'){ p.t+=dt/p.T; const _k3=Math.min(1,Math.max(0,p.t)); p.x=lerp(p.x0,p.x1,_k3); p.y=lerp(p.y0,p.y1,_k3); if(Math.random()<0.8) addParts(p.x,p.y,1,'#cf9dff',0.9,0.3,0); if(_k3>=1){ p.done=true; explodePlasma(p); } continue; }   /* v380: 플라즈마탄 비행 */
     if(p.kind==='fireball'){
